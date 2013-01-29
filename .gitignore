@@ -7,7 +7,7 @@
 *~.nib
 
 # Package Files #
-*.jar
+#*.jar util pour les libs
 *.war
 *.ear
 
@@ -16,10 +16,7 @@ CVS/
 classes/
 .svn
 .CVS
-intermediate
-publish
-.idea
-target
+target/
 bin/
 tmp/
 
