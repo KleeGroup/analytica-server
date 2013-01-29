@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE application-config PUBLIC "-//Kasper//DTD Kasper Application Config 1.0//EN"
+                              "http://www.kleegroup.com/dtd/kasper-application-config_1_0.dtd"> 
+
+<application-config>
+	
+	<config name="analytica">
+  		<property name="colors" value="DEFAULT"/>
+  	</config>
+  	
+	<config name="analytica.dashboards">
+  		<property name="dashboards" value="dashboard1;dashboard2"/>
+  	</config>
+	
+  	<config name="analytica.dashboard1">
+  		<property name="dashboardTitle" value="Chart Gallery"/>
+  		<property name="dashboardIcon" value="none"/>
+  		<property name="panels" value="panel1-7;panel1-1;panel1-2;panel1-3;panel1-4;panel1-5;panel1-6"/>
+  		<property name="timeDim" value="Day"/>
+  		<property name="timeFrom" value="NOW-90"/>
+  		<property name="timeTo" value="NOW"/>
+  	</config>
+  	
+  	<config name="analytica.dashboard1.panel1-7">
+  		<property name="title" value="BigValue"/>
+  		<property name="icon" value="lock"/>
+  		<property name="renderer" value="bigValue"/>
+  		<property name="size" value="1x1"/>
+  		<property name="loadType" value="data"/>
+  		<property name="whatDim" value="FullName"/>
+  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="labels" value="Min;Temps moyen;Max"/>
+  	</config>
+  	
+  	<config name="analytica.dashboard1.panel1-1">
+  		<property name="title" value="Thermometre perf"/>
+  		<property name="icon" value="off"/>
+  		<property name="renderer" value="thermometer"/>
+  		<property name="size" value="1x1"/>
+  		<property name="loadType" value="data"/>
+  		<property name="whatDim" value="FullName"/>
+  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="labels" value="Min;Temps moyen;Max"/>
+  	</config>
+  	
+  	<config name="analytica.dashboard1.panel1-2">
+  		<property name="title" value="Perfs par module"/>
+  		<property name="icon" value="signal"/>
+  		<property name="renderer" value="barchart"/>
+  		<property name="size" value="1x1"/>
+  		<property name="loadType" value="whatLine"/>
+  		<property name="whatDim" value="Module"/>
+  		<property name="whatList" value="/PAGE;/SQL;/FACADE"/>
+  		<property name="dataList" value="duration:max;duration:mean;duration:min"/>
+  		<property name="labels" value="Max;Temps moyen;Min"/>
+  	</config>
+  	
+  	<config name="analytica.dashboard1.panel1-3">
+  		<property name="title" value="Evolution des Perfs"/>
+  		<property name="icon" value="time"/>
+  		<property name="renderer" value="timeline"/>
+  		<property name="size" value="1x1"/>
+  		<property name="loadType" value="timeLine"/>
+  		<property name="whatDim" value="FullName"/>
+  		<property name="whatList" value="/PAGE"/>
+  		<property name="dataList" value="duration:max;duration:mean;duration:min"/>
+  		<property name="labels" value="Max;Temps moyen;Min"/>
+  	</config>
+  
+  <config name="analytica.dashboard1.panel1-4">
+  		<property name="title" value="Perfs par module"/>
+  		<property name="icon" value="time"/>
+  		<property name="renderer" value="piechart"/>
+  		<property name="size" value="2x2"/>
+  		<property name="loadType" value="whatLine"/>
+  		<property name="whatDim" value="Module"/>
+  		<property name="whatList" value="/PAGE;/SQL;/FACADE"/>
+  		<property name="dataList" value="duration:mean"/>
+  		<property name="labels" value="Temps moyen"/>
+  	</config>
+  	<config name="analytica.dashboard1.panel1-5">
+  		<property name="title" value="Répartition temps de réponse"/>
+  		<property name="icon" value="time"/>
+  		<property name="renderer" value="timeline_stacked"/>
+  		<property name="size" value="2x2"/>
+  		<property name="loadType" value="timeLine"/>
+  		<property name="whatDim" value="Module"/>
+  		<property name="whatList" value="/PAGE"/>
+  		<property name="dataList" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
+  		<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>
+  		<property name="colors" value="RED2GREEN"/>
+  	</config>
+  	<config name="analytica.dashboard1.panel1-6">
+  		<property name="title" value="Perfs par page"/>
+  		<property name="icon" value="list-alt"/>
+  		<property name="renderer" value="table"/>
+  		<property name="size" value="4x1"/>
+  		<property name="loadType" value="whatLine"/>
+  		<property name="whatDim" value="FullName"/>
+  		<property name="whatList" value="/PAGE"/>
+  		<property name="dataList" value="duration:count;PAGE_SIZE:mean;EXCEPTION:mean;duration:mean;FACADE_duration:mean;SQL_duration:mean;FACADE_REF_CACHE_HIT:mean"/>
+  		<property name="labels" value="Hits;Taille page (o);Exception (%);Temps page (ms);Temps services (ms);Temps SQL (ms);Cache hit (%)"/>  		
+  	</config>
+  	
+  	<config name="analytica.dashboard2">
+  		<property name="dashboardTitle" value="Dash-Test"/>
+  		<property name="dashboardIcon" value="none"/>
+  		<property name="panels" value="panel2-1"/>
+  	</config>
+  	
+  	<config name="analytica.dashboard2.panel2-1">
+  		<property name="title" value="Thermometre perf"/>
+  		<property name="icon" value="fire"/>
+  		<property name="renderer" value="thermometer"/>
+  		<property name="size" value="2x2"/>
+  		<property name="loadType" value="data"/>
+  		<property name="timeDim" value="Minute"/>
+  		<property name="timeFrom" value="NOW-3"/>
+  		<property name="timeTo" value="NOW"/>
+  		<property name="whatDim" value="Module"/>
+  		<property name="whatList" value="/PAGE;/SQL;/FACADE"/>
+  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="labels" value="Min;Temps moyen;Max"/>
+  	</config>  	  	
+</application-config>

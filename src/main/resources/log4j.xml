@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="FILE_LOG" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="d:/logs/monitoring.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="50000KB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{yyyyMMdd} %d{HH:mm:ss} [%t] %-5p %-11c - %m %x %n" />
+		</layout>
+	</appender>
+
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{yyyyMMdd} %d{HH:mm:ss} [%t] %-5p %-C - %m %x %n" />
+		</layout>
+	</appender>
+	
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="STDOUT" />
+	</root>
+	
+</log4j:configuration>

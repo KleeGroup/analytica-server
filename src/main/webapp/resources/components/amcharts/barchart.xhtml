@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+<head>
+<title>Graph barChart</title>
+</head>
+<body>
+
+<cc:interface>	
+	<cc:attribute name="var" />
+	<cc:attribute name="panel" />
+</cc:interface>
+
+<cc:implementation >
+	<div id="#{cc.attrs.var}_container" class="chart_container"></div>
+	<script type="text/javascript">
+	AmCharts.ready(function () {
+    	var chart;
+    	var chartData = <h:outputText escape="false" value="#{cc.attrs.panel}">
+		<f:converter converterId="amcLineChartConverter"/>
+			<f:attribute name="datas" value="#{analyticaDashboardController.data[cc.attrs.panel]}"/>
+			</h:outputText>;
+        // SERIAL CHART
+        chart = new AmCharts.AmSerialChart();
+        //chart.fontSize = 9;
+        chart.dataProvider = chartData.datas;
+        chart.categoryField = chartData.xlabel;
+        chart.plotAreaBorderColor = "#DADADA";
+        chart.plotAreaBorderAlpha = 1;
+        
+        // AXES
+        // Category
+        var categoryAxis = chart.categoryAxis;
+        categoryAxis.gridPosition = "start";
+        categoryAxis.gridAlpha = 0.1;
+        categoryAxis.axisAlpha = 0;
+        //categoryAxis.labelRotation = 45;
+
+        // Value
+        var valueAxis = new AmCharts.ValueAxis();
+        valueAxis.axisAlpha = 0;
+        valueAxis.gridAlpha = 0.1;
+        valueAxis.position = "top";
+        chart.addValueAxis(valueAxis);
+
+        // GRAPHS
+        for(var i = 0; i != chartData.series.length; i++) {
+	        var graph1 = new AmCharts.AmGraph();
+	        graph1.type = "column";
+	        graph1.title = chartData.series[i].title;
+	        graph1.valueField = chartData.series[i].field;
+	        graph1.balloonText = chartData.series[i].title+":[[value]]";
+	        graph1.lineAlpha = 0;
+	        if(chartData.colors) {
+	        	graph1.fillColors = chartData.colors[i];
+        	}
+	        graph1.fillAlphas = 1;
+	        chart.addGraph(graph1);
+	    }
+    
+        // LEGEND
+        var legend = new AmCharts.AmLegend();
+
+        // WRITE
+        chart.write("#{cc.attrs.var}_container");
+    });
+</script>
+</cc:implementation>
+
+</body>
+</html> 

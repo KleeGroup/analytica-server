@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:analytica="http://java.sun.com/jsf/composite/components/analytica"
+	xmlns:k="http://java.sun.com/jsf/composite/components/kasper"
+	template="template.xhtml">
+	
+	<ui:define name="head">
+		<title>Analytica - Dashboard</title>
+	</ui:define>		
+	<ui:define name="content">
+		<h:form>
+		<div class="container-fluid">
+		<ui:repeat value="#{analyticaDashboardController.ctx.dashboard[analyticaDashboardController.ctx.currentDashboard].panels}" var="panelName">	
+			<div id="panel_dashboard1_#{panelName}" class="panel panel-width-#{analyticaDashboardController.ctx.panel[panelName].panelWidth} panel-height-#{analyticaDashboardController.ctx.panel[panelName].panelHeight}">
+				<div class="panel-header">
+						<h6><i class="icon-#{analyticaDashboardController.ctx.panel[panelName].panelIcon}"></i> #{analyticaDashboardController.ctx.panel[panelName].panelTitle}</h6>
+				</div>
+				<div class="panel-inner">
+					<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'thermometer'}">
+			  			<analytica:thermometer var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			  		</ui:fragment>
+			  		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'linechart'}">
+			  			<analytica:linechart var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'barchart'}">
+			  			<analytica:barchart var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'piechart'}">
+			  			<analytica:piechart var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'timeline'}">
+			  			<analytica:timeline var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'timeline_stacked'}">
+			  			<analytica:timelinestacked var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'table'}">
+			  			<analytica:table var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'bigValue'}">
+			  			<analytica:bigValue var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+		   		</div>
+		   	</div>
+		</ui:repeat>
+		</div>
+		</h:form>
+  	</ui:define>
+  	
+  </ui:composition>

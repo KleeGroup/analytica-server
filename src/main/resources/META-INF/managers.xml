@@ -1,0 +1,52 @@
+<?xml version =	'1.0' encoding = 'ISO-8859-1'?>
+<!-- Utilisé en exécution -->
+<modules>
+  <module name="kasper-kernel">
+	    <manager name="LocaleManager" class="kasperimpl.locale.LocaleManagerImpl" initClass="com.kleegroup.analyticaimpl.ui.boot.initializer.LocaleManagerInitializer">
+	            <param name="multilingual" value="false" />
+	            <param name="locales" value="fr_FR" />
+	    </manager>
+		<manager name="ResourceManager" class="kasperimpl.resource.ResourceManagerImpl" >
+			<plugin id="javaRR"  	name="ResourceResolver" class="kasperimpl.resource.plugins.java.ClassPathResourceResolverPlugin"/>
+			<plugin id="servlerRR" 	name="ResourceResolver" class="kasperimpl.ui.plugins.servlet.ServletResourceResolverPlugin"/>
+		</manager>
+		
+	    <manager name="ConfigManager" class="kasperimpl.config.ConfigManagerImpl">
+	    	<plugin name="ConfigPlugin" class="kasperimpl.config.plugins.xml.XmlConfigPlugin">
+	            <param name="url" value="WEB-INF/dashboards-config.xml" />            
+	        </plugin>
+	    </manager>
+	</module>
+	<module name="kasper-commons">
+	    <manager name="ComponentManager" class="kasperimpl.component.ComponentManagerImpl">
+	        <plugin name="ConfigFactoryPlugin" class="kasperimpl.component.plugins.config.xml.XmlConfigFactoryPlugin" >
+	            <param name ="componentConfiguration" value="{componentConfiguration}"/>
+	        </plugin>  
+	        <plugin name="ComponentRefFactoryPlugin" class="kasperimpl.component.plugins.aop.jdk.JDKComponentRefFactoryPlugin" />
+	    </manager>
+	</module>
+    
+  <module name="analytica">
+    <manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
+        <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
+        	<param name="dbPath" value="d:/analytica/db" />
+        </plugin>
+         <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
+        </plugin>
+        <!--plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.infobright.InfoBrightCubeStorePlugin">
+        	<param name="dbUrl" value="jdbc:mysql://localhost:5029/cubes" />
+        	<param name="dbLogin" value="root" />
+        	<param name="dbPassword" value="" />
+       </plugin -->
+        <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.H2CubeStorePlugin">
+        	<param name="dbUrl" value="jdbc:h2:file:d:/analytica/h2/cubes;CACHE_SIZE=16384" />
+        	<param name="dbLogin" value="sa" />
+        	<param name="dbPassword" value="sa" />
+       </plugin>
+     </manager>
+   </module>
+     
+    <!-- ============================================================================================= -->
+    <!-- Parametrage application ===================================================================== -->
+   
+ </modules>
