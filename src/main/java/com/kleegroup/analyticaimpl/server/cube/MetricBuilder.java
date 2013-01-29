@@ -29,11 +29,11 @@ import kasper.kernel.util.Assertion;
  */
 public final class MetricBuilder implements Builder<Metric> {
 	private final String metricName;
-	private long count;
-	private double min;
-	private double max;
-	private double sum;
-	private double sqrSum;
+	private long count = 0;
+	private double min = Double.MAX_VALUE;
+	private double max = Double.MIN_VALUE;
+	private double sum = 0;
+	private double sqrSum = 0;
 
 	/**
 	 * Constructeur.
@@ -46,13 +46,14 @@ public final class MetricBuilder implements Builder<Metric> {
 	}
 
 	/**
-	 * Ajout d'une valeur.
-	 * @param metric Metric à compléter 
+	 * Add value.
+	 * @param value Value to add 
+	 * @return MetricBuilder builder
 	 */
 	public MetricBuilder withValue(final double value) {
 		count++;
 		max = Math.max(max, value);
-		min = Math.max(min, value);
+		min = Math.min(min, value);
 		sum += value;
 		sqrSum += value * value;
 		return this;
@@ -61,6 +62,7 @@ public final class MetricBuilder implements Builder<Metric> {
 	/**
 	 * Ajout d'une metric. 
 	 * @param metric Metric
+	 * @return MetricBuilder builder
 	 */
 	public MetricBuilder withMetric(final Metric metric) {
 		Assertion.notNull(metric);
@@ -75,10 +77,12 @@ public final class MetricBuilder implements Builder<Metric> {
 	}
 
 	/** 
-	 * Construction du Cube.
-	 * @return cube
+	 * Construction de la Metric du cube.
+	 * @return Metric du cube
 	 */
 	public Metric build() {
+		Assertion.precondition(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricName);
+		//---------------------------------------------------------------------
 		return new Metric(metricName, count, min, max, sum, sqrSum);
 	}
 }
