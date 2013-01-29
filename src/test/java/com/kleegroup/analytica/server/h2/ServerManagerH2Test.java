@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analytica.server.h2;
 
-import com.kleegroup.analytica.server.AbstractAnalyticaTest;
+import com.kleegroup.analytica.server.AbstractServerManagerTest;
 
 /**
  * Cas de Test JUNIT de l'API Analytics.
@@ -25,6 +25,6 @@ import com.kleegroup.analytica.server.AbstractAnalyticaTest;
  * @author pchretien, npiedeloup
  * @version $Id: ServerManagerH2Test.java,v 1.2 2012/03/22 18:33:04 pchretien Exp $
  */
-public final class ServerManagerH2Test extends AbstractAnalyticaTest {
+public final class ServerManagerH2Test extends AbstractServerManagerTest {
 	//
 }
