@@ -22,12 +22,12 @@
 	<module name="analytica">
 		<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl">
 			<plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
-				<param name="dbPath" value="d:/analytica/db" />
+				<param name="dbPath" value="d:/analytica/db-test" />
 			</plugin>
 			<plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
 			</plugin>
 			<plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.H2CubeStorePlugin">
-				<param name="dbUrl" value="jdbc:h2:file:d:/analytica/h2/cubes;CACHE_SIZE=8192" />
+				<param name="dbUrl" value="jdbc:h2:file:d:/analytica/h2-test/cubes;CACHE_SIZE=8192" />
 				<param name="dbLogin" value="sa" />
 				<param name="dbPassword" value="sa" />
 			</plugin>

@@ -342,7 +342,7 @@ final class CubeStatements {
 		cubesSql.append("from CUBE cub ");
 		cubesSql.append("where 1=1 ");
 		appendCubeWherePart(Collections.<String> emptyList(), params, cubesSql);
-		cubesSql.append("order by cub.time_position, cub.what_position; ");
+		cubesSql.append(" order by cub.time_position, cub.what_position; ");
 		final List<CubeBuilderBean> cubeInfos = SimpleDAO.executeQueryList(cubesSql.toString(), params, CubeBuilderBean.class, connection);
 
 		final StringBuilder metricsSql = new StringBuilder();
@@ -350,7 +350,7 @@ final class CubeStatements {
 		metricsSql.append("from CUBE cub, METRIC mtr ");
 		metricsSql.append("where mtr.cub_id = cub.cub_id ");
 		appendCubeWherePart(Collections.<String> emptyList(), params, metricsSql);
-		metricsSql.append("group by mtr.cub_id, mtr.name; ");
+		metricsSql.append(" group by mtr.cub_id, mtr.name; ");
 		final List<MetricBuilder> metricBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, MetricBuilder.class, connection);
 
 		final StringBuilder metaDatasSql = new StringBuilder();
@@ -358,7 +358,7 @@ final class CubeStatements {
 		metaDatasSql.append("from CUBE cub, META_DATA mta ");
 		metaDatasSql.append("where mta.cub_id = cub.cub_id ");
 		appendCubeWherePart(Collections.<String> emptyList(), params, metaDatasSql);
-		metaDatasSql.append("order by mta.cub_id, mta.name; ");
+		metaDatasSql.append(" order by mta.cub_id, mta.name; ");
 		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, MetaDataBuilder.class, connection);
 
 		final Map<Long, CubeBuilder> cubeBuilderIndex = new LinkedHashMap<Long, CubeBuilder>();
@@ -383,10 +383,10 @@ final class CubeStatements {
 	}
 
 	private void appendCubeWherePart(final List<String> whatPrefixes, final PlainBean params, final StringBuilder sql) {
-		sql.append("and cub.TID_CD = ${timeDimension}");
-		sql.append("and cub.WHD_CD = ${whatDimension}");
-		sql.append("and cub.time_position >= ${timePositionMin}");
-		sql.append("and cub.time_position < ${timePositionMax}");
+		sql.append("and cub.TID_CD = ${timeDimension} ");
+		sql.append("and cub.WHD_CD = ${whatDimension} ");
+		sql.append("and cub.time_position >= ${timePositionMin} ");
+		sql.append("and cub.time_position < ${timePositionMax} ");
 
 		if (!whatPrefixes.isEmpty()) {
 			sql.append("and (");
@@ -397,7 +397,7 @@ final class CubeStatements {
 				sql.append(sep);
 				sql.append("cub.what_position like ${");
 				sql.append(whatPrefixName);
-				sql.append("} || '%'");
+				sql.append("} || '%' ");
 				params.set(whatPrefixName, whatPrefixValue);
 				sep = " or ";
 			}
@@ -538,7 +538,7 @@ final class CubeStatements {
 		metricsSql.append("from CUBE cub, METRIC mtr ");
 		metricsSql.append("where mtr.cub_id = cub.cub_id ");
 		appendCubeWherePart(whatPrefixes, params, metricsSql);
-		metricsSql.append("order by mtr.name; ");
+		metricsSql.append(" order by mtr.name; ");
 		final List<DataKeyBuilderBean> metricsBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, DataKeyBuilderBean.class, connection);
 
 		final StringBuilder metaDatasSql = new StringBuilder();
@@ -546,7 +546,7 @@ final class CubeStatements {
 		metaDatasSql.append("from CUBE cub, META_DATA mta ");
 		metaDatasSql.append("where mta.cub_id = cub.cub_id ");
 		appendCubeWherePart(whatPrefixes, params, metaDatasSql);
-		metaDatasSql.append("order by mta.name; ");
+		metaDatasSql.append(" order by mta.name; ");
 		final List<DataKeyBuilderBean> metaDatasBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, DataKeyBuilderBean.class, connection);
 
 		final List<DataKey> dataKeys = new ArrayList<DataKey>();

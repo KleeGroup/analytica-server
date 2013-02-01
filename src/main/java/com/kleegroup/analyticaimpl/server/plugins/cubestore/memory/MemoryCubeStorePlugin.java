@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import kasper.kernel.util.Assertion;
 
@@ -51,6 +53,10 @@ import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class MemoryCubeStorePlugin implements CubeStorePlugin {
+	//on utilise le caractère 254 (à la fin de l'ascii) pour faire la borne max de recherche : 
+	//ainsi l'espace de recherche est [prefix, prefix+(char(154))]
+	//cette technique permet d'utiliser le subList plutot qu'un startwith très couteux
+	private final static char LAST_CHAR = 254;
 	private final Comparator<CubeKey> cubeKeyComparator = new CubeKeyComparator();
 	private final Map<TimeDimension, Map<WhatDimension, SortedMap<CubeKey, Cube>>> store;
 	private String lastProcessIdStored;
@@ -120,16 +126,12 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		//On prépare les bornes de temps
 		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
 		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
-		//on utilise le caractère 254 (à la fin de l'ascii) pour faire la borne max de recherche : 
-		//ainsi l'espace de recherche est [prefix, prefix+(char(154))]
-		//cette technique permet d'utiliser le subList plutot qu'un startwith très couteux
-		final char lastChar = 254;
 
 		//On remplit une liste de cube avec tous les what voulu
 		final List<Cube> allCubes = new ArrayList<Cube>();
 		for (final String whatValue : whatSelection.getWhatValues()) {
 			final WhatPosition minWhat = new WhatPosition(whatValue, whatSelection.getDimension());
-			final WhatPosition maxWhat = new WhatPosition(whatValue + lastChar, whatSelection.getDimension());
+			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, whatSelection.getDimension());
 			final CubeKey fromKey = new CubeKey(minTime, minWhat);
 			final CubeKey toKey = new CubeKey(maxTime, maxWhat);
 			allCubes.addAll(load(fromKey, toKey));
@@ -184,23 +186,86 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	/** {@inheritDoc} */
 	public List<TimePosition> loadSubTimePositions(final TimeSelection timeSelection) {
-		//		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
-		//		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
-		// TODO Auto-generated method stub
+		final TimeDimension timeDimension = timeSelection.getDimension().drillDown();
+		if (timeDimension == null) {
+			return Collections.emptyList();
+		}
+		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeDimension);
+		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeDimension);
 
-		return Collections.emptyList();
+		final WhatPosition minWhat = new WhatPosition("/", WhatDimension.Global);
+		final WhatPosition maxWhat = new WhatPosition("/" + LAST_CHAR, WhatDimension.Global);
+		final CubeKey fromKey = new CubeKey(minTime, minWhat);
+		final CubeKey toKey = new CubeKey(maxTime, maxWhat);
+		final List<Cube> allCubes = load(fromKey, toKey);
+
+		final SortedSet<TimePosition> result = new TreeSet<TimePosition>();
+		for (final Cube cube : allCubes) {
+			result.add(cube.getKey().getTimePosition());
+		}
+
+		return new ArrayList<TimePosition>(result);
 	}
 
 	/** {@inheritDoc} */
 	public List<WhatPosition> loadSubWhatPositions(final TimeSelection timeSelection, final WhatSelection whatSelection) {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
+		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
+		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
+
+		final WhatDimension whatDimension = whatSelection.getDimension().drillDown();
+		if (whatDimension == null) {
+			return Collections.emptyList();
+		}
+		final List<Cube> allCubes = new ArrayList<Cube>();
+		for (final String whatValue : whatSelection.getWhatValues()) {
+			final WhatPosition minWhat = new WhatPosition(whatValue, whatDimension);
+			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, whatDimension);
+			final CubeKey fromKey = new CubeKey(minTime, minWhat);
+			final CubeKey toKey = new CubeKey(maxTime, maxWhat);
+			allCubes.addAll(load(fromKey, toKey));
+		}
+
+		final SortedSet<WhatPosition> result = new TreeSet<WhatPosition>();
+		for (final Cube cube : allCubes) {
+			result.add(cube.getKey().getWhatPosition());
+		}
+
+		return new ArrayList<WhatPosition>(result);
 	}
 
 	/** {@inheritDoc} */
 	public List<DataKey> loadDataKeys(final TimeSelection timeSelection, final WhatSelection whatSelection) {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
+		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
+		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
+
+		final WhatDimension whatDimension = whatSelection.getDimension().drillDown();
+		final List<Cube> allCubes = new ArrayList<Cube>();
+		for (final String whatValue : whatSelection.getWhatValues()) {
+			final WhatPosition minWhat = new WhatPosition(whatValue, whatDimension);
+			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, whatDimension);
+			final CubeKey fromKey = new CubeKey(minTime, minWhat);
+			final CubeKey toKey = new CubeKey(maxTime, maxWhat);
+			allCubes.addAll(load(fromKey, toKey));
+		}
+
+		final Set<String> resultMetric = new HashSet<String>();
+		final Set<String> resultMetadata = new HashSet<String>();
+		for (final Cube cube : allCubes) {
+			for (final Metric metric : cube.getMetrics()) {
+				resultMetric.add(metric.getName());
+			}
+			for (final MetaData metaData : cube.getMetaDatas()) {
+				resultMetadata.add(metaData.getName());
+			}
+		}
+		final List<DataKey> result = new ArrayList<DataKey>();
+		for (final String metric : resultMetric) {
+			result.add(new DataKey(metric, DataType.count));
+		}
+		for (final String metaData : resultMetadata) {
+			result.add(new DataKey(metaData, DataType.metaData));
+		}
+		return result;
 	}
 
 	/** {@inheritDoc} */

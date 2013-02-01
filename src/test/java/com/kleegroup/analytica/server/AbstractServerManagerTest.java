@@ -58,6 +58,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	private static final String TEST_META_DATA_2 = "TEST_META_DATA_2";
 	private static final String TEST_META_DATA_1 = "TEST_META_DATA_1";
 	private static final String TEST_MEAN_VALUE = "TEST_MEAN_VALUE";
+	private static final String TEST_VALUE_PCT = "TEST_VALUE_PCT";
 	/** Base de données gérant les articles envoyés dans une commande. */
 	private static final String PROCESS1_TYPE = "ARTICLE";
 	private static final String PROCESS2_TYPE = "COMMANDE";
@@ -182,17 +183,17 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	@Test
 	public void testMeanZero() {
 		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_MEAN2", "Process1");
-		kProcessBuilder1.incMeasure(TEST_MEAN_VALUE, 90);
+		kProcessBuilder1.incMeasure(TEST_VALUE_PCT, 90);
 		serverManager.push(kProcessBuilder1.build());
 
 		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_MEAN2", "Process2");
-		//TEST_MEAN_VALUE = 0 implicite
+		//TEST_VALUE_PCT = 0 implicite
 		serverManager.push(kProcessBuilder2.build());
 
 		//---------------------------------------------------------------------
-		final DataKey[] metrics = new DataKey[] { new DataKey(TEST_MEAN_VALUE, DataType.mean) };
+		final DataKey[] metrics = new DataKey[] { new DataKey(TEST_VALUE_PCT, DataType.mean) };
 		final List<Data> datas = getCubeToday("TEST_MEAN2", metrics);
-		final double valueMean = getMean(datas, TEST_MEAN_VALUE);
+		final double valueMean = getMean(datas, TEST_VALUE_PCT);
 		Assert.assertEquals("Le cube ne contient pas la moyenne attendue\n" + datas, 45.0, valueMean, 0);
 	}
 
@@ -207,7 +208,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder2.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() + 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Module, WhatDimension.SEPARATOR + "TEST_MEAN3");
 		serverManager.store50NextProcessesAsCube();
 		final List<Data> datas = serverManager.getData(timeSelection, whatSelection, asList(new DataKey(TEST_MEAN_VALUE, DataType.mean)));
@@ -260,7 +261,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder2.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Module, WhatDimension.SEPARATOR + "TEST_META_DATA3");
 
 		serverManager.store50NextProcessesAsCube();
@@ -290,7 +291,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder4.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Module, WhatDimension.SEPARATOR + "TEST_MEAN4");
 		final List<DataKey> metrics = asList(new DataKey(TEST_MEAN_VALUE, DataType.mean), new DataKey(TEST_MEAN_VALUE, DataType.max), new DataKey(TEST_MEAN_VALUE, DataType.min), new DataKey(TEST_MEAN_VALUE, DataType.count), new DataKey(TEST_MEAN_VALUE, DataType.stdDev));
 		serverManager.store50NextProcessesAsCube();

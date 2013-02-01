@@ -70,6 +70,11 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	private final PriorityQueue<Cube> writeBuffer = new PriorityQueue<Cube>(100, new Comparator<Cube>() {
 		@Override
 		public int compare(final Cube o1, final Cube o2) {
+			if (o1 == null) {
+				return -1;
+			} else if (o2 == null) {
+				return 1;
+			}
 			final CubeKey k1 = o1.getKey();
 			final CubeKey k2 = o2.getKey();
 			return k1.getTimePosition().getValue().compareTo(k2.getTimePosition().getValue());
@@ -108,18 +113,18 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		try {
 			final Connection conn = store.getConnection();
 			try {
-				final TimePosition timePosition = lowLevelCube.getKey().getTimePosition();
-				//while (timePosition != null) {
-				final WhatPosition whatPosition = lowLevelCube.getKey().getWhatPosition();
-				//while (whatPosition != null) {
-				final CubeKey storedCubeKey = new CubeKey(timePosition, whatPosition);
-				store(lowLevelCube, storedCubeKey, conn);
-				//On remonte what
-				//whatPosition = whatPosition.drillUp();
-				//}
-				//On remonte time
-				//timePosition = timePosition.drillUp();
-				//}
+				TimePosition timePosition = lowLevelCube.getKey().getTimePosition();
+				while (timePosition != null) {
+					WhatPosition whatPosition = lowLevelCube.getKey().getWhatPosition();
+					while (whatPosition != null) {
+						final CubeKey storedCubeKey = new CubeKey(timePosition, whatPosition);
+						store(lowLevelCube, storedCubeKey, conn);
+						//On remonte what
+						whatPosition = whatPosition.drillUp();
+					}
+					//On remonte time
+					timePosition = timePosition.drillUp();
+				}
 				flushWriteBuffer(conn);
 			} finally {
 				store.close(conn);
