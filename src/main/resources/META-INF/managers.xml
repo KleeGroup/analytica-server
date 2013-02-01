@@ -17,15 +17,7 @@
 	        </plugin>
 	    </manager>
 	</module>
-	<module name="kasper-commons">
-	    <manager name="ComponentManager" class="kasperimpl.component.ComponentManagerImpl">
-	        <plugin name="ConfigFactoryPlugin" class="kasperimpl.component.plugins.config.xml.XmlConfigFactoryPlugin" >
-	            <param name ="componentConfiguration" value="{componentConfiguration}"/>
-	        </plugin>  
-	        <plugin name="ComponentRefFactoryPlugin" class="kasperimpl.component.plugins.aop.jdk.JDKComponentRefFactoryPlugin" />
-	    </manager>
-	</module>
-    
+	
   <module name="analytica">
     <manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
         <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
@@ -38,11 +30,13 @@
         	<param name="dbLogin" value="root" />
         	<param name="dbPassword" value="" />
        </plugin -->
-        <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.H2CubeStorePlugin">
+       <!-- <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.H2CubeStorePlugin">
         	<param name="dbUrl" value="jdbc:h2:file:d:/analytica/h2/cubes;CACHE_SIZE=16384" />
         	<param name="dbLogin" value="sa" />
         	<param name="dbPassword" value="sa" />
-       </plugin>
+       </plugin> -->
+       <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.memory.MemoryCubeStorePlugin">
+	   </plugin>
      </manager>
    </module>
      
