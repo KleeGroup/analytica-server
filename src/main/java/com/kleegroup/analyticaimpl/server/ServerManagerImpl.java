@@ -267,7 +267,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	public void start() {
 		asyncCubeStoreTimer = new Timer(true);
 		final TimerTask storeCubeTask = new StoreCubeTask();
-		//asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //50processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
+		asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //50processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
 	}
 
 	/** {@inheritDoc} */
