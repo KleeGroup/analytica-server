@@ -55,6 +55,7 @@ public final class RestNetApiPlugin implements NetApiPlugin {
 	public void push(final String json) {
 		final KProcess[] processes = new Gson().fromJson(json, KProcess[].class);
 		LOG.info("PUSH " + processes.length + " processes.");
+		LOG.info("-> " + json);
 		for (final KProcess process : processes) {
 			serverManager.push(process);
 		}
