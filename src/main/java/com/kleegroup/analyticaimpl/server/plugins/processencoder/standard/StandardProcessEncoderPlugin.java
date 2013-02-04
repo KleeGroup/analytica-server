@@ -92,14 +92,14 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		}
 		sb.append(process.getName());
 		final WhatPosition whatPosition = new WhatPosition(sb.toString(), WhatDimension.FullName);
-		final String whatModulePositionValue = new WhatPosition(sb.toString(), WhatDimension.Module).getValue().substring(1); //On retire le premier /
+		final String whatTypePositionValue = new WhatPosition(sb.toString(), WhatDimension.Type).getValue().substring(1); //On retire le premier /
 		sb.setLength(0);
 
-		CubeKey key = new CubeKey(timePosition, whatPosition);
+		final CubeKey key = new CubeKey(timePosition, whatPosition);
 		final CubeBuilder cubeBuilder = new CubeBuilder(key);
 
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
-			addMetric(measure.getKey(), measure.getValue(), cubeBuilder, whatModulePositionValue, parentCubeBuilders, sb);
+			addMetric(measure.getKey(), measure.getValue(), cubeBuilder, whatTypePositionValue, parentCubeBuilders, sb);
 		}
 
 		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
@@ -137,7 +137,7 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		//On crée une répartion : 10,20,50 ...
 		final String strValue = String.valueOf(Math.round(value));
 		long clusterValue = value == 0 ? 0 : -1;
-		long indice = (long) Math.pow(10, (strValue.length() - 1));
+		long indice = (long) Math.pow(10, strValue.length() - 1);
 		while (clusterValue == -1) {
 			if (value <= 1 * indice) {
 				clusterValue = 1 * indice;

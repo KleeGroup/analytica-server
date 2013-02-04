@@ -17,8 +17,6 @@
  */
 package com.kleegroup.analyticaimpl.server.cube;
 
-import kasper.kernel.util.Assertion;
-
 import com.kleegroup.analytica.server.data.WhatDimension;
 
 /**
@@ -31,7 +29,6 @@ public final class WhatPosition extends Identity {
 
 	public WhatPosition(final String fullName, final WhatDimension whatDimension) {
 		super("What:[" + whatDimension.name() + "]" + whatDimension.reduce(fullName));
-		Assertion.notNull(whatDimension);
 		//---------------------------------------------------------------------
 		this.whatDimension = whatDimension;
 		what = whatDimension.reduce(fullName);

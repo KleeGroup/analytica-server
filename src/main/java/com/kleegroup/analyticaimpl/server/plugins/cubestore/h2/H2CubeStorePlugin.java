@@ -432,6 +432,9 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		final WhatDimension subWhatDimension;
 		switch (whatDimension) {
 			case Global:
+				subWhatDimension = WhatDimension.Type;
+				break;
+			case Type:
 				subWhatDimension = WhatDimension.Module;
 				break;
 			case Module:

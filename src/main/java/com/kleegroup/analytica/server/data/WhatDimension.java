@@ -32,9 +32,13 @@ public enum WhatDimension {
 	 */
 	Global(null),
 	/**
-	 * Module. (SQL, PAGE, ...)
+	 * Type. (SQL, PAGE, WORK, ...)
 	 */
-	Module(Global),
+	Type(Global),
+	/**
+	 * Module. (pages, resources, ...)
+	 */
+	Module(Type),
 	/**
 	 * SimpleName.
 	 */
@@ -76,6 +80,8 @@ public enum WhatDimension {
 	public WhatDimension drillDown() {
 		switch (this) {
 			case Global:
+				return Type;
+			case Type:
 				return Module;
 			case Module:
 				return SimpleName;
@@ -107,14 +113,17 @@ public enum WhatDimension {
 			case Global:
 				part = 0;
 				break;
-			case Module:
+			case Type:
 				part = 1;
 				break;
-			case SimpleName:
+			case Module:
 				part = 2;
 				break;
-			case FullName:
+			case SimpleName:
 				part = 3;
+				break;
+			case FullName:
+				part = 15; //on prend tout
 				break;
 			default:
 				throw new UnsupportedOperationException("Dimension non reconnue: " + whatDimension);
