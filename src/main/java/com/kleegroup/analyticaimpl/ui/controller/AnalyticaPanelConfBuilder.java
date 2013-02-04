@@ -132,11 +132,11 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		if (timeStr.equals("NOW")) {
 			return new Date();
 		} else if (timeStr.startsWith("NOW-")) {
-			final long delta = Long.valueOf(timeStr.substring("NOW-".length()));
-			return new Date(System.currentTimeMillis() - delta * 24 * 60 * 60 * 1000L);
+			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW-".length()));
+			return new Date(System.currentTimeMillis() - deltaMs);
 		} else if (timeStr.startsWith("NOW+")) {
-			final long delta = Long.valueOf(timeStr.substring("NOW+".length()));
-			return new Date(System.currentTimeMillis() + delta * 24 * 60 * 60 * 1000L);
+			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW+".length()));
+			return new Date(System.currentTimeMillis() + deltaMs);
 		}
 		final String datePattern;
 		switch (dimension) {
@@ -160,6 +160,27 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		} catch (final ParseException e) {
 			// TODO Auto-generated catch block
 			throw new KRuntimeException("Erreur de format de date (" + timeStr + "). Format attendu :" + sdf.toPattern());
+		}
+	}
+
+	private long readDeltaAsMs(final String deltaAsString) {
+		final Long delta;
+		char unit = deltaAsString.charAt(deltaAsString.length() - 1);
+		if (unit >= '0' && unit <= '9') {
+			unit = 'd';
+			delta = Long.valueOf(deltaAsString);
+		} else {
+			delta = Long.valueOf(deltaAsString.substring(0, deltaAsString.length() - 1));
+		}
+		switch (unit) {
+			case 'd':
+				return delta * 24 * 60 * 60 * 1000L;
+			case 'h':
+				return delta * 60 * 60 * 1000L;
+			case 'm':
+				return delta * 60 * 1000L;
+			default:
+				throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
 		}
 	}
 
