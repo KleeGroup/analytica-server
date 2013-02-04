@@ -31,6 +31,7 @@ BODY{
   /* -webkit-border-radius-bottom: 5px;
   -moz-border-radius-bottom: 5px;
   border-bottom-radius: 5px; */
+  overflow : auto;
 }
 
 .panel-header {
