@@ -23,8 +23,8 @@
         <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
         	<param name="dbPath" value="d:/analytica/db" />
         </plugin>
-         <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
-        </plugin>
+         <!-- <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin"/> -->
+         <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.stack.StackProcessEncoderPlugin"/>
         <!--plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.infobright.InfoBrightCubeStorePlugin">
         	<param name="dbUrl" value="jdbc:mysql://localhost:5029/cubes" />
         	<param name="dbLogin" value="root" />

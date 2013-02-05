@@ -10,8 +10,93 @@
   	</config>
   	
 	<config name="analytica.dashboards">
-  		<property name="dashboards" value="dashboard1;dashboard2"/>
+  		<property name="dashboards" value="dashboardFicen;dashboard1;dashboard2"/>
   	</config>
+	
+	
+	<config name="analytica.dashboardFicen">
+  		<property name="dashboardTitle" value="Application Ficen"/>
+  		<property name="dashboardIcon" value="none"/>
+  		<property name="panels" value="panelFicen-1;panelFicen-2;panelFicen-3;panelFicen-4;panelFicen-5;panelFicen-6"/>
+  		<property name="timeDim" value="Minute"/>
+  		<property name="timeFrom" value="NOW-3"/>
+  		<property name="timeTo" value="NOW"/>
+  	</config>
+  	
+  	<config name="analytica.dashboardFicen.panelFicen-1">
+  		<property name="title" value="Performances Temps-réel"/>
+  		<property name="icon" value="lock"/>
+  		<property name="renderer" value="bigValue"/>
+  		<property name="size" value="1x1"/>
+  		<property name="loadType" value="whatLine"/>
+  		<property name="timeFrom" value="NOW-1h"/>
+  		<property name="whatDim" value="Type"/>
+  		<property name="whatList" value="/REQUEST;/FACADE;/WORK"/>
+  		<property name="dataList" value="duration:mean"/>
+  		<property name="labels" value="ms"/>
+  	</config>
+  	<config name="analytica.dashboardFicen.panelFicen-2">
+  		<property name="title" value="Répartition temps de réponse"/>
+  		<property name="icon" value="time"/>
+  		<property name="renderer" value="timeline_stacked"/>
+  		<property name="size" value="2x1"/>
+  		<property name="loadType" value="timeLine"/>
+  		<property name="whatDim" value="Type"/>
+  		<property name="whatList" value="/REQUEST"/>
+  		<property name="dataList" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
+  		<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>
+  		<property name="colors" value="RED2GREEN"/>
+  	</config>
+  	
+  	<config name="analytica.dashboardFicen.panelFicen-3">
+  		<property name="title" value="Répartition par module"/>
+  		<property name="icon" value="time"/>
+  		<property name="renderer" value="timeline_stacked"/>
+  		<property name="size" value="1x1"/>
+  		<property name="loadType" value="timeLine"/>
+  		<property name="whatDim" value="Type"/>
+  		<property name="whatList" value="/REQUEST"/>
+  		<property name="dataList" value="WORK_duration:mean;FACADE_duration:mean;duration:mean"/>
+  		<property name="labels" value="Work;Services;Request"/>
+  		<property name="colors" value="RED2GREEN"/>
+  	</config>
+  	
+  	<config name="analytica.dashboardFicen.panelFicen-4">
+  		<property name="title" value="Requetes"/>
+  		<property name="icon" value="list-alt"/>
+  		<property name="renderer" value="table"/>
+  		<property name="size" value="4x2"/>
+  		<property name="loadType" value="whatLine"/>
+  		<property name="whatDim" value="SimpleName"/>
+  		<property name="whatList" value="/REQUEST"/>
+  		<property name="dataList" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="labels" value="Hits;Taille page (o);CPU (ms);Erreurs User (%);Autres erreurs (%);Temps page (ms);Temps services (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
+  	</config>
+  	
+  	<config name="analytica.dashboardFicen.panelFicen-5">
+  		<property name="title" value="Services"/>
+  		<property name="icon" value="list-alt"/>
+  		<property name="renderer" value="table"/>
+  		<property name="size" value="4x2"/>
+  		<property name="loadType" value="whatLine"/>
+  		<property name="whatDim" value="SimpleName"/>
+  		<property name="whatList" value="/FACADE"/>
+  		<property name="dataList" value="duration:count;ERROR_PCT:mean;duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="labels" value="Hits;Exception (%);Temps service (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
+  	</config>
+  	
+  	<config name="analytica.dashboardFicen.panelFicen-6">
+  		<property name="title" value="Works"/>
+  		<property name="icon" value="list-alt"/>
+  		<property name="renderer" value="table"/>
+  		<property name="size" value="4x2"/>
+  		<property name="loadType" value="whatLine"/>
+  		<property name="whatDim" value="SimpleName"/>
+  		<property name="whatList" value="/WORK"/>
+  		<property name="dataList" value="duration:count;ERROR_PCT:mean;duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="labels" value="Hits;Exception (%);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
+  	</config>
+  	
 	
   	<config name="analytica.dashboard1">
   		<property name="dashboardTitle" value="Chart Gallery"/>
@@ -22,6 +107,7 @@
   		<property name="timeTo" value="NOW"/>
   	</config>
   	
+  	  	
   	<config name="analytica.dashboard1.panel1-7">
   		<property name="title" value="BigValue"/>
   		<property name="icon" value="lock"/>
