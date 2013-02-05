@@ -57,9 +57,9 @@ public final class KProcess {
 	private final List<KProcess> subProcesses;
 
 	/*
-	 * Le constructeur est pacakage car il faut passer par le builder.
+	 * Le constructeur est package car il faut passer par le builder.
 	 */
-	KProcess(final String type, final String name, final Date startDate, Map<String, Double> measures, final Map<String, String> metaDatas, final List<KProcess> subProcesses) {
+	KProcess(final String type, final String name, final Date startDate, final Map<String, Double> measures, final Map<String, String> metaDatas, final List<KProcess> subProcesses) {
 		Assertion.notEmpty(type);
 		Assertion.notEmpty(name);
 		Assertion.precondition(TYPE_REGEX.matcher(type).matches(), "le type du processus ne respecte pas la regex {0}", TYPE_REGEX);

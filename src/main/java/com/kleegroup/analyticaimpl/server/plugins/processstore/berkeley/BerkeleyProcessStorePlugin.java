@@ -32,10 +32,18 @@ import com.kleegroup.analyticaimpl.server.Identified;
 import com.kleegroup.analyticaimpl.server.ProcessStorePlugin;
 import com.sleepycat.je.DatabaseEntry;
 
+/**
+ * Stockage des Process dans une base Berkeley.
+ * @author npiedeloup
+ * @version $Id: $
+ */
 public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Activeable {
 	private final BerkeleyDatabase database;
 	private final BerkeleyDatabaseWriter writer;
 
+	/**
+	 * @param dbPath Chemin de stockage de la base berkeley
+	 */
 	@Inject
 	public BerkeleyProcessStorePlugin(@Named("dbPath") final String dbPath) {
 		database = new BerkeleyDatabase(new File(dbPath));
@@ -73,4 +81,5 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 
 		return processes;
 	}
+
 }

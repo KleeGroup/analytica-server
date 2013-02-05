@@ -49,6 +49,7 @@ import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
  * @version $Id: StandardProcessEncoderPlugin.java,v 1.16 2012/10/16 17:27:12 pchretien Exp $
  */
 public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin {
+
 	/** {@inheritDoc} */
 	public List<Cube> encode(final KProcess process) {
 		final List<Cube> result = new ArrayList<Cube>();

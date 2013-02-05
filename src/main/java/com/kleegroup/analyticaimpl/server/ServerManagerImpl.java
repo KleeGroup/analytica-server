@@ -76,7 +76,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		this.processStorePlugin = processStorePlugin;
 		this.encoderPlugin = encoderPlugin;
 		this.cubeStorePlugin = cubeStorePlugin;
-
 	}
 
 	/** {@inheritDoc} */
@@ -108,7 +107,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	public List<Data> getData(final TimeSelection timeSelection, final WhatSelection whatSelection, final List<DataKey> metrics) {
 		final List<Cube> aggregatedCubes = cubeStorePlugin.load(timeSelection, true, whatSelection, true, metrics);
 		if (aggregatedCubes.isEmpty()) {
-			return Collections.emptyList(); //TODO npi que faire si pas de ligne , l'aggregation devrait retourner toujours une ligne, non ?
+			return Collections.emptyList(); //TODO npi que faire si pas de ligne, l'aggregation devrait retourner toujours une ligne, non ?
 		}
 		//---------------------------------------------------------------------
 		Assertion.postcondition(aggregatedCubes.size() == 1, "La liste de cube doit être agrégée sur tout les axes, il doit dont y avoir un seul élément dans la liste (size:{0})", aggregatedCubes.size());
