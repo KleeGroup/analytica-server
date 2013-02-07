@@ -115,7 +115,7 @@ public final class StackProcessEncoderPlugin implements ProcessEncoderPlugin, Ac
 		public boolean add(final KProcess o) {
 			super.add(o);
 			final Date limit = new Date(System.currentTimeMillis() - delayMinute * 60 * 1000);
-			while (getFirst().getStartDate().before(limit)) {
+			while (!isEmpty() && getFirst().getStartDate().before(limit)) {
 				super.remove();
 			}
 			return true;
