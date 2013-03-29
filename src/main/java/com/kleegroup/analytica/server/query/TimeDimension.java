@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analytica.server.data;
+package com.kleegroup.analytica.server.query;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +26,7 @@ import kasper.kernel.util.Assertion;
 /**
  * Niveaux heures, minutes ou secondes de la dimension hiérarchique temps.
  *
- * @author pchretien
+ * @author npiedeloup, pchretien
  * @version $Id: TimeDimension.java,v 1.3 2012/10/16 16:25:22 pchretien Exp $
  */
 public enum TimeDimension implements Dimension<TimeDimension> {

@@ -1,4 +1,4 @@
-package com.kleegroup.analytica.server.data;
+package com.kleegroup.analytica.server.query;
 
 /**
  * Une dimension ou axe

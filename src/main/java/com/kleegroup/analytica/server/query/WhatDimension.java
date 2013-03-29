@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analytica.server.data;
+package com.kleegroup.analytica.server.query;
 
 import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
