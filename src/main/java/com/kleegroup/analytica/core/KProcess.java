@@ -30,8 +30,9 @@ import kasper.kernel.util.Assertion;
  * Un process est un événement ayant 
  * - un type 
  * - un nom
+ * - une date de début 
  * - une liste de sous process
- * _ une durée (cf.mesures)
+ * - une durée (cf.mesures)
  * - une liste de mesures dont obligatoirement une mesure de type 'duration'
  * - une liste de métadonnées
  * 

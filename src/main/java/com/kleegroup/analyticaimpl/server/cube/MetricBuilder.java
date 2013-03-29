@@ -30,8 +30,8 @@ import kasper.kernel.util.Assertion;
 public final class MetricBuilder implements Builder<Metric> {
 	private final String metricName;
 	private long count = 0;
-	private double min = Double.MAX_VALUE;
-	private double max = Double.MIN_VALUE;
+	private double min = Double.NaN;
+	private double max = Double.NaN;
 	private double sum = 0;
 	private double sqrSum = 0;
 
@@ -52,8 +52,8 @@ public final class MetricBuilder implements Builder<Metric> {
 	 */
 	public MetricBuilder withValue(final double value) {
 		count++;
-		max = Math.max(max, value);
-		min = Math.min(min, value);
+		max = max(max, value);
+		min = min(min, value);
 		sum += value;
 		sqrSum += value * value;
 		return this;
@@ -69,8 +69,8 @@ public final class MetricBuilder implements Builder<Metric> {
 		Assertion.precondition(metricName.equals(metric.getName()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricName, metric.getName());
 		//---------------------------------------------------------------------
 		count += metric.get(Metric.F_COUNT);
-		max = Math.max(max, metric.get(Metric.F_MAX));
-		min = Math.min(min, metric.get(Metric.F_MIN));
+		max = max(max, metric.get(Metric.F_MAX));
+		min = min(min, metric.get(Metric.F_MIN));
 		sum += metric.get(Metric.F_SUM);
 		sqrSum += metric.get(Metric.F_SQR_SUM);
 		return this;
@@ -84,5 +84,13 @@ public final class MetricBuilder implements Builder<Metric> {
 		Assertion.precondition(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricName);
 		//---------------------------------------------------------------------
 		return new Metric(metricName, count, min, max, sum, sqrSum);
+	}
+
+	private static double max(double d1, double d2) {
+		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : Math.max(d1, d2);
+	}
+
+	private static double min(double d1, double d2) {
+		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : Math.min(d1, d2);
 	}
 }

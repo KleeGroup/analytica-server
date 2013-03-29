@@ -49,7 +49,7 @@ public final class Metric {
 	private final double sum;
 	private final double sqrSum;
 
-	public Metric(final String name, final long count, final double min, final double max, final double sum, final double sqrSum) {
+	Metric(final String name, final long count, final double min, final double max, final double sum, final double sqrSum) {
 		Assertion.notEmpty(name);
 		//---------------------------------------------------------------------
 		this.name = name;
