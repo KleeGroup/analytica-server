@@ -124,16 +124,16 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	/** {@inheritDoc} */
 	public List<Cube> load(final TimeSelection timeSelection, final boolean aggregateTime, final WhatSelection whatSelection, final boolean aggregateWhat, final List<DataKey> metrics) {
 		//On prépare les bornes de temps
-		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
-		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
+		final TimePosition minTimePosition = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
+		final TimePosition maxTimePosition = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
 
 		//On remplit une liste de cube avec tous les what voulu
 		final List<Cube> allCubes = new ArrayList<Cube>();
 		for (final String whatValue : whatSelection.getWhatValues()) {
 			final WhatPosition minWhat = new WhatPosition(whatValue, whatSelection.getDimension());
 			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, whatSelection.getDimension());
-			final CubeKey fromKey = new CubeKey(minTime, minWhat);
-			final CubeKey toKey = new CubeKey(maxTime, maxWhat);
+			final CubeKey fromKey = new CubeKey(minTimePosition, minWhat);
+			final CubeKey toKey = new CubeKey(maxTimePosition, maxWhat);
 			allCubes.addAll(load(fromKey, toKey));
 		}
 		//On prepare un index de metric attendu
@@ -153,7 +153,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
 			final WhatPosition useWhat = aggregateWhat ? allWhat : cube.getKey().getWhatPosition();
-			final TimePosition useTime = aggregateTime ? minTime : cube.getKey().getTimePosition();
+			final TimePosition useTime = aggregateTime ? minTimePosition : cube.getKey().getTimePosition();
 			final CubeBuilder cubeBuilder = obtainCubeBuilder(useTime, useWhat, cubeBuilderIndex);
 
 			for (final Metric metric : cube.getMetrics()) {

@@ -24,8 +24,8 @@ import java.util.Map.Entry;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.server.data.TimeDimension;
-import com.kleegroup.analytica.server.data.WhatDimension;
+import com.kleegroup.analytica.server.query.TimeDimension;
+import com.kleegroup.analytica.server.query.WhatDimension;
 import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
