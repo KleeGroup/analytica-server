@@ -58,72 +58,60 @@ import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.SimpleDAO;
  * @version $Id: CubeStatements.java,v 1.16 2013/01/14 16:35:20 npiedeloup Exp $
  */
 final class CubeStatements {
-	private static final String CREATE_DATABASE_SCRIPT;
+	private static final String CREATE_DATABASE_SCRIPT = new StringBuilder()//
+			.append("CREATE SEQUENCE SEQ_CUBE; ")//
+			.append("CREATE SEQUENCE SEQ_METRIC; ")//
+			.append("CREATE SEQUENCE SEQ_META_DATA; ")//
+			.append("CREATE TABLE CUBE(CUB_ID BIGINT PRIMARY KEY, TIME_POSITION TIMESTAMP, TID_CD VARCHAR2, WHAT_POSITION VARCHAR2, WHD_CD VARCHAR2); ")//
+			.append("CREATE TABLE METRIC(MTR_ID BIGINT PRIMARY KEY, CUB_ID BIGINT, NAME VARCHAR2, COUNT BIGINT, MIN DOUBLE, MAX DOUBLE, SUM DOUBLE, SQR_SUM DOUBLE, FOREIGN KEY(CUB_ID) REFERENCES CUBE(CUB_ID)); ")//
+			.append("CREATE TABLE META_DATA(MTA_ID BIGINT PRIMARY KEY, CUB_ID BIGINT, NAME VARCHAR2, VALUE VARCHAR2, FOREIGN KEY(CUB_ID) REFERENCES CUBE(CUB_ID)); ")//
+			.append("CREATE MEMORY TABLE TIME_DIMENSION(TID_CD VARCHAR2 PRIMARY KEY, TID_CD_PARENT VARCHAR2, FOREIGN KEY(TID_CD_PARENT) REFERENCES TIME_DIMENSION(TID_CD)); ")//
+			.append("CREATE MEMORY TABLE WHAT_DIMENSION(WHD_CD VARCHAR2 PRIMARY KEY, WHD_CD_PARENT VARCHAR2, FOREIGN KEY(WHD_CD_PARENT) REFERENCES WHAT_DIMENSION(WHD_CD)); ")//
+			.append("CREATE MEMORY TABLE LAST_PROCESS_ID(LAST_PROCESS_ID VARCHAR2 PRIMARY KEY); ")//
 
-	static {
-		final StringBuilder sql = new StringBuilder();
-		sql.append("CREATE SEQUENCE SEQ_CUBE; ");
-		sql.append("CREATE SEQUENCE SEQ_METRIC; ");
-		sql.append("CREATE SEQUENCE SEQ_META_DATA; ");
-		sql.append("CREATE TABLE CUBE(CUB_ID BIGINT PRIMARY KEY, TIME_POSITION TIMESTAMP, TID_CD VARCHAR2, WHAT_POSITION VARCHAR2, WHD_CD VARCHAR2); ");
-		sql.append("CREATE TABLE METRIC(MTR_ID BIGINT PRIMARY KEY, CUB_ID BIGINT, NAME VARCHAR2, COUNT BIGINT, MIN DOUBLE, MAX DOUBLE, SUM DOUBLE, SQR_SUM DOUBLE, FOREIGN KEY(CUB_ID) REFERENCES CUBE(CUB_ID)); ");
-		sql.append("CREATE TABLE META_DATA(MTA_ID BIGINT PRIMARY KEY, CUB_ID BIGINT, NAME VARCHAR2, VALUE VARCHAR2, FOREIGN KEY(CUB_ID) REFERENCES CUBE(CUB_ID)); ");
-		sql.append("CREATE MEMORY TABLE TIME_DIMENSION(TID_CD VARCHAR2 PRIMARY KEY, TID_CD_PARENT VARCHAR2, FOREIGN KEY(TID_CD_PARENT) REFERENCES TIME_DIMENSION(TID_CD)); ");
-		sql.append("CREATE MEMORY TABLE WHAT_DIMENSION(WHD_CD VARCHAR2 PRIMARY KEY, WHD_CD_PARENT VARCHAR2, FOREIGN KEY(WHD_CD_PARENT) REFERENCES WHAT_DIMENSION(WHD_CD)); ");
-		sql.append("CREATE MEMORY TABLE LAST_PROCESS_ID(LAST_PROCESS_ID VARCHAR2 PRIMARY KEY); ");
+			.append("CREATE INDEX IDX_CUB_TIME ON CUBE(TID_CD, TIME_POSITION); ")//
+			.append("CREATE INDEX IDX_CUB_WHAT ON CUBE(WHD_CD, WHAT_POSITION); ")//
+			.append("CREATE INDEX IDX_MTR_CUB_ID ON METRIC(CUB_ID); ")//
+			.append("CREATE INDEX IDX_MTR_NAME ON METRIC(NAME); ")//
+			.append("CREATE INDEX IDX_MTA_CUB_ID ON META_DATA(CUB_ID); ")//
+			.append("CREATE INDEX IDX_MTA_NAME ON META_DATA(NAME); ")//
+			.append("CREATE INDEX IDX_TDI_PARENT ON TIME_DIMENSION(TID_CD, TID_CD_PARENT); ")//
+			.append("CREATE INDEX IDX_WHD_PARENT ON WHAT_DIMENSION(WHD_CD, WHD_CD_PARENT); ")//
+			.append("CREATE UNIQUE INDEX IDX_CUB_UNIQUE ON CUBE(TID_CD, WHD_CD, TIME_POSITION, WHAT_POSITION); ")//
+			.append("SET DEFAULT_LOCK_TIMEOUT 5000; ")//
+			.toString();
 
-		sql.append("CREATE INDEX IDX_CUB_TIME ON CUBE(TID_CD, TIME_POSITION); ");
-		sql.append("CREATE INDEX IDX_CUB_WHAT ON CUBE(WHD_CD, WHAT_POSITION); ");
-		sql.append("CREATE INDEX IDX_MTR_CUB_ID ON METRIC(CUB_ID); ");
-		sql.append("CREATE INDEX IDX_MTR_NAME ON METRIC(NAME); ");
-		sql.append("CREATE INDEX IDX_MTA_CUB_ID ON META_DATA(CUB_ID); ");
-		sql.append("CREATE INDEX IDX_MTA_NAME ON META_DATA(NAME); ");
-		sql.append("CREATE INDEX IDX_TDI_PARENT ON TIME_DIMENSION(TID_CD, TID_CD_PARENT); ");
-		sql.append("CREATE INDEX IDX_WHD_PARENT ON WHAT_DIMENSION(WHD_CD, WHD_CD_PARENT); ");
-		sql.append("CREATE UNIQUE INDEX IDX_CUB_UNIQUE ON CUBE(TID_CD, WHD_CD, TIME_POSITION, WHAT_POSITION); ");
-		sql.append("SET DEFAULT_LOCK_TIMEOUT 5000; ");
-
-		CREATE_DATABASE_SCRIPT = sql.toString();
-	}
 	//private static final String WHERE_PART_RANGED_CUBE;
 	static {
-		final StringBuilder sql = new StringBuilder();
-		sql.append("and cub.TID_CD = ${timeDimension} ");
-		sql.append("and cub.WHD_CD = ${whatDimension} ");
-		sql.append("and cub.time_position >= ${timePositionMin} ");
-		sql.append("and cub.time_position < ${timePositionMax} ");
-		sql.append("and cub.what_position >= ${whatPositionMin} ");
-		sql.append("and cub.what_position < ${whatPositionMax} ");
+		final StringBuilder sql = new StringBuilder()//
+				.append("and cub.TID_CD = ${timeDimension} ")//
+				.append("and cub.WHD_CD = ${whatDimension} ")//
+				.append("and cub.time_position >= ${timePositionMin} ")//
+				.append("and cub.time_position < ${timePositionMax} ")//
+				.append("and cub.what_position >= ${whatPositionMin} ")//
+				.append("and cub.what_position < ${whatPositionMax} ");
 		//	WHERE_PART_RANGED_CUBE = sql.toString();
 	}
-	private static final String SELECT_CUBE;
-	static {
-		final StringBuilder sql = new StringBuilder();
-		sql.append("select cub.cub_id, cub.time_position, cub.tid_cd, cub.what_position, cub.whd_cd ");
-		sql.append("from CUBE cub ");
-		sql.append("where cub.TID_CD = ${timeDimension} ");
-		sql.append("and cub.WHD_CD = ${whatDimension} ");
-		sql.append("and cub.time_position = ${timePosition} ");
-		sql.append("and cub.what_position = ${whatPosition} ");
-		SELECT_CUBE = sql.toString();
-	}
+	private static final String SELECT_CUBE = new StringBuilder()//
+			.append("select cub.cub_id, cub.time_position, cub.tid_cd, cub.what_position, cub.whd_cd ")//
+			.append("from CUBE cub ")//
+			.append("where cub.TID_CD = ${timeDimension} ")//
+			.append("and cub.WHD_CD = ${whatDimension} ")//
+			.append("and cub.time_position = ${timePosition} ")//
+			.append("and cub.what_position = ${whatPosition} ")//
+			.toString();
 
-	private static final String SELECT_CUBE_LOCKED;
-	static {
-		final StringBuilder sql = new StringBuilder();
-		sql.append(SELECT_CUBE);
-		sql.append("for update ");
-		SELECT_CUBE_LOCKED = sql.toString();
-	}
+	private static final String SELECT_CUBE_LOCKED = new StringBuilder()//
+			.append(SELECT_CUBE)//
+			.append("for update ")//
+			.toString();
 
-	private static final String SELECT_METRICS;
-	static {
-		final StringBuilder sql = new StringBuilder();
-		sql.append("select mtr.name, mtr.count, mtr.min, mtr.max, mtr.sum, mtr.sqr_sum ");
-		sql.append("from METRIC mtr ");
-		sql.append("where mtr.cub_id = ${cubId}; ");
-		SELECT_METRICS = sql.toString();
-	}
+	private static final String SELECT_METRICS = new StringBuilder()//
+			.append("select mtr.name, mtr.count, mtr.min, mtr.max, mtr.sum, mtr.sqr_sum ")//
+			.append("from METRIC mtr ")//
+			.append("where mtr.cub_id = ${cubId}; ")//
+			.toString();
+
 	//	private static final String SELECT_RANGED_METRICS;
 	//	static {
 	//		final StringBuilder sql = new StringBuilder();
@@ -147,14 +135,12 @@ final class CubeStatements {
 	//		sql.append("group by mtr.name; ");
 	//		SELECT_GROUPED_RANGED_METRICS = sql.toString();
 	//	}
-	private static final String SELECT_METADATAS;
-	static {
-		final StringBuilder sql = new StringBuilder();
-		sql.append("select mta.name, mta.value ");
-		sql.append("from META_DATA mta ");
-		sql.append("where mta.cub_id = ${cubId}; ");
-		SELECT_METADATAS = sql.toString();
-	}
+	private static final String SELECT_METADATAS = new StringBuilder()//
+			.append("select mta.name, mta.value ")//
+			.append("from META_DATA mta ")//
+			.append("where mta.cub_id = ${cubId}; ")//
+			.toString();
+
 	//	private static final String SELECT_RANGED_METADATAS;
 	//	static {
 	//		final StringBuilder sql = new StringBuilder();
@@ -273,22 +259,22 @@ final class CubeStatements {
 
 		final StringBuilder cubesSql = new StringBuilder();
 
-		cubesSql.append("select cub.cub_id, cub.time_position, cub.tid_cd, cub.what_position, cub.whd_cd ");
-		cubesSql.append("from CUBE cub ");
-		cubesSql.append("where 1=1 ");
+		cubesSql.append("select cub.cub_id, cub.time_position, cub.tid_cd, cub.what_position, cub.whd_cd ")//
+				.append("from CUBE cub ")//
+				.append("where 1=1 ");
 		appendCubeWherePart(whatPrefixes, params, cubesSql);
 		cubesSql.append("order by cub.time_position, cub.what_position; ");
 		final List<CubeBuilderBean> cubeInfos = SimpleDAO.executeQueryList(cubesSql.toString(), params, CubeBuilderBean.class, connection);
 
 		final List<MetricBuilder> metricBuilders;
 		if (!metricsNames.isEmpty()) {
-			final StringBuilder metricsSql = new StringBuilder();
-			metricsSql.append("select mtr.cub_id, mtr.name, sum(mtr.count) count, min(mtr.min) min, max(mtr.max) max, sum(mtr.sum) sum, sum(mtr.sqr_sum) sqr_sum ");
-			metricsSql.append("from CUBE cub, METRIC mtr ");
-			metricsSql.append("where mtr.cub_id = cub.cub_id ");
+			final StringBuilder metricsSql = new StringBuilder()//
+					.append("select mtr.cub_id, mtr.name, sum(mtr.count) count, min(mtr.min) min, max(mtr.max) max, sum(mtr.sum) sum, sum(mtr.sqr_sum) sqr_sum ")//
+					.append("from CUBE cub, METRIC mtr ")//
+					.append("where mtr.cub_id = cub.cub_id ");
 			appendCubeWherePart(whatPrefixes, params, metricsSql);
-			metricsSql.append("and mtr.name in (${metricList}) ");
-			metricsSql.append("group by mtr.cub_id, mtr.name; ");
+			metricsSql.append("and mtr.name in (${metricList}) ")//
+					.append("group by mtr.cub_id, mtr.name; ");
 			final String preparedMetricsSql = addMultiValuedField("metricList", metricsNames, params, metricsSql.toString());
 			metricBuilders = SimpleDAO.executeQueryList(preparedMetricsSql, params, MetricBuilder.class, connection);
 		} else {
@@ -296,10 +282,10 @@ final class CubeStatements {
 		}
 		final List<MetaDataBuilder> metaDataBuilders;
 		if (!metaDataNames.isEmpty()) {
-			final StringBuilder metaDatasSql = new StringBuilder();
-			metaDatasSql.append("select distinct mta.cub_id, mta.name, mta.value ");
-			metaDatasSql.append("from CUBE cub, META_DATA mta ");
-			metaDatasSql.append("where mta.cub_id = cub.cub_id ");
+			final StringBuilder metaDatasSql = new StringBuilder()//
+					.append("select distinct mta.cub_id, mta.name, mta.value ")//
+					.append("from CUBE cub, META_DATA mta ")//
+					.append("where mta.cub_id = cub.cub_id ");
 			appendCubeWherePart(whatPrefixes, params, metaDatasSql);
 			metaDatasSql.append("and mta.name in (${metaDataList}) ");
 			metaDatasSql.append("order by mta.cub_id, mta.name; ");
@@ -313,14 +299,13 @@ final class CubeStatements {
 			final CubeBuilder cubeBuilder = cubeInfo.build();
 			cubeBuilderIndex.put(cubeInfo.getCubId(), cubeBuilder);
 		}
-		CubeBuilder cubeBuilder;
 		for (final MetricBuilder metricBuilder : metricBuilders) {
-			cubeBuilder = cubeBuilderIndex.get(metricBuilder.getCubId());
-			cubeBuilder.withMetric(metricBuilder.build());
+			cubeBuilderIndex.get(metricBuilder.getCubId())//
+					.withMetric(metricBuilder.build());
 		}
 		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
-			cubeBuilder = cubeBuilderIndex.get(metaDataBuilder.getCubId());
-			cubeBuilder.withMetaData(metaDataBuilder.build());
+			cubeBuilderIndex.get(metaDataBuilder.getCubId())//
+					.withMetaData(metaDataBuilder.build());
 		}
 		final List<Cube> cubes = new ArrayList<Cube>();
 		for (final CubeBuilder cubeBuilderFinal : cubeBuilderIndex.values()) {
@@ -338,25 +323,26 @@ final class CubeStatements {
 
 		final StringBuilder cubesSql = new StringBuilder();
 
-		cubesSql.append("select cub.cub_id, cub.time_position, cub.tid_cd, cub.what_position, cub.whd_cd ");
-		cubesSql.append("from CUBE cub ");
-		cubesSql.append("where 1=1 ");
+		cubesSql.append("select cub.cub_id, cub.time_position, cub.tid_cd, cub.what_position, cub.whd_cd ")//
+				.append("from CUBE cub ")//
+				.append("where 1=1 ");
 		appendCubeWherePart(Collections.<String> emptyList(), params, cubesSql);
 		cubesSql.append(" order by cub.time_position, cub.what_position; ");
 		final List<CubeBuilderBean> cubeInfos = SimpleDAO.executeQueryList(cubesSql.toString(), params, CubeBuilderBean.class, connection);
 
-		final StringBuilder metricsSql = new StringBuilder();
-		metricsSql.append("select mtr.cub_id, mtr.name, sum(mtr.count) count, min(mtr.min) min, max(mtr.max) max, sum(mtr.sum) sum, sum(mtr.sqr_sum) sqr_sum ");
-		metricsSql.append("from CUBE cub, METRIC mtr ");
-		metricsSql.append("where mtr.cub_id = cub.cub_id ");
+		final StringBuilder metricsSql = new StringBuilder()//
+				.append("select mtr.cub_id, mtr.name, sum(mtr.count) count, min(mtr.min) min, max(mtr.max) max, sum(mtr.sum) sum, sum(mtr.sqr_sum) sqr_sum ")//
+				.append("from CUBE cub, METRIC mtr ")//
+				.append("where mtr.cub_id = cub.cub_id ");
+
 		appendCubeWherePart(Collections.<String> emptyList(), params, metricsSql);
 		metricsSql.append(" group by mtr.cub_id, mtr.name; ");
 		final List<MetricBuilder> metricBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, MetricBuilder.class, connection);
 
-		final StringBuilder metaDatasSql = new StringBuilder();
-		metaDatasSql.append("select distinct mta.cub_id, mta.name, mta.value ");
-		metaDatasSql.append("from CUBE cub, META_DATA mta ");
-		metaDatasSql.append("where mta.cub_id = cub.cub_id ");
+		final StringBuilder metaDatasSql = new StringBuilder()//
+				.append("select distinct mta.cub_id, mta.name, mta.value ")//
+				.append("from CUBE cub, META_DATA mta ")//
+				.append("where mta.cub_id = cub.cub_id ");
 		appendCubeWherePart(Collections.<String> emptyList(), params, metaDatasSql);
 		metaDatasSql.append(" order by mta.cub_id, mta.name; ");
 		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, MetaDataBuilder.class, connection);
@@ -366,14 +352,13 @@ final class CubeStatements {
 			final CubeBuilder cubeBuilder = cubeInfo.build();
 			cubeBuilderIndex.put(cubeInfo.getCubId(), cubeBuilder);
 		}
-		CubeBuilder cubeBuilder;
 		for (final MetricBuilder metricBuilder : metricBuilders) {
-			cubeBuilder = cubeBuilderIndex.get(metricBuilder.getCubId());
-			cubeBuilder.withMetric(metricBuilder.build());
+			cubeBuilderIndex.get(metricBuilder.getCubId())//
+					.withMetric(metricBuilder.build());
 		}
 		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
-			cubeBuilder = cubeBuilderIndex.get(metaDataBuilder.getCubId());
-			cubeBuilder.withMetaData(metaDataBuilder.build());
+			cubeBuilderIndex.get(metaDataBuilder.getCubId())//
+					.withMetaData(metaDataBuilder.build());
 		}
 		final List<Cube> cubes = new ArrayList<Cube>();
 		for (final CubeBuilder cubeBuilderFinal : cubeBuilderIndex.values()) {
@@ -383,10 +368,10 @@ final class CubeStatements {
 	}
 
 	private void appendCubeWherePart(final List<String> whatPrefixes, final PlainBean params, final StringBuilder sql) {
-		sql.append("and cub.TID_CD = ${timeDimension} ");
-		sql.append("and cub.WHD_CD = ${whatDimension} ");
-		sql.append("and cub.time_position >= ${timePositionMin} ");
-		sql.append("and cub.time_position < ${timePositionMax} ");
+		sql.append("and cub.TID_CD = ${timeDimension} ")//
+				.append("and cub.WHD_CD = ${whatDimension} ")//
+				.append("and cub.time_position >= ${timePositionMin} ")//
+				.append("and cub.time_position < ${timePositionMax} ");
 
 		if (!whatPrefixes.isEmpty()) {
 			sql.append("and (");
@@ -394,10 +379,10 @@ final class CubeStatements {
 			for (int i = 0; i < whatPrefixes.size(); i++) {
 				final String whatPrefixName = "whatPrefix" + i;
 				final String whatPrefixValue = whatPrefixes.get(i);
-				sql.append(sep);
-				sql.append("cub.what_position like ${");
-				sql.append(whatPrefixName);
-				sql.append("} || '%' ");
+				sql.append(sep)//
+						.append("cub.what_position like ${")//
+						.append(whatPrefixName)//
+						.append("} || '%' ");
 				params.set(whatPrefixName, whatPrefixValue);
 				sep = " or ";
 			}
@@ -489,9 +474,9 @@ final class CubeStatements {
 
 		final StringBuilder cubesSql = new StringBuilder();
 
-		cubesSql.append("select distinct cub.time_position, cub.tid_cd ");
-		cubesSql.append("from CUBE cub ");
-		cubesSql.append("where 1=1 ");
+		cubesSql.append("select distinct cub.time_position, cub.tid_cd ")//
+				.append("from CUBE cub ")//
+				.append("where 1=1 ");
 		appendCubeWherePart(Collections.<String> emptyList(), params, cubesSql);
 		cubesSql.append("order by cub.time_position; ");
 		final List<TimePositionBuilderBean> timePositionBuilders = SimpleDAO.executeQueryList(cubesSql.toString(), params, TimePositionBuilderBean.class, connection);
@@ -510,11 +495,10 @@ final class CubeStatements {
 		params.set("timePositionMin", timeMin);
 		params.set("timePositionMax", timeMax);
 
-		final StringBuilder cubesSql = new StringBuilder();
-
-		cubesSql.append("select distinct cub.what_position, cub.whd_cd ");
-		cubesSql.append("from CUBE cub ");
-		cubesSql.append("where 1=1 ");
+		final StringBuilder cubesSql = new StringBuilder()//
+				.append("select distinct cub.what_position, cub.whd_cd ")//
+				.append("from CUBE cub ")//
+				.append("where 1=1 ");
 		appendCubeWherePart(whatPrefixes, params, cubesSql);
 		cubesSql.append("order by cub.what_position; ");
 		final List<WhatPositionBuilderBean> whatPositionBuilders = SimpleDAO.executeQueryList(cubesSql.toString(), params, WhatPositionBuilderBean.class, connection);
@@ -533,18 +517,18 @@ final class CubeStatements {
 		params.set("timePositionMin", timeMin);
 		params.set("timePositionMax", timeMax);
 
-		final StringBuilder metricsSql = new StringBuilder();
-		metricsSql.append("select distinct mtr.name ");
-		metricsSql.append("from CUBE cub, METRIC mtr ");
-		metricsSql.append("where mtr.cub_id = cub.cub_id ");
+		final StringBuilder metricsSql = new StringBuilder()//
+				.append("select distinct mtr.name ")//
+				.append("from CUBE cub, METRIC mtr ")//
+				.append("where mtr.cub_id = cub.cub_id ");
 		appendCubeWherePart(whatPrefixes, params, metricsSql);
 		metricsSql.append(" order by mtr.name; ");
 		final List<DataKeyBuilderBean> metricsBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, DataKeyBuilderBean.class, connection);
 
-		final StringBuilder metaDatasSql = new StringBuilder();
-		metaDatasSql.append("select distinct mta.name ");
-		metaDatasSql.append("from CUBE cub, META_DATA mta ");
-		metaDatasSql.append("where mta.cub_id = cub.cub_id ");
+		final StringBuilder metaDatasSql = new StringBuilder()//
+				.append("select distinct mta.name ")//
+				.append("from CUBE cub, META_DATA mta ")//
+				.append("where mta.cub_id = cub.cub_id ");
 		appendCubeWherePart(whatPrefixes, params, metaDatasSql);
 		metaDatasSql.append(" order by mta.name; ");
 		final List<DataKeyBuilderBean> metaDatasBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, DataKeyBuilderBean.class, connection);
