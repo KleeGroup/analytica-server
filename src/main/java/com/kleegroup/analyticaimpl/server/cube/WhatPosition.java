@@ -23,38 +23,33 @@ import com.kleegroup.analytica.server.data.WhatDimension;
  * @author npiedeloup
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class WhatPosition extends Identity {
-	private final WhatDimension whatDimension;
+public final class WhatPosition extends Identity implements Position<WhatDimension, WhatPosition> {
+	private final WhatDimension dimension;
 	private final String what;
 
 	public WhatPosition(final String fullName, final WhatDimension whatDimension) {
 		super("What:[" + whatDimension.name() + "]" + whatDimension.reduce(fullName));
 		//---------------------------------------------------------------------
-		this.whatDimension = whatDimension;
+		this.dimension = whatDimension;
 		what = whatDimension.reduce(fullName);
 	}
 
+	/** {@inheritDoc} */
 	public WhatPosition drillUp() {
-		final WhatDimension upWhatDimension = whatDimension.drillUp();
+		final WhatDimension upWhatDimension = dimension.drillUp();
 		return upWhatDimension != null ? new WhatPosition(what, upWhatDimension) : null;
 	}
 
+	/** {@inheritDoc} */
 	public WhatDimension getDimension() {
-		return whatDimension;
+		return dimension;
 	}
 
 	public String getValue() {
 		return what;
 	}
 
-	/**
-	 * Vérifie si la position est contenue dans une autre autre.
-	 * Une position A est contenue dans une position B  
-	 * Si A = B
-	 * Si B peut être obtenu par drillUp successifs sur A.
-	 * @param otherTime
-	 * @return
-	 */
+	/** {@inheritDoc} */
 	public boolean isIn(final WhatPosition otherWhat) {
 		if (this.equals(otherWhat)) {
 			return true;

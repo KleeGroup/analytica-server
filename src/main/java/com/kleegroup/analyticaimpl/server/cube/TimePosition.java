@@ -25,39 +25,34 @@ import com.kleegroup.analytica.server.data.TimeDimension;
  * @author npiedeloup
  * @version $Id: TimePosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class TimePosition extends Identity {
-	private final TimeDimension timeDimension;
+public final class TimePosition extends Identity implements Position<TimeDimension, TimePosition> {
+	private final TimeDimension dimension;
 	private final Date date;
 
 	public TimePosition(final Date date, final TimeDimension timeDimension) {
 		super("Time:[" + timeDimension.name() + "]" + timeDimension.reduce(date).getTime());
 		//Assertion.notNull(timeDimension); inutil
 		//---------------------------------------------------------------------
-		this.timeDimension = timeDimension;
+		this.dimension = timeDimension;
 		this.date = timeDimension.reduce(date);
 	}
 
+	/** {@inheritDoc} */
 	public TimePosition drillUp() {
-		final TimeDimension upTimeDimension = timeDimension.drillUp();
+		final TimeDimension upTimeDimension = dimension.drillUp();
 		return upTimeDimension != null ? new TimePosition(date, upTimeDimension) : null;
 	}
 
+	/** {@inheritDoc} */
 	public TimeDimension getDimension() {
-		return timeDimension;
+		return dimension;
 	}
 
 	public Date getValue() {
 		return date;
 	}
 
-	/**
-	 * Vérifie si la position est contenue dans une autre autre.
-	 * Une position A est contenue dans une position B  
-	 * Si A = B
-	 * Si B peut être obtenu par drillUp successifs sur A.
-	 * @param otherTime
-	 * @return
-	 */
+	/** {@inheritDoc} */
 	public boolean isIn(final TimePosition otherTime) {
 		if (this.equals(otherTime)) {
 			return true;

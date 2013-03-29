@@ -23,10 +23,10 @@ import kasper.kernel.util.Assertion;
 /**
  * Niveaux global, Module, SimpleName ou fullName de la dimension hiérarchique What.
  *
- * @author npiedeloup
+ * @author npiedeloup, pchretien
  * @version $Id: WhatDimension.java,v 1.2 2012/04/11 15:52:24 npiedeloup Exp $
  */
-public enum WhatDimension {
+public enum WhatDimension implements Dimension<WhatDimension> {
 	/**
 	 * Global.
 	 */
@@ -60,23 +60,17 @@ public enum WhatDimension {
 		this.up = up;
 	}
 
-	/**
-	 * @return Nom de l'axe
-	 */
+	/** {@inheritDoc} */
 	public String getLabel() {
 		return name().toLowerCase();
 	}
 
-	/**
-	 * @return Niveau supérieur ou null.
-	 */
+	/** {@inheritDoc} */
 	public WhatDimension drillUp() {
 		return up;
 	}
 
-	/**
-	 * @return Niveau inférieur ou null.
-	 */
+	/** {@inheritDoc} */
 	public WhatDimension drillDown() {
 		switch (this) {
 			case Global:

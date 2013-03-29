@@ -29,7 +29,7 @@ import kasper.kernel.util.Assertion;
  * @author pchretien
  * @version $Id: TimeDimension.java,v 1.3 2012/10/16 16:25:22 pchretien Exp $
  */
-public enum TimeDimension {
+public enum TimeDimension implements Dimension<TimeDimension> {
 	/**
 	 * Année.
 	 */
@@ -61,23 +61,17 @@ public enum TimeDimension {
 		this.up = up;
 	}
 
-	/**
-	 * @return Nom de l'axe
-	 */
+	/** {@inheritDoc} */
 	public String getLabel() {
 		return name().toLowerCase();
 	}
 
-	/**
-	 * @return Niveau supérieur ou null.
-	 */
+	/** {@inheritDoc} */
 	public TimeDimension drillUp() {
 		return up;
 	}
 
-	/**
-	 * @return Niveau inférieur ou null.
-	 */
+	/** {@inheritDoc} */
 	public TimeDimension drillDown() {
 		switch (this) {
 			case Year:
