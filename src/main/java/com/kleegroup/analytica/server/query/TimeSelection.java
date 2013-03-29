@@ -30,7 +30,7 @@ public final class TimeSelection implements Selection<TimeDimension> {
 	private final Date maxDate;
 	private final TimeDimension dimension;
 
-	public TimeSelection(final Date minDate, final Date maxDate, final TimeDimension dimension) {
+	public TimeSelection(final TimeDimension dimension, final Date minDate, final Date maxDate) {
 		Assertion.notNull(minDate);
 		Assertion.notNull(maxDate);
 		Assertion.precondition(minDate.before(maxDate), "la date min doit être inférieure à la date max");

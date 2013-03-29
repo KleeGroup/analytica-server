@@ -241,7 +241,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		Date currentMaxDate;
 		for (Date currentMinDate = timeSelection.getMinValue(); currentMinDate.before(timeSelection.getMaxValue()); currentMinDate = currentMaxDate) {
 			currentMaxDate = new Date(currentMinDate.getTime() + timeStepMillis);
-			final TimeSelection newTimeSelection = new TimeSelection(currentMinDate, currentMaxDate, subTimeDimension);
+			final TimeSelection newTimeSelection = new TimeSelection(subTimeDimension, currentMinDate, currentMaxDate);
 			result.add(newTimeSelection);
 		}
 		return result;

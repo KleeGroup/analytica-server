@@ -42,10 +42,10 @@ import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
 import com.kleegroup.analytica.server.data.DataType;
-import com.kleegroup.analytica.server.data.TimeDimension;
-import com.kleegroup.analytica.server.data.TimeSelection;
-import com.kleegroup.analytica.server.data.WhatDimension;
-import com.kleegroup.analytica.server.data.WhatSelection;
+import com.kleegroup.analytica.server.query.TimeDimension;
+import com.kleegroup.analytica.server.query.TimeSelection;
+import com.kleegroup.analytica.server.query.WhatDimension;
+import com.kleegroup.analytica.server.query.WhatSelection;
 
 /**
  * Cas de Test JUNIT de l'API Analytics.
@@ -208,7 +208,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder2.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + "TEST_MEAN3");
 		serverManager.store50NextProcessesAsCube();
 		final List<Data> datas = serverManager.getData(timeSelection, whatSelection, asList(new DataKey(TEST_MEAN_VALUE, DataType.mean)));
@@ -239,7 +239,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder5.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.SimpleName, "/TEST_WHAT_SELECTION1/Process1", "/TEST_WHAT_SELECTION1/Process2");
 		serverManager.store50NextProcessesAsCube();
 		final List<Data> datas = serverManager.getData(timeSelection, whatSelection, asList(new DataKey(TEST_MEAN_VALUE, DataType.mean)));
@@ -261,7 +261,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder2.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + "TEST_META_DATA3");
 
 		serverManager.store50NextProcessesAsCube();
@@ -291,7 +291,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder4.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + "TEST_MEAN4");
 		final List<DataKey> metrics = asList(new DataKey(TEST_MEAN_VALUE, DataType.mean), new DataKey(TEST_MEAN_VALUE, DataType.max), new DataKey(TEST_MEAN_VALUE, DataType.min), new DataKey(TEST_MEAN_VALUE, DataType.count), new DataKey(TEST_MEAN_VALUE, DataType.stdDev));
 		serverManager.store50NextProcessesAsCube();
@@ -325,7 +325,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder4.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.FullName, WhatDimension.SEPARATOR + "TEST_MEAN5");
 		final List<DataKey> metrics = asList(new DataKey(TEST_MEAN_VALUE, DataType.mean), new DataKey(TEST_MEAN_VALUE, DataType.count));
 		serverManager.store50NextProcessesAsCube();
@@ -363,7 +363,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.push(kProcessBuilder4.build());
 
 		//---------------------------------------------------------------------
-		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.FullName, WhatDimension.SEPARATOR + "TEST_MEAN6");
 		final List<DataKey> metrics = asList(new DataKey(TEST_MEAN_VALUE, DataType.mean), new DataKey(TEST_MEAN_VALUE, DataType.count));
 		serverManager.store50NextProcessesAsCube();
@@ -374,7 +374,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	}
 
 	private List<Data> getCubeToday(final String module, final DataKey... metrics) {
-		final TimeSelection timeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Minute);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + module);
 		serverManager.store50NextProcessesAsCube();
 		final List<Data> datas = serverManager.getData(timeSelection, whatSelection, asList(metrics));
@@ -402,7 +402,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	}
 
 	private void printDatas(final String... metrics) {
-		final TimeSelection timeSelection = new TimeSelection(new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000), TimeDimension.Day);
+		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Day, new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.SimpleName, "/");
 		final List<DataKey> dataKeys = new ArrayList<DataKey>(metrics.length);
 		for (final String metric : metrics) {
