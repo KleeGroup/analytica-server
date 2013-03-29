@@ -49,28 +49,7 @@ public final class CubeKey extends Identity {
 		if (equals(key)) {
 			return true;
 		}
-		return isInTime(key.timePosition) && isInWhat(key.whatPosition);
+		return timePosition.isIn(key.timePosition) && whatPosition.isIn(key.whatPosition);
 	}
 
-	private boolean isInTime(final TimePosition otherTime) {
-		if (timePosition.equals(otherTime)) {
-			return true;
-		}
-		TimePosition upperTime = timePosition.drillUp();
-		while (upperTime != null && !upperTime.equals(otherTime)) {
-			upperTime = upperTime.drillUp();
-		}
-		return otherTime.equals(upperTime);
-	}
-
-	private boolean isInWhat(final WhatPosition otherWhat) {
-		if (whatPosition.equals(otherWhat)) {
-			return true;
-		}
-		WhatPosition upperWhat = whatPosition.drillUp();
-		while (upperWhat != null && !upperWhat.equals(otherWhat)) {
-			upperWhat = upperWhat.drillUp();
-		}
-		return otherWhat.equals(upperWhat);
-	}
 }

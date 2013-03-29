@@ -25,7 +25,7 @@ import java.util.Map;
 import kasper.kernel.util.Assertion;
 
 /**
- * @author npiedeloup
+ * @author npiedeloup, pchretien
  * @version $Id: Cube.java,v 1.6 2012/10/16 13:34:49 pchretien Exp $
  */
 public final class Cube {
@@ -81,7 +81,7 @@ public final class Cube {
 		final Map<String, Metric> indexedList = new LinkedHashMap<String, Metric>(metrics.size());
 		for (final Metric metric : metrics) {
 			final Object old = indexedList.put(metric.getName(), metric);
-			Assertion.invariant(old == null, "La liste de Metric ne doit pas contenir de doublon");
+			Assertion.isNull(old, "La liste de Metric ne doit pas contenir de doublon");
 		}
 		return indexedList;
 	}

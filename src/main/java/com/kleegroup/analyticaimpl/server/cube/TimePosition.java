@@ -49,4 +49,23 @@ public final class TimePosition extends Identity {
 	public Date getValue() {
 		return date;
 	}
+
+	/**
+	 * Vérifie si la position est contenue dans une autre autre.
+	 * Une position A est contenue dans une position B  
+	 * Si A = B
+	 * Si B peut être obtenu par drillUp successifs sur A.
+	 * @param otherTime
+	 * @return
+	 */
+	public boolean isIn(final TimePosition otherTime) {
+		if (this.equals(otherTime)) {
+			return true;
+		}
+		TimePosition upperTime = drillUp();
+		while (upperTime != null && !upperTime.equals(otherTime)) {
+			upperTime = upperTime.drillUp();
+		}
+		return otherTime.equals(upperTime);
+	}
 }

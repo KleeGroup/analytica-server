@@ -46,4 +46,23 @@ public final class WhatPosition extends Identity {
 	public String getValue() {
 		return what;
 	}
+
+	/**
+	 * Vérifie si la position est contenue dans une autre autre.
+	 * Une position A est contenue dans une position B  
+	 * Si A = B
+	 * Si B peut être obtenu par drillUp successifs sur A.
+	 * @param otherTime
+	 * @return
+	 */
+	public boolean isIn(final WhatPosition otherWhat) {
+		if (this.equals(otherWhat)) {
+			return true;
+		}
+		WhatPosition upperWhat = this.drillUp();
+		while (upperWhat != null && !upperWhat.equals(otherWhat)) {
+			upperWhat = upperWhat.drillUp();
+		}
+		return otherWhat.equals(upperWhat);
+	}
 }
