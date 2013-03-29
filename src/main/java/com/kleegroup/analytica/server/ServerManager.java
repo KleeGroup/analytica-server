@@ -26,8 +26,8 @@ import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
-import com.kleegroup.analytica.server.data.TimeSelection;
-import com.kleegroup.analytica.server.data.WhatSelection;
+import com.kleegroup.analytica.server.query.TimeSelection;
+import com.kleegroup.analytica.server.query.WhatSelection;
 
 /**
  * Serveur de Analytica.

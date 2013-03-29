@@ -1,6 +1,6 @@
 package com.kleegroup.analyticaimpl.server.cube;
 
-import com.kleegroup.analytica.server.data.Dimension;
+import com.kleegroup.analytica.server.query.Dimension;
 
 /**
  * Une position est définie sur une dimension (ou axe).

@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.server.cube;
 
-import com.kleegroup.analytica.server.data.WhatDimension;
+import com.kleegroup.analytica.server.query.WhatDimension;
 
 /**
  * @author npiedeloup

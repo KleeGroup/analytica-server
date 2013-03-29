@@ -19,7 +19,7 @@ package com.kleegroup.analyticaimpl.server.cube;
 
 import java.util.Date;
 
-import com.kleegroup.analytica.server.data.TimeDimension;
+import com.kleegroup.analytica.server.query.TimeDimension;
 
 /**
  * @author npiedeloup

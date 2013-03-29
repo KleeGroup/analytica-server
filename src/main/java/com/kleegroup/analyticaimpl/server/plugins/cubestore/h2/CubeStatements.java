@@ -32,8 +32,8 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataType;
-import com.kleegroup.analytica.server.data.TimeDimension;
-import com.kleegroup.analytica.server.data.WhatDimension;
+import com.kleegroup.analytica.server.query.TimeDimension;
+import com.kleegroup.analytica.server.query.WhatDimension;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
 import com.kleegroup.analyticaimpl.server.cube.CubeKey;

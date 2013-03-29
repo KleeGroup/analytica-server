@@ -21,8 +21,8 @@ import java.util.Date;
 
 import kasper.kernel.lang.Builder;
 
-import com.kleegroup.analytica.server.data.TimeDimension;
-import com.kleegroup.analytica.server.data.WhatDimension;
+import com.kleegroup.analytica.server.query.TimeDimension;
+import com.kleegroup.analytica.server.query.WhatDimension;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
 import com.kleegroup.analyticaimpl.server.cube.CubeKey;
 import com.kleegroup.analyticaimpl.server.cube.TimePosition;

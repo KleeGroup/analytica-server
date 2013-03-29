@@ -39,10 +39,10 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataType;
-import com.kleegroup.analytica.server.data.TimeDimension;
-import com.kleegroup.analytica.server.data.TimeSelection;
-import com.kleegroup.analytica.server.data.WhatDimension;
-import com.kleegroup.analytica.server.data.WhatSelection;
+import com.kleegroup.analytica.server.query.TimeDimension;
+import com.kleegroup.analytica.server.query.TimeSelection;
+import com.kleegroup.analytica.server.query.WhatDimension;
+import com.kleegroup.analytica.server.query.WhatSelection;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;

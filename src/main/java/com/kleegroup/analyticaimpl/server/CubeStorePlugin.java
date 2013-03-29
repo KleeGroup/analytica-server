@@ -22,8 +22,8 @@ import java.util.List;
 import kasper.kernel.manager.Plugin;
 
 import com.kleegroup.analytica.server.data.DataKey;
-import com.kleegroup.analytica.server.data.TimeSelection;
-import com.kleegroup.analytica.server.data.WhatSelection;
+import com.kleegroup.analytica.server.query.TimeSelection;
+import com.kleegroup.analytica.server.query.WhatSelection;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.TimePosition;
 import com.kleegroup.analyticaimpl.server.cube.WhatPosition;

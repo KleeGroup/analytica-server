@@ -101,8 +101,8 @@ public final class Cube {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append(key.id()).append("{\n\tMetrics:");
+		final StringBuilder sb = new StringBuilder()//
+				.append(key.id()).append("{\n\tMetrics:");
 		for (final Metric metric : getMetrics()) {
 			sb.append("\n\t\t- ").append(metric.getName()).append(" = ").append(metric.get(Metric.F_MEAN));
 		}
