@@ -34,7 +34,7 @@ import kasper.kernel.util.Assertion;
  * @version $Id: CubeBuilder.java,v 1.6 2012/11/08 17:06:41 pchretien Exp $
  */
 public final class CubeBuilder implements Builder<Cube> {
-	private final CubeKey key;
+	private final CubePosition key;
 	private final Map<String, MetricBuilder> metrics = new HashMap<String, MetricBuilder>();
 	private final Set<MetaData> metaDatas = new HashSet<MetaData>(500);
 
@@ -42,7 +42,7 @@ public final class CubeBuilder implements Builder<Cube> {
 	 * Constructeur.
 	 * @param cubeKey Identifiant du cube
 	 */
-	public CubeBuilder(CubeKey key) {
+	public CubeBuilder(CubePosition key) {
 		Assertion.notNull(key);
 		//---------------------------------------------------------------------
 		this.key = key;
@@ -83,7 +83,7 @@ public final class CubeBuilder implements Builder<Cube> {
 	public CubeBuilder withCube(final Cube cube) {
 		Assertion.notNull(cube);
 		//Assertion util mais 50% des perfs !!
-		Assertion.precondition(cube.getKey().isIn(key), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", key, cube.getKey());
+		Assertion.precondition(isIn(cube.getKey(), key), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", key, cube.getKey());
 		//---------------------------------------------------------------------
 		for (final Metric metric : cube.getMetrics()) {
 			withMetric(metric);
@@ -92,6 +92,18 @@ public final class CubeBuilder implements Builder<Cube> {
 			withMetaData(metaData);
 		}
 		return this;
+	}
+
+	/**
+	 * Vérifie l'inclusion de clé, util pour controller le merge de Cube.
+	 * @param key Clé dont on veut vérifier l'inclusion
+	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
+	 */
+	private boolean isIn(final CubePosition key1, final CubePosition key2) {
+		if (key1.equals(key)) {
+			return true;
+		}
+		return key1.getTimePosition().isIn(key2.getTimePosition()) && key1.getWhatPosition().isIn(key.getWhatPosition());
 	}
 
 	/** 

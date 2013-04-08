@@ -18,14 +18,16 @@
 package com.kleegroup.analyticaimpl.server.cube;
 
 /**
- * @author npiedeloup
+ * Position (clé) du cube dans l'espace multidimensionnel. 
+ * 
+ * @author npiedeloup, pchretien
  * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class CubeKey extends Identity {
+public final class CubePosition extends Identity {
 	private final TimePosition timePosition;
 	private final WhatPosition whatPosition;
 
-	public CubeKey(final TimePosition timePosition, final WhatPosition whatPosition) {
+	public CubePosition(final TimePosition timePosition, final WhatPosition whatPosition) {
 		super("cube:[" + whatPosition.id() + ";" + timePosition.id() + "]");
 		//---------------------------------------------------------------------
 		this.timePosition = timePosition;
@@ -39,17 +41,4 @@ public final class CubeKey extends Identity {
 	public WhatPosition getWhatPosition() {
 		return whatPosition;
 	}
-
-	/**
-	 * Vérifier l'inclusion de clé, util pour controller le merge de Cube.
-	 * @param key Clé dont on veut vérifier l'inclusion
-	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
-	 */
-	boolean isIn(final CubeKey key) {
-		if (equals(key)) {
-			return true;
-		}
-		return timePosition.isIn(key.timePosition) && whatPosition.isIn(key.whatPosition);
-	}
-
 }

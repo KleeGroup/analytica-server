@@ -21,7 +21,7 @@ import java.util.Comparator;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analyticaimpl.server.cube.CubeKey;
+import com.kleegroup.analyticaimpl.server.cube.CubePosition;
 import com.kleegroup.analyticaimpl.server.cube.TimePosition;
 import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
 
@@ -29,9 +29,9 @@ import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
  * @author npiedeloup
  * @version $Id: CubeKeyComparator.java,v 1.5 2012/04/17 09:11:33 pchretien Exp $
  */
-final class CubeKeyComparator implements Comparator<CubeKey> {
+final class CubeKeyComparator implements Comparator<CubePosition> {
 
-	public int compare(final CubeKey o1, final CubeKey o2) {
+	public int compare(final CubePosition o1, final CubePosition o2) {
 		final WhatPosition what1 = o1.getWhatPosition();
 		final WhatPosition what2 = o2.getWhatPosition();
 		Assertion.invariant(what1.getDimension().equals(what2.getDimension()), "On ne compare pas des dimenssions différentes : {0} != {1}", what1, what2);

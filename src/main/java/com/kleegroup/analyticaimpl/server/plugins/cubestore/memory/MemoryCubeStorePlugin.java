@@ -41,7 +41,7 @@ import com.kleegroup.analytica.server.query.WhatSelection;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubeKey;
+import com.kleegroup.analyticaimpl.server.cube.CubePosition;
 import com.kleegroup.analyticaimpl.server.cube.MetaData;
 import com.kleegroup.analyticaimpl.server.cube.Metric;
 import com.kleegroup.analyticaimpl.server.cube.TimePosition;
@@ -57,8 +57,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//ainsi l'espace de recherche est [prefix, prefix+(char(154))]
 	//cette technique permet d'utiliser le subList plutot qu'un startwith très couteux
 	private final static char LAST_CHAR = 254;
-	private final Comparator<CubeKey> cubeKeyComparator = new CubeKeyComparator();
-	private final Map<TimeDimension, Map<WhatDimension, SortedMap<CubeKey, Cube>>> store;
+	private final Comparator<CubePosition> cubeKeyComparator = new CubeKeyComparator();
+	private final Map<TimeDimension, Map<WhatDimension, SortedMap<CubePosition, Cube>>> store;
 	private String lastProcessIdStored;
 
 	/**
@@ -66,12 +66,12 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	 */
 	public MemoryCubeStorePlugin() {
 		super();
-		store = new HashMap<TimeDimension, Map<WhatDimension, SortedMap<CubeKey, Cube>>>();
+		store = new HashMap<TimeDimension, Map<WhatDimension, SortedMap<CubePosition, Cube>>>();
 		for (final TimeDimension timeDimension : TimeDimension.values()) {
-			final Map<WhatDimension, SortedMap<CubeKey, Cube>> timeStore = new HashMap<WhatDimension, SortedMap<CubeKey, Cube>>();
+			final Map<WhatDimension, SortedMap<CubePosition, Cube>> timeStore = new HashMap<WhatDimension, SortedMap<CubePosition, Cube>>();
 			store.put(timeDimension, timeStore);
 			for (final WhatDimension whatDimension : WhatDimension.values()) {
-				final SortedMap<CubeKey, Cube> whatStore = new TreeMap<CubeKey, Cube>(cubeKeyComparator);
+				final SortedMap<CubePosition, Cube> whatStore = new TreeMap<CubePosition, Cube>(cubeKeyComparator);
 				timeStore.put(whatDimension, whatStore);
 			}
 		}
@@ -86,7 +86,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		while (timePosition != null) {
 			WhatPosition whatPosition = lowLevelCube.getKey().getWhatPosition();
 			while (whatPosition != null) {
-				final CubeKey storedCubeKey = new CubeKey(timePosition, whatPosition);
+				final CubePosition storedCubeKey = new CubePosition(timePosition, whatPosition);
 				store(lowLevelCube, storedCubeKey);
 				//On remonte what
 				whatPosition = whatPosition.drillUp();
@@ -96,7 +96,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		}
 	}
 
-	private void store(final Cube cube, final CubeKey cubeKey) {
+	private void store(final Cube cube, final CubePosition cubeKey) {
 		final CubeBuilder cubeBuilder = new CubeBuilder(cubeKey);
 		cubeBuilder.withCube(cube);
 
@@ -107,16 +107,16 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		loadStore(cubeKey).put(cubeKey, cubeBuilder.build());
 	}
 
-	private SortedMap<CubeKey, Cube> loadStore(final CubeKey key) {
+	private SortedMap<CubePosition, Cube> loadStore(final CubePosition key) {
 		return store.get(key.getTimePosition().getDimension()).get(key.getWhatPosition().getDimension());
 	}
 
-	private List<Cube> load(final CubeKey fromKey, final CubeKey toKey) {//fromKey inclus, toKey exclus 
+	private List<Cube> load(final CubePosition fromKey, final CubePosition toKey) {//fromKey inclus, toKey exclus 
 		Assertion.precondition(fromKey.getTimePosition().getDimension().equals(toKey.getTimePosition().getDimension()), "La dimension temporelle du from et du to doit être la même from:{1} != to:{0}", fromKey.getTimePosition().getDimension(), toKey.getTimePosition().getDimension());
 		Assertion.precondition(fromKey.getWhatPosition().getDimension().equals(toKey.getWhatPosition().getDimension()), "La dimension sémantique du from et du to doit être la même from:{1} != to:{0}", fromKey.getWhatPosition().getDimension(), toKey.getWhatPosition().getDimension());
 		//---------------------------------------------------------------------
-		final SortedMap<CubeKey, Cube> dimensionStore = loadStore(fromKey);
-		final SortedMap<CubeKey, Cube> subStore = dimensionStore.subMap(fromKey, toKey);
+		final SortedMap<CubePosition, Cube> dimensionStore = loadStore(fromKey);
+		final SortedMap<CubePosition, Cube> subStore = dimensionStore.subMap(fromKey, toKey);
 		final List<Cube> result = new ArrayList<Cube>(subStore.values());
 		return result;
 	}
@@ -132,8 +132,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		for (final String whatValue : whatSelection.getWhatValues()) {
 			final WhatPosition minWhat = new WhatPosition(whatValue, whatSelection.getDimension());
 			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, whatSelection.getDimension());
-			final CubeKey fromKey = new CubeKey(minTimePosition, minWhat);
-			final CubeKey toKey = new CubeKey(maxTimePosition, maxWhat);
+			final CubePosition fromKey = new CubePosition(minTimePosition, minWhat);
+			final CubePosition toKey = new CubePosition(maxTimePosition, maxWhat);
 			allCubes.addAll(load(fromKey, toKey));
 		}
 		//On prepare un index de metric attendu
@@ -149,7 +149,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 		//On aggrege les metrics/meta demandées en fonction des parametres 
 		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, whatSelection.getDimension());
-		final SortedMap<CubeKey, CubeBuilder> cubeBuilderIndex = new TreeMap<CubeKey, CubeBuilder>(cubeKeyComparator);
+		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>(cubeKeyComparator);
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
 			final WhatPosition useWhat = aggregateWhat ? allWhat : cube.getKey().getWhatPosition();
@@ -174,8 +174,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		return cube;
 	}
 
-	private CubeBuilder obtainCubeBuilder(final TimePosition timePosition, final WhatPosition whatPosition, final SortedMap<CubeKey, CubeBuilder> timeIndex) {
-		final CubeKey key = new CubeKey(timePosition, whatPosition);
+	private CubeBuilder obtainCubeBuilder(final TimePosition timePosition, final WhatPosition whatPosition, final SortedMap<CubePosition, CubeBuilder> timeIndex) {
+		final CubePosition key = new CubePosition(timePosition, whatPosition);
 		CubeBuilder cubeBuilder = timeIndex.get(key);
 		if (cubeBuilder == null) {
 			cubeBuilder = new CubeBuilder(key);
@@ -195,8 +195,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 		final WhatPosition minWhat = new WhatPosition("/", WhatDimension.Global);
 		final WhatPosition maxWhat = new WhatPosition("/" + LAST_CHAR, WhatDimension.Global);
-		final CubeKey fromKey = new CubeKey(minTime, minWhat);
-		final CubeKey toKey = new CubeKey(maxTime, maxWhat);
+		final CubePosition fromKey = new CubePosition(minTime, minWhat);
+		final CubePosition toKey = new CubePosition(maxTime, maxWhat);
 		final List<Cube> allCubes = load(fromKey, toKey);
 
 		final SortedSet<TimePosition> result = new TreeSet<TimePosition>();
@@ -220,8 +220,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		for (final String whatValue : whatSelection.getWhatValues()) {
 			final WhatPosition minWhat = new WhatPosition(whatValue, whatDimension);
 			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, whatDimension);
-			final CubeKey fromKey = new CubeKey(minTime, minWhat);
-			final CubeKey toKey = new CubeKey(maxTime, maxWhat);
+			final CubePosition fromKey = new CubePosition(minTime, minWhat);
+			final CubePosition toKey = new CubePosition(maxTime, maxWhat);
 			allCubes.addAll(load(fromKey, toKey));
 		}
 
@@ -243,8 +243,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		for (final String whatValue : whatSelection.getWhatValues()) {
 			final WhatPosition minWhat = new WhatPosition(whatValue, whatDimension);
 			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, whatDimension);
-			final CubeKey fromKey = new CubeKey(minTime, minWhat);
-			final CubeKey toKey = new CubeKey(maxTime, maxWhat);
+			final CubePosition fromKey = new CubePosition(minTime, minWhat);
+			final CubePosition toKey = new CubePosition(maxTime, maxWhat);
 			allCubes.addAll(load(fromKey, toKey));
 		}
 

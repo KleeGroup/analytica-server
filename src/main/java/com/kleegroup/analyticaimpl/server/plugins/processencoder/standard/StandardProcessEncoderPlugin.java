@@ -29,7 +29,7 @@ import com.kleegroup.analytica.server.query.WhatDimension;
 import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubeKey;
+import com.kleegroup.analyticaimpl.server.cube.CubePosition;
 import com.kleegroup.analyticaimpl.server.cube.MetaData;
 import com.kleegroup.analyticaimpl.server.cube.Metric;
 import com.kleegroup.analyticaimpl.server.cube.MetricBuilder;
@@ -96,7 +96,7 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		final String whatTypePositionValue = new WhatPosition(sb.toString(), WhatDimension.Type).getValue().substring(1); //On retire le premier /
 		sb.setLength(0);
 
-		final CubeKey key = new CubeKey(timePosition, whatPosition);
+		final CubePosition key = new CubePosition(timePosition, whatPosition);
 		final CubeBuilder cubeBuilder = new CubeBuilder(key);
 
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {

@@ -36,7 +36,7 @@ import com.kleegroup.analytica.server.query.TimeDimension;
 import com.kleegroup.analytica.server.query.WhatDimension;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubeKey;
+import com.kleegroup.analyticaimpl.server.cube.CubePosition;
 import com.kleegroup.analyticaimpl.server.cube.MetaData;
 import com.kleegroup.analyticaimpl.server.cube.Metric;
 import com.kleegroup.analyticaimpl.server.cube.TimePosition;
@@ -193,7 +193,7 @@ final class CubeStatements {
 	//		return SimpleDAO.executeQueryList(preparedSql, params, MetaDataBuilderBean.class, connection);
 	//	}
 
-	public Cube loadCube(final CubeKey cubeKey, final Connection connection) throws DaoException {
+	public Cube loadCube(final CubePosition cubeKey, final Connection connection) throws DaoException {
 		long time = System.currentTimeMillis();
 		final PlainBean params = new PlainBean();
 		params.set("timeDimension", cubeKey.getTimePosition().getDimension().name());

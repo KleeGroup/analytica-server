@@ -32,12 +32,12 @@ public final class Cube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
-	private final CubeKey key;
+	private final CubePosition key;
 	private final Map<String, Metric> metrics;
 	private final Map<String, Collection<MetaData>> indexedMetadatas;
 	private final Collection<MetaData> allMetaDatas;
 
-	Cube(final CubeKey key, final Collection<Metric> metrics, final Collection<MetaData> metadatas) {
+	Cube(final CubePosition key, final Collection<Metric> metrics, final Collection<MetaData> metadatas) {
 		Assertion.notNull(key);
 		Assertion.notNull(metrics);
 		Assertion.notNull(metadatas);
@@ -48,7 +48,7 @@ public final class Cube {
 		allMetaDatas = metadatas;
 	}
 
-	public CubeKey getKey() {
+	public CubePosition getKey() {
 		return key;
 	}
 

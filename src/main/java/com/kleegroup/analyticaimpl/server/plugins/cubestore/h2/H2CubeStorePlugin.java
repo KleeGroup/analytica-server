@@ -46,7 +46,7 @@ import com.kleegroup.analytica.server.query.WhatSelection;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubeKey;
+import com.kleegroup.analyticaimpl.server.cube.CubePosition;
 import com.kleegroup.analyticaimpl.server.cube.MetaData;
 import com.kleegroup.analyticaimpl.server.cube.Metric;
 import com.kleegroup.analyticaimpl.server.cube.TimePosition;
@@ -65,7 +65,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	private final TicTac tic = new TicTac("CubeStore");
 	private final H2DataBase store;
 	private final CubeStatements statements;
-	private final Map<CubeKey, Cube> naiveCache = new HashMap<CubeKey, Cube>();
+	private final Map<CubePosition, Cube> naiveCache = new HashMap<CubePosition, Cube>();
 
 	private final PriorityQueue<Cube> writeBuffer = new PriorityQueue<Cube>(100, new Comparator<Cube>() {
 		@Override
@@ -75,8 +75,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 			} else if (o2 == null) {
 				return 1;
 			}
-			final CubeKey k1 = o1.getKey();
-			final CubeKey k2 = o2.getKey();
+			final CubePosition k1 = o1.getKey();
+			final CubePosition k2 = o2.getKey();
 			return k1.getTimePosition().getValue().compareTo(k2.getTimePosition().getValue());
 		}
 	});
@@ -117,7 +117,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 				while (timePosition != null) {
 					WhatPosition whatPosition = lowLevelCube.getKey().getWhatPosition();
 					while (whatPosition != null) {
-						final CubeKey storedCubeKey = new CubeKey(timePosition, whatPosition);
+						final CubePosition storedCubeKey = new CubePosition(timePosition, whatPosition);
 						store(lowLevelCube, storedCubeKey, conn);
 						//On remonte what
 						whatPosition = whatPosition.drillUp();
@@ -139,7 +139,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	private long cacheMissNoData = 0;
 	private long writeData = 0;
 
-	private void store(final Cube cube, final CubeKey cubeKey, final Connection conn) throws DaoException {
+	private void store(final Cube cube, final CubePosition cubeKey, final Connection conn) throws DaoException {
 		tic.tic("store");
 		tic.tic("mergeCube");
 		final CubeBuilder cubeBuilder = new CubeBuilder(cubeKey);
@@ -176,7 +176,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		tic.tac("store");
 	}
 
-	private void computeAndStoreCube(final CubeKey cubeKey) throws DaoException {
+	private void computeAndStoreCube(final CubePosition cubeKey) throws DaoException {
 		tic.tic("computeAndStoreCube");
 		//final CubeBuilder cubeBuilder = new CubeBuilder(cubeKey.getTimePosition(), cubeKey.getWhatPosition());
 		List<Cube> allCubes;
@@ -205,7 +205,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 				final WhatPosition newWhat = new WhatPosition(cubeKey.getWhatPosition().getValue(), lowerWhatDimension);
 				for (Date newDate = startDate; newDate.before(timeDimension.getMaxDate(startDate)); newDate = lowerTimeDimension.getMaxDate(newDate)) {
 					final TimePosition newTime = new TimePosition(newDate, lowerTimeDimension);
-					final CubeKey newCubeKey = new CubeKey(newTime, newWhat);
+					final CubePosition newCubeKey = new CubePosition(newTime, newWhat);
 					computeAndStoreCube(newCubeKey);
 				}
 				allCubes = statements.loadCubes(lowerTimeDimension, lowerWhatDimension, startDate, timeDimension.getMaxDate(startDate), connection);
@@ -214,7 +214,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 			}
 			tic.tic("cubeBuilderIndex");
 			//On aggrege les metrics/meta 
-			final SortedMap<CubeKey, CubeBuilder> cubeBuilderIndex = new TreeMap<CubeKey, CubeBuilder>();
+			final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>();
 			for (final Cube cube : allCubes) {
 				final WhatPosition useWhat = new WhatPosition(cube.getKey().getWhatPosition().getValue(), whatDimension);
 				final TimePosition useTime = new TimePosition(cube.getKey().getTimePosition().getValue(), timeDimension);
@@ -301,7 +301,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 						final TimePosition newTime = new TimePosition(newDate, timeSelection.getDimension());
 						for (final String whatValue : whatSelection.getWhatValues()) {
 							final WhatPosition newWhat = new WhatPosition(whatValue, whatSelection.getDimension());
-							final CubeKey newCubeKey = new CubeKey(newTime, newWhat);
+							final CubePosition newCubeKey = new CubePosition(newTime, newWhat);
 							computeAndStoreCube(newCubeKey);
 						}
 					}
@@ -321,7 +321,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		tic.tic("cubeBuilderIndex");
 		//On aggrege les metrics/meta demandées en fonction des parametres 
 		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, whatSelection.getDimension());
-		final SortedMap<CubeKey, CubeBuilder> cubeBuilderIndex = new TreeMap<CubeKey, CubeBuilder>();
+		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>();
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
 			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getKey().getWhatPosition(), whatSelection.getDimension());
@@ -378,8 +378,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		return resultTimePosition;
 	}
 
-	private CubeBuilder obtainCubeBuilder(final TimePosition timePosition, final WhatPosition whatPosition, final SortedMap<CubeKey, CubeBuilder> timeIndex) {
-		final CubeKey key = new CubeKey(timePosition, whatPosition);
+	private CubeBuilder obtainCubeBuilder(final TimePosition timePosition, final WhatPosition whatPosition, final SortedMap<CubePosition, CubeBuilder> timeIndex) {
+		final CubePosition key = new CubePosition(timePosition, whatPosition);
 		CubeBuilder cubeBuilder = timeIndex.get(key);
 		if (cubeBuilder == null) {
 			cubeBuilder = new CubeBuilder(key);

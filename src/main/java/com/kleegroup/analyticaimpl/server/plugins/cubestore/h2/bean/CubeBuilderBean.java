@@ -24,7 +24,7 @@ import kasper.kernel.lang.Builder;
 import com.kleegroup.analytica.server.query.TimeDimension;
 import com.kleegroup.analytica.server.query.WhatDimension;
 import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubeKey;
+import com.kleegroup.analyticaimpl.server.cube.CubePosition;
 import com.kleegroup.analyticaimpl.server.cube.TimePosition;
 import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
 
@@ -47,7 +47,7 @@ public final class CubeBuilderBean implements Builder<CubeBuilder> {
 	public CubeBuilder build() {
 		final TimePosition timePosition = new TimePosition(time, timeDimension);
 		final WhatPosition whatPosition = new WhatPosition(what, whatDimension);
-		CubeKey key = new CubeKey(timePosition, whatPosition);
+		CubePosition key = new CubePosition(timePosition, whatPosition);
 		return new CubeBuilder(key);
 	}
 
