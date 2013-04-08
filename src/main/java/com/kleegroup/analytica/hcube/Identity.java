@@ -15,30 +15,49 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.cube;
+package com.kleegroup.analytica.hcube;
+
+import kasper.kernel.util.Assertion;
 
 /**
- * Position (clé) du cube dans l'espace multidimensionnel. 
- * 
- * @author npiedeloup, pchretien
- * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
+ * @author npiedeloup
+ * @version $Id: Identity.java,v 1.3 2012/10/16 13:52:38 pchretien Exp $
  */
-public final class CubePosition extends Identity {
-	private final TimePosition timePosition;
-	private final WhatPosition whatPosition;
+public abstract class Identity implements Comparable<Identity> {
+	private final String id;
 
-	public CubePosition(final TimePosition timePosition, final WhatPosition whatPosition) {
-		super("cube:[" + whatPosition.id() + ";" + timePosition.id() + "]");
+	public Identity(final String id) {
+		Assertion.notEmpty(id);
 		//---------------------------------------------------------------------
-		this.timePosition = timePosition;
-		this.whatPosition = whatPosition;
+		this.id = id;
 	}
 
-	public TimePosition getTimePosition() {
-		return timePosition;
+	@Override
+	public final int hashCode() {
+		return id.hashCode();
 	}
 
-	public WhatPosition getWhatPosition() {
-		return whatPosition;
+	@Override
+	public final boolean equals(final Object object) {
+		if (object instanceof Identity) {
+			return id.equals(((Identity) object).id());
+		}
+		return false;
 	}
+
+	public final String id() {
+		return id;
+	}
+
+	public int compareTo(final Identity object) {
+		Assertion.notNull(object);
+		//---------------------------------------------------------------------
+		return id.compareTo(object.id());
+	}
+
+	@Override
+	public final String toString() {
+		return id;
+	}
+
 }

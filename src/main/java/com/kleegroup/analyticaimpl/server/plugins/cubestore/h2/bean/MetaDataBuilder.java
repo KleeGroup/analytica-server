@@ -19,7 +19,7 @@ package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
 
 import kasper.kernel.lang.Builder;
 
-import com.kleegroup.analyticaimpl.server.cube.MetaData;
+import com.kleegroup.analytica.hcube.cube.MetaData;
 
 /**
  * Meta-données d'un processus.

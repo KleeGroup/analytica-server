@@ -17,8 +17,8 @@
  */
 package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
 
-import com.kleegroup.analytica.server.query.WhatDimension;
-import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
+import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 
 /**
  * Metric d'un cube.

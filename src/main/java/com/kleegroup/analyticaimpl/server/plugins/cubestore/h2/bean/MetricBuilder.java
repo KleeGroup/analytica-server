@@ -19,7 +19,7 @@ package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
 
 import kasper.kernel.lang.Builder;
 
-import com.kleegroup.analyticaimpl.server.cube.Metric;
+import com.kleegroup.analytica.hcube.cube.Metric;
 
 /**
  * Metric d'un cube.

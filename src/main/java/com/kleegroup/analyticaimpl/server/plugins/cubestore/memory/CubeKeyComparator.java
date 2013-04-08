@@ -21,9 +21,9 @@ import java.util.Comparator;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analyticaimpl.server.cube.CubePosition;
-import com.kleegroup.analyticaimpl.server.cube.TimePosition;
-import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
+import com.kleegroup.analytica.hcube.dimension.CubePosition;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 
 /**
  * @author npiedeloup

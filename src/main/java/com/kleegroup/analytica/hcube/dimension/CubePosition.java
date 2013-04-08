@@ -15,37 +15,32 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.cube;
+package com.kleegroup.analytica.hcube.dimension;
 
-import com.kleegroup.analytica.server.query.WhatDimension;
+import com.kleegroup.analytica.hcube.Identity;
 
 /**
- * @author npiedeloup
- * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
+ * Position (clé) du cube dans l'espace multidimensionnel. 
+ * 
+ * @author npiedeloup, pchretien
+ * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class WhatPosition extends Identity implements Position<WhatDimension, WhatPosition> {
-	private final WhatDimension dimension;
-	private final String what;
+public final class CubePosition extends Identity {
+	private final TimePosition timePosition;
+	private final WhatPosition whatPosition;
 
-	public WhatPosition(final String fullName, final WhatDimension whatDimension) {
-		super("What:[" + whatDimension.name() + "]" + whatDimension.reduce(fullName));
+	public CubePosition(final TimePosition timePosition, final WhatPosition whatPosition) {
+		super("cube:[" + whatPosition.id() + ";" + timePosition.id() + "]");
 		//---------------------------------------------------------------------
-		this.dimension = whatDimension;
-		what = whatDimension.reduce(fullName);
+		this.timePosition = timePosition;
+		this.whatPosition = whatPosition;
 	}
 
-	/** {@inheritDoc} */
-	public WhatPosition drillUp() {
-		final WhatDimension upWhatDimension = dimension.drillUp();
-		return upWhatDimension != null ? new WhatPosition(what, upWhatDimension) : null;
+	public TimePosition getTimePosition() {
+		return timePosition;
 	}
 
-	/** {@inheritDoc} */
-	public WhatDimension getDimension() {
-		return dimension;
-	}
-
-	public String getValue() {
-		return what;
+	public WhatPosition getWhatPosition() {
+		return whatPosition;
 	}
 }

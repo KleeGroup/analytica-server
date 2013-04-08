@@ -1,4 +1,4 @@
-package com.kleegroup.analytica.server.query;
+package com.kleegroup.analytica.hcube.dimension;
 
 /**
  * Une dimension ou axe

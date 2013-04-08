@@ -21,12 +21,12 @@ import java.util.Date;
 
 import kasper.kernel.lang.Builder;
 
-import com.kleegroup.analytica.server.query.TimeDimension;
-import com.kleegroup.analytica.server.query.WhatDimension;
-import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubePosition;
-import com.kleegroup.analyticaimpl.server.cube.TimePosition;
-import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
+import com.kleegroup.analytica.hcube.cube.CubeBuilder;
+import com.kleegroup.analytica.hcube.dimension.CubePosition;
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
+import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 
 /**
  * Key d'un cube.

@@ -21,12 +21,12 @@ import java.util.List;
 
 import kasper.kernel.manager.Plugin;
 
+import com.kleegroup.analytica.hcube.cube.Cube;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
+import com.kleegroup.analytica.hcube.query.TimeSelection;
+import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.DataKey;
-import com.kleegroup.analytica.server.query.TimeSelection;
-import com.kleegroup.analytica.server.query.WhatSelection;
-import com.kleegroup.analyticaimpl.server.cube.Cube;
-import com.kleegroup.analyticaimpl.server.cube.TimePosition;
-import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
 
 /**
  * Plugin gérant le stockage des cubes.

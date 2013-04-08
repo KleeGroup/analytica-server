@@ -30,17 +30,17 @@ import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
+import com.kleegroup.analytica.hcube.cube.Cube;
+import com.kleegroup.analytica.hcube.cube.CubeBuilder;
+import com.kleegroup.analytica.hcube.cube.MetaData;
+import com.kleegroup.analytica.hcube.cube.Metric;
+import com.kleegroup.analytica.hcube.dimension.CubePosition;
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
+import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataType;
-import com.kleegroup.analytica.server.query.TimeDimension;
-import com.kleegroup.analytica.server.query.WhatDimension;
-import com.kleegroup.analyticaimpl.server.cube.Cube;
-import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubePosition;
-import com.kleegroup.analyticaimpl.server.cube.MetaData;
-import com.kleegroup.analyticaimpl.server.cube.Metric;
-import com.kleegroup.analyticaimpl.server.cube.TimePosition;
-import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.CubeBuilderBean;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.DataKeyBuilderBean;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.LastProcessIdBuilderBean;

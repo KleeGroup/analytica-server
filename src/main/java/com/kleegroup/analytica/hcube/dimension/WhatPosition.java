@@ -15,40 +15,37 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.cube;
+package com.kleegroup.analytica.hcube.dimension;
 
-import java.util.Date;
-
-import com.kleegroup.analytica.server.query.TimeDimension;
+import com.kleegroup.analytica.hcube.Identity;
 
 /**
  * @author npiedeloup
- * @version $Id: TimePosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
+ * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class TimePosition extends Identity implements Position<TimeDimension, TimePosition> {
-	private final TimeDimension dimension;
-	private final Date date;
+public final class WhatPosition extends Identity implements Position<WhatDimension, WhatPosition> {
+	private final WhatDimension dimension;
+	private final String what;
 
-	public TimePosition(final Date date, final TimeDimension timeDimension) {
-		super("Time:[" + timeDimension.name() + "]" + timeDimension.reduce(date).getTime());
-		//Assertion.notNull(timeDimension); inutil
+	public WhatPosition(final String fullName, final WhatDimension whatDimension) {
+		super("What:[" + whatDimension.name() + "]" + whatDimension.reduce(fullName));
 		//---------------------------------------------------------------------
-		this.dimension = timeDimension;
-		this.date = timeDimension.reduce(date);
+		this.dimension = whatDimension;
+		what = whatDimension.reduce(fullName);
 	}
 
 	/** {@inheritDoc} */
-	public TimePosition drillUp() {
-		final TimeDimension upTimeDimension = dimension.drillUp();
-		return upTimeDimension != null ? new TimePosition(date, upTimeDimension) : null;
+	public WhatPosition drillUp() {
+		final WhatDimension upWhatDimension = dimension.drillUp();
+		return upWhatDimension != null ? new WhatPosition(what, upWhatDimension) : null;
 	}
 
 	/** {@inheritDoc} */
-	public TimeDimension getDimension() {
+	public WhatDimension getDimension() {
 		return dimension;
 	}
 
-	public Date getValue() {
-		return date;
+	public String getValue() {
+		return what;
 	}
 }

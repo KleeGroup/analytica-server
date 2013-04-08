@@ -15,12 +15,14 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.cube;
+package com.kleegroup.analytica.hcube.cube;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.kleegroup.analytica.hcube.dimension.CubePosition;
 
 import kasper.kernel.util.Assertion;
 

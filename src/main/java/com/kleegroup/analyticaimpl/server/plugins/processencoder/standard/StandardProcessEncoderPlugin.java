@@ -24,17 +24,17 @@ import java.util.Map.Entry;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.server.query.TimeDimension;
-import com.kleegroup.analytica.server.query.WhatDimension;
+import com.kleegroup.analytica.hcube.cube.Cube;
+import com.kleegroup.analytica.hcube.cube.CubeBuilder;
+import com.kleegroup.analytica.hcube.cube.MetaData;
+import com.kleegroup.analytica.hcube.cube.Metric;
+import com.kleegroup.analytica.hcube.cube.MetricBuilder;
+import com.kleegroup.analytica.hcube.dimension.CubePosition;
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
+import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
-import com.kleegroup.analyticaimpl.server.cube.Cube;
-import com.kleegroup.analyticaimpl.server.cube.CubeBuilder;
-import com.kleegroup.analyticaimpl.server.cube.CubePosition;
-import com.kleegroup.analyticaimpl.server.cube.MetaData;
-import com.kleegroup.analyticaimpl.server.cube.Metric;
-import com.kleegroup.analyticaimpl.server.cube.MetricBuilder;
-import com.kleegroup.analyticaimpl.server.cube.TimePosition;
-import com.kleegroup.analyticaimpl.server.cube.WhatPosition;
 
 /**
  * Implémentation de la transformation des Process en cubes.

@@ -31,8 +31,8 @@ import kasper.kernel.lang.Activeable;
 
 import com.google.gson.Gson;
 import com.kleegroup.analytica.core.KProcess;
+import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
-import com.kleegroup.analyticaimpl.server.cube.Cube;
 import com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin;
 
 /**

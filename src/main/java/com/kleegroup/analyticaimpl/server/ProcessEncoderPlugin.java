@@ -22,7 +22,7 @@ import java.util.List;
 import kasper.kernel.manager.Plugin;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analyticaimpl.server.cube.Cube;
+import com.kleegroup.analytica.hcube.cube.Cube;
 
 /**
  * Transformation d'un process en cubes.

@@ -19,8 +19,8 @@ package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
 
 import java.util.Date;
 
-import com.kleegroup.analytica.server.query.TimeDimension;
-import com.kleegroup.analyticaimpl.server.cube.TimePosition;
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
 
 /**
  * Metric d'un cube.

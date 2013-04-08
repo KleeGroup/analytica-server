@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.cube;
+package com.kleegroup.analytica.hcube.cube;
 
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;

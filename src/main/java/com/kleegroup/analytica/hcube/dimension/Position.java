@@ -1,6 +1,5 @@
-package com.kleegroup.analyticaimpl.server.cube;
+package com.kleegroup.analytica.hcube.dimension;
 
-import com.kleegroup.analytica.server.query.Dimension;
 
 /**
  * Une position est définie sur une dimension (ou axe).
@@ -9,7 +8,14 @@ import com.kleegroup.analytica.server.query.Dimension;
  * @author pchretien
  */
 public interface Position<D extends Dimension<D>, P extends Position<D, P>> {
+	/**
+	 * 
+	 * @return Dimension
+	 */
 	D getDimension();
 
+	/**
+	 * @return Position dans la dimension de niveau supérieure, ou null si plus de niveau au dessus.
+	 */
 	P drillUp();
 }
