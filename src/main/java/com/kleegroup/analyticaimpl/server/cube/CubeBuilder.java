@@ -103,7 +103,26 @@ public final class CubeBuilder implements Builder<Cube> {
 		if (key1.equals(key)) {
 			return true;
 		}
-		return key1.getTimePosition().isIn(key2.getTimePosition()) && key1.getWhatPosition().isIn(key.getWhatPosition());
+		return isIn(key1.getTimePosition(), key2.getTimePosition()) && isIn(key1.getWhatPosition(), key.getWhatPosition());
+	}
+
+	/**
+	 * Vérifie si la position est contenue dans une autre autre.
+	 * Une position A est contenue dans une position B  
+	 * Si A = B
+	 * Si B peut être obtenu par drillUp successifs sur A.
+	 * @param otherPosition
+	 * @return
+	 */
+	private static boolean isIn(final Position position, final Position otherPosition) {
+		if (position.equals(otherPosition)) {
+			return true;
+		}
+		Position upperPosition = position.drillUp();
+		while (upperPosition != null && !upperPosition.equals(otherPosition)) {
+			upperPosition = upperPosition.drillUp();
+		}
+		return otherPosition.equals(upperPosition);
 	}
 
 	/** 

@@ -51,16 +51,4 @@ public final class TimePosition extends Identity implements Position<TimeDimensi
 	public Date getValue() {
 		return date;
 	}
-
-	/** {@inheritDoc} */
-	public boolean isIn(final TimePosition otherTime) {
-		if (this.equals(otherTime)) {
-			return true;
-		}
-		TimePosition upperTime = drillUp();
-		while (upperTime != null && !upperTime.equals(otherTime)) {
-			upperTime = upperTime.drillUp();
-		}
-		return otherTime.equals(upperTime);
-	}
 }

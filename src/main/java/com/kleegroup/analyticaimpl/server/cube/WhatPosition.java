@@ -48,16 +48,4 @@ public final class WhatPosition extends Identity implements Position<WhatDimensi
 	public String getValue() {
 		return what;
 	}
-
-	/** {@inheritDoc} */
-	public boolean isIn(final WhatPosition otherWhat) {
-		if (this.equals(otherWhat)) {
-			return true;
-		}
-		WhatPosition upperWhat = this.drillUp();
-		while (upperWhat != null && !upperWhat.equals(otherWhat)) {
-			upperWhat = upperWhat.drillUp();
-		}
-		return otherWhat.equals(upperWhat);
-	}
 }
