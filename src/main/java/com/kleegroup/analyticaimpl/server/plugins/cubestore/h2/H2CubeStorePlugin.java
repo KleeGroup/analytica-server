@@ -19,7 +19,6 @@ package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +47,6 @@ import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.server.data.DataType;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.TicTac;
@@ -391,70 +389,70 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		return cubeBuilder;
 	}
 
-	/** {@inheritDoc} */
-	public List<TimePosition> loadSubTimePositions(final TimeSelection timeSelection) {
-		final TimeDimension timeDimension = timeSelection.getDimension();
-		final TimeDimension subTimeDimension = timeDimension.drillDown();
-		if (subTimeDimension == null) {
-			//Si minute, on retourne une liste vide
-			return Collections.emptyList();
-		}
-
-		final List<TimePosition> timePositions;
-		try {
-			final Connection connection = store.getConnection();
-			try {
-				timePositions = statements.loadTimePositions(subTimeDimension, timeSelection.getMinValue(), timeSelection.getMaxValue(), connection);
-				//pas de commit : ReadOnly
-			} finally {
-				store.close(connection);
-			}
-		} catch (final DaoException e) {
-			throw new RuntimeException("Erreur lors du chargement des TimePositions", e);
-		}
-		return timePositions;
-	}
-
-	/** {@inheritDoc} */
-	public List<WhatPosition> loadSubWhatPositions(final Query query) {
-		final WhatDimension whatDimension = query.getWhatSelection().getDimension();
-		final WhatDimension subWhatDimension = whatDimension.drillDown();
-		if (subWhatDimension == null) {
-			return Collections.emptyList();
-			//Si FullName, on retourne une liste vide
-		}
-
-		final List<WhatPosition> whatPositions;
-		try {
-			final Connection connection = store.getConnection();
-			try {
-				whatPositions = statements.loadWhatPositions(query.getTimeSelection().getDimension(), subWhatDimension, query.getTimeSelection().getMinValue(), query.getTimeSelection().getMaxValue(), query.getWhatSelection().getWhatValues(), connection);
-				//pas de commit : ReadOnly
-			} finally {
-				store.close(connection);
-			}
-		} catch (final DaoException e) {
-			throw new RuntimeException("Erreur lors du chargement des WhatPositions", e);
-		}
-		return whatPositions;
-	}
-
-	/** {@inheritDoc} */
-	public List<DataKey> loadDataKeys(final Query query) {
-		final List<DataKey> dataKeys;
-		try {
-			final Connection connection = store.getConnection();
-			try {
-				dataKeys = statements.loadDataKeys(query, connection);
-				//pas de commit : ReadOnly
-			} finally {
-				store.close(connection);
-			}
-		} catch (final DaoException e) {
-			throw new RuntimeException("Erreur lors du chargement des TimePositions", e);
-		}
-		return dataKeys;
-	}
+	//	/** {@inheritDoc} */
+	//	public List<TimePosition> loadSubTimePositions(final TimeSelection timeSelection) {
+	//		final TimeDimension timeDimension = timeSelection.getDimension();
+	//		final TimeDimension subTimeDimension = timeDimension.drillDown();
+	//		if (subTimeDimension == null) {
+	//			//Si minute, on retourne une liste vide
+	//			return Collections.emptyList();
+	//		}
+	//
+	//		final List<TimePosition> timePositions;
+	//		try {
+	//			final Connection connection = store.getConnection();
+	//			try {
+	//				timePositions = statements.loadTimePositions(subTimeDimension, timeSelection.getMinValue(), timeSelection.getMaxValue(), connection);
+	//				//pas de commit : ReadOnly
+	//			} finally {
+	//				store.close(connection);
+	//			}
+	//		} catch (final DaoException e) {
+	//			throw new RuntimeException("Erreur lors du chargement des TimePositions", e);
+	//		}
+	//		return timePositions;
+	//	}
+	//
+	//	/** {@inheritDoc} */
+	//	public List<WhatPosition> loadSubWhatPositions(final Query query) {
+	//		final WhatDimension whatDimension = query.getWhatSelection().getDimension();
+	//		final WhatDimension subWhatDimension = whatDimension.drillDown();
+	//		if (subWhatDimension == null) {
+	//			return Collections.emptyList();
+	//			//Si FullName, on retourne une liste vide
+	//		}
+	//
+	//		final List<WhatPosition> whatPositions;
+	//		try {
+	//			final Connection connection = store.getConnection();
+	//			try {
+	//				whatPositions = statements.loadWhatPositions(query.getTimeSelection().getDimension(), subWhatDimension, query.getTimeSelection().getMinValue(), query.getTimeSelection().getMaxValue(), query.getWhatSelection().getWhatValues(), connection);
+	//				//pas de commit : ReadOnly
+	//			} finally {
+	//				store.close(connection);
+	//			}
+	//		} catch (final DaoException e) {
+	//			throw new RuntimeException("Erreur lors du chargement des WhatPositions", e);
+	//		}
+	//		return whatPositions;
+	//	}
+	//
+	//	/** {@inheritDoc} */
+	//	public List<DataKey> loadDataKeys(final Query query) {
+	//		final List<DataKey> dataKeys;
+	//		try {
+	//			final Connection connection = store.getConnection();
+	//			try {
+	//				dataKeys = statements.loadDataKeys(query, connection);
+	//				//pas de commit : ReadOnly
+	//			} finally {
+	//				store.close(connection);
+	//			}
+	//		} catch (final DaoException e) {
+	//			throw new RuntimeException("Erreur lors du chargement des TimePositions", e);
+	//		}
+	//		return dataKeys;
+	//	}
 
 	/** {@inheritDoc} */
 	public String loadLastProcessIdStored() {

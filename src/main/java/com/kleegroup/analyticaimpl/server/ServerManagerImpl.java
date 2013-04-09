@@ -38,9 +38,7 @@ import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
-import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.ServerManager;
 import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataSet;
@@ -199,21 +197,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 			return null;
 		}
 		return metric.get(dataKey.getType().name());
-	}
-
-	/** {@inheritDoc} */
-	public List<WhatSelection> getSubWhatSelections(final Query query) {
-		final List<WhatPosition> subWhatPositions = cubeStorePlugin.loadSubWhatPositions(query);
-		final List<WhatSelection> result = new ArrayList<WhatSelection>();
-		for (final WhatPosition subWhatPosition : subWhatPositions) {
-			result.add(new WhatSelection(subWhatPosition.getDimension(), subWhatPosition.getValue()));
-		}
-		return result;
-	}
-
-	/** {@inheritDoc} */
-	public List<DataKey> getSubDataKeys(final Query query) {
-		return cubeStorePlugin.loadDataKeys(query);
 	}
 
 	/** {@inheritDoc} */

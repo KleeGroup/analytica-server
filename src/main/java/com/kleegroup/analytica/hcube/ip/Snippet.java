@@ -57,4 +57,25 @@ public class Snippet {
 		return result;
 	}
 
+	/**
+	 * @param query  Requête précisant les selections
+	 * @return Liste des WhatSelection sous jacentes sur une durée donnée
+	 */
+	//	public List<WhatSelection> getSubWhatSelections(final Query query) {
+	//		final List<WhatPosition> subWhatPositions = cubeStorePlugin.loadSubWhatPositions(query);
+	//		final List<WhatSelection> result = new ArrayList<WhatSelection>();
+	//		for (final WhatPosition subWhatPosition : subWhatPositions) {
+	//			result.add(new WhatSelection(subWhatPosition.getDimension(), subWhatPosition.getValue()));
+	//		}
+	//		return result;
+	//	}
+
+	/**
+	 * @param query  Requête précisant les selections
+	* @return Liste des DataKey possibles
+	*/
+	//	public List<DataKey> getSubDataKeys(final Query query) {
+	//		return cubeStorePlugin.loadDataKeys(query);
+	//	}
+
 }

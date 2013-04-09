@@ -23,9 +23,7 @@ import java.util.List;
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataSet;
 
@@ -48,18 +46,6 @@ public interface ServerManager extends Manager {
 	 * @return nombre de process traités
 	 */
 	int store50NextProcessesAsCube();
-
-	/**
-	 * @param query  Requête précisant les selections
-	 * @return Liste des WhatSelection sous jacentes sur une durée donnée
-	 */
-	List<WhatSelection> getSubWhatSelections(final Query query);
-
-	/**
-	 * @param query  Requête précisant les selections
-	 * @return Liste des DataKey possibles
-	 */
-	List<DataKey> getSubDataKeys(final Query query);
 
 	/**
 	 * Fournit une liste de metric agreggée sur des dates et des what.
