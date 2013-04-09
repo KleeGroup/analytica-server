@@ -429,24 +429,10 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	/** {@inheritDoc} */
 	public List<WhatPosition> loadSubWhatPositions(final TimeSelection timeSelection, final WhatSelection whatSelection) {
 		final WhatDimension whatDimension = whatSelection.getDimension();
-		final WhatDimension subWhatDimension;
-		switch (whatDimension) {
-			case Global:
-				subWhatDimension = WhatDimension.Type;
-				break;
-			case Type:
-				subWhatDimension = WhatDimension.Module;
-				break;
-			case Module:
-				subWhatDimension = WhatDimension.SimpleName;
-				break;
-			case SimpleName:
-				subWhatDimension = WhatDimension.FullName;
-				break;
-			case FullName:
-			default:
-				//Si FullName, on retourne une liste vide
-				return Collections.emptyList();
+		final WhatDimension subWhatDimension = whatDimension.drillDown();
+		if (subWhatDimension == null) {
+			return Collections.emptyList();
+			//Si FullName, on retourne une liste vide
 		}
 
 		final List<WhatPosition> whatPositions;

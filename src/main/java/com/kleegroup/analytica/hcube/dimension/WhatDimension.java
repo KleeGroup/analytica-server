@@ -60,10 +60,10 @@ public enum WhatDimension implements Dimension<WhatDimension> {
 		this.up = up;
 	}
 
-	/** {@inheritDoc} */
-	public String getLabel() {
-		return name().toLowerCase();
-	}
+	//	/** {@inheritDoc} */
+	//	public String getLabel() {
+	//		return name().toLowerCase();
+	//	}
 
 	/** {@inheritDoc} */
 	public WhatDimension drillUp() {
