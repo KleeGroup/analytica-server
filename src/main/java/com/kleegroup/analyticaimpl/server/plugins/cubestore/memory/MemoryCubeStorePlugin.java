@@ -124,8 +124,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	/** {@inheritDoc} */
 	public List<Cube> load(final TimeSelection timeSelection, final boolean aggregateTime, final WhatSelection whatSelection, final boolean aggregateWhat, final List<DataKey> metrics) {
 		//On prépare les bornes de temps
-		final TimePosition minTimePosition = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
-		final TimePosition maxTimePosition = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
+		final TimePosition minTimePosition = timeSelection.getMinTimePosition();
+		final TimePosition maxTimePosition = timeSelection.getMaxTimePosition();
 
 		//On remplit une liste de cube avec tous les what voulu
 		final List<Cube> allCubes = new ArrayList<Cube>();
@@ -190,8 +190,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		if (timeDimension == null) {
 			return Collections.emptyList();
 		}
-		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeDimension);
-		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeDimension);
+		final TimePosition minTime = timeSelection.getMinTimePosition();
+		final TimePosition maxTime = timeSelection.getMaxTimePosition();
 
 		final WhatPosition minWhat = new WhatPosition("/", WhatDimension.Global);
 		final WhatPosition maxWhat = new WhatPosition("/" + LAST_CHAR, WhatDimension.Global);
@@ -209,8 +209,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	/** {@inheritDoc} */
 	public List<WhatPosition> loadSubWhatPositions(final TimeSelection timeSelection, final WhatSelection whatSelection) {
-		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
-		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
+		final TimePosition minTime = timeSelection.getMinTimePosition();
+		final TimePosition maxTime = timeSelection.getMaxTimePosition();
 
 		final WhatDimension whatDimension = whatSelection.getDimension().drillDown();
 		if (whatDimension == null) {
@@ -235,8 +235,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	/** {@inheritDoc} */
 	public List<DataKey> loadDataKeys(final TimeSelection timeSelection, final WhatSelection whatSelection) {
-		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
-		final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
+		final TimePosition minTime = timeSelection.getMinTimePosition();
+		final TimePosition maxTime = timeSelection.getMaxTimePosition();
 
 		final WhatDimension whatDimension = whatSelection.getDimension().drillDown();
 		final List<Cube> allCubes = new ArrayList<Cube>();

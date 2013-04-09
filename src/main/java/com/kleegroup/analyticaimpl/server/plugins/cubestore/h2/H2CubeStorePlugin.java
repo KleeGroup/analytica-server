@@ -275,7 +275,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	/** {@inheritDoc} */
 	public List<Cube> load(final TimeSelection timeSelection, final boolean aggregateTime, final WhatSelection whatSelection, final boolean aggregateWhat, final List<DataKey> metrics) {
 		tic.tic("load");//On prépare les bornes de temps
-		final TimePosition minTime = new TimePosition(timeSelection.getMinValue(), timeSelection.getDimension());
+		final TimePosition minTime = timeSelection.getMinTimePosition();
 		//final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
 
 		//On prepare un index de metric attendu

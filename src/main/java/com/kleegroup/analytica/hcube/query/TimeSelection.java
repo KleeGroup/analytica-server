@@ -19,9 +19,10 @@ package com.kleegroup.analytica.hcube.query;
 
 import java.util.Date;
 
-import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-
 import kasper.kernel.util.Assertion;
+
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
 
 /**
  * @author npiedeloup, pchretien
@@ -54,5 +55,13 @@ public final class TimeSelection implements Selection<TimeDimension> {
 	/** {@inheritDoc} */
 	public TimeDimension getDimension() {
 		return dimension;
+	}
+
+	public TimePosition getMinTimePosition() {
+		return new TimePosition(getMinValue(), getDimension());
+	}
+
+	public TimePosition getMaxTimePosition() {
+		return new TimePosition(getMaxValue(), getDimension());
 	}
 }
