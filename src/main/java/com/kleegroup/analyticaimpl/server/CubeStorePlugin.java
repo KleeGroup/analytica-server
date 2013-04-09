@@ -24,8 +24,8 @@ import kasper.kernel.manager.Plugin;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
+import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
-import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.DataKey;
 
 /**
@@ -44,14 +44,13 @@ public interface CubeStorePlugin extends Plugin {
 
 	/**
 	 * Chargement des cubes.
-	 * @param timeSelection Selection temporelle
+	 * @param query Selection 
 	 * @param aggregateTime Si les données sont aggrégés sur l'axe temporel
-	 * @param whatSelection Selection fonctionnelle
 	 * @param aggregateWhat Si les données sont aggrégés sur l'axe fonctionnel
 	 * @param metrics Liste des indicateurs attendus (MEASURE et META_DATA)
 	 * @return Liste des cubes
 	 */
-	List<Cube> load(TimeSelection timeSelection, boolean aggregateTime, WhatSelection whatSelection, boolean aggregateWhat, List<DataKey> metrics);
+	List<Cube> load(Query query, boolean aggregateTime, boolean aggregateWhat, List<DataKey> metrics);
 
 	/**
 	 * Liste des selections temporelles de dimension inférieurs sous la séléction passée en paramètre.
@@ -66,15 +65,14 @@ public interface CubeStorePlugin extends Plugin {
 	 * @param whatSelection Selection fonctionelle
 	 * @return Liste des selections fonctionelles
 	 */
-	List<WhatPosition> loadSubWhatPositions(TimeSelection timeSelection, WhatSelection whatSelection);
+	List<WhatPosition> loadSubWhatPositions(Query query);
 
 	/**
 	 * Liste des indicateurs disponibles dans une selection temporelle et fonctionnelle.
-	 * @param timeSelection Selection temporelle
-	 * @param whatSelection Selection fonctionelle
+	 * @param query Selection 
 	 * @return Liste des indicateurs
 	 */
-	List<DataKey> loadDataKeys(TimeSelection timeSelection, WhatSelection whatSelection);
+	List<DataKey> loadDataKeys(Query query);
 
 	/**
 	 * @return Dernier id de process stocké

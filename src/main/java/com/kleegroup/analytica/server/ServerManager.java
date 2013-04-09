@@ -23,6 +23,7 @@ import java.util.List;
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
+import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.Data;
@@ -56,44 +57,39 @@ public interface ServerManager extends Manager {
 	List<TimeSelection> getSubTimeSelections(final TimeSelection timeSelection);
 
 	/**
-	 * @param timeSelection TimeSelection parent
-	 * @param whatSelection WhatSelection parent
+	 * @param query  Requête précisant les selections
 	 * @return Liste des WhatSelection sous jacentes sur une durée donnée
 	 */
-	List<WhatSelection> getSubWhatSelections(final TimeSelection timeSelection, final WhatSelection whatSelection);
+	List<WhatSelection> getSubWhatSelections(final Query query);
 
 	/**
-	 * @param timeSelection TimeSelection parent
-	 * @param whatSelection WhatSelection parent
+	 * @param query  Requête précisant les selections
 	 * @return Liste des DataKey possibles
 	 */
-	List<DataKey> getSubDataKeys(final TimeSelection timeSelection, final WhatSelection whatSelection);
+	List<DataKey> getSubDataKeys(final Query query);
 
 	/**
 	 * Fournit une liste de metric agreggée sur des dates et des what.
-	 * @param timeSelection Selection de date a aggréger avant resultat
-	 * @param whatSelection Selection des WhatPositions a aggréger avant resultat
+	 * @param query  Requête précisant les selections a aggréger avant resultat
 	 * @param metrics Liste des métrics recherchées
 	 * @return Liste de métric pour l'ensemble des WhatPosition sur l'interval de date
 	 */
-	List<Data> getData(final TimeSelection timeSelection, final WhatSelection whatSelection, final List<DataKey> metrics);
+	List<Data> getData(final Query query, final List<DataKey> metrics);
 
 	/**
 	 * Fournit une liste de données sur un interval de date, en ASSEMBLANT les WhatPosition récupérés (par exemple un essemble cohérent de What).
-	 * @param timeSelection Selection de date, la dimension déterminera le niveau d'agregation
-	 * @param whatSelection Selection des WhatPositions a aggréger avant resultat
+	 * @param query  Requête précisant les selections
 	 * @param metrics Liste des métrics recherchées
 	 * @return Liste de valeur par métric pour l'ensemble des WhatPosition et par date (permet des courbes de metrics entre deux dates pour un ensemble de what)
 	 */
-	List<DataSet<Date, ?>> getDataTimeLine(final TimeSelection timeSelection, final WhatSelection whatSelection, final List<DataKey> metrics);
+	List<DataSet<Date, ?>> getDataTimeLine(final Query query, final List<DataKey> metrics);
 
 	/**
 	 * Fournit une liste de données sur un ensemble de what, en ASSEMBLANT les TimePosition récupérés (par exemple 30 jours glissant).
-	 * @param timeSelection Selection de date a aggréger avant resultat
-	 * @param whatSelection Selection de WhatPositions, la dimension déterminera le niveau d'agregation
+	 * @param query  Requête précisant les selections
 	 * @param metrics Liste des métrics recherchées
 	 * @return Liste de valeur par métric pour l'ensemble des TimePosition et par what (permet des courbes de metrics entre deux what sur une période)
 	 */
-	List<DataSet<String, ?>> getDataWhatLine(final TimeSelection timeSelection, final WhatSelection whatSelection, final List<DataKey> metrics);
+	List<DataSet<String, ?>> getDataWhatLine(final Query query, final List<DataKey> metrics);
 
 }
