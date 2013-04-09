@@ -38,10 +38,8 @@ import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
-import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.ServerManager;
 import com.kleegroup.analytica.server.data.Data;
@@ -55,7 +53,6 @@ import com.kleegroup.analytica.server.data.DataType;
  */
 public final class ServerManagerImpl implements ServerManager, Activeable {
 
-	private static final long HOUR_TIME_MILLIS = 60 * 60 * 1000;
 	private final ProcessStorePlugin processStorePlugin;
 	private final ProcessEncoderPlugin encoderPlugin;
 	private final CubeStorePlugin cubeStorePlugin;
@@ -202,50 +199,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 			return null;
 		}
 		return metric.get(dataKey.getType().name());
-	}
-
-	/** {@inheritDoc} */
-	public List<TimeSelection> getSubTimeSelections(final TimeSelection timeSelection) {
-		final List<TimeSelection> result;
-		final TimeDimension subTimeDimension;
-		//final TimeDimension subTimeDimension = getSubTimeDimension(timeSelection.getDimension());
-		switch (timeSelection.getDimension()) {
-			case Year:
-				subTimeDimension = TimeDimension.Month;
-				result = createSubTimeSelection(timeSelection, subTimeDimension, 3L * 31 * 24 * HOUR_TIME_MILLIS);
-				break;
-			case Month:
-				subTimeDimension = TimeDimension.Day;
-				result = createSubTimeSelection(timeSelection, subTimeDimension, 7L * 24 * HOUR_TIME_MILLIS);
-				break;
-			case Day:
-				subTimeDimension = TimeDimension.Hour;
-				result = createSubTimeSelection(timeSelection, subTimeDimension, 24L * HOUR_TIME_MILLIS);
-				break;
-			case Hour:
-				subTimeDimension = TimeDimension.Minute;
-				result = createSubTimeSelection(timeSelection, subTimeDimension, 6L * HOUR_TIME_MILLIS);
-				break;
-			case Minute:
-				result = Collections.emptyList();
-				break;
-			default:
-				throw new IllegalArgumentException("TimeDimension inconnue : " + timeSelection.getDimension());
-		}
-
-		//return cubeStorePlugin.loadSubTimeSelections(timeSelection);
-		return result;
-	}
-
-	private List<TimeSelection> createSubTimeSelection(final TimeSelection timeSelection, final TimeDimension subTimeDimension, final long timeStepMillis) {
-		final List<TimeSelection> result = new ArrayList<TimeSelection>();
-		Date currentMaxDate;
-		for (Date currentMinDate = timeSelection.getMinValue(); currentMinDate.before(timeSelection.getMaxValue()); currentMinDate = currentMaxDate) {
-			currentMaxDate = new Date(currentMinDate.getTime() + timeStepMillis);
-			final TimeSelection newTimeSelection = new TimeSelection(subTimeDimension, currentMinDate, currentMaxDate);
-			result.add(newTimeSelection);
-		}
-		return result;
 	}
 
 	/** {@inheritDoc} */

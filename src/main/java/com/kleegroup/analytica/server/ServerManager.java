@@ -25,7 +25,6 @@ import kasper.kernel.manager.Manager;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataSet;
@@ -49,12 +48,6 @@ public interface ServerManager extends Manager {
 	 * @return nombre de process traités
 	 */
 	int store50NextProcessesAsCube();
-
-	/**
-	 * @param timeSelection TimeSelection parent
-	 * @return Liste des TimeSelections sous jacentes
-	 */
-	List<TimeSelection> getSubTimeSelections(final TimeSelection timeSelection);
 
 	/**
 	 * @param query  Requête précisant les selections
