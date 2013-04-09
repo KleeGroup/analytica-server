@@ -22,11 +22,11 @@ import java.util.List;
 import kasper.kernel.manager.Plugin;
 
 import com.kleegroup.analytica.hcube.cube.Cube;
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
-import com.kleegroup.analytica.server.data.DataKey;
 
 /**
  * Plugin gérant le stockage des cubes.
@@ -44,13 +44,12 @@ public interface CubeStorePlugin extends Plugin {
 
 	/**
 	 * Chargement des cubes.
-	 * @param query Selection 
+	 * @param query Selection comprenant la liste des métriques attendues
 	 * @param aggregateTime Si les données sont aggrégés sur l'axe temporel
 	 * @param aggregateWhat Si les données sont aggrégés sur l'axe fonctionnel
-	 * @param metrics Liste des indicateurs attendus (MEASURE et META_DATA)
 	 * @return Liste des cubes
 	 */
-	List<Cube> load(Query query, boolean aggregateTime, boolean aggregateWhat, List<DataKey> metrics);
+	List<Cube> load(Query query, boolean aggregateTime, boolean aggregateWhat);
 
 	/**
 	 * Liste des selections temporelles de dimension inférieurs sous la séléction passée en paramètre.

@@ -38,13 +38,13 @@ import org.junit.Test;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
 import com.kleegroup.analytica.server.data.DataType;
 
@@ -211,9 +211,9 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		//---------------------------------------------------------------------
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + "TEST_MEAN3");
-		final Query query = new Query(timeSelection, whatSelection);
+		final Query query = new Query(timeSelection, whatSelection, asList(new DataKey(TEST_MEAN_VALUE, DataType.mean)));
 		serverManager.store50NextProcessesAsCube();
-		final List<Data> datas = serverManager.getData(query, asList(new DataKey(TEST_MEAN_VALUE, DataType.mean)));
+		final List<Data> datas = serverManager.getData(query);
 		final double valueMean = datas.get(0).getValue();
 		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 75.0, valueMean, 0);
 	}
@@ -244,8 +244,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.SimpleName, "/TEST_WHAT_SELECTION1/Process1", "/TEST_WHAT_SELECTION1/Process2");
 		serverManager.store50NextProcessesAsCube();
-		final Query query = new Query(timeSelection, whatSelection);
-		final List<Data> datas = serverManager.getData(query, asList(new DataKey(TEST_MEAN_VALUE, DataType.mean)));
+		final Query query = new Query(timeSelection, whatSelection, asList(new DataKey(TEST_MEAN_VALUE, DataType.mean)));
+		final List<Data> datas = serverManager.getData(query);
 		final double valueMean = datas.get(0).getValue();
 		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 70.0, valueMean, 0);
 	}
@@ -268,8 +268,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + "TEST_META_DATA3");
 
 		serverManager.store50NextProcessesAsCube();
-		final Query query = new Query(timeSelection, whatSelection);
-		final List<Data> datas = serverManager.getData(query, asList(new DataKey(TEST_META_DATA_1, DataType.metaData), new DataKey(TEST_META_DATA_2, DataType.metaData)));
+		final Query query = new Query(timeSelection, whatSelection, asList(new DataKey(TEST_META_DATA_1, DataType.metaData), new DataKey(TEST_META_DATA_2, DataType.metaData)));
+		final List<Data> datas = serverManager.getData(query);
 		final List<String> valueMetaData1 = datas.get(0).getStringValues();
 		Assert.assertTrue("Le cube ne contient pas la metaData attendue : MD1\n" + datas, valueMetaData1.contains("MD1"));
 		Assert.assertTrue("Le cube ne contient pas la metaData attendue : MD2\n" + datas, valueMetaData1.contains("MD2"));
@@ -299,8 +299,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + "TEST_MEAN4");
 		final List<DataKey> metrics = asList(new DataKey(TEST_MEAN_VALUE, DataType.mean), new DataKey(TEST_MEAN_VALUE, DataType.max), new DataKey(TEST_MEAN_VALUE, DataType.min), new DataKey(TEST_MEAN_VALUE, DataType.count), new DataKey(TEST_MEAN_VALUE, DataType.stdDev));
 		serverManager.store50NextProcessesAsCube();
-		final Query query = new Query(timeSelection, whatSelection);
-		final List<Data> datas = serverManager.getData(query, metrics);
+		final Query query = new Query(timeSelection, whatSelection, metrics);
+		final List<Data> datas = serverManager.getData(query);
 		final double valueMean = datas.get(0).getValue();
 		final double valueMax = datas.get(1).getValue();
 		final double valueMin = datas.get(2).getValue();
@@ -334,9 +334,9 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.FullName, WhatDimension.SEPARATOR + "TEST_MEAN5");
 		final List<DataKey> metrics = asList(new DataKey(TEST_MEAN_VALUE, DataType.mean), new DataKey(TEST_MEAN_VALUE, DataType.count));
 		serverManager.store50NextProcessesAsCube();
-		final Query query = new Query(timeSelection, whatSelection);
+		final Query query = new Query(timeSelection, whatSelection, metrics);
 
-		final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(query, metrics);
+		final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(query);
 		final DataSet<String, ?> dataSetMean = datas.get(0);
 		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process1", dataSetMean.getLabels().get(0));
 		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process2", dataSetMean.getLabels().get(1));
@@ -375,9 +375,9 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final List<DataKey> metrics = asList(new DataKey(TEST_MEAN_VALUE, DataType.mean), new DataKey(TEST_MEAN_VALUE, DataType.count));
 		serverManager.store50NextProcessesAsCube();
 
-		final Query query = new Query(timeSelection, whatSelection);
+		final Query query = new Query(timeSelection, whatSelection, metrics);
 
-		final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(query, metrics);
+		final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(query);
 		System.out.println(datas);
 		//		final DataSet<Date, ?> dataSetMean = datas.get(0);
 		//		final DataSet<Date, ?> dataSetCount = datas.get(1);
@@ -387,9 +387,9 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + module);
 		serverManager.store50NextProcessesAsCube();
-		final Query query = new Query(timeSelection, whatSelection);
+		final Query query = new Query(timeSelection, whatSelection, asList(metrics));
 
-		final List<Data> datas = serverManager.getData(query, asList(metrics));
+		final List<Data> datas = serverManager.getData(query);
 		return datas;
 	}
 
@@ -422,9 +422,9 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 			dataKeys.add(new DataKey(metric, DataType.mean));
 		}
 		serverManager.store50NextProcessesAsCube();
-		final Query query = new Query(timeSelection, whatSelection);
+		final Query query = new Query(timeSelection, whatSelection, dataKeys);
 
-		final List<Data> datas = serverManager.getData(query, dataKeys);
+		final List<Data> datas = serverManager.getData(query);
 		for (final Data data : datas) {
 			System.out.println(data);
 		}

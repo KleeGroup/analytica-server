@@ -23,11 +23,11 @@ import java.util.List;
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
 
 /**
@@ -71,25 +71,22 @@ public interface ServerManager extends Manager {
 	/**
 	 * Fournit une liste de metric agreggée sur des dates et des what.
 	 * @param query  Requête précisant les selections a aggréger avant resultat
-	 * @param metrics Liste des métrics recherchées
 	 * @return Liste de métric pour l'ensemble des WhatPosition sur l'interval de date
 	 */
-	List<Data> getData(final Query query, final List<DataKey> metrics);
+	List<Data> getData(final Query query);
 
 	/**
 	 * Fournit une liste de données sur un interval de date, en ASSEMBLANT les WhatPosition récupérés (par exemple un essemble cohérent de What).
 	 * @param query  Requête précisant les selections
-	 * @param metrics Liste des métrics recherchées
 	 * @return Liste de valeur par métric pour l'ensemble des WhatPosition et par date (permet des courbes de metrics entre deux dates pour un ensemble de what)
 	 */
-	List<DataSet<Date, ?>> getDataTimeLine(final Query query, final List<DataKey> metrics);
+	List<DataSet<Date, ?>> getDataTimeLine(final Query query);
 
 	/**
 	 * Fournit une liste de données sur un ensemble de what, en ASSEMBLANT les TimePosition récupérés (par exemple 30 jours glissant).
 	 * @param query  Requête précisant les selections
-	 * @param metrics Liste des métrics recherchées
 	 * @return Liste de valeur par métric pour l'ensemble des TimePosition et par what (permet des courbes de metrics entre deux what sur une période)
 	 */
-	List<DataSet<String, ?>> getDataWhatLine(final Query query, final List<DataKey> metrics);
+	List<DataSet<String, ?>> getDataWhatLine(final Query query);
 
 }

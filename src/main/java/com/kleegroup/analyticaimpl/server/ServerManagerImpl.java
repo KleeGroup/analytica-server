@@ -35,6 +35,7 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.Cube;
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
@@ -44,7 +45,6 @@ import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.ServerManager;
 import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
 import com.kleegroup.analytica.server.data.DataType;
 
@@ -105,8 +105,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<Data> getData(final Query query, final List<DataKey> metrics) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, true, metrics);
+	public List<Data> getData(final Query query) {
+		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, true);
 		if (aggregatedCubes.isEmpty()) {
 			return Collections.emptyList(); //TODO npi que faire si pas de ligne, l'aggregation devrait retourner toujours une ligne, non ?
 		}
@@ -115,8 +115,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		//---------------------------------------------------------------------
 		final Cube aggregatedCube = aggregatedCubes.get(0);
 		//On convertit le cube en liste de Data : 1 par metrics
-		final List<Data> datas = new ArrayList<Data>(metrics.size());
-		for (final DataKey dataKey : metrics) {
+		final List<Data> datas = new ArrayList<Data>(query.getKeys().size());
+		for (final DataKey dataKey : query.getKeys()) {
 			if (dataKey.getType() == DataType.metaData) {
 				final List<String> metaDataValues = new ArrayList<String>();
 				for (final MetaData metaData : aggregatedCube.getMetaData(dataKey.getName())) {
@@ -131,18 +131,18 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<DataSet<Date, ?>> getDataTimeLine(final Query query, final List<DataKey> metrics) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, false, true, metrics);
+	public List<DataSet<Date, ?>> getDataTimeLine(final Query query) {
+		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, false, true);
 		//On convertit la liste de cube en liste de DataSet : 1 par metrics
-		final List<DataSet<Date, ?>> datas = convertToDataSet(aggregatedCubes, true, metrics);
+		final List<DataSet<Date, ?>> datas = convertToDataSet(aggregatedCubes, true, query.getKeys());
 		return datas;
 	}
 
 	/** {@inheritDoc} */
-	public List<DataSet<String, ?>> getDataWhatLine(final Query query, final List<DataKey> metrics) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, false, metrics);
+	public List<DataSet<String, ?>> getDataWhatLine(final Query query) {
+		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, false);
 		//On convertit la liste de cube en liste de DataSet : 1 par metrics
-		final List<DataSet<String, ?>> datas = convertToDataSet(aggregatedCubes, false, metrics);
+		final List<DataSet<String, ?>> datas = convertToDataSet(aggregatedCubes, false, query.getKeys());
 		return datas;
 	}
 

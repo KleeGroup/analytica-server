@@ -15,33 +15,62 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
+package com.kleegroup.analytica.hcube.cube;
 
-import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.server.data.DataType;
 
-/**
- * DataKey.
- * Une dataKey possède un type et un nom.
- *  
- * @author npiedeloup
- * @version $Id: DataKeyBuilderBean.java,v 1.1 2012/03/15 18:03:50 npiedeloup Exp $
- */
-public final class DataKeyBuilderBean {
-	private String name;
+import kasper.kernel.util.Assertion;
 
-	/**
-	 * @param dataType Type de la data (non connu du select)
-	 * @return Build de DataKey.
-	 */
-	public DataKey build(final DataType dataType) {
-		return new DataKey(name, dataType);
+/**
+ * @author npiedeloup
+ * @version $Id: DataKey.java,v 1.3 2012/04/17 09:15:26 pchretien Exp $
+ */
+public final class DataKey {
+	private final String name;
+	private final DataType type;
+
+	//COMMENTAIRES 
+
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+	//COMMENTAIRES 
+
+	public DataKey(final String name, final DataType type) {
+		Assertion.notEmpty(name);
+		Assertion.notNull(type);
+		//---------------------------------------------------------------------
+		this.name = name;
+		this.type = type;
 	}
 
-	/**
-	 * @param name Nom de la data
-	 */
-	public final void setName(final String name) {
-		this.name = name;
+	public String getName() {
+		return name;
+	}
+
+	public DataType getType() {
+		return type;
+	}
+
+	@Override
+	public String toString() {
+		return name + ":" + type.name();
 	}
 }

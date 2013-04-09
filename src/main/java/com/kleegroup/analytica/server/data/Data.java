@@ -19,6 +19,8 @@ package com.kleegroup.analytica.server.data;
 
 import java.util.List;
 
+import com.kleegroup.analytica.hcube.cube.DataKey;
+
 import kasper.kernel.util.Assertion;
 
 /**

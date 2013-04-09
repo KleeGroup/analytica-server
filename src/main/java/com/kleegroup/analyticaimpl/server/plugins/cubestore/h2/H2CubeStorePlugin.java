@@ -39,6 +39,7 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
@@ -48,7 +49,6 @@ import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
-import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataType;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.TicTac;
@@ -274,7 +274,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<Cube> load(final Query query, final boolean aggregateTime, final boolean aggregateWhat, final List<DataKey> metrics) {
+	public List<Cube> load(final Query query, final boolean aggregateTime, final boolean aggregateWhat) {
 		tic.tic("load");//On prépare les bornes de temps
 		final TimePosition minTime = query.getTimeSelection().getMinTimePosition();
 		//final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
@@ -282,7 +282,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		//On prepare un index de metric attendu
 		final Set<String> metricNames = new HashSet<String>();
 		final Set<String> metaDataNames = new HashSet<String>();
-		for (final DataKey dataKey : metrics) {
+		for (final DataKey dataKey : query.getKeys()) {
 			if (dataKey.getType() == DataType.metaData) {
 				metaDataNames.add(dataKey.getName());
 			} else {
