@@ -6,6 +6,10 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.DataKey;
 
+/**
+ * Requête permettant de définir les zones de sélections sur les différents axes du cube.
+ * @author npiedeloup, pchretien
+ */
 public final class Query {
 	private final TimeSelection timeSelection;
 	private final WhatSelection whatSelection;

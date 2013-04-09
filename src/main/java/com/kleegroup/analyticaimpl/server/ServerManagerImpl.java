@@ -129,16 +129,14 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	public List<DataSet<Date, ?>> getDataTimeLine(final Query query) {
 		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, false, true);
 		//On convertit la liste de cube en liste de DataSet : 1 par metrics
-		final List<DataSet<Date, ?>> datas = convertToDataSet(aggregatedCubes, true, query.getKeys());
-		return datas;
+		return convertToDataSet(aggregatedCubes, true, query.getKeys());
 	}
 
 	/** {@inheritDoc} */
 	public List<DataSet<String, ?>> getDataWhatLine(final Query query) {
 		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, false);
 		//On convertit la liste de cube en liste de DataSet : 1 par metrics
-		final List<DataSet<String, ?>> datas = convertToDataSet(aggregatedCubes, false, query.getKeys());
-		return datas;
+		return convertToDataSet(aggregatedCubes, false, query.getKeys());
 	}
 
 	private <X> List<DataSet<X, ?>> convertToDataSet(final List<Cube> aggregatedCubes, final boolean dateAsLabels, final List<DataKey> metrics) {

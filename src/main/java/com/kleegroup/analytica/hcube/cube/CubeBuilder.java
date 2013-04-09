@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.kleegroup.analytica.hcube.dimension.CubePosition;
-import com.kleegroup.analytica.hcube.dimension.Position;
-
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
+
+import com.kleegroup.analytica.hcube.dimension.CubePosition;
+import com.kleegroup.analytica.hcube.dimension.Position;
 
 /**
  * Builder permettant de contruire un cube.
