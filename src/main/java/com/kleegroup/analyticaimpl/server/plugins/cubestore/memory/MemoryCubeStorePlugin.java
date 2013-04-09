@@ -61,7 +61,6 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	 * Constructeur.
 	 */
 	public MemoryCubeStorePlugin() {
-		super();
 		store = new HashMap<TimeDimension, Map<WhatDimension, SortedMap<CubePosition, Cube>>>();
 		for (final TimeDimension timeDimension : TimeDimension.values()) {
 			final Map<WhatDimension, SortedMap<CubePosition, Cube>> timeStore = new HashMap<WhatDimension, SortedMap<CubePosition, Cube>>();

@@ -32,23 +32,16 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
-import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
-import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.server.data.DataType;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.CubeBuilderBean;
-import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.DataKeyBuilderBean;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.LastProcessIdBuilderBean;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.MetaDataBuilder;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.MetricBuilder;
-import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.TimePositionBuilderBean;
-import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.WhatPositionBuilderBean;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.DaoException;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.H2DataBase;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.PlainBean;
@@ -467,88 +460,88 @@ final class CubeStatements {
 		return oldSql.replace("${" + fieldName + "}", sb.toString());
 	}
 
-	public List<TimePosition> loadTimePositions(final TimeDimension timeDimension, final Date timeMin, final Date timeMax, final Connection connection) throws DaoException {
-		final PlainBean params = new PlainBean();
-		params.set("timeDimension", timeDimension.name());
-		params.set("whatDimension", WhatDimension.Global);
-		params.set("timePositionMin", timeMin);
-		params.set("timePositionMax", timeMax);
+	//	public List<TimePosition> loadTimePositions(final TimeDimension timeDimension, final Date timeMin, final Date timeMax, final Connection connection) throws DaoException {
+	//		final PlainBean params = new PlainBean();
+	//		params.set("timeDimension", timeDimension.name());
+	//		params.set("whatDimension", WhatDimension.Global);
+	//		params.set("timePositionMin", timeMin);
+	//		params.set("timePositionMax", timeMax);
+	//
+	//		final StringBuilder cubesSql = new StringBuilder();
+	//
+	//		cubesSql.append("select distinct cub.time_position, cub.tid_cd ")//
+	//				.append("from CUBE cub ")//
+	//				.append("where 1=1 ");
+	//		appendCubeWherePart(Collections.<String> emptyList(), params, cubesSql);
+	//		cubesSql.append("order by cub.time_position; ");
+	//		final List<TimePositionBuilderBean> timePositionBuilders = SimpleDAO.executeQueryList(cubesSql.toString(), params, TimePositionBuilderBean.class, connection);
+	//
+	//		final List<TimePosition> timePositions = new ArrayList<TimePosition>();
+	//		for (final TimePositionBuilderBean timePositionBuilder : timePositionBuilders) {
+	//			timePositions.add(timePositionBuilder.buildTimePosition());
+	//		}
+	//		return timePositions;
+	//	}
 
-		final StringBuilder cubesSql = new StringBuilder();
-
-		cubesSql.append("select distinct cub.time_position, cub.tid_cd ")//
-				.append("from CUBE cub ")//
-				.append("where 1=1 ");
-		appendCubeWherePart(Collections.<String> emptyList(), params, cubesSql);
-		cubesSql.append("order by cub.time_position; ");
-		final List<TimePositionBuilderBean> timePositionBuilders = SimpleDAO.executeQueryList(cubesSql.toString(), params, TimePositionBuilderBean.class, connection);
-
-		final List<TimePosition> timePositions = new ArrayList<TimePosition>();
-		for (final TimePositionBuilderBean timePositionBuilder : timePositionBuilders) {
-			timePositions.add(timePositionBuilder.buildTimePosition());
-		}
-		return timePositions;
-	}
-
-	public List<WhatPosition> loadWhatPositions(final TimeDimension timeDimension, final WhatDimension whatDimension, final Date timeMin, final Date timeMax, final List<String> whatPrefixes, final Connection connection) throws DaoException {
-		final PlainBean params = new PlainBean();
-		params.set("timeDimension", timeDimension.name());
-		params.set("whatDimension", whatDimension.name());
-		params.set("timePositionMin", timeMin);
-		params.set("timePositionMax", timeMax);
-
-		final StringBuilder cubesSql = new StringBuilder()//
-				.append("select distinct cub.what_position, cub.whd_cd ")//
-				.append("from CUBE cub ")//
-				.append("where 1=1 ");
-		appendCubeWherePart(whatPrefixes, params, cubesSql);
-		cubesSql.append("order by cub.what_position; ");
-		final List<WhatPositionBuilderBean> whatPositionBuilders = SimpleDAO.executeQueryList(cubesSql.toString(), params, WhatPositionBuilderBean.class, connection);
-
-		final List<WhatPosition> whatPositions = new ArrayList<WhatPosition>();
-		for (final WhatPositionBuilderBean whatPositionBuilder : whatPositionBuilders) {
-			whatPositions.add(whatPositionBuilder.buildWhatPosition());
-		}
-		return whatPositions;
-	}
-
-	public List<DataKey> loadDataKeys(final Query query, final Connection connection) throws DaoException {
-		final PlainBean params = new PlainBean();
-		params.set("timeDimension", query.getTimeSelection().getDimension().name());
-		params.set("whatDimension", query.getWhatSelection().getDimension().name());
-		params.set("timePositionMin", query.getTimeSelection().getMinValue());
-		params.set("timePositionMax", query.getTimeSelection().getMaxValue());
-
-		final StringBuilder metricsSql = new StringBuilder()//
-				.append("select distinct mtr.name ")//
-				.append("from CUBE cub, METRIC mtr ")//
-				.append("where mtr.cub_id = cub.cub_id ");
-		appendCubeWherePart(query.getWhatSelection().getWhatValues(), params, metricsSql);
-		metricsSql.append(" order by mtr.name; ");
-		final List<DataKeyBuilderBean> metricsBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, DataKeyBuilderBean.class, connection);
-
-		final StringBuilder metaDatasSql = new StringBuilder()//
-				.append("select distinct mta.name ")//
-				.append("from CUBE cub, META_DATA mta ")//
-				.append("where mta.cub_id = cub.cub_id ");
-		appendCubeWherePart(query.getWhatSelection().getWhatValues(), params, metaDatasSql);
-		metaDatasSql.append(" order by mta.name; ");
-		final List<DataKeyBuilderBean> metaDatasBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, DataKeyBuilderBean.class, connection);
-
-		final List<DataKey> dataKeys = new ArrayList<DataKey>();
-		for (final DataKeyBuilderBean dataKeyBuilder : metricsBuilders) {
-			dataKeys.add(dataKeyBuilder.build(DataType.count));
-			dataKeys.add(dataKeyBuilder.build(DataType.max));
-			dataKeys.add(dataKeyBuilder.build(DataType.min));
-			dataKeys.add(dataKeyBuilder.build(DataType.mean));
-			dataKeys.add(dataKeyBuilder.build(DataType.stdDev));
-		}
-		for (final DataKeyBuilderBean dataKeyBuilder : metaDatasBuilders) {
-			dataKeys.add(dataKeyBuilder.build(DataType.metaData));
-		}
-
-		return dataKeys;
-	}
+	//	public List<WhatPosition> loadWhatPositions(final TimeDimension timeDimension, final WhatDimension whatDimension, final Date timeMin, final Date timeMax, final List<String> whatPrefixes, final Connection connection) throws DaoException {
+	//		final PlainBean params = new PlainBean();
+	//		params.set("timeDimension", timeDimension.name());
+	//		params.set("whatDimension", whatDimension.name());
+	//		params.set("timePositionMin", timeMin);
+	//		params.set("timePositionMax", timeMax);
+	//
+	//		final StringBuilder cubesSql = new StringBuilder()//
+	//				.append("select distinct cub.what_position, cub.whd_cd ")//
+	//				.append("from CUBE cub ")//
+	//				.append("where 1=1 ");
+	//		appendCubeWherePart(whatPrefixes, params, cubesSql);
+	//		cubesSql.append("order by cub.what_position; ");
+	//		final List<WhatPositionBuilderBean> whatPositionBuilders = SimpleDAO.executeQueryList(cubesSql.toString(), params, WhatPositionBuilderBean.class, connection);
+	//
+	//		final List<WhatPosition> whatPositions = new ArrayList<WhatPosition>();
+	//		for (final WhatPositionBuilderBean whatPositionBuilder : whatPositionBuilders) {
+	//			whatPositions.add(whatPositionBuilder.buildWhatPosition());
+	//		}
+	//		return whatPositions;
+	//	}
+	//
+	//	public List<DataKey> loadDataKeys(final Query query, final Connection connection) throws DaoException {
+	//		final PlainBean params = new PlainBean();
+	//		params.set("timeDimension", query.getTimeSelection().getDimension().name());
+	//		params.set("whatDimension", query.getWhatSelection().getDimension().name());
+	//		params.set("timePositionMin", query.getTimeSelection().getMinValue());
+	//		params.set("timePositionMax", query.getTimeSelection().getMaxValue());
+	//
+	//		final StringBuilder metricsSql = new StringBuilder()//
+	//				.append("select distinct mtr.name ")//
+	//				.append("from CUBE cub, METRIC mtr ")//
+	//				.append("where mtr.cub_id = cub.cub_id ");
+	//		appendCubeWherePart(query.getWhatSelection().getWhatValues(), params, metricsSql);
+	//		metricsSql.append(" order by mtr.name; ");
+	//		final List<DataKeyBuilderBean> metricsBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, DataKeyBuilderBean.class, connection);
+	//
+	//		final StringBuilder metaDatasSql = new StringBuilder()//
+	//				.append("select distinct mta.name ")//
+	//				.append("from CUBE cub, META_DATA mta ")//
+	//				.append("where mta.cub_id = cub.cub_id ");
+	//		appendCubeWherePart(query.getWhatSelection().getWhatValues(), params, metaDatasSql);
+	//		metaDatasSql.append(" order by mta.name; ");
+	//		final List<DataKeyBuilderBean> metaDatasBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, DataKeyBuilderBean.class, connection);
+	//
+	//		final List<DataKey> dataKeys = new ArrayList<DataKey>();
+	//		for (final DataKeyBuilderBean dataKeyBuilder : metricsBuilders) {
+	//			dataKeys.add(dataKeyBuilder.build(DataType.count));
+	//			dataKeys.add(dataKeyBuilder.build(DataType.max));
+	//			dataKeys.add(dataKeyBuilder.build(DataType.min));
+	//			dataKeys.add(dataKeyBuilder.build(DataType.mean));
+	//			dataKeys.add(dataKeyBuilder.build(DataType.stdDev));
+	//		}
+	//		for (final DataKeyBuilderBean dataKeyBuilder : metaDatasBuilders) {
+	//			dataKeys.add(dataKeyBuilder.build(DataType.metaData));
+	//		}
+	//
+	//		return dataKeys;
+	//	}
 
 	private void executeAutoTx(final String sql) throws DaoException {
 		final Connection conn = h2DataBase.getConnection();
