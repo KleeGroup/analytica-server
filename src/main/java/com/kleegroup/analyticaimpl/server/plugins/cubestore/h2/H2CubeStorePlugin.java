@@ -391,24 +391,10 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	/** {@inheritDoc} */
 	public List<TimePosition> loadSubTimePositions(final TimeSelection timeSelection) {
 		final TimeDimension timeDimension = timeSelection.getDimension();
-		final TimeDimension subTimeDimension;
-		switch (timeDimension) {
-			case Year:
-				subTimeDimension = TimeDimension.Month;
-				break;
-			case Month:
-				subTimeDimension = TimeDimension.Day;
-				break;
-			case Day:
-				subTimeDimension = TimeDimension.Hour;
-				break;
-			case Hour:
-				subTimeDimension = TimeDimension.Minute;
-				break;
-			case Minute:
-			default:
-				//Si minute, on retourne une liste vide
-				return Collections.emptyList();
+		final TimeDimension subTimeDimension = timeDimension.drillDown();
+		if (subTimeDimension == null) {
+			//Si minute, on retourne une liste vide
+			return Collections.emptyList();
 		}
 
 		final List<TimePosition> timePositions;
