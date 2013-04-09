@@ -46,8 +46,8 @@ import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
+import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
-import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataType;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
@@ -218,7 +218,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 			for (final Cube cube : allCubes) {
 				final WhatPosition useWhat = new WhatPosition(cube.getKey().getWhatPosition().getValue(), whatDimension);
 				final TimePosition useTime = new TimePosition(cube.getKey().getTimePosition().getValue(), timeDimension);
-				final CubeBuilder cubeBuilder = obtainCubeBuilder(useTime, useWhat, cubeBuilderIndex);
+				final CubePosition cubePosition = new CubePosition(useTime, useWhat);
+				final CubeBuilder cubeBuilder = obtainCubeBuilder(cubePosition, cubeBuilderIndex);
 				cubeBuilder.withCube(cube);
 				//A valider !!!!!!!
 				//A valider !!!!!!!
@@ -273,9 +274,9 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<Cube> load(final TimeSelection timeSelection, final boolean aggregateTime, final WhatSelection whatSelection, final boolean aggregateWhat, final List<DataKey> metrics) {
+	public List<Cube> load(final Query query, final boolean aggregateTime, final boolean aggregateWhat, final List<DataKey> metrics) {
 		tic.tic("load");//On prépare les bornes de temps
-		final TimePosition minTime = timeSelection.getMinTimePosition();
+		final TimePosition minTime = query.getTimeSelection().getMinTimePosition();
 		//final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
 
 		//On prepare un index de metric attendu
@@ -293,19 +294,19 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 			tic.tic("loadCubes");
 			final Connection connection = store.getConnection();
 			try {
-				allCubes = statements.loadCubes(timeSelection.getDimension(), whatSelection.getDimension(), timeSelection.getMinValue(), timeSelection.getMaxValue(), whatSelection.getWhatValues(), metricNames, metaDataNames, aggregateTime, aggregateWhat, connection);
+				allCubes = statements.loadCubes(query, metricNames, metaDataNames, aggregateTime, aggregateWhat, connection);
 				if (allCubes.isEmpty()) {
 					tic.tic("atRunTimeComputeAndStoreCube");
 					//Sinon on construit le niveau du dessous
-					for (Date newDate = minTime.getValue(); newDate.before(timeSelection.getDimension().getMaxDate(timeSelection.getMaxValue())); newDate = timeSelection.getDimension().getMaxDate(newDate)) {
-						final TimePosition newTime = new TimePosition(newDate, timeSelection.getDimension());
-						for (final String whatValue : whatSelection.getWhatValues()) {
-							final WhatPosition newWhat = new WhatPosition(whatValue, whatSelection.getDimension());
+					for (Date newDate = minTime.getValue(); newDate.before(query.getTimeSelection().getDimension().getMaxDate(query.getTimeSelection().getMaxValue())); newDate = query.getTimeSelection().getDimension().getMaxDate(newDate)) {
+						final TimePosition newTime = new TimePosition(newDate, query.getTimeSelection().getDimension());
+						for (final String whatValue : query.getWhatSelection().getWhatValues()) {
+							final WhatPosition newWhat = new WhatPosition(whatValue, query.getWhatSelection().getDimension());
 							final CubePosition newCubeKey = new CubePosition(newTime, newWhat);
 							computeAndStoreCube(newCubeKey);
 						}
 					}
-					allCubes = statements.loadCubes(timeSelection.getDimension(), whatSelection.getDimension(), timeSelection.getMinValue(), timeSelection.getMaxValue(), whatSelection.getWhatValues(), metricNames, metaDataNames, aggregateTime, aggregateWhat, connection);
+					allCubes = statements.loadCubes(query, metricNames, metaDataNames, aggregateTime, aggregateWhat, connection);
 					Assertion.postcondition(!allCubes.isEmpty(), "La liste des cubes est toujours vide pendant le load");
 					tic.tac("atRunTimeComputeAndStoreCube");
 				}
@@ -320,13 +321,16 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		}
 		tic.tic("cubeBuilderIndex");
 		//On aggrege les metrics/meta demandées en fonction des parametres 
-		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, whatSelection.getDimension());
+		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, query.getWhatSelection().getDimension());
 		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>();
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
-			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getKey().getWhatPosition(), whatSelection.getDimension());
-			final TimePosition useTime = aggregateTime ? minTime : drillUp(cube.getKey().getTimePosition(), timeSelection.getDimension());
-			final CubeBuilder cubeBuilder = obtainCubeBuilder(useTime, useWhat, cubeBuilderIndex);
+			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getKey().getWhatPosition(), query.getWhatSelection().getDimension());
+			final TimePosition useTime = aggregateTime ? minTime : drillUp(cube.getKey().getTimePosition(), query.getTimeSelection().getDimension());
+
+			final CubePosition cubePosition = new CubePosition(useTime, useWhat);
+
+			final CubeBuilder cubeBuilder = obtainCubeBuilder(cubePosition, cubeBuilderIndex);
 			for (final Metric metric : cube.getMetrics()) {
 				if (metricNames.contains(metric.getName())) {
 					cubeBuilder.withMetric(metric);
@@ -378,12 +382,11 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		return resultTimePosition;
 	}
 
-	private CubeBuilder obtainCubeBuilder(final TimePosition timePosition, final WhatPosition whatPosition, final SortedMap<CubePosition, CubeBuilder> timeIndex) {
-		final CubePosition key = new CubePosition(timePosition, whatPosition);
-		CubeBuilder cubeBuilder = timeIndex.get(key);
+	private CubeBuilder obtainCubeBuilder(CubePosition cubePosition, final SortedMap<CubePosition, CubeBuilder> timeIndex) {
+		CubeBuilder cubeBuilder = timeIndex.get(cubePosition);
 		if (cubeBuilder == null) {
-			cubeBuilder = new CubeBuilder(key);
-			timeIndex.put(key, cubeBuilder);
+			cubeBuilder = new CubeBuilder(cubePosition);
+			timeIndex.put(cubePosition, cubeBuilder);
 		}
 		return cubeBuilder;
 	}
@@ -413,8 +416,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<WhatPosition> loadSubWhatPositions(final TimeSelection timeSelection, final WhatSelection whatSelection) {
-		final WhatDimension whatDimension = whatSelection.getDimension();
+	public List<WhatPosition> loadSubWhatPositions(final Query query) {
+		final WhatDimension whatDimension = query.getWhatSelection().getDimension();
 		final WhatDimension subWhatDimension = whatDimension.drillDown();
 		if (subWhatDimension == null) {
 			return Collections.emptyList();
@@ -425,7 +428,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		try {
 			final Connection connection = store.getConnection();
 			try {
-				whatPositions = statements.loadWhatPositions(timeSelection.getDimension(), subWhatDimension, timeSelection.getMinValue(), timeSelection.getMaxValue(), whatSelection.getWhatValues(), connection);
+				whatPositions = statements.loadWhatPositions(query.getTimeSelection().getDimension(), subWhatDimension, query.getTimeSelection().getMinValue(), query.getTimeSelection().getMaxValue(), query.getWhatSelection().getWhatValues(), connection);
 				//pas de commit : ReadOnly
 			} finally {
 				store.close(connection);
@@ -437,12 +440,12 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<DataKey> loadDataKeys(final TimeSelection timeSelection, final WhatSelection whatSelection) {
+	public List<DataKey> loadDataKeys(final Query query) {
 		final List<DataKey> dataKeys;
 		try {
 			final Connection connection = store.getConnection();
 			try {
-				dataKeys = statements.loadDataKeys(timeSelection.getDimension(), whatSelection.getDimension(), timeSelection.getMinValue(), timeSelection.getMaxValue(), whatSelection.getWhatValues(), connection);
+				dataKeys = statements.loadDataKeys(query, connection);
 				//pas de commit : ReadOnly
 			} finally {
 				store.close(connection);

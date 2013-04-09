@@ -39,6 +39,7 @@ import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
+import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataType;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.CubeBuilderBean;
@@ -241,14 +242,15 @@ final class CubeStatements {
 		return cubeBuilder.build();
 	}
 
-	public List<Cube> loadCubes(final TimeDimension timeDimension, final WhatDimension whatDimension, final Date timeMin, final Date timeMax, final List<String> whatPrefixes, final Set<String> metricsNames, final Set<String> metaDataNames, final boolean aggregateTime, final boolean aggregateWhat, final Connection connection) throws DaoException {
+	public List<Cube> loadCubes(final Query query, final Set<String> metricsNames, final Set<String> metaDataNames, final boolean aggregateTime, final boolean aggregateWhat, final Connection connection) throws DaoException {
+		List<String> whatPrefixes = query.getWhatSelection().getWhatValues();
 		Assertion.precondition(whatPrefixes.size() >= 1, "Il faut au moins 1 préfix de whatPosition.");
 		//---------------------------------------------------------------------
 		final PlainBean params = new PlainBean();
-		params.set("timeDimension", timeDimension.name());
-		params.set("whatDimension", whatDimension.name());
-		params.set("timePositionMin", timeMin);
-		params.set("timePositionMax", timeMax);
+		params.set("timeDimension", query.getTimeSelection().getDimension().name());
+		params.set("whatDimension", query.getWhatSelection().getDimension().name());
+		params.set("timePositionMin", query.getTimeSelection().getMinValue());
+		params.set("timePositionMax", query.getTimeSelection().getMaxValue());
 		final StringBuilder agregateFields = new StringBuilder();
 		if (!aggregateTime) {
 			agregateFields.append(", cub.time_position");
@@ -510,18 +512,18 @@ final class CubeStatements {
 		return whatPositions;
 	}
 
-	public List<DataKey> loadDataKeys(final TimeDimension timeDimension, final WhatDimension whatDimension, final Date timeMin, final Date timeMax, final List<String> whatPrefixes, final Connection connection) throws DaoException {
+	public List<DataKey> loadDataKeys(final Query query, final Connection connection) throws DaoException {
 		final PlainBean params = new PlainBean();
-		params.set("timeDimension", timeDimension.name());
-		params.set("whatDimension", whatDimension.name());
-		params.set("timePositionMin", timeMin);
-		params.set("timePositionMax", timeMax);
+		params.set("timeDimension", query.getTimeSelection().getDimension().name());
+		params.set("whatDimension", query.getWhatSelection().getDimension().name());
+		params.set("timePositionMin", query.getTimeSelection().getMinValue());
+		params.set("timePositionMax", query.getTimeSelection().getMaxValue());
 
 		final StringBuilder metricsSql = new StringBuilder()//
 				.append("select distinct mtr.name ")//
 				.append("from CUBE cub, METRIC mtr ")//
 				.append("where mtr.cub_id = cub.cub_id ");
-		appendCubeWherePart(whatPrefixes, params, metricsSql);
+		appendCubeWherePart(query.getWhatSelection().getWhatValues(), params, metricsSql);
 		metricsSql.append(" order by mtr.name; ");
 		final List<DataKeyBuilderBean> metricsBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, DataKeyBuilderBean.class, connection);
 
@@ -529,7 +531,7 @@ final class CubeStatements {
 				.append("select distinct mta.name ")//
 				.append("from CUBE cub, META_DATA mta ")//
 				.append("where mta.cub_id = cub.cub_id ");
-		appendCubeWherePart(whatPrefixes, params, metaDatasSql);
+		appendCubeWherePart(query.getWhatSelection().getWhatValues(), params, metaDatasSql);
 		metaDatasSql.append(" order by mta.name; ");
 		final List<DataKeyBuilderBean> metaDatasBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, DataKeyBuilderBean.class, connection);
 

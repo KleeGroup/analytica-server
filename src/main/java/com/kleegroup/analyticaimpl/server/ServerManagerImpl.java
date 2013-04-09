@@ -39,6 +39,7 @@ import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
+import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.ServerManager;
@@ -104,8 +105,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<Data> getData(final TimeSelection timeSelection, final WhatSelection whatSelection, final List<DataKey> metrics) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(timeSelection, true, whatSelection, true, metrics);
+	public List<Data> getData(final Query query, final List<DataKey> metrics) {
+		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, true, metrics);
 		if (aggregatedCubes.isEmpty()) {
 			return Collections.emptyList(); //TODO npi que faire si pas de ligne, l'aggregation devrait retourner toujours une ligne, non ?
 		}
@@ -130,16 +131,16 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<DataSet<Date, ?>> getDataTimeLine(final TimeSelection timeSelection, final WhatSelection whatSelection, final List<DataKey> metrics) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(timeSelection, false, whatSelection, true, metrics);
+	public List<DataSet<Date, ?>> getDataTimeLine(final Query query, final List<DataKey> metrics) {
+		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, false, true, metrics);
 		//On convertit la liste de cube en liste de DataSet : 1 par metrics
 		final List<DataSet<Date, ?>> datas = convertToDataSet(aggregatedCubes, true, metrics);
 		return datas;
 	}
 
 	/** {@inheritDoc} */
-	public List<DataSet<String, ?>> getDataWhatLine(final TimeSelection timeSelection, final WhatSelection whatSelection, final List<DataKey> metrics) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(timeSelection, true, whatSelection, false, metrics);
+	public List<DataSet<String, ?>> getDataWhatLine(final Query query, final List<DataKey> metrics) {
+		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, false, metrics);
 		//On convertit la liste de cube en liste de DataSet : 1 par metrics
 		final List<DataSet<String, ?>> datas = convertToDataSet(aggregatedCubes, false, metrics);
 		return datas;
@@ -248,8 +249,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<WhatSelection> getSubWhatSelections(final TimeSelection timeSelection, final WhatSelection whatSelection) {
-		final List<WhatPosition> subWhatPositions = cubeStorePlugin.loadSubWhatPositions(timeSelection, whatSelection);
+	public List<WhatSelection> getSubWhatSelections(final Query query) {
+		final List<WhatPosition> subWhatPositions = cubeStorePlugin.loadSubWhatPositions(query);
 		final List<WhatSelection> result = new ArrayList<WhatSelection>();
 		for (final WhatPosition subWhatPosition : subWhatPositions) {
 			result.add(new WhatSelection(subWhatPosition.getDimension(), subWhatPosition.getValue()));
@@ -258,8 +259,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public List<DataKey> getSubDataKeys(final TimeSelection timeSelection, final WhatSelection whatSelection) {
-		return cubeStorePlugin.loadDataKeys(timeSelection, whatSelection);
+	public List<DataKey> getSubDataKeys(final Query query) {
+		return cubeStorePlugin.loadDataKeys(query);
 	}
 
 	/** {@inheritDoc} */
