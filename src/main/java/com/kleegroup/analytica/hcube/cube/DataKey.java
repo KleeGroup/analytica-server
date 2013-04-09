@@ -17,7 +17,6 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
-import com.kleegroup.analytica.server.data.DataType;
 
 import kasper.kernel.util.Assertion;
 

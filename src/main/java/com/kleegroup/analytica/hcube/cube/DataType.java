@@ -15,33 +15,17 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
-
-import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.hcube.cube.DataType;
+package com.kleegroup.analytica.hcube.cube;
 
 /**
- * DataKey.
- * Une dataKey possède un type et un nom.
- *  
  * @author npiedeloup
- * @version $Id: DataKeyBuilderBean.java,v 1.1 2012/03/15 18:03:50 npiedeloup Exp $
+ * @version $Id: DataType.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
-public final class DataKeyBuilderBean {
-	private String name;
-
-	/**
-	 * @param dataType Type de la data (non connu du select)
-	 * @return Build de DataKey.
-	 */
-	public DataKey build(final DataType dataType) {
-		return new DataKey(name, dataType);
-	}
-
-	/**
-	 * @param name Nom de la data
-	 */
-	public final void setName(final String name) {
-		this.name = name;
-	}
+public enum DataType {
+	metaData, //
+	count, //
+	mean, //
+	max, //
+	min, //
+	stdDev;
 }

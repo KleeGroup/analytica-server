@@ -39,6 +39,7 @@ import org.junit.Test;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
 import com.kleegroup.analytica.hcube.cube.DataKey;
+import com.kleegroup.analytica.hcube.cube.DataType;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.query.Query;
@@ -46,7 +47,6 @@ import com.kleegroup.analytica.hcube.query.TimeSelection;
 import com.kleegroup.analytica.hcube.query.WhatSelection;
 import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataSet;
-import com.kleegroup.analytica.server.data.DataType;
 
 /**
  * Cas de Test JUNIT de l'API Analytics.

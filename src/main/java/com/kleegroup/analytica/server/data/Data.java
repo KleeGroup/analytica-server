@@ -20,6 +20,7 @@ package com.kleegroup.analytica.server.data;
 import java.util.List;
 
 import com.kleegroup.analytica.hcube.cube.DataKey;
+import com.kleegroup.analytica.hcube.cube.DataType;
 
 import kasper.kernel.util.Assertion;
 

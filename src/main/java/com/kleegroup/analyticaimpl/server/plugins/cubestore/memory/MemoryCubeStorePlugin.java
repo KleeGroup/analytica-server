@@ -32,6 +32,7 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
 import com.kleegroup.analytica.hcube.cube.DataKey;
+import com.kleegroup.analytica.hcube.cube.DataType;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
@@ -40,7 +41,6 @@ import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.server.data.DataType;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 
 /**

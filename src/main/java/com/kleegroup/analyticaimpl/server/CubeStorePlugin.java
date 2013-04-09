@@ -33,7 +33,7 @@ public interface CubeStorePlugin extends Plugin {
 
 	/**
 	 * Enregistre un cube.
-	 * Celui-ci sera merger avec les autres cubes déjà enregistré.
+	 * Celui-ci sera mergé avec les autres cubes déjà enregistrés.
 	 * @param cube Cube.
 	 */
 	void merge(Cube cube);
@@ -41,33 +41,11 @@ public interface CubeStorePlugin extends Plugin {
 	/**
 	 * Chargement des cubes.
 	 * @param query Selection comprenant la liste des métriques attendues
-	 * @param aggregateTime Si les données sont aggrégés sur l'axe temporel
-	 * @param aggregateWhat Si les données sont aggrégés sur l'axe fonctionnel
+	 * @param aggregateTime Si les données sont aggrégées sur l'axe temporel
+	 * @param aggregateWhat Si les données sont aggrégées sur l'axe fonctionnel
 	 * @return Liste des cubes
 	 */
 	List<Cube> load(Query query, boolean aggregateTime, boolean aggregateWhat);
-
-	//	/**
-	//	 * Liste des selections temporelles de dimension inférieurs sous la séléction passée en paramètre.
-	//	 * @param timeSelection  Selection temporelle
-	//	 * @return Liste des selections temporelles
-	//	 */
-	//	List<TimePosition> loadSubTimePositions(TimeSelection timeSelection);
-
-	//	/**
-	//	 * Liste des selections fonctionelles de dimension inférieurs sous la séléction passée en paramètre dans une selection temporelle donnée.
-	//	 * @param timeSelection Selection temporelle
-	//	 * @param whatSelection Selection fonctionelle
-	//	 * @return Liste des selections fonctionelles
-	//	 */
-	//	List<WhatPosition> loadSubWhatPositions(Query query);
-
-	//	/**
-	//	 * Liste des indicateurs disponibles dans une selection temporelle et fonctionnelle.
-	//	 * @param query Selection 
-	//	 * @return Liste des indicateurs
-	//	 */
-	//	List<DataKey> loadDataKeys(Query query);
 
 	/**
 	 * @return Dernier id de process stocké
@@ -79,3 +57,25 @@ public interface CubeStorePlugin extends Plugin {
 	 */
 	void saveLastProcessIdStored(String lastProcessIdStored);
 }
+
+//	/**
+//	 * Liste des selections temporelles de dimension inférieurs sous la séléction passée en paramètre.
+//	 * @param timeSelection  Selection temporelle
+//	 * @return Liste des selections temporelles
+//	 */
+//	List<TimePosition> loadSubTimePositions(TimeSelection timeSelection);
+
+//	/**
+//	 * Liste des selections fonctionelles de dimension inférieurs sous la séléction passée en paramètre dans une selection temporelle donnée.
+//	 * @param timeSelection Selection temporelle
+//	 * @param whatSelection Selection fonctionelle
+//	 * @return Liste des selections fonctionelles
+//	 */
+//	List<WhatPosition> loadSubWhatPositions(Query query);
+
+//	/**
+//	 * Liste des indicateurs disponibles dans une selection temporelle et fonctionnelle.
+//	 * @param query Selection 
+//	 * @return Liste des indicateurs
+//	 */
+//	List<DataKey> loadDataKeys(Query query);

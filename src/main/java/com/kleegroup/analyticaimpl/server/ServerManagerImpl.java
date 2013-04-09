@@ -36,13 +36,13 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.DataKey;
+import com.kleegroup.analytica.hcube.cube.DataType;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.server.ServerManager;
 import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataSet;
-import com.kleegroup.analytica.server.data.DataType;
 
 /**
  * Manager Serveur d'Analytica.
