@@ -1,4 +1,4 @@
-package com.kleegroup.analytica.hcube.ip;
+package com.kleegroup.analytica.hcube.trash;
 
 import com.kleegroup.analytica.hcube.dimension.Dimension;
 

@@ -1,4 +1,4 @@
-package com.kleegroup.analytica.hcube.ip;
+package com.kleegroup.analytica.hcube.trash;
 
 import java.util.List;
 
