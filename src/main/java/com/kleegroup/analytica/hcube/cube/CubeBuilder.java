@@ -28,7 +28,6 @@ import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
-import com.kleegroup.analytica.hcube.dimension.Position;
 
 /**
  * Builder permettant de contruire un cube.
@@ -86,7 +85,7 @@ public final class CubeBuilder implements Builder<Cube> {
 	public CubeBuilder withCube(final Cube cube) {
 		Assertion.notNull(cube);
 		//Assertion util mais 50% des perfs !!
-		Assertion.precondition(isIn(cube.getPosition(), cubePosition), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubePosition, cube.getPosition());
+		Assertion.precondition(cubePosition.contains(cube.getPosition()), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubePosition, cube.getPosition());
 		//---------------------------------------------------------------------
 		for (final Metric metric : cube.getMetrics()) {
 			withMetric(metric);
@@ -95,37 +94,6 @@ public final class CubeBuilder implements Builder<Cube> {
 			withMetaData(metaData);
 		}
 		return this;
-	}
-
-	/**
-	 * Vérifie l'inclusion de clé, util pour controller le merge de Cube.
-	 * @param cubePosition Clé dont on veut vérifier l'inclusion
-	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
-	 */
-	private boolean isIn(final CubePosition cubePosition1, final CubePosition cubePosition2) {
-		if (cubePosition1.equals(cubePosition)) {
-			return true;
-		}
-		return isIn(cubePosition1.getTimePosition(), cubePosition2.getTimePosition()) && isIn(cubePosition1.getWhatPosition(), cubePosition.getWhatPosition());
-	}
-
-	/**
-	 * Vérifie si la position est contenue dans une autre autre.
-	 * Une position A est contenue dans une position B  
-	 * Si A = B
-	 * Si B peut être obtenu par drillUp successifs sur A.
-	 * @param otherPosition
-	 * @return
-	 */
-	private static boolean isIn(final Position position, final Position otherPosition) {
-		if (position.equals(otherPosition)) {
-			return true;
-		}
-		Position upperPosition = position.drillUp();
-		while (upperPosition != null && !upperPosition.equals(otherPosition)) {
-			upperPosition = upperPosition.drillUp();
-		}
-		return otherPosition.equals(upperPosition);
 	}
 
 	/** 

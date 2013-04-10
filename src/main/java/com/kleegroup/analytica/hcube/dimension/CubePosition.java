@@ -25,6 +25,9 @@ import com.kleegroup.analytica.hcube.Identity;
 /**
  * Position (clé) du cube dans l'espace multidimensionnel. 
  * 
+ * A partir d'une position il est possible d'accéder à la liste de toutes les positions qui la contiennent.
+ * Inversement il est possible de savoir si une poition est contenue dans une autre.
+ *  
  * @author npiedeloup, pchretien
  * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
@@ -67,5 +70,40 @@ public final class CubePosition extends Identity {
 			timePosition = timePosition.drillUp();
 		}
 		return upperCubePositions;
+	}
+
+	/**
+	 * Vérifie l'inclusion de clé, util pour controller le merge de Cube.
+	 * @param cubePosition Clé dont on veut vérifier l'inclusion
+	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
+	 */
+	public boolean contains(final CubePosition cubePosition) {
+		if (this.equals(cubePosition)) {
+			return true;
+		}
+		return contains(timePosition, cubePosition.timePosition) && contains(whatPosition, cubePosition.whatPosition);
+	}
+
+	/**
+	 * Vérifie si la position est contenue dans une autre autre.
+	 * Une position A est contenue dans une position B  
+	 * Si A = B
+	 * Si B peut être obtenu par drillUp successifs sur A.
+	 * @param otherPosition
+	 * @return
+	 */
+	private static boolean contains(final Position position, final Position otherPosition) {
+		//On vérifie que l'autre position est contenue dans la première
+		//========[----position-----]====
+		//=============[other]===========
+		//pour ce faire on remonte les positions jusqu'à les faire coincider.
+		Position upperPosition = otherPosition;
+		while (upperPosition != null) {
+			if (position.equals(upperPosition)) {
+				return true;
+			}
+			upperPosition = upperPosition.drillUp();
+		}
+		return false;
 	}
 }
