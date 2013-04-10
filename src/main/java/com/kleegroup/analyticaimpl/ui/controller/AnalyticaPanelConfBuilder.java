@@ -28,12 +28,12 @@ import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.server.data.DataKey;
-import com.kleegroup.analytica.server.data.DataType;
-import com.kleegroup.analytica.server.data.TimeDimension;
-import com.kleegroup.analytica.server.data.TimeSelection;
-import com.kleegroup.analytica.server.data.WhatDimension;
-import com.kleegroup.analytica.server.data.WhatSelection;
+import com.kleegroup.analytica.hcube.cube.DataKey;
+import com.kleegroup.analytica.hcube.cube.DataType;
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.query.QueryBuilder;
 
 /**
  * @author npiedeloup
@@ -64,9 +64,11 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 	/** {@inheritDoc} */
 	public AnalyticaPanelConf build() {
 		final String panelContext = dashboardContext + "." + panelName;
-		final TimeSelection panelTimeSelection = readTimeSelection(panelContext);
-		final WhatSelection panelWhatSelection = readWhatSelection(panelContext);
-		final List<DataKey> panelDataKeys = readDataKeyList(panelContext);
+		QueryBuilder queryBuilder = new QueryBuilder(readDataKeyList(panelContext));
+		readTimeSelection(panelContext, queryBuilder);
+		readWhatSelection(panelContext, queryBuilder);
+
+		Query panelQuery = queryBuilder.build();
 		final List<String> panelLabels = java.util.Arrays.asList(configManager.getStringValue(panelContext, "labels").split(";"));
 
 		final boolean aggregateTime;
@@ -91,7 +93,7 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		final String colors = configManager.getStringValue(panelContext, "colors");
 		final int panelWidth = Integer.parseInt(panelSize.split("x")[0]);
 		final int panelHeight = Integer.parseInt(panelSize.split("x")[1]);
-		return new AnalyticaPanelConf(panelName, panelTimeSelection, panelWhatSelection, panelDataKeys, panelLabels, aggregateTime, aggregateWhat, panelTitle, panelIcon, panelRenderer, colors, panelWidth, panelHeight);
+		return new AnalyticaPanelConf(panelName, panelQuery, panelLabels, aggregateTime, aggregateWhat, panelTitle, panelIcon, panelRenderer, colors, panelWidth, panelHeight);
 
 	}
 
@@ -109,23 +111,28 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		return dataKeys;
 	}
 
-	private WhatSelection readWhatSelection(final String confContext) {
+	private void readWhatSelection(final String confContext, final QueryBuilder queryBuilder) {
 		final String whatDim = configManager.getStringValue(confContext, "whatDim");
 		final String whatList = configManager.getStringValue(confContext, "whatList");
 
-		final WhatDimension dimension = WhatDimension.valueOf(whatDim);
-		return new WhatSelection(dimension, whatList.split(";"));
+		final WhatDimension whatDimension = WhatDimension.valueOf(whatDim);
+		queryBuilder//
+				.on(whatDimension)//
+				.with(whatList.split(";"));
 	}
 
-	private TimeSelection readTimeSelection(final String confContext) {
+	private void readTimeSelection(final String confContext, final QueryBuilder queryBuilder) {
 		final String timeDim = configManager.getStringValue(confContext, "timeDim");
 		final String timeFrom = configManager.getStringValue(confContext, "timeFrom");
 		final String timeTo = configManager.getStringValue(confContext, "timeTo");
 
-		final TimeDimension dimension = TimeDimension.valueOf(timeDim);
-		final Date minValue = readDate(timeFrom, dimension);
-		final Date maxValue = readDate(timeTo, dimension);
-		return new TimeSelection(minValue, maxValue, dimension);
+		final TimeDimension timeDimension = TimeDimension.valueOf(timeDim);
+		final Date minValue = readDate(timeFrom, timeDimension);
+		final Date maxValue = readDate(timeTo, timeDimension);
+		queryBuilder//
+				.on(timeDimension)//
+				.from(minValue)//
+				.to(maxValue);
 	}
 
 	private Date readDate(final String timeStr, final TimeDimension dimension) {

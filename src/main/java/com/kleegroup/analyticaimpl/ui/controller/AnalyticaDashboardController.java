@@ -34,8 +34,8 @@ import kasper.jsf.util.JSFUtil;
 
 import org.primefaces.model.chart.ChartModel;
 
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
 
 /**
@@ -151,8 +151,8 @@ public final class AnalyticaDashboardController {
 				final List<ColumnModel> result = new ArrayList<ColumnModel>();
 				ColumnModel columnModel = new ColumnModel("Label", "LABEL");
 				result.add(columnModel);
-				for (int i = 0; i < analyticaPanelConf.getDataKeys().size(); i++) {
-					final DataKey datakey = analyticaPanelConf.getDataKeys().get(i);
+				for (int i = 0; i < analyticaPanelConf.getQuery().getKeys().size(); i++) {
+					final DataKey datakey = analyticaPanelConf.getQuery().getKeys().get(i);
 					columnModel = new ColumnModel(analyticaPanelConf.getLabels().get(i), datakey.toString());
 					result.add(columnModel);
 				}

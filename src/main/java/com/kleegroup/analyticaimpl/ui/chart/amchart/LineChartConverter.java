@@ -32,7 +32,7 @@ import javax.faces.convert.ConverterException;
 
 import kasper.kernel.exception.KRuntimeException;
 
-import com.kleegroup.analytica.server.data.DataKey;
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
 import com.kleegroup.analyticaimpl.ui.colors.HSLLinearInterpolation;
 import com.kleegroup.analyticaimpl.ui.colors.RGBCatmullInterpolation;
@@ -89,7 +89,7 @@ public final class LineChartConverter implements Converter {
 		final StringBuilder result = new StringBuilder();
 		result.append("{ datas:[");
 		String sep = "";
-		final List<DataKey> dataKeys = panelConf.getDataKeys();
+		final List<DataKey> dataKeys = panelConf.getQuery().getKeys();
 		for (final Map.Entry<Object, Map<DataKey, Object>> entry : allDatas.entrySet()) {
 			result.append(sep);
 			result.append("{key:");

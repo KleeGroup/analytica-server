@@ -27,11 +27,9 @@ import javax.faces.bean.SessionScoped;
 
 import kasper.kernel.util.Assertion;
 
+import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
-import com.kleegroup.analytica.server.data.TimeSelection;
-import com.kleegroup.analytica.server.data.WhatSelection;
 
 /**
  * @author npiedeloup

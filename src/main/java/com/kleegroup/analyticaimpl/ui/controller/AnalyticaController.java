@@ -29,14 +29,12 @@ import javax.inject.Inject;
 import kasper.jsf.util.JSFConstants;
 import kasper.jsf.util.JSFUtil;
 
+import com.kleegroup.analytica.hcube.cube.DataKey;
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.server.ServerManager;
 import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataKey;
 import com.kleegroup.analytica.server.data.DataSet;
-import com.kleegroup.analytica.server.data.TimeDimension;
-import com.kleegroup.analytica.server.data.TimeSelection;
-import com.kleegroup.analytica.server.data.WhatDimension;
-import com.kleegroup.analytica.server.data.WhatSelection;
 
 /**
  * @author npiedeloup

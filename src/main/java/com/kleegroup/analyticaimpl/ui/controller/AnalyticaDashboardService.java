@@ -49,13 +49,13 @@ public final class AnalyticaDashboardService implements Serializable {
 	public final String loadDataAsJson(final AnalyticaPanelConf analyticaPanelConf) {
 		final Object objectResult;
 		if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
-			final List<Data> datas = serverManager.getData(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<Data> datas = serverManager.getData(analyticaPanelConf.getQuery());
 			objectResult = datas;
 		} else if (analyticaPanelConf.isAggregateTime()) {
-			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getQuery());
 			objectResult = datas;
 		} else {
-			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getQuery());
 			objectResult = datas;
 		}
 		final Gson gson = new Gson();
@@ -65,7 +65,7 @@ public final class AnalyticaDashboardService implements Serializable {
 	public final ChartModel loadDataAsChartModel(final AnalyticaPanelConf analyticaPanelConf) {
 		final CartesianChartModel result = new CartesianChartModel();
 		if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
-			final List<Data> datas = serverManager.getData(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<Data> datas = serverManager.getData(analyticaPanelConf.getQuery());
 			final ChartSeries serie = new ChartSeries();
 			serie.setLabel(analyticaPanelConf.getPanelTitle());
 			for (final Data data : datas) {
@@ -73,7 +73,7 @@ public final class AnalyticaDashboardService implements Serializable {
 			}
 			result.addSeries(serie);
 		} else if (analyticaPanelConf.isAggregateTime()) {
-			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getQuery());
 			for (final DataSet<String, ?> dataSet : datas) {
 				final LineChartSeries serie = new LineChartSeries();
 				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
@@ -86,7 +86,7 @@ public final class AnalyticaDashboardService implements Serializable {
 			}
 
 		} else {
-			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getQuery());
 			for (final DataSet<Date, ?> dataSet : datas) {
 				final LineChartSeries serie = new LineChartSeries();
 				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
@@ -104,13 +104,13 @@ public final class AnalyticaDashboardService implements Serializable {
 	public List<?> loadData(final AnalyticaPanelConf analyticaPanelConf) {
 		final List<?> result;
 		if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
-			final List<Data> datas = serverManager.getData(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<Data> datas = serverManager.getData(analyticaPanelConf.getQuery());
 			result = datas;
 		} else if (analyticaPanelConf.isAggregateTime()) {
-			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getQuery());
 			result = datas;
 		} else {
-			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getQuery());
 			result = datas;
 		}
 		return result;
