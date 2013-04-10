@@ -32,9 +32,8 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
 import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.hcube.cube.DataType;
-import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
+import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
@@ -122,14 +121,14 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 			allCubes.addAll(load(fromKey, toKey));
 		}
 		//On prepare un index de metric attendu
-		final Set<String> metricNames = new HashSet<String>();
-		final Set<String> metaDataNames = new HashSet<String>();
+		final Set<MetricKey> metriceys = new HashSet<MetricKey>();
+		//		final Set<String> metaDataNames = new HashSet<String>();
 		for (final DataKey dataKey : query.getKeys()) {
-			if (dataKey.getType() == DataType.metaData) {
-				metaDataNames.add(dataKey.getName());
-			} else {
-				metricNames.add(dataKey.getName());
-			}
+			//			if (dataKey.getType() == DataType.metaData) {
+			//				metaDataNames.add(dataKey.getName());
+			//			} else {
+			metriceys.add(dataKey.getMetricKey());
+			//			}
 		}
 
 		//On aggrege les metrics/meta demandées en fonction des parametres 
@@ -144,15 +143,15 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 			final CubeBuilder cubeBuilder = obtainCubeBuilder(key, cubeBuilderIndex);
 
 			for (final Metric metric : cube.getMetrics()) {
-				if (metricNames.contains(metric.getName())) {
+				if (metriceys.contains(metric.getKey())) {
 					cubeBuilder.withMetric(metric);
 				}
 			}
-			for (final MetaData metaData : cube.getMetaDatas()) {
-				if (metaDataNames.contains(metaData.getName())) {
-					cubeBuilder.withMetaData(metaData);
-				}
-			}
+			//			for (final MetaData metaData : cube.getMetaDatas()) {
+			//				if (metaDataNames.contains(metaData.getName())) {
+			//					cubeBuilder.withMetaData(metaData);
+			//				}
+			//			}
 		}
 		final List<Cube> cubes = new ArrayList<Cube>(cubeBuilderIndex.size());
 		for (final CubeBuilder cubeBuilder : cubeBuilderIndex.values()) {

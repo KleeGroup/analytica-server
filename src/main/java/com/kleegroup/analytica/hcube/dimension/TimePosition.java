@@ -30,7 +30,7 @@ public final class TimePosition extends Identity implements Position<TimeDimensi
 	private final Date date;
 
 	public TimePosition(final Date date, final TimeDimension timeDimension) {
-		super("Time:[" + timeDimension.name() + "]" + timeDimension.reduce(date).getTime());
+		super("time:[" + timeDimension.name() + "]" + timeDimension.reduce(date).getTime());
 		//Assertion.notNull(timeDimension); inutil
 		//---------------------------------------------------------------------
 		this.dimension = timeDimension;

@@ -33,7 +33,7 @@ import kasper.kernel.util.Assertion;
  * @version $Id: Metric.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class Metric {
-	private final String name;
+	private final MetricKey metricKey;
 
 	private final long count;
 	private final double min;
@@ -41,10 +41,10 @@ public final class Metric {
 	private final double sum;
 	private final double sqrSum;
 
-	public Metric(final String name, final long count, final double min, final double max, final double sum, final double sqrSum) {
-		Assertion.notEmpty(name);
+	public Metric(final MetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum) {
+		Assertion.notNull(metricKey);
 		//---------------------------------------------------------------------
-		this.name = name;
+		this.metricKey = metricKey;
 		this.count = count;
 		this.min = min;
 		this.max = max;
@@ -55,8 +55,8 @@ public final class Metric {
 	/**
 	 * @return Nom de metric
 	 */
-	public String getName() {
-		return name;
+	public MetricKey getKey() {
+		return metricKey;
 	}
 
 	/**

@@ -21,10 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,8 +34,6 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.hcube.cube.DataType;
-import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.server.ServerManager;
@@ -112,15 +108,15 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		//On convertit le cube en liste de Data : 1 par metrics
 		final List<Data> datas = new ArrayList<Data>(query.getKeys().size());
 		for (final DataKey dataKey : query.getKeys()) {
-			if (dataKey.getType() == DataType.metaData) {
-				final List<String> metaDataValues = new ArrayList<String>();
-				for (final MetaData metaData : aggregatedCube.getMetaData(dataKey.getName())) {
-					metaDataValues.add(metaData.getValue());
-				}
-				datas.add(new Data(dataKey, metaDataValues));
-			} else {
-				datas.add(new Data(dataKey, getCubeValue(aggregatedCube, dataKey)));
-			}
+			//		if (dataKey.getType() == DataType.metaData) {
+			//				final List<String> metaDataValues = new ArrayList<String>();
+			//				for (final MetaData metaData : aggregatedCube.getMetaData(dataKey.getName())) {
+			//					metaDataValues.add(metaData.getValue());
+			//				}
+			//datas.add(new Data(dataKey, metaDataValues));
+			//			} else {
+			datas.add(new Data(dataKey, getCubeValue(aggregatedCube, dataKey)));
+			//			}
 		}
 		return datas;
 	}
@@ -142,14 +138,14 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private <X> List<DataSet<X, ?>> convertToDataSet(final List<Cube> aggregatedCubes, final boolean dateAsLabels, final List<DataKey> metrics) {
 		final List<X> labels = new ArrayList<X>(aggregatedCubes.size());
 		final Map<DataKey, List<Double>> valuesMap = new HashMap<DataKey, List<Double>>();
-		final Map<DataKey, List<Set<String>>> metaDatasMap = new HashMap<DataKey, List<Set<String>>>();
+		//		final Map<DataKey, List<Set<String>>> metaDatasMap = new HashMap<DataKey, List<Set<String>>>();
 		//1- on prépare les listes de valeurs et de metaData
 		for (final DataKey dataKey : metrics) {
-			if (dataKey.getType() == DataType.metaData) {
-				metaDatasMap.put(dataKey, new ArrayList<Set<String>>());
-			} else {
-				valuesMap.put(dataKey, new ArrayList<Double>());
-			}
+			//			if (dataKey.getType() == DataType.metaData) {
+			//				metaDatasMap.put(dataKey, new ArrayList<Set<String>>());
+			//			} else {
+			valuesMap.put(dataKey, new ArrayList<Double>());
+			//			}
 		}
 		//2- On parcour les cubes et on remplit les données
 		for (final Cube cube : aggregatedCubes) {
@@ -161,34 +157,34 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 				labels.add((X) cube.getPosition().getWhatPosition().getValue());
 			}
 			for (final DataKey dataKey : metrics) {
-				if (dataKey.getType() == DataType.metaData) {
-					final List<Set<String>> metadatas = metaDatasMap.get(dataKey);
-					final Set<String> values = new HashSet<String>();
-					for (final MetaData metaData : cube.getMetaData(dataKey.getName())) {
-						values.add(metaData.getValue());
-					}
-					metadatas.add(values);
-				} else {
-					final List<Double> values = valuesMap.get(dataKey);
-					values.add(getCubeValue(cube, dataKey));
-				}
+				//if (dataKey.getType() == DataType.metaData) {
+				//					final List<Set<String>> metadatas = metaDatasMap.get(dataKey);
+				//					final Set<String> values = new HashSet<String>();
+				//					for (final MetaData metaData : cube.getMetaData(dataKey.getName())) {
+				//						values.add(metaData.getValue());
+				//					}
+				//					metadatas.add(values);
+				//} else {
+				final List<Double> values = valuesMap.get(dataKey);
+				values.add(getCubeValue(cube, dataKey));
+				//}
 			}
 		}
 
 		//3- On crée les DataSet
 		final List<DataSet<X, ?>> datas = new ArrayList<DataSet<X, ?>>(metrics.size());
 		for (final DataKey dataKey : metrics) {
-			if (dataKey.getType() == DataType.metaData) {
-				datas.add(new DataSet<X, Set<String>>(dataKey, labels, metaDatasMap.get(dataKey)));
-			} else {
-				datas.add(new DataSet<X, Double>(dataKey, labels, valuesMap.get(dataKey)));
-			}
+			//			if (dataKey.getType() == DataType.metaData) {
+			//				datas.add(new DataSet<X, Set<String>>(dataKey, labels, metaDatasMap.get(dataKey)));
+			//			} else {
+			datas.add(new DataSet<X, Double>(dataKey, labels, valuesMap.get(dataKey)));
+			//			}
 		}
 		return datas;
 	}
 
 	private double getCubeValue(final Cube cube, final DataKey dataKey) {
-		final Metric metric = cube.getMetric(dataKey.getName());
+		final Metric metric = cube.getMetric(dataKey.getMetricKey());
 		//Assertion.notNull(metric,"La metric {0} n''a pas été trouvée dans le cube {1}", dataKey.getName(), cube.getKey());
 		//---------------------------------------------------------------------
 		if (metric == null) { //la metric peut-être null sur certain cube (exemple 'CACHE_HIT' n'est présent que sur quelques cubes)

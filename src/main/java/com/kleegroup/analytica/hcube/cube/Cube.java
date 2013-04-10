@@ -17,7 +17,6 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +26,12 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
 
 /**
+ * Un cube contient :
+ *  - des métriques nommées
+ *  	exemple : temps réponse, nombre de mails envoyés
+ *  - des métadonnées 
+ *  	exemple : tags, users
+ *  
  * @author npiedeloup, pchretien
  * @version $Id: Cube.java,v 1.6 2012/10/16 13:34:49 pchretien Exp $
  */
@@ -35,19 +40,20 @@ public final class Cube {
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
 	private final CubePosition cubePosition;
-	private final Map<String, Metric> metrics;
-	private final Map<String, Collection<MetaData>> indexedMetadatas;
-	private final Collection<MetaData> metaDatas;
+	private final Map<MetricKey, Metric> metrics;
 
-	Cube(final CubePosition cubePosition, final Collection<Metric> metrics, final Collection<MetaData> metadatas) {
+	//	private final Map<String, Collection<MetaData>> indexedMetadatas;
+	//	private final Collection<MetaData> metaDatas;
+
+	Cube(final CubePosition cubePosition, final Collection<Metric> metrics/*, final Collection<MetaData> metadatas*/) {
 		Assertion.notNull(cubePosition);
 		Assertion.notNull(metrics);
-		Assertion.notNull(metadatas);
+		//		Assertion.notNull(metadatas);
 		//---------------------------------------------------------------------
 		this.cubePosition = cubePosition;
 		this.metrics = index(metrics);
-		indexedMetadatas = indexMeta(metadatas);
-		this.metaDatas = metadatas;
+		//		indexedMetadatas = indexMeta(metadatas);
+		//		this.metaDatas = metadatas;
 	}
 
 	public CubePosition getPosition() {
@@ -59,8 +65,8 @@ public final class Cube {
 	 * @param name Nom de la métrique
 	 * @return Métrique
 	 */
-	public Metric getMetric(final String name) {
-		return metrics.get(name);
+	public Metric getMetric(final MetricKey metricKey) {
+		return metrics.get(metricKey);
 	}
 
 	/**
@@ -71,47 +77,47 @@ public final class Cube {
 		return metrics.values();
 	}
 
-	public Collection<MetaData> getMetaData(final String name) {
-		return indexedMetadatas.get(name);
-	}
+	//	public Collection<MetaData> getMetaData(final String name) {
+	//		return indexedMetadatas.get(name);
+	//	}
+	//
+	//	public Collection<MetaData> getMetaDatas() {
+	//		return metaDatas;
+	//	}
 
-	public Collection<MetaData> getMetaDatas() {
-		return metaDatas;
-	}
-
-	private static Map<String, Metric> index(final Collection<Metric> metrics) {
-		final Map<String, Metric> indexedList = new LinkedHashMap<String, Metric>(metrics.size());
+	private static Map<MetricKey, Metric> index(final Collection<Metric> metrics) {
+		final Map<MetricKey, Metric> indexedList = new LinkedHashMap<MetricKey, Metric>(metrics.size());
 		for (final Metric metric : metrics) {
-			final Object old = indexedList.put(metric.getName(), metric);
+			final Object old = indexedList.put(metric.getKey(), metric);
 			Assertion.isNull(old, "La liste de Metric ne doit pas contenir de doublon");
 		}
 		return indexedList;
 	}
 
-	private static Map<String, Collection<MetaData>> indexMeta(final Collection<MetaData> metaDatas) {
-		final Map<String, Collection<MetaData>> indexedList = new LinkedHashMap<String, Collection<MetaData>>(metaDatas.size());
-		for (final MetaData metaData : metaDatas) {
-			Collection<MetaData> list = indexedList.get(metaData.getName());
-			if (list == null) {
-				list = new ArrayList<MetaData>();
-				indexedList.put(metaData.getName(), list);
-			}
-			list.add(metaData);
-		}
-		return indexedList;
-	}
+	//	private static Map<String, Collection<MetaData>> indexMeta(final Collection<MetaData> metaDatas) {
+	//		final Map<String, Collection<MetaData>> indexedList = new LinkedHashMap<String, Collection<MetaData>>(metaDatas.size());
+	//		for (final MetaData metaData : metaDatas) {
+	//			Collection<MetaData> list = indexedList.get(metaData.getName());
+	//			if (list == null) {
+	//				list = new ArrayList<MetaData>();
+	//				indexedList.put(metaData.getName(), list);
+	//			}
+	//			list.add(metaData);
+	//		}
+	//		return indexedList;
+	//	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
 				.append(cubePosition.id()).append("{\n\tMetrics:");
 		for (final Metric metric : getMetrics()) {
-			sb.append("\n\t\t- ").append(metric.getName()).append(" = ").append(metric.get(DataType.mean));
+			sb.append("\n\t\t- ").append(metric.getKey()).append(" = ").append(metric.get(DataType.mean));
 		}
-		sb.append("\n\tMetaDatas:");
-		for (final MetaData metadata : getMetaDatas()) {
-			sb.append("\n\t\t- ").append(metadata.getName()).append(" = ").append(metadata.getValue());
-		}
+		//		sb.append("\n\tMetaDatas:");
+		//		for (final MetaData metadata : getMetaDatas()) {
+		//			sb.append("\n\t\t- ").append(metadata.getName()).append(" = ").append(metadata.getValue());
+		//		}
 		sb.append("}");
 		return sb.toString();
 	}

@@ -28,7 +28,7 @@ public final class WhatPosition extends Identity implements Position<WhatDimensi
 	private final String what;
 
 	public WhatPosition(final String fullName, final WhatDimension whatDimension) {
-		super("What:[" + whatDimension.name() + "]" + whatDimension.reduce(fullName));
+		super("what:[" + whatDimension.name() + "]" + whatDimension.reduce(fullName));
 		//---------------------------------------------------------------------
 		this.dimension = whatDimension;
 		what = whatDimension.reduce(fullName);

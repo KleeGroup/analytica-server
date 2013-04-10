@@ -19,6 +19,7 @@ package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
 
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.DataType;
+import com.kleegroup.analytica.hcube.cube.MetricKey;
 
 /**
  * DataKey.
@@ -35,7 +36,7 @@ public final class DataKeyBuilderBean {
 	 * @return Build de DataKey.
 	 */
 	public DataKey build(final DataType dataType) {
-		return new DataKey(name, dataType);
+		return new DataKey(new MetricKey(name), dataType);
 	}
 
 	/**

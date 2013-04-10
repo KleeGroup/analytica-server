@@ -20,6 +20,7 @@ package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
 import kasper.kernel.lang.Builder;
 
 import com.kleegroup.analytica.hcube.cube.Metric;
+import com.kleegroup.analytica.hcube.cube.MetricKey;
 
 /**
  * Metric d'un cube.
@@ -42,7 +43,7 @@ public final class MetricBuilder implements Builder<Metric> {
 	 * @return Build de metric
 	 */
 	public Metric build() {
-		return new Metric(name, count, min, max, sum, sqrSum);
+		return new Metric(new MetricKey(name), count, min, max, sum, sqrSum);
 	}
 
 	public final long getCubId() {

@@ -22,7 +22,7 @@ package com.kleegroup.analytica.hcube.cube;
  * @version $Id: DataType.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public enum DataType {
-	metaData, //
+	//	metaData, //
 	count, //
 	mean, //
 	max, //

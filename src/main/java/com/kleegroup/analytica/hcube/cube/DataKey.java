@@ -17,7 +17,6 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
-
 import kasper.kernel.util.Assertion;
 
 /**
@@ -25,7 +24,7 @@ import kasper.kernel.util.Assertion;
  * @version $Id: DataKey.java,v 1.3 2012/04/17 09:15:26 pchretien Exp $
  */
 public final class DataKey {
-	private final String name;
+	private final MetricKey metricKey;
 	private final DataType type;
 
 	//COMMENTAIRES 
@@ -52,16 +51,16 @@ public final class DataKey {
 	//COMMENTAIRES 
 	//COMMENTAIRES 
 
-	public DataKey(final String name, final DataType type) {
-		Assertion.notEmpty(name);
+	public DataKey(final MetricKey metricKey, final DataType type) {
+		Assertion.notNull(metricKey);
 		Assertion.notNull(type);
 		//---------------------------------------------------------------------
-		this.name = name;
+		this.metricKey = metricKey;
 		this.type = type;
 	}
 
-	public String getName() {
-		return name;
+	public MetricKey getMetricKey() {
+		return metricKey;
 	}
 
 	public DataType getType() {
@@ -70,6 +69,6 @@ public final class DataKey {
 
 	@Override
 	public String toString() {
-		return name + ":" + type.name();
+		return metricKey + ":" + type.name();
 	}
 }

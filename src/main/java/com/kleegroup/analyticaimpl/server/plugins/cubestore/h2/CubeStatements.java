@@ -33,15 +33,14 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
 import com.kleegroup.analytica.hcube.cube.DataType;
-import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
+import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.CubeBuilderBean;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.LastProcessIdBuilderBean;
-import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.MetaDataBuilder;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean.MetricBuilder;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.DaoException;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.H2DataBase;
@@ -221,22 +220,22 @@ final class CubeStatements {
 		}
 
 		time = System.currentTimeMillis();
-		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(SELECT_METADATAS, result, MetaDataBuilder.class, connection);
-		if (System.currentTimeMillis() - time > 1000) {
-			System.out.println("load SELECT_METADATAS lent (" + (System.currentTimeMillis() - time) + " ms)  cubId:" + result.getCubId() + "======================================================");
-		}
+		//		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(SELECT_METADATAS, result, MetaDataBuilder.class, connection);
+		//		if (System.currentTimeMillis() - time > 1000) {
+		//			System.out.println("load SELECT_METADATAS lent (" + (System.currentTimeMillis() - time) + " ms)  cubId:" + result.getCubId() + "======================================================");
+		//		}
 		final CubeBuilder cubeBuilder = new CubeBuilder(cubeKey);
 		for (final MetricBuilder metricBuilder : metricBuilders) {
 			cubeBuilder.withMetric(metricBuilder.build());
 		}
-		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
-			cubeBuilder.withMetaData(metaDataBuilder.build());
-		}
+		//		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
+		//			cubeBuilder.withMetaData(metaDataBuilder.build());
+		//		}
 
 		return cubeBuilder.build();
 	}
 
-	public List<Cube> loadCubes(final Query query, final Set<String> metricsNames, final Set<String> metaDataNames, final boolean aggregateTime, final boolean aggregateWhat, final Connection connection) throws DaoException {
+	public List<Cube> loadCubes(final Query query, final Set<MetricKey> metricKeys, /*final Set<String> metaDataNames,*/final boolean aggregateTime, final boolean aggregateWhat, final Connection connection) throws DaoException {
 		List<String> whatPrefixes = query.getWhatValues();
 		Assertion.precondition(whatPrefixes.size() >= 1, "Il faut au moins 1 préfix de whatPosition.");
 		//---------------------------------------------------------------------
@@ -263,7 +262,7 @@ final class CubeStatements {
 		final List<CubeBuilderBean> cubeInfos = SimpleDAO.executeQueryList(cubesSql.toString(), params, CubeBuilderBean.class, connection);
 
 		final List<MetricBuilder> metricBuilders;
-		if (!metricsNames.isEmpty()) {
+		if (!metricKeys.isEmpty()) {
 			final StringBuilder metricsSql = new StringBuilder()//
 					.append("select mtr.cub_id, mtr.name, sum(mtr.count) count, min(mtr.min) min, max(mtr.max) max, sum(mtr.sum) sum, sum(mtr.sqr_sum) sqr_sum ")//
 					.append("from CUBE cub, METRIC mtr ")//
@@ -271,25 +270,25 @@ final class CubeStatements {
 			appendCubeWherePart(whatPrefixes, params, metricsSql);
 			metricsSql.append("and mtr.name in (${metricList}) ")//
 					.append("group by mtr.cub_id, mtr.name; ");
-			final String preparedMetricsSql = addMultiValuedField("metricList", metricsNames, params, metricsSql.toString());
+			final String preparedMetricsSql = addMultiValuedField("metricList", metricKeys, params, metricsSql.toString());
 			metricBuilders = SimpleDAO.executeQueryList(preparedMetricsSql, params, MetricBuilder.class, connection);
 		} else {
 			metricBuilders = Collections.emptyList();
 		}
-		final List<MetaDataBuilder> metaDataBuilders;
-		if (!metaDataNames.isEmpty()) {
-			final StringBuilder metaDatasSql = new StringBuilder()//
-					.append("select distinct mta.cub_id, mta.name, mta.value ")//
-					.append("from CUBE cub, META_DATA mta ")//
-					.append("where mta.cub_id = cub.cub_id ");
-			appendCubeWherePart(whatPrefixes, params, metaDatasSql);
-			metaDatasSql.append("and mta.name in (${metaDataList}) ");
-			metaDatasSql.append("order by mta.cub_id, mta.name; ");
-			final String preparedMetaDatasSql = addMultiValuedField("metaDataList", metaDataNames, params, metaDatasSql.toString());
-			metaDataBuilders = SimpleDAO.executeQueryList(preparedMetaDatasSql, params, MetaDataBuilder.class, connection);
-		} else {
-			metaDataBuilders = Collections.emptyList();
-		}
+		//		final List<MetaDataBuilder> metaDataBuilders;
+		//		if (!metaDataNames.isEmpty()) {
+		//			final StringBuilder metaDatasSql = new StringBuilder()//
+		//					.append("select distinct mta.cub_id, mta.name, mta.value ")//
+		//					.append("from CUBE cub, META_DATA mta ")//
+		//					.append("where mta.cub_id = cub.cub_id ");
+		//			appendCubeWherePart(whatPrefixes, params, metaDatasSql);
+		//			metaDatasSql.append("and mta.name in (${metaDataList}) ");
+		//			metaDatasSql.append("order by mta.cub_id, mta.name; ");
+		//			final String preparedMetaDatasSql = addMultiValuedField("metaDataList", metaDataNames, params, metaDatasSql.toString());
+		//			metaDataBuilders = SimpleDAO.executeQueryList(preparedMetaDatasSql, params, MetaDataBuilder.class, connection);
+		//		} else {
+		//			metaDataBuilders = Collections.emptyList();
+		//		}
 		final Map<Long, CubeBuilder> cubeBuilderIndex = new LinkedHashMap<Long, CubeBuilder>();
 		for (final CubeBuilderBean cubeInfo : cubeInfos) {
 			final CubeBuilder cubeBuilder = cubeInfo.build();
@@ -299,10 +298,10 @@ final class CubeStatements {
 			cubeBuilderIndex.get(metricBuilder.getCubId())//
 					.withMetric(metricBuilder.build());
 		}
-		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
-			cubeBuilderIndex.get(metaDataBuilder.getCubId())//
-					.withMetaData(metaDataBuilder.build());
-		}
+		//		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
+		//			cubeBuilderIndex.get(metaDataBuilder.getCubId())//
+		//					.withMetaData(metaDataBuilder.build());
+		//		}
 		final List<Cube> cubes = new ArrayList<Cube>();
 		for (final CubeBuilder cubeBuilderFinal : cubeBuilderIndex.values()) {
 			cubes.add(cubeBuilderFinal.build());
@@ -341,7 +340,7 @@ final class CubeStatements {
 				.append("where mta.cub_id = cub.cub_id ");
 		appendCubeWherePart(Collections.<String> emptyList(), params, metaDatasSql);
 		metaDatasSql.append(" order by mta.cub_id, mta.name; ");
-		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, MetaDataBuilder.class, connection);
+		//		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, MetaDataBuilder.class, connection);
 
 		final Map<Long, CubeBuilder> cubeBuilderIndex = new LinkedHashMap<Long, CubeBuilder>();
 		for (final CubeBuilderBean cubeInfo : cubeInfos) {
@@ -352,10 +351,10 @@ final class CubeStatements {
 			cubeBuilderIndex.get(metricBuilder.getCubId())//
 					.withMetric(metricBuilder.build());
 		}
-		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
-			cubeBuilderIndex.get(metaDataBuilder.getCubId())//
-					.withMetaData(metaDataBuilder.build());
-		}
+		//		for (final MetaDataBuilder metaDataBuilder : metaDataBuilders) {
+		//			cubeBuilderIndex.get(metaDataBuilder.getCubId())//
+		//					.withMetaData(metaDataBuilder.build());
+		//		}
 		final List<Cube> cubes = new ArrayList<Cube>();
 		for (final CubeBuilder cubeBuilderFinal : cubeBuilderIndex.values()) {
 			cubes.add(cubeBuilderFinal.build());
@@ -406,7 +405,7 @@ final class CubeStatements {
 		}
 
 		saveMetrics(cube.getMetrics(), cubId, connection);
-		saveMetaDatas(cube.getMetaDatas(), cubId, connection);
+		//saveMetaDatas(cube.getMetaDatas(), cubId, connection);
 	}
 
 	private void saveMetrics(final Collection<Metric> metrics, final long cubId, final Connection connection) throws DaoException {
@@ -416,7 +415,7 @@ final class CubeStatements {
 		SimpleDAO.executeSQL("DELETE FROM METRIC WHERE CUB_ID = ${cubId}; ", params, connection);
 
 		for (final Metric metric : metrics) {
-			params.set("name", metric.getName());
+			params.set("name", metric.getKey());
 			params.set(DataType.count.name(), metric.get(DataType.count));
 			params.set(DataType.min.name(), metric.get(DataType.min));
 			params.set(DataType.max.name(), metric.get(DataType.max));
@@ -431,31 +430,31 @@ final class CubeStatements {
 		//		}
 	}
 
-	private void saveMetaDatas(final Collection<MetaData> metaDatas, final long cubId, final Connection connection) throws DaoException {
-		//if (auction.getAucId() == null) {
-		final PlainBean params = new PlainBean();
-		params.set("cubId", cubId);
-		SimpleDAO.executeSQL("DELETE FROM META_DATA WHERE CUB_ID = ${cubId}; ", params, connection);
-		for (final MetaData metaData : metaDatas) {
-			params.set("name", metaData.getName());
-			params.set("value", metaData.getValue());
-			SimpleDAO.executeSQL("INSERT INTO META_DATA (MTA_ID, CUB_ID, NAME, VALUE) VALUES(NEXTVAL('SEQ_META_DATA'), ${cubId}, ${name}, ${value}); @generated(mtaId)", params, connection);
+	/*	private void saveMetaDatas(final Collection<MetaData> metaDatas, final long cubId, final Connection connection) throws DaoException {
+			//if (auction.getAucId() == null) {
+			final PlainBean params = new PlainBean();
+			params.set("cubId", cubId);
+			SimpleDAO.executeSQL("DELETE FROM META_DATA WHERE CUB_ID = ${cubId}; ", params, connection);
+			for (final MetaData metaData : metaDatas) {
+				params.set("name", metaData.getName());
+				params.set("value", metaData.getValue());
+				SimpleDAO.executeSQL("INSERT INTO META_DATA (MTA_ID, CUB_ID, NAME, VALUE) VALUES(NEXTVAL('SEQ_META_DATA'), ${cubId}, ${name}, ${value}); @generated(mtaId)", params, connection);
+			}
+			//		} else {
+			//			SimpleDAO.executeSQL("UPDATE AUCTION SET START_INDEX = ${startIndex}," + " END_INDEX = ${endIndex}," + " TOTAL_INDEX = ${totalIndex},"
+			//					+ " UPDATE_TIME = CURRENT_TIMESTAMP()" + " WHERE AUC_ID = ${aucId}", auction, connection);
+			//
+			//		}
 		}
-		//		} else {
-		//			SimpleDAO.executeSQL("UPDATE AUCTION SET START_INDEX = ${startIndex}," + " END_INDEX = ${endIndex}," + " TOTAL_INDEX = ${totalIndex},"
-		//					+ " UPDATE_TIME = CURRENT_TIMESTAMP()" + " WHERE AUC_ID = ${aucId}", auction, connection);
-		//
-		//		}
-	}
-
-	private static String addMultiValuedField(final String fieldName, final Set<String> fieldValues, final PlainBean params, final String oldSql) {
+	*/
+	private static String addMultiValuedField(final String fieldName, final Set<MetricKey> metricKeys, final PlainBean params, final String oldSql) {
 		final StringBuilder sb = new StringBuilder();
 		String sep = "";
 		int i = 0;
-		for (final String fieldValue : fieldValues) {
+		for (final MetricKey metricKey : metricKeys) {
 			final String newFieldName = fieldName + i++;
 			sb.append(sep).append("${").append(newFieldName).append("}");
-			params.set(newFieldName, fieldValue);
+			params.set(newFieldName, metricKey);
 			sep = ",";
 		}
 		return oldSql.replace("${" + fieldName + "}", sb.toString());

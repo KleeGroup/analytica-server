@@ -26,9 +26,9 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
-import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.cube.MetricBuilder;
+import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
@@ -103,9 +103,9 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 			addMetric(measure.getKey(), measure.getValue(), cubeBuilder, whatTypePositionValue, parentCubeBuilders, sb);
 		}
 
-		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
-			cubeBuilder.withMetaData(new MetaData(metaData.getKey(), metaData.getValue()));
-		}
+		//		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
+		//			cubeBuilder.withMetaData(new MetaData(metaData.getKey(), metaData.getValue()));
+		//		}
 
 		return cubeBuilder;
 	}
@@ -114,13 +114,13 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		Assertion.precondition(sb.length() == 0, "Le buffer doit être vide");
 		//---------------------------------------------------------------------
 		// 1- Cas général : on ajoute la mesure sous forme de métric dans le cube 
-		cubeBuilder.withMetric(new MetricBuilder(measureName).withValue(measureValue).build());
+		cubeBuilder.withMetric(new MetricBuilder(new MetricKey(measureName)).withValue(measureValue).build());
 		//---------------------------------------------------------------------
 		//---------------------------------------------------------------------
 		// 2- Cas particulier : Certaines métriques sont escaladées au niveau des processus parents.  
 		if (isClimbingMetric(measureName)) {
 			sb.append(whatModulePositionValue).append("_").append(measureName);
-			final Metric metric = new MetricBuilder(sb.toString()).withValue(measureValue).build();
+			final Metric metric = new MetricBuilder(new MetricKey(sb.toString())).withValue(measureValue).build();
 			sb.setLength(0);
 			for (final CubeBuilder parentCubeBuilder : parentCubeBuilders) {
 				parentCubeBuilder.withMetric(metric);

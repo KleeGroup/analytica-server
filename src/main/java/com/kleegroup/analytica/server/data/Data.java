@@ -19,10 +19,9 @@ package com.kleegroup.analytica.server.data;
 
 import java.util.List;
 
-import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.hcube.cube.DataType;
-
 import kasper.kernel.util.Assertion;
+
+import com.kleegroup.analytica.hcube.cube.DataKey;
 
 /**
  * @author npiedeloup
@@ -65,12 +64,12 @@ public final class Data {
 
 	private Data(final DataKey key, final Double value, final List<String> stringValues) {
 		Assertion.notNull(key);
-		if (key.getType() == DataType.metaData) {
-			Assertion.notNull(stringValues, "Pour les méta-données la value est une String mais peut-être vide");
-			Assertion.precondition(stringValues != null && !stringValues.isEmpty() && value == null, "Pour les méta-données la value est une liste de avec au moins un élément");
-		} else {
-			Assertion.precondition(stringValues == null && value != null, "La valeur doit être numérique, sauf pour les méta-données");
-		}
+		//		if (key.getType() == DataType.metaData) {
+		//			Assertion.notNull(stringValues, "Pour les méta-données la value est une String mais peut-être vide");
+		//			Assertion.precondition(stringValues != null && !stringValues.isEmpty() && value == null, "Pour les méta-données la value est une liste de avec au moins un élément");
+		//		} else {
+		Assertion.precondition(stringValues == null && value != null, "La valeur doit être numérique, sauf pour les méta-données");
+		//		}
 		//---------------------------------------------------------------------
 		this.key = key;
 		this.value = value;
@@ -82,7 +81,7 @@ public final class Data {
 	}
 
 	public double getValue() {
-		Assertion.precondition(key.getType() != DataType.metaData, "Pour les méta-données il n'y a pas de valeur numérique");
+		//		Assertion.precondition(key.getType() != DataType.metaData, "Pour les méta-données il n'y a pas de valeur numérique");
 		//---------------------------------------------------------------------
 		return value;
 	}

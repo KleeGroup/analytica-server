@@ -19,10 +19,8 @@ package com.kleegroup.analytica.hcube.cube;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
@@ -37,8 +35,9 @@ import com.kleegroup.analytica.hcube.dimension.CubePosition;
  */
 public final class CubeBuilder implements Builder<Cube> {
 	private final CubePosition cubePosition;
-	private final Map<String, MetricBuilder> metrics = new HashMap<String, MetricBuilder>();
-	private final Set<MetaData> metaDatas = new HashSet<MetaData>(500);
+	private final Map<MetricKey, MetricBuilder> metrics = new HashMap<MetricKey, MetricBuilder>();
+
+	//	private final Set<MetaData> metaDatas = new HashSet<MetaData>(500);
 
 	/**
 	 * Constructeur.
@@ -57,26 +56,26 @@ public final class CubeBuilder implements Builder<Cube> {
 	public CubeBuilder withMetric(final Metric metric) {
 		Assertion.notNull(metric);
 		//---------------------------------------------------------------------
-		MetricBuilder metricBuilder = metrics.get(metric.getName());
+		MetricBuilder metricBuilder = metrics.get(metric.getKey());
 		if (metricBuilder == null) {
-			metricBuilder = new MetricBuilder(metric.getName());
-			metrics.put(metric.getName(), metricBuilder);
+			metricBuilder = new MetricBuilder(metric.getKey());
+			metrics.put(metric.getKey(), metricBuilder);
 		}
 		//On ajoute metric
 		metricBuilder.withMetric(metric);
 		return this;
 	}
 
-	/** 
-	 * Ajout d'une meta-donnée.
-	 * @param metaData meta-donnée
-	 */
-	public CubeBuilder withMetaData(final MetaData metaData) {
-		Assertion.notNull(metaData);
-		//---------------------------------------------------------------------
-		metaDatas.add(metaData);
-		return this;
-	}
+	//	/** 
+	//	 * Ajout d'une meta-donnée.
+	//	 * @param metaData meta-donnée
+	//	 */
+	//	public CubeBuilder withMetaData(final MetaData metaData) {
+	//		Assertion.notNull(metaData);
+	//		//---------------------------------------------------------------------
+	//		metaDatas.add(metaData);
+	//		return this;
+	//	}
 
 	/**
 	 * Ajout d'un cube. 
@@ -90,9 +89,9 @@ public final class CubeBuilder implements Builder<Cube> {
 		for (final Metric metric : cube.getMetrics()) {
 			withMetric(metric);
 		}
-		for (final MetaData metaData : cube.getMetaDatas()) {
-			withMetaData(metaData);
-		}
+		//		for (final MetaData metaData : cube.getMetaDatas()) {
+		//			withMetaData(metaData);
+		//		}
 		return this;
 	}
 
@@ -105,6 +104,6 @@ public final class CubeBuilder implements Builder<Cube> {
 		for (final MetricBuilder metricBuilder : metrics.values()) {
 			list.add(metricBuilder.build());
 		}
-		return new Cube(cubePosition, list, metaDatas);
+		return new Cube(cubePosition, list/*, metaDatas*/);
 	}
 }

@@ -68,11 +68,12 @@ public final class MetaData {
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(final Object other) {
-		if (other instanceof MetaData) {
-			final MetaData otherMetaData = (MetaData) other;
-			return name.equals(otherMetaData.name) && value.equals(otherMetaData.value);
-		}
-		return false;
+		throw new IllegalAccessError();
+		//		if (other instanceof MetaData) {
+		//			final MetaData otherMetaData = (MetaData) other;
+		//			return name.equals(otherMetaData.name) && value.equals(otherMetaData.value);
+		//		}
+		//		return false;
 	}
 
 	/** {@inheritDoc} */

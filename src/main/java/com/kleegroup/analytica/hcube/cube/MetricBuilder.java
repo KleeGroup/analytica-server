@@ -28,7 +28,7 @@ import kasper.kernel.util.Assertion;
  * @version $Id: MetricBuilder.java,v 1.3 2012/10/16 12:53:40 pchretien Exp $
  */
 public final class MetricBuilder implements Builder<Metric> {
-	private final String metricName;
+	private final MetricKey metricKey;
 	private long count = 0;
 	private double min = Double.NaN; //Par défaut pas de min
 	private double max = Double.NaN; //Par défaut pas de max
@@ -39,10 +39,10 @@ public final class MetricBuilder implements Builder<Metric> {
 	 * Constructeur.
 	 * @param metricName Nom de la metric
 	 */
-	public MetricBuilder(final String metricName) {
-		Assertion.notEmpty(metricName);
+	public MetricBuilder(final MetricKey metricKey) {
+		Assertion.notNull(metricKey);
 		//---------------------------------------------------------------------
-		this.metricName = metricName;
+		this.metricKey = metricKey;
 	}
 
 	/**
@@ -66,7 +66,7 @@ public final class MetricBuilder implements Builder<Metric> {
 	 */
 	public MetricBuilder withMetric(final Metric metric) {
 		Assertion.notNull(metric);
-		Assertion.precondition(metricName.equals(metric.getName()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricName, metric.getName());
+		Assertion.precondition(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
 		//---------------------------------------------------------------------
 		count += metric.get(DataType.count);
 		max = max(max, metric.get(DataType.max));
@@ -81,9 +81,9 @@ public final class MetricBuilder implements Builder<Metric> {
 	 * @return Metric du cube
 	 */
 	public Metric build() {
-		Assertion.precondition(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricName);
+		Assertion.precondition(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
 		//---------------------------------------------------------------------
-		return new Metric(metricName, count, min, max, sum, sqrSum);
+		return new Metric(metricKey, count, min, max, sum, sqrSum);
 	}
 
 	private static double max(double d1, double d2) {
