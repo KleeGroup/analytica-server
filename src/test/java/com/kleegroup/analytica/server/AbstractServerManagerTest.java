@@ -144,14 +144,16 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testMetaData() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_META_DATA", "Process1");
-		kProcessBuilder1.setMetaData(TEST_META_DATA_1, "MD1");
-		serverManager.push(kProcessBuilder1.build());
+		final KProcess kProcess1 = createProcess("TEST_META_DATA", "Process1")//
+				.setMetaData(TEST_META_DATA_1, "MD1")//
+				.build();
+		serverManager.push(kProcess1);
 
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_META_DATA", "Process2");
-		kProcessBuilder2.setMetaData(TEST_META_DATA_1, "MD2");
-		kProcessBuilder2.setMetaData(TEST_META_DATA_2, "MD3");
-		serverManager.push(kProcessBuilder2.build());
+		final KProcess kProcess2 = createProcess("TEST_META_DATA", "Process2")//
+				.setMetaData(TEST_META_DATA_1, "MD2")//
+				.setMetaData(TEST_META_DATA_2, "MD3")//
+				.build();
+		serverManager.push(kProcess2);
 
 		//---------------------------------------------------------------------
 		final DataKey[] metrics = new DataKey[] { new DataKey(TEST_META_DATA_1, DataType.metaData), new DataKey(TEST_META_DATA_2, DataType.metaData) };
@@ -167,13 +169,15 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testMean() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_MEAN1", "Process1");
-		kProcessBuilder1.incMeasure(TEST_MEAN_VALUE, 100);
-		serverManager.push(kProcessBuilder1.build());
+		final KProcess kProcess1 = createProcess("TEST_MEAN1", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 100)//
+				.build();
+		serverManager.push(kProcess1);
 
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_MEAN1", "Process2");
-		kProcessBuilder2.incMeasure(TEST_MEAN_VALUE, 50);
-		serverManager.push(kProcessBuilder2.build());
+		final KProcess kProcess2 = createProcess("TEST_MEAN1", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 50)//
+				.build();
+		serverManager.push(kProcess2);
 		//---------------------------------------------------------------------
 		final DataKey[] metrics = new DataKey[] { new DataKey(TEST_MEAN_VALUE, DataType.mean) };
 		final List<Data> datas = getCubeToday("TEST_MEAN1", metrics);
@@ -183,13 +187,15 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testMeanZero() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_MEAN2", "Process1");
-		kProcessBuilder1.incMeasure(TEST_VALUE_PCT, 90);
-		serverManager.push(kProcessBuilder1.build());
+		final KProcess kProcess1 = createProcess("TEST_MEAN2", "Process1")//
+				.incMeasure(TEST_VALUE_PCT, 90)//
+				.build();
+		serverManager.push(kProcess1);
 
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_MEAN2", "Process2");
+		final KProcess kProcess2 = createProcess("TEST_MEAN2", "Process2")//
+				.build();
 		//TEST_VALUE_PCT = 0 implicite
-		serverManager.push(kProcessBuilder2.build());
+		serverManager.push(kProcess2);
 
 		//---------------------------------------------------------------------
 		final DataKey[] metrics = new DataKey[] { new DataKey(TEST_VALUE_PCT, DataType.mean) };
@@ -200,13 +206,15 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testData() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_MEAN3", "Process1");
-		kProcessBuilder1.incMeasure(TEST_MEAN_VALUE, 100);
-		serverManager.push(kProcessBuilder1.build());
+		final KProcess kProcess1 = createProcess("TEST_MEAN3", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 100)//
+				.build();
+		serverManager.push(kProcess1);
 
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_MEAN3", "Process2");
-		kProcessBuilder2.incMeasure(TEST_MEAN_VALUE, 50);
-		serverManager.push(kProcessBuilder2.build());
+		final KProcess kProcess2 = createProcess("TEST_MEAN3", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 50)//
+				.build();
+		serverManager.push(kProcess2);
 
 		//---------------------------------------------------------------------
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
@@ -224,21 +232,30 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testDataWhatSelection() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_WHAT_SELECTION1", "Process1");
-		kProcessBuilder1.incMeasure(TEST_MEAN_VALUE, 100);
-		serverManager.push(kProcessBuilder1.build());
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_WHAT_SELECTION1", "Process1");
-		kProcessBuilder2.incMeasure(TEST_MEAN_VALUE, 50);
-		serverManager.push(kProcessBuilder2.build());
-		final KProcessBuilder kProcessBuilder3 = createProcess("TEST_WHAT_SELECTION1", "Process2");
-		kProcessBuilder3.incMeasure(TEST_MEAN_VALUE, 80);
-		serverManager.push(kProcessBuilder3.build());
-		final KProcessBuilder kProcessBuilder4 = createProcess("TEST_WHAT_SELECTION1", "Process2");
-		kProcessBuilder4.incMeasure(TEST_MEAN_VALUE, 50);
-		serverManager.push(kProcessBuilder4.build());
-		final KProcessBuilder kProcessBuilder5 = createProcess("TEST_WHAT_SELECTION1", "Process3");
-		kProcessBuilder5.incMeasure(TEST_MEAN_VALUE, 10);
-		serverManager.push(kProcessBuilder5.build());
+		final KProcess kProcess1 = createProcess("TEST_WHAT_SELECTION1", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 100)//
+				.build();
+		serverManager.push(kProcess1);
+
+		final KProcess kProcess2 = createProcess("TEST_WHAT_SELECTION1", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 50)//
+				.build();
+		serverManager.push(kProcess2);
+
+		final KProcess kProcess3 = createProcess("TEST_WHAT_SELECTION1", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 80)//
+				.build();
+		serverManager.push(kProcess3);
+
+		final KProcess kProcess4 = createProcess("TEST_WHAT_SELECTION1", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 50)//
+				.build();
+		serverManager.push(kProcess4);
+
+		final KProcess kProcess5 = createProcess("TEST_WHAT_SELECTION1", "Process3")//
+				.incMeasure(TEST_MEAN_VALUE, 10)//
+				.build();
+		serverManager.push(kProcess5);
 
 		//---------------------------------------------------------------------
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
@@ -252,16 +269,18 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testDataMetaData() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_META_DATA3", "Process1");
-		kProcessBuilder1.incMeasure("TEST_VALUE", 100);
-		kProcessBuilder1.setMetaData(TEST_META_DATA_1, "MD1");
-		serverManager.push(kProcessBuilder1.build());
+		final KProcess kProcess1 = createProcess("TEST_META_DATA3", "Process1")//
+				.incMeasure("TEST_VALUE", 100)//
+				.setMetaData(TEST_META_DATA_1, "MD1")//
+				.build();
+		serverManager.push(kProcess1);
 
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_META_DATA3", "Process2");
-		kProcessBuilder2.incMeasure("TEST_VALUE", 50);
-		kProcessBuilder2.setMetaData(TEST_META_DATA_1, "MD2");
-		kProcessBuilder2.setMetaData(TEST_META_DATA_2, "MD3");
-		serverManager.push(kProcessBuilder2.build());
+		final KProcess kProcess2 = createProcess("TEST_META_DATA3", "Process2")//
+				.incMeasure("TEST_VALUE", 50)//
+				.setMetaData(TEST_META_DATA_1, "MD2")//
+				.setMetaData(TEST_META_DATA_2, "MD3")//
+				.build();
+		serverManager.push(kProcess2);
 
 		//---------------------------------------------------------------------
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 1 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
@@ -281,15 +300,21 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testDataMultiMetric() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_MEAN4", "Process1");
-		kProcessBuilder1.incMeasure(TEST_MEAN_VALUE, 100);
-		serverManager.push(kProcessBuilder1.build());
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_MEAN4", "Process2");
-		kProcessBuilder2.incMeasure(TEST_MEAN_VALUE, 50);
-		serverManager.push(kProcessBuilder2.build());
-		final KProcessBuilder kProcessBuilder3 = createProcess("TEST_MEAN4", "Process1");
-		kProcessBuilder3.incMeasure(TEST_MEAN_VALUE, 60);
-		serverManager.push(kProcessBuilder3.build());
+		final KProcess kProcess1 = createProcess("TEST_MEAN4", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 100)//
+				.build();
+		serverManager.push(kProcess1);
+
+		final KProcess kProcess2 = createProcess("TEST_MEAN4", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 50)//
+				.build();
+		serverManager.push(kProcess2);
+
+		final KProcess kProcess3 = createProcess("TEST_MEAN4", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 60)//
+				.build();
+		serverManager.push(kProcess3);
+
 		final KProcessBuilder kProcessBuilder4 = createProcess("TEST_MEAN4", "Process2");
 		kProcessBuilder4.incMeasure(TEST_MEAN_VALUE, 90);
 		serverManager.push(kProcessBuilder4.build());
@@ -316,18 +341,25 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testDataSetWhatLine() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_MEAN5", "Process1");
-		kProcessBuilder1.incMeasure(TEST_MEAN_VALUE, 100);
-		serverManager.push(kProcessBuilder1.build());
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_MEAN5", "Process2");
-		kProcessBuilder2.incMeasure(TEST_MEAN_VALUE, 50);
-		serverManager.push(kProcessBuilder2.build());
-		final KProcessBuilder kProcessBuilder3 = createProcess("TEST_MEAN5", "Process2");
-		kProcessBuilder3.incMeasure(TEST_MEAN_VALUE, 60);
-		serverManager.push(kProcessBuilder3.build());
-		final KProcessBuilder kProcessBuilder4 = createProcess("TEST_MEAN5", "Process3");
-		kProcessBuilder4.incMeasure(TEST_MEAN_VALUE, 90);
-		serverManager.push(kProcessBuilder4.build());
+		final KProcess kProcess1 = createProcess("TEST_MEAN5", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 100)//
+				.build();
+		serverManager.push(kProcess1);
+
+		final KProcess kProcess2 = createProcess("TEST_MEAN5", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 50)//
+				.build();
+		serverManager.push(kProcess2);
+
+		final KProcess kProcess3 = createProcess("TEST_MEAN5", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 60)//
+				.build();
+		serverManager.push(kProcess3);
+
+		final KProcess kProcess4 = createProcess("TEST_MEAN5", "Process3")//
+				.incMeasure(TEST_MEAN_VALUE, 90)//
+				.build();
+		serverManager.push(kProcess4);
 
 		//---------------------------------------------------------------------
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
@@ -356,18 +388,25 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testDataSetTimeLine() {
-		final KProcessBuilder kProcessBuilder1 = createProcess("TEST_MEAN6", "Process1");
-		kProcessBuilder1.incMeasure(TEST_MEAN_VALUE, 100);
-		serverManager.push(kProcessBuilder1.build());
-		final KProcessBuilder kProcessBuilder2 = createProcess("TEST_MEAN6", "Process2");
-		kProcessBuilder2.incMeasure(TEST_MEAN_VALUE, 50);
-		serverManager.push(kProcessBuilder2.build());
-		final KProcessBuilder kProcessBuilder3 = createProcess("TEST_MEAN6", "Process2");
-		kProcessBuilder3.incMeasure(TEST_MEAN_VALUE, 60);
-		serverManager.push(kProcessBuilder3.build());
-		final KProcessBuilder kProcessBuilder4 = createProcess("TEST_MEAN6", "Process3");
-		kProcessBuilder4.incMeasure(TEST_MEAN_VALUE, 90);
-		serverManager.push(kProcessBuilder4.build());
+		final KProcess kProcess1 = createProcess("TEST_MEAN6", "Process1")//
+				.incMeasure(TEST_MEAN_VALUE, 100)//
+				.build();
+		serverManager.push(kProcess1);
+
+		final KProcess kProcess2 = createProcess("TEST_MEAN6", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 50)//
+				.build();
+		serverManager.push(kProcess2);
+
+		final KProcess kProcess3 = createProcess("TEST_MEAN6", "Process2")//
+				.incMeasure(TEST_MEAN_VALUE, 60)//
+				.build();
+		serverManager.push(kProcess3);
+
+		final KProcess kProcess4 = createProcess("TEST_MEAN6", "Process3")//
+				.incMeasure(TEST_MEAN_VALUE, 90)//
+				.build();
+		serverManager.push(kProcess4);
 
 		//---------------------------------------------------------------------
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
@@ -386,11 +425,11 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	private List<Data> getCubeToday(final String module, final DataKey... metrics) {
 		final TimeSelection timeSelection = new TimeSelection(TimeDimension.Minute, new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000), new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
 		final WhatSelection whatSelection = new WhatSelection(WhatDimension.Type, WhatDimension.SEPARATOR + module);
-		serverManager.store50NextProcessesAsCube();
 		final Query query = new Query(timeSelection, whatSelection, asList(metrics));
 
-		final List<Data> datas = serverManager.getData(query);
-		return datas;
+		serverManager.store50NextProcessesAsCube();
+
+		return serverManager.getData(query);
 	}
 
 	private static double getMean(final List<Data> datas, final String measureName) {
@@ -450,11 +489,11 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 * @return Kprocess resultat
 	 */
 	private static KProcess createOneCommande(final String numCommande, final int nbArticles) {
-		final KProcessBuilder kProcessBuilder1 = createProcess(PROCESS2_TYPE, "1 Commande");
-		kProcessBuilder1.setMetaData(numCommande, "NUMERO");
-		kProcessBuilder1.incMeasure("MONTANT", 5);
-		kProcessBuilder1.addSubProcess(createNArticles(nbArticles));
-		return kProcessBuilder1.build();
+		return createProcess(PROCESS2_TYPE, "1 Commande")//
+				.setMetaData(numCommande, "NUMERO")//
+				.incMeasure("MONTANT", 5)//
+				.addSubProcess(createNArticles(nbArticles))//
+				.build();
 	}
 
 	/**
@@ -465,10 +504,11 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	private static KProcess createNArticles(final int nbArticles) {
 		final KProcessBuilder kProcessBuilder2 = createProcess(PROCESS1_TYPE, nbArticles + " Articles 25 Kg", nbArticles * 10);
 		for (int i = 0; i < nbArticles; i++) {
-			final KProcessBuilder kProcessBuilder1 = createProcess(PROCESS1_TYPE, "1 Article 25 Kg");
-			kProcessBuilder1.setMeasure("POIDS", 25);
-			kProcessBuilder1.incMeasure("MONTANT", 10);
-			kProcessBuilder2.addSubProcess(kProcessBuilder1.build());
+			final KProcess kProcess1 = createProcess(PROCESS1_TYPE, "1 Article 25 Kg")//
+					.setMeasure("POIDS", 25)//
+					.incMeasure("MONTANT", 10)//
+					.build();
+			kProcessBuilder2.addSubProcess(kProcess1);
 		}
 		return kProcessBuilder2.build();
 	}
