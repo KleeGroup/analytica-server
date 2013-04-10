@@ -241,10 +241,10 @@ final class CubeStatements {
 		Assertion.precondition(whatPrefixes.size() >= 1, "Il faut au moins 1 préfix de whatPosition.");
 		//---------------------------------------------------------------------
 		final PlainBean params = new PlainBean();
-		params.set("timeDimension", query.getTimeSelection().getDimension().name());
+		params.set("timeDimension", query.getTimeDimension().name());
 		params.set("whatDimension", query.getWhatSelection().getDimension().name());
-		params.set("timePositionMin", query.getTimeSelection().getMinValue());
-		params.set("timePositionMax", query.getTimeSelection().getMaxValue());
+		params.set("timePositionMin", query.getMinTimePosition().getValue());
+		params.set("timePositionMax", query.getMaxTimePosition().getValue());
 		final StringBuilder agregateFields = new StringBuilder();
 		if (!aggregateTime) {
 			agregateFields.append(", cub.time_position");
