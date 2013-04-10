@@ -49,7 +49,6 @@ import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
-import com.kleegroup.analyticaimpl.server.plugins.cubestore.TicTac;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.DaoException;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.H2DataBase;
 import com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.dao.H2DataBaseImpl;
