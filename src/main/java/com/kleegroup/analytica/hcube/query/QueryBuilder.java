@@ -10,7 +10,7 @@ import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 
 /**
- * Requête permettant de définir les zones de sélections sur les différents axes du cube.
+ * Builder de la requête.
  * @author npiedeloup, pchretien
  */
 public class QueryBuilder implements Builder<Query> {

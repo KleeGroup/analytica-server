@@ -11,6 +11,7 @@ import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
+ * Cette requête doit être construite avec QueryBuilder.
  * @author npiedeloup, pchretien
  */
 public final class Query {
