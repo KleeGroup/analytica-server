@@ -388,10 +388,10 @@ final class CubeStatements {
 
 	public void saveCube(final Cube cube, final Connection connection) throws DaoException {
 		final PlainBean params = new PlainBean();
-		params.set("timeDimension", cube.getKey().getTimePosition().getDimension().name());
-		params.set("whatDimension", cube.getKey().getWhatPosition().getDimension().name());
-		params.set("timePosition", cube.getKey().getTimePosition().getValue());
-		params.set("whatPosition", cube.getKey().getWhatPosition().getValue());
+		params.set("timeDimension", cube.getPosition().getTimePosition().getDimension().name());
+		params.set("whatDimension", cube.getPosition().getWhatPosition().getDimension().name());
+		params.set("timePosition", cube.getPosition().getTimePosition().getValue());
+		params.set("whatPosition", cube.getPosition().getWhatPosition().getValue());
 
 		final List<CubeBuilderBean> result = SimpleDAO.executeQueryList(SELECT_CUBE_LOCKED, params, CubeBuilderBean.class, connection);
 		final Long cubId;
@@ -401,7 +401,7 @@ final class CubeStatements {
 			cubId = params.get("cubId");
 		} else {
 			//update : il n'y a pas a toucher au cube lui même
-			Assertion.postcondition(result.size() == 1, "Trop de resultat ({1}) pour {0}", cube.getKey(), result.size());
+			Assertion.postcondition(result.size() == 1, "Trop de resultat ({1}) pour {0}", cube.getPosition(), result.size());
 			cubId = result.get(0).getCubId();
 		}
 

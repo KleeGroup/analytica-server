@@ -34,24 +34,24 @@ public final class Cube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
-	private final CubePosition key;
+	private final CubePosition cubePosition;
 	private final Map<String, Metric> metrics;
 	private final Map<String, Collection<MetaData>> indexedMetadatas;
-	private final Collection<MetaData> allMetaDatas;
+	private final Collection<MetaData> metaDatas;
 
-	Cube(final CubePosition key, final Collection<Metric> metrics, final Collection<MetaData> metadatas) {
-		Assertion.notNull(key);
+	Cube(final CubePosition cubePosition, final Collection<Metric> metrics, final Collection<MetaData> metadatas) {
+		Assertion.notNull(cubePosition);
 		Assertion.notNull(metrics);
 		Assertion.notNull(metadatas);
 		//---------------------------------------------------------------------
-		this.key = key;
+		this.cubePosition = cubePosition;
 		this.metrics = index(metrics);
 		indexedMetadatas = indexMeta(metadatas);
-		allMetaDatas = metadatas;
+		this.metaDatas = metadatas;
 	}
 
-	public CubePosition getKey() {
-		return key;
+	public CubePosition getPosition() {
+		return cubePosition;
 	}
 
 	/**
@@ -76,7 +76,7 @@ public final class Cube {
 	}
 
 	public Collection<MetaData> getMetaDatas() {
-		return allMetaDatas;
+		return metaDatas;
 	}
 
 	private static Map<String, Metric> index(final Collection<Metric> metrics) {
@@ -104,7 +104,7 @@ public final class Cube {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
-				.append(key.id()).append("{\n\tMetrics:");
+				.append(cubePosition.id()).append("{\n\tMetrics:");
 		for (final Metric metric : getMetrics()) {
 			sb.append("\n\t\t- ").append(metric.getName()).append(" = ").append(metric.get(DataType.mean));
 		}

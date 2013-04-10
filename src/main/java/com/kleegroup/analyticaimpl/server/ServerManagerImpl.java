@@ -156,9 +156,9 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 			//Si la liste des cubes est limité on peut éviter ce if, 
 			//mais il reste intéréssant de remplir les labels au même endroit que les valeurs
 			if (dateAsLabels) {
-				labels.add((X) cube.getKey().getTimePosition().getValue());
+				labels.add((X) cube.getPosition().getTimePosition().getValue());
 			} else {
-				labels.add((X) cube.getKey().getWhatPosition().getValue());
+				labels.add((X) cube.getPosition().getWhatPosition().getValue());
 			}
 			for (final DataKey dataKey : metrics) {
 				if (dataKey.getType() == DataType.metaData) {

@@ -37,7 +37,7 @@ import com.kleegroup.analytica.hcube.dimension.Position;
  * @version $Id: CubeBuilder.java,v 1.6 2012/11/08 17:06:41 pchretien Exp $
  */
 public final class CubeBuilder implements Builder<Cube> {
-	private final CubePosition key;
+	private final CubePosition cubePosition;
 	private final Map<String, MetricBuilder> metrics = new HashMap<String, MetricBuilder>();
 	private final Set<MetaData> metaDatas = new HashSet<MetaData>(500);
 
@@ -45,10 +45,10 @@ public final class CubeBuilder implements Builder<Cube> {
 	 * Constructeur.
 	 * @param cubeKey Identifiant du cube
 	 */
-	public CubeBuilder(CubePosition key) {
-		Assertion.notNull(key);
+	public CubeBuilder(CubePosition cubePosition) {
+		Assertion.notNull(cubePosition);
 		//---------------------------------------------------------------------
-		this.key = key;
+		this.cubePosition = cubePosition;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public final class CubeBuilder implements Builder<Cube> {
 	public CubeBuilder withCube(final Cube cube) {
 		Assertion.notNull(cube);
 		//Assertion util mais 50% des perfs !!
-		Assertion.precondition(isIn(cube.getKey(), key), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", key, cube.getKey());
+		Assertion.precondition(isIn(cube.getPosition(), cubePosition), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubePosition, cube.getPosition());
 		//---------------------------------------------------------------------
 		for (final Metric metric : cube.getMetrics()) {
 			withMetric(metric);
@@ -99,14 +99,14 @@ public final class CubeBuilder implements Builder<Cube> {
 
 	/**
 	 * Vérifie l'inclusion de clé, util pour controller le merge de Cube.
-	 * @param key Clé dont on veut vérifier l'inclusion
+	 * @param cubePosition Clé dont on veut vérifier l'inclusion
 	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
 	 */
-	private boolean isIn(final CubePosition key1, final CubePosition key2) {
-		if (key1.equals(key)) {
+	private boolean isIn(final CubePosition cubePosition1, final CubePosition cubePosition2) {
+		if (cubePosition1.equals(cubePosition)) {
 			return true;
 		}
-		return isIn(key1.getTimePosition(), key2.getTimePosition()) && isIn(key1.getWhatPosition(), key.getWhatPosition());
+		return isIn(cubePosition1.getTimePosition(), cubePosition2.getTimePosition()) && isIn(cubePosition1.getWhatPosition(), cubePosition.getWhatPosition());
 	}
 
 	/**
@@ -137,6 +137,6 @@ public final class CubeBuilder implements Builder<Cube> {
 		for (final MetricBuilder metricBuilder : metrics.values()) {
 			list.add(metricBuilder.build());
 		}
-		return new Cube(key, list, metaDatas);
+		return new Cube(cubePosition, list, metaDatas);
 	}
 }

@@ -73,8 +73,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 			} else if (o2 == null) {
 				return 1;
 			}
-			final CubePosition k1 = o1.getKey();
-			final CubePosition k2 = o2.getKey();
+			final CubePosition k1 = o1.getPosition();
+			final CubePosition k2 = o2.getPosition();
 			return k1.getTimePosition().getValue().compareTo(k2.getTimePosition().getValue());
 		}
 	});
@@ -111,9 +111,9 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		try {
 			final Connection conn = store.getConnection();
 			try {
-				TimePosition timePosition = lowLevelCube.getKey().getTimePosition();
+				TimePosition timePosition = lowLevelCube.getPosition().getTimePosition();
 				while (timePosition != null) {
-					WhatPosition whatPosition = lowLevelCube.getKey().getWhatPosition();
+					WhatPosition whatPosition = lowLevelCube.getPosition().getWhatPosition();
 					while (whatPosition != null) {
 						final CubePosition storedCubeKey = new CubePosition(timePosition, whatPosition);
 						store(lowLevelCube, storedCubeKey, conn);
@@ -214,8 +214,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 			//On aggrege les metrics/meta 
 			final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>();
 			for (final Cube cube : allCubes) {
-				final WhatPosition useWhat = new WhatPosition(cube.getKey().getWhatPosition().getValue(), whatDimension);
-				final TimePosition useTime = new TimePosition(cube.getKey().getTimePosition().getValue(), timeDimension);
+				final WhatPosition useWhat = new WhatPosition(cube.getPosition().getWhatPosition().getValue(), whatDimension);
+				final TimePosition useTime = new TimePosition(cube.getPosition().getTimePosition().getValue(), timeDimension);
 				final CubePosition cubePosition = new CubePosition(useTime, useWhat);
 				final CubeBuilder cubeBuilder = obtainCubeBuilder(cubePosition, cubeBuilderIndex);
 				cubeBuilder.withCube(cube);
@@ -323,8 +323,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>();
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
-			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getKey().getWhatPosition(), query.getWhatSelection().getDimension());
-			final TimePosition useTime = aggregateTime ? minTime : drillUp(cube.getKey().getTimePosition(), query.getTimeSelection().getDimension());
+			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getPosition().getWhatPosition(), query.getWhatSelection().getDimension());
+			final TimePosition useTime = aggregateTime ? minTime : drillUp(cube.getPosition().getTimePosition(), query.getTimeSelection().getDimension());
 
 			final CubePosition cubePosition = new CubePosition(useTime, useWhat);
 

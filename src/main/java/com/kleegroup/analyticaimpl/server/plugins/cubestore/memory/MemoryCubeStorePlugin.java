@@ -77,9 +77,9 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		Assertion.notNull(lowLevelCube);
 		//---------------------------------------------------------------------
 		//on remonte les axes, le premier sera le plus bas niveau
-		TimePosition timePosition = lowLevelCube.getKey().getTimePosition();
+		TimePosition timePosition = lowLevelCube.getPosition().getTimePosition();
 		while (timePosition != null) {
-			WhatPosition whatPosition = lowLevelCube.getKey().getWhatPosition();
+			WhatPosition whatPosition = lowLevelCube.getPosition().getWhatPosition();
 			while (whatPosition != null) {
 				final CubePosition storedCubeKey = new CubePosition(timePosition, whatPosition);
 				store(lowLevelCube, storedCubeKey);
@@ -147,8 +147,8 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>(cubeKeyComparator);
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
-			final WhatPosition useWhat = aggregateWhat ? allWhat : cube.getKey().getWhatPosition();
-			final TimePosition useTime = aggregateTime ? minTimePosition : cube.getKey().getTimePosition();
+			final WhatPosition useWhat = aggregateWhat ? allWhat : cube.getPosition().getWhatPosition();
+			final TimePosition useTime = aggregateTime ? minTimePosition : cube.getPosition().getTimePosition();
 			final CubeBuilder cubeBuilder = obtainCubeBuilder(useTime, useWhat, cubeBuilderIndex);
 
 			for (final Metric metric : cube.getMetrics()) {
