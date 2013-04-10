@@ -334,13 +334,13 @@ final class CubeStatements {
 		metricsSql.append(" group by mtr.cub_id, mtr.name; ");
 		final List<MetricBuilder> metricBuilders = SimpleDAO.executeQueryList(metricsSql.toString(), params, MetricBuilder.class, connection);
 
-		final StringBuilder metaDatasSql = new StringBuilder()//
-				.append("select distinct mta.cub_id, mta.name, mta.value ")//
-				.append("from CUBE cub, META_DATA mta ")//
-				.append("where mta.cub_id = cub.cub_id ");
-		appendCubeWherePart(Collections.<String> emptyList(), params, metaDatasSql);
-		metaDatasSql.append(" order by mta.cub_id, mta.name; ");
-		//		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, MetaDataBuilder.class, connection);
+		//		final StringBuilder metaDatasSql = new StringBuilder()//
+		//				.append("select distinct mta.cub_id, mta.name, mta.value ")//
+		//				.append("from CUBE cub, META_DATA mta ")//
+		//				.append("where mta.cub_id = cub.cub_id ");
+		//		appendCubeWherePart(Collections.<String> emptyList(), params, metaDatasSql);
+		//		metaDatasSql.append(" order by mta.cub_id, mta.name; ");
+		//		//		final List<MetaDataBuilder> metaDataBuilders = SimpleDAO.executeQueryList(metaDatasSql.toString(), params, MetaDataBuilder.class, connection);
 
 		final Map<Long, CubeBuilder> cubeBuilderIndex = new LinkedHashMap<Long, CubeBuilder>();
 		for (final CubeBuilderBean cubeInfo : cubeInfos) {
