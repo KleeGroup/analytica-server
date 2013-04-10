@@ -237,12 +237,12 @@ final class CubeStatements {
 	}
 
 	public List<Cube> loadCubes(final Query query, final Set<String> metricsNames, final Set<String> metaDataNames, final boolean aggregateTime, final boolean aggregateWhat, final Connection connection) throws DaoException {
-		List<String> whatPrefixes = query.getWhatSelection().getWhatValues();
+		List<String> whatPrefixes = query.getWhatValues();
 		Assertion.precondition(whatPrefixes.size() >= 1, "Il faut au moins 1 préfix de whatPosition.");
 		//---------------------------------------------------------------------
 		final PlainBean params = new PlainBean();
 		params.set("timeDimension", query.getTimeDimension().name());
-		params.set("whatDimension", query.getWhatSelection().getDimension().name());
+		params.set("whatDimension", query.getWhatDimension().name());
 		params.set("timePositionMin", query.getMinTimePosition().getValue());
 		params.set("timePositionMax", query.getMaxTimePosition().getValue());
 		final StringBuilder agregateFields = new StringBuilder();

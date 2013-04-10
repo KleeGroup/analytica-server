@@ -124,9 +124,9 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 		//On remplit une liste de cube avec tous les what voulu.
 		final List<Cube> allCubes = new ArrayList<Cube>();
-		for (final String whatValue : query.getWhatSelection().getWhatValues()) {
-			final WhatPosition minWhat = new WhatPosition(whatValue, query.getWhatSelection().getDimension());
-			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, query.getWhatSelection().getDimension());
+		for (final String whatValue : query.getWhatValues()) {
+			final WhatPosition minWhat = new WhatPosition(whatValue, query.getWhatDimension());
+			final WhatPosition maxWhat = new WhatPosition(whatValue + LAST_CHAR, query.getWhatDimension());
 			final CubePosition fromKey = new CubePosition(minTimePosition, minWhat);
 			final CubePosition toKey = new CubePosition(maxTimePosition, maxWhat);
 			allCubes.addAll(load(fromKey, toKey));
@@ -143,7 +143,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		}
 
 		//On aggrege les metrics/meta demandées en fonction des parametres 
-		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, query.getWhatSelection().getDimension());
+		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, query.getWhatDimension());
 		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>(cubeKeyComparator);
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée

@@ -28,12 +28,12 @@ import com.kleegroup.analytica.hcube.dimension.TimePosition;
  * @author npiedeloup, pchretien
  * @version $Id: TimeSelection.java,v 1.5 2012/10/16 15:58:55 pchretien Exp $
  */
-public final class TimeSelection implements Selection<TimeDimension> {
+final class TimeSelection implements Selection<TimeDimension> {
 	private final TimePosition minTimePosition;
 	private final TimePosition maxTimePosition;
 	private final TimeDimension dimension;
 
-	public TimeSelection(final TimeDimension dimension, final Date minDate, final Date maxDate) {
+	TimeSelection(final TimeDimension dimension, final Date minDate, final Date maxDate) {
 		Assertion.notNull(minDate);
 		Assertion.notNull(maxDate);
 		Assertion.precondition(minDate.before(maxDate), "la date min doit être inférieure à la date max");

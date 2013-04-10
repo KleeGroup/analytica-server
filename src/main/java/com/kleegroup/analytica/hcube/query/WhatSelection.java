@@ -20,20 +20,20 @@ package com.kleegroup.analytica.hcube.query;
 import java.util.Arrays;
 import java.util.List;
 
-import com.kleegroup.analytica.hcube.dimension.WhatDimension;
-
 import kasper.kernel.util.Assertion;
+
+import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 
 /**
  * 
  * @author npiedeloup, pchretien
  * @version $Id: WhatSelection.java,v 1.6 2012/04/17 09:03:44 pchretien Exp $
  */
-public final class WhatSelection implements Selection<WhatDimension> {
+final class WhatSelection implements Selection<WhatDimension> {
 	private final List<String> whatValues;
 	private final WhatDimension dimension;
 
-	public WhatSelection(final WhatDimension dimension, final String... whatValues) {
+	WhatSelection(final WhatDimension dimension, final String... whatValues) {
 		Assertion.notNull(dimension);
 		Assertion.notNull(whatValues);
 		for (final String whatValue : whatValues) {

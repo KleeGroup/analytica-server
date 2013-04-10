@@ -298,8 +298,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 					//Sinon on construit le niveau du dessous
 					for (Date newDate = minTime.getValue(); newDate.before(query.getTimeDimension().getMaxDate(query.getMaxTimePosition().getValue())); newDate = query.getTimeDimension().getMaxDate(newDate)) {
 						final TimePosition newTime = new TimePosition(newDate, query.getTimeDimension());
-						for (final String whatValue : query.getWhatSelection().getWhatValues()) {
-							final WhatPosition newWhat = new WhatPosition(whatValue, query.getWhatSelection().getDimension());
+						for (final String whatValue : query.getWhatValues()) {
+							final WhatPosition newWhat = new WhatPosition(whatValue, query.getWhatDimension());
 							final CubePosition newCubeKey = new CubePosition(newTime, newWhat);
 							computeAndStoreCube(newCubeKey);
 						}
@@ -319,11 +319,11 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		}
 		tic.tic("cubeBuilderIndex");
 		//On aggrege les metrics/meta demandées en fonction des parametres 
-		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, query.getWhatSelection().getDimension());
+		final WhatPosition allWhat = new WhatPosition(WhatDimension.SEPARATOR, query.getWhatDimension());
 		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>();
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
-			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getPosition().getWhatPosition(), query.getWhatSelection().getDimension());
+			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getPosition().getWhatPosition(), query.getWhatDimension());
 			final TimePosition useTime = aggregateTime ? minTime : drillUp(cube.getPosition().getTimePosition(), query.getTimeDimension());
 
 			final CubePosition cubePosition = new CubePosition(useTime, useWhat);

@@ -6,7 +6,7 @@ import com.kleegroup.analytica.hcube.dimension.Dimension;
  * Une selection permet de définir un ensemble de position sur une dimension donnée.
  * @author npiedeloup, pchretien
  */
-public interface Selection<D extends Dimension<D>> {
+interface Selection<D extends Dimension<D>> {
 
 	/**
 	 * @return Dimension de la selection
