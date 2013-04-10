@@ -171,8 +171,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		List<Cube> allCubes;
 		final TimeDimension timeDimension = cubeKey.getTimePosition().getDimension();
 		final WhatDimension whatDimension = cubeKey.getWhatPosition().getDimension();
-		final TimeDimension lowerTimeDimension = timeDimension.drillDown() != null ? timeDimension.drillDown() : TimeDimension.Minute;
-		final WhatDimension lowerWhatDimension = whatDimension.drillDown() != null ? whatDimension.drillDown() : WhatDimension.FullName;
+		final TimeDimension lowerTimeDimension = timeDimension.drillDown() != null ? timeDimension.drillDown() : timeDimension;
+		final WhatDimension lowerWhatDimension = whatDimension.drillDown() != null ? whatDimension.drillDown() : whatDimension;
 		final Date startDate = cubeKey.getTimePosition().getValue();
 		final Connection connection = store.getConnection();
 		try {
