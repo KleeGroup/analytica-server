@@ -5,6 +5,8 @@ import java.util.List;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.DataKey;
+import com.kleegroup.analytica.hcube.dimension.TimeDimension;
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
@@ -25,15 +27,23 @@ public final class Query {
 		this.keys = keys;
 	}
 
-	public TimeSelection getTimeSelection() {
-		return timeSelection;
-	}
-
 	public WhatSelection getWhatSelection() {
 		return whatSelection;
 	}
 
 	public List<DataKey> getKeys() {
 		return keys;
+	}
+
+	public TimeDimension getTimeDimension() {
+		return timeSelection.getDimension();
+	}
+
+	public TimePosition getMinTimePosition() {
+		return timeSelection.getMinTimePosition();
+	}
+
+	public TimePosition getMaxTimePosition() {
+		return timeSelection.getMaxTimePosition();
 	}
 }

@@ -119,8 +119,8 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	/** {@inheritDoc} */
 	public List<Cube> load(final Query query, final boolean aggregateTime, final boolean aggregateWhat) {
 		//On prépare les bornes de temps
-		final TimePosition minTimePosition = query.getTimeSelection().getMinTimePosition();
-		final TimePosition maxTimePosition = query.getTimeSelection().getMaxTimePosition();
+		final TimePosition minTimePosition = query.getMinTimePosition();
+		final TimePosition maxTimePosition = query.getMaxTimePosition();
 
 		//On remplit une liste de cube avec tous les what voulu.
 		final List<Cube> allCubes = new ArrayList<Cube>();

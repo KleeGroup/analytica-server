@@ -274,7 +274,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	/** {@inheritDoc} */
 	public List<Cube> load(final Query query, final boolean aggregateTime, final boolean aggregateWhat) {
 		tic.tic("load");//On prépare les bornes de temps
-		final TimePosition minTime = query.getTimeSelection().getMinTimePosition();
+		final TimePosition minTime = query.getMinTimePosition();
 		//final TimePosition maxTime = new TimePosition(timeSelection.getMaxValue(), timeSelection.getDimension());
 
 		//On prepare un index de metric attendu
@@ -296,8 +296,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 				if (allCubes.isEmpty()) {
 					tic.tic("atRunTimeComputeAndStoreCube");
 					//Sinon on construit le niveau du dessous
-					for (Date newDate = minTime.getValue(); newDate.before(query.getTimeSelection().getDimension().getMaxDate(query.getTimeSelection().getMaxValue())); newDate = query.getTimeSelection().getDimension().getMaxDate(newDate)) {
-						final TimePosition newTime = new TimePosition(newDate, query.getTimeSelection().getDimension());
+					for (Date newDate = minTime.getValue(); newDate.before(query.getTimeDimension().getMaxDate(query.getMaxTimePosition().getValue())); newDate = query.getTimeDimension().getMaxDate(newDate)) {
+						final TimePosition newTime = new TimePosition(newDate, query.getTimeDimension());
 						for (final String whatValue : query.getWhatSelection().getWhatValues()) {
 							final WhatPosition newWhat = new WhatPosition(whatValue, query.getWhatSelection().getDimension());
 							final CubePosition newCubeKey = new CubePosition(newTime, newWhat);
@@ -324,7 +324,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		for (final Cube cube : allCubes) {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
 			final WhatPosition useWhat = aggregateWhat ? allWhat : drillUp(cube.getPosition().getWhatPosition(), query.getWhatSelection().getDimension());
-			final TimePosition useTime = aggregateTime ? minTime : drillUp(cube.getPosition().getTimePosition(), query.getTimeSelection().getDimension());
+			final TimePosition useTime = aggregateTime ? minTime : drillUp(cube.getPosition().getTimePosition(), query.getTimeDimension());
 
 			final CubePosition cubePosition = new CubePosition(useTime, useWhat);
 
