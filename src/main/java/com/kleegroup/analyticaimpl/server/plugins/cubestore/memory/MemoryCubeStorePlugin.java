@@ -53,7 +53,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//ainsi l'espace de recherche est [prefix, prefix+(char(154))]
 	//cette technique permet d'utiliser le subList plutot qu'un startwith très couteux
 	private final static char LAST_CHAR = 254;
-	private final Comparator<CubePosition> cubeKeyComparator = new CubeKeyComparator();
+	private final Comparator<CubePosition> cubeKeyComparator = new CubePositionComparator();
 	private final Map<TimeDimension, Map<WhatDimension, SortedMap<CubePosition, Cube>>> store;
 	private String lastProcessIdStored;
 
@@ -154,11 +154,11 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 				}
 			}
 		}
-		final List<Cube> cube = new ArrayList<Cube>(cubeBuilderIndex.size());
+		final List<Cube> cubes = new ArrayList<Cube>(cubeBuilderIndex.size());
 		for (final CubeBuilder cubeBuilder : cubeBuilderIndex.values()) {
-			cube.add(cubeBuilder.build());
+			cubes.add(cubeBuilder.build());
 		}
-		return cube;
+		return cubes;
 	}
 
 	private CubeBuilder obtainCubeBuilder(final CubePosition key, final SortedMap<CubePosition, CubeBuilder> timeIndex) {

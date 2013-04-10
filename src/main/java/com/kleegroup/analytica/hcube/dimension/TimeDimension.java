@@ -61,12 +61,6 @@ public enum TimeDimension implements Dimension<TimeDimension> {
 		this.up = up;
 	}
 
-	//
-	//	/** {@inheritDoc} */
-	//	public String getLabel() {
-	//		return name().toLowerCase();
-	//	}
-
 	/** {@inheritDoc} */
 	public TimeDimension drillUp() {
 		return up;

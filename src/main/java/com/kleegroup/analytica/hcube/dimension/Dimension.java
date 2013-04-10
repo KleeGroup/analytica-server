@@ -6,11 +6,6 @@ package com.kleegroup.analytica.hcube.dimension;
  * @author npiedeloup, pchretien
  */
 public interface Dimension<D extends Dimension<D>> {
-	//	/**
-	//	 * @return Nom de l'axe
-	//	 */
-	//	String getLabel();
-
 	/**
 	 * @return Niveau supérieur ou null.
 	 */

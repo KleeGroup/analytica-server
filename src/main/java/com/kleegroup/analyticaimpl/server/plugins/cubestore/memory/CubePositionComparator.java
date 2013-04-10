@@ -29,7 +29,7 @@ import com.kleegroup.analytica.hcube.dimension.WhatPosition;
  * @author npiedeloup
  * @version $Id: CubeKeyComparator.java,v 1.5 2012/04/17 09:11:33 pchretien Exp $
  */
-final class CubeKeyComparator implements Comparator<CubePosition> {
+final class CubePositionComparator implements Comparator<CubePosition> {
 
 	public int compare(final CubePosition o1, final CubePosition o2) {
 		final WhatPosition what1 = o1.getWhatPosition();
@@ -43,18 +43,5 @@ final class CubeKeyComparator implements Comparator<CubePosition> {
 		}
 		return what1.getValue().compareTo(what2.getValue());
 	}
-
-	//	public int compare(final CubeKey o1, final CubeKey o2) {
-	//		final TimePosition time1 = o1.getTimePosition();
-	//		final TimePosition time2 = o2.getTimePosition();
-	//		Assertion.invariant(time1.getDimension().equals(time2.getDimension()), "On ne compare pas des dimenssions différentes : {0} != {1}", time1, time2);
-	//		if (time1.equals(time2)) {
-	//			final WhatPosition what1 = o1.getWhatPosition();
-	//			final WhatPosition what2 = o2.getWhatPosition();
-	//			Assertion.invariant(what1.getDimension().equals(what2.getDimension()), "On ne compare pas des dimenssions différentes : {0} != {1}", what1, what2);
-	//			return what1.getValue().compareTo(what2.getValue());
-	//		}
-	//		return time1.getValue().compareTo(time2.getValue());
-	//	}
 
 }
