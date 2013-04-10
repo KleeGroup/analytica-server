@@ -32,6 +32,7 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
+import com.kleegroup.analytica.hcube.cube.DataType;
 import com.kleegroup.analytica.hcube.cube.MetaData;
 import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
@@ -416,11 +417,11 @@ final class CubeStatements {
 
 		for (final Metric metric : metrics) {
 			params.set("name", metric.getName());
-			params.set(Metric.F_COUNT, metric.get(Metric.F_COUNT));
-			params.set(Metric.F_MIN, metric.get(Metric.F_MIN));
-			params.set(Metric.F_MAX, metric.get(Metric.F_MAX));
-			params.set(Metric.F_SUM, metric.get(Metric.F_SUM));
-			params.set(Metric.F_SQR_SUM, metric.get(Metric.F_SQR_SUM));
+			params.set(DataType.count.name(), metric.get(DataType.count));
+			params.set(DataType.min.name(), metric.get(DataType.min));
+			params.set(DataType.max.name(), metric.get(DataType.max));
+			params.set(DataType.sum.name(), metric.get(DataType.sum));
+			params.set(DataType.sqrSum.name(), metric.get(DataType.sqrSum));
 			SimpleDAO.executeSQL("INSERT INTO METRIC (MTR_ID, CUB_ID, NAME, COUNT, MIN, MAX, SUM, SQR_SUM) VALUES(NEXTVAL('SEQ_METRIC'), ${cubId}, " + "${name}, ${count}, ${min}, ${max}, ${sum}, ${sqrSum}); @generated(mtrId)", params, connection);
 		}
 		//		} else {

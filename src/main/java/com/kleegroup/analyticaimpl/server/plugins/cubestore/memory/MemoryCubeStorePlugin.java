@@ -48,7 +48,7 @@ import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
  * @author npiedeloup
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
- final class MemoryCubeStorePlugin implements CubeStorePlugin {
+final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//on utilise le caractère 254 (à la fin de l'ascii) pour faire la borne max de recherche : 
 	//ainsi l'espace de recherche est [prefix, prefix+(char(154))]
 	//cette technique permet d'utiliser le subList plutot qu'un startwith très couteux
@@ -92,13 +92,14 @@ import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 	}
 
 	private void store(final Cube cube, final CubePosition cubeKey) {
-		final CubeBuilder cubeBuilder = new CubeBuilder(cubeKey);
-		cubeBuilder.withCube(cube);
+		final CubeBuilder cubeBuilder = new CubeBuilder(cubeKey)//
+				.withCube(cube);
 
 		final Cube oldCube = loadStore(cubeKey).get(cubeKey);
 		if (oldCube != null) {
 			cubeBuilder.withCube(oldCube);
 		}
+
 		loadStore(cubeKey).put(cubeKey, cubeBuilder.build());
 	}
 
@@ -112,8 +113,7 @@ import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
 		//---------------------------------------------------------------------
 		final SortedMap<CubePosition, Cube> dimensionStore = loadStore(fromKey);
 		final SortedMap<CubePosition, Cube> subStore = dimensionStore.subMap(fromKey, toKey);
-		final List<Cube> result = new ArrayList<Cube>(subStore.values());
-		return result;
+		return new ArrayList<Cube>(subStore.values());
 	}
 
 	/** {@inheritDoc} */

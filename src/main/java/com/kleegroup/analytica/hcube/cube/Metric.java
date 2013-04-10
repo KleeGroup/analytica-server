@@ -33,14 +33,6 @@ import kasper.kernel.util.Assertion;
  * @version $Id: Metric.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class Metric {
-	public static final String F_MEAN = "mean";
-	public static final String F_STD_DEV = "stdDev";
-	public static final String F_COUNT = "count";
-	public static final String F_SQR_SUM = "sqrSum";
-	public static final String F_SUM = "sum";
-	public static final String F_MAX = "max";
-	public static final String F_MIN = "min";
-
 	private final String name;
 
 	private final long count;
@@ -89,24 +81,26 @@ public final class Metric {
 		return Double.NaN;
 	}
 
-	public double get(final String fname) {
-		if (F_MIN.equals(fname)) {
-			return min;
-		} else if (F_MAX.equals(fname)) {
-			return max;
-		} else if (F_SUM.equals(fname)) {
-			return sum;
-		} else if (F_SQR_SUM.equals(fname)) {
-			return sqrSum;
-		} else if (F_SUM.equals(fname)) {
-			return sum;
-		} else if (F_COUNT.equals(fname)) {
-			return count;
-		} else if (F_STD_DEV.equals(fname)) {
-			return getStandardDeviation();
-		} else if (F_MEAN.equals(fname)) {
-			return getMean();
+	public double get(final DataType dataType) {
+		Assertion.notNull(dataType);
+		//---------------------------------------------------------------------
+		switch (dataType) {
+			case count:
+				return count;
+			case max:
+				return max;
+			case min:
+				return min;
+			case sum:
+				return sum;
+			case mean:
+				return getMean();
+			case sqrSum:
+				return sqrSum;
+			case stdDev:
+				return getStandardDeviation();
+			default:
+				throw new IllegalArgumentException("Fonction inconnue : " + dataType);
 		}
-		throw new IllegalArgumentException("Fonction inconnue : " + fname);
 	}
 }

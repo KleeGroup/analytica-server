@@ -30,8 +30,8 @@ import kasper.kernel.util.Assertion;
 public final class MetricBuilder implements Builder<Metric> {
 	private final String metricName;
 	private long count = 0;
-	private double min = Double.NaN;
-	private double max = Double.NaN;
+	private double min = Double.NaN; //Par défaut pas de min
+	private double max = Double.NaN; //Par défaut pas de max
 	private double sum = 0;
 	private double sqrSum = 0;
 
@@ -68,11 +68,11 @@ public final class MetricBuilder implements Builder<Metric> {
 		Assertion.notNull(metric);
 		Assertion.precondition(metricName.equals(metric.getName()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricName, metric.getName());
 		//---------------------------------------------------------------------
-		count += metric.get(Metric.F_COUNT);
-		max = max(max, metric.get(Metric.F_MAX));
-		min = min(min, metric.get(Metric.F_MIN));
-		sum += metric.get(Metric.F_SUM);
-		sqrSum += metric.get(Metric.F_SQR_SUM);
+		count += metric.get(DataType.count);
+		max = max(max, metric.get(DataType.max));
+		min = min(min, metric.get(DataType.min));
+		sum += metric.get(DataType.sum);
+		sqrSum += metric.get(DataType.sqrSum);
 		return this;
 	}
 

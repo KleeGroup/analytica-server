@@ -22,9 +22,9 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.kleegroup.analytica.hcube.dimension.CubePosition;
-
 import kasper.kernel.util.Assertion;
+
+import com.kleegroup.analytica.hcube.dimension.CubePosition;
 
 /**
  * @author npiedeloup, pchretien
@@ -106,7 +106,7 @@ public final class Cube {
 		final StringBuilder sb = new StringBuilder()//
 				.append(key.id()).append("{\n\tMetrics:");
 		for (final Metric metric : getMetrics()) {
-			sb.append("\n\t\t- ").append(metric.getName()).append(" = ").append(metric.get(Metric.F_MEAN));
+			sb.append("\n\t\t- ").append(metric.getName()).append(" = ").append(metric.get(DataType.mean));
 		}
 		sb.append("\n\tMetaDatas:");
 		for (final MetaData metadata : getMetaDatas()) {

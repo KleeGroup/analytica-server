@@ -194,7 +194,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		if (metric == null) { //la metric peut-être null sur certain cube (exemple 'CACHE_HIT' n'est présent que sur quelques cubes)
 			return null;
 		}
-		return metric.get(dataKey.getType().name());
+		return metric.get(dataKey.getType());
 	}
 
 	/** {@inheritDoc} */

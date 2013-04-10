@@ -27,5 +27,7 @@ public enum DataType {
 	mean, //
 	max, //
 	min, //
+	sum, //
+	sqrSum, //
 	stdDev;
 }
