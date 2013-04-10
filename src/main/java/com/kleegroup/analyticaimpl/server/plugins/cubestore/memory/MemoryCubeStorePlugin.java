@@ -76,18 +76,8 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	public void merge(final Cube lowLevelCube) {
 		Assertion.notNull(lowLevelCube);
 		//---------------------------------------------------------------------
-		//on remonte les axes, le premier sera le plus bas niveau
-		TimePosition timePosition = lowLevelCube.getPosition().getTimePosition();
-		while (timePosition != null) {
-			WhatPosition whatPosition = lowLevelCube.getPosition().getWhatPosition();
-			while (whatPosition != null) {
-				final CubePosition storedCubeKey = new CubePosition(timePosition, whatPosition);
-				store(lowLevelCube, storedCubeKey);
-				//On remonte what
-				whatPosition = whatPosition.drillUp();
-			}
-			//On remonte time
-			timePosition = timePosition.drillUp();
+		for (CubePosition upCubePosition : lowLevelCube.getPosition().drillUp()) {
+			store(lowLevelCube, upCubePosition);
 		}
 	}
 
@@ -149,7 +139,9 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
 			final WhatPosition useWhat = aggregateWhat ? allWhat : cube.getPosition().getWhatPosition();
 			final TimePosition useTime = aggregateTime ? minTimePosition : cube.getPosition().getTimePosition();
-			final CubeBuilder cubeBuilder = obtainCubeBuilder(useTime, useWhat, cubeBuilderIndex);
+			final CubePosition key = new CubePosition(useTime, useWhat);
+
+			final CubeBuilder cubeBuilder = obtainCubeBuilder(key, cubeBuilderIndex);
 
 			for (final Metric metric : cube.getMetrics()) {
 				if (metricNames.contains(metric.getName())) {
@@ -169,8 +161,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		return cube;
 	}
 
-	private CubeBuilder obtainCubeBuilder(final TimePosition timePosition, final WhatPosition whatPosition, final SortedMap<CubePosition, CubeBuilder> timeIndex) {
-		final CubePosition key = new CubePosition(timePosition, whatPosition);
+	private CubeBuilder obtainCubeBuilder(final CubePosition key, final SortedMap<CubePosition, CubeBuilder> timeIndex) {
 		CubeBuilder cubeBuilder = timeIndex.get(key);
 		if (cubeBuilder == null) {
 			cubeBuilder = new CubeBuilder(key);

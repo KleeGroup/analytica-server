@@ -17,6 +17,9 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.kleegroup.analytica.hcube.Identity;
 
 /**
@@ -42,5 +45,27 @@ public final class CubePosition extends Identity {
 
 	public WhatPosition getWhatPosition() {
 		return whatPosition;
+	}
+
+	/**
+	 * Calcule la liste de tous les cubes auxquels le présent cube appartient
+	 * Cette méthode permet de préparer toutes les agrégations.
+	 * @return Liste de tous les cubes auxquels le présent cube appartient
+	 */
+	public List<CubePosition> drillUp() {
+		List<CubePosition> upperCubePositions = new ArrayList<CubePosition>();
+		//on remonte les axes, le premier sera le plus bas niveau
+		TimePosition timePosition = getTimePosition();
+		while (timePosition != null) {
+			WhatPosition whatPosition = getWhatPosition();
+			while (whatPosition != null) {
+				upperCubePositions.add(new CubePosition(timePosition, whatPosition));
+				//On remonte what
+				whatPosition = whatPosition.drillUp();
+			}
+			//On remonte time
+			timePosition = timePosition.drillUp();
+		}
+		return upperCubePositions;
 	}
 }

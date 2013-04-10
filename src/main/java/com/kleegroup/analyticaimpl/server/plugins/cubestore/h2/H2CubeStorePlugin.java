@@ -111,17 +111,8 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		try {
 			final Connection conn = store.getConnection();
 			try {
-				TimePosition timePosition = lowLevelCube.getPosition().getTimePosition();
-				while (timePosition != null) {
-					WhatPosition whatPosition = lowLevelCube.getPosition().getWhatPosition();
-					while (whatPosition != null) {
-						final CubePosition storedCubeKey = new CubePosition(timePosition, whatPosition);
-						store(lowLevelCube, storedCubeKey, conn);
-						//On remonte what
-						whatPosition = whatPosition.drillUp();
-					}
-					//On remonte time
-					timePosition = timePosition.drillUp();
+				for (CubePosition upCubePosition : lowLevelCube.getPosition().drillUp()) {
+					store(lowLevelCube, upCubePosition, conn);
 				}
 				flushWriteBuffer(conn);
 			} finally {
@@ -137,18 +128,18 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 	private long cacheMissNoData = 0;
 	private long writeData = 0;
 
-	private void store(final Cube cube, final CubePosition cubeKey, final Connection conn) throws DaoException {
+	private void store(final Cube cube, final CubePosition cubePosition, final Connection conn) throws DaoException {
 		tic.tic("store");
 		tic.tic("mergeCube");
-		final CubeBuilder cubeBuilder = new CubeBuilder(cubeKey);
+		final CubeBuilder cubeBuilder = new CubeBuilder(cubePosition);
 		cubeBuilder.withCube(cube);
 		tic.tac("mergeCube");
 		tic.tic("loadCube");
-		Cube oldCube = naiveCache.get(cubeKey);
+		Cube oldCube = naiveCache.get(cubePosition);
 		cacheUse++;
 		if (oldCube == null) {
 			cacheMiss++;
-			oldCube = statements.loadCube(cubeKey, conn);
+			oldCube = statements.loadCube(cubePosition, conn);
 			if (oldCube == null) {
 				cacheMissNoData++;
 			}
@@ -163,7 +154,7 @@ public final class H2CubeStorePlugin implements CubeStorePlugin, Activeable {
 		writeBuffer.offer(mergedCube);
 		checkWriteBuffer(conn); //On garde les cube a écrire pour faire de l'écriture en masse
 		//
-		naiveCache.put(cubeKey, mergedCube);
+		naiveCache.put(cubePosition, mergedCube);
 
 		if (naiveCache.size() > 10000) {
 			naiveCache.clear();
