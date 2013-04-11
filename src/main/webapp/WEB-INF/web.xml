@@ -29,6 +29,10 @@
         <param-name>default.charset</param-name>
         <param-value>iso-8859-1</param-value>
     </context-param>  
+    <context-param>
+        <param-name>analytica.db.path</param-name>
+        <param-value>d:/analytica/db</param-value>
+    </context-param>
     
     <!-- JSF configuration -->
     <context-param>

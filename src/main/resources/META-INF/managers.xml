@@ -21,7 +21,7 @@
   <module name="analytica">
     <manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
         <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
-        	<param name="dbPath" value="d:/analytica/db" />
+        	<param name="dbPath" value="{analytica.db.path}" />
         </plugin>
          <!-- <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin"/> -->
          <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.stack.StackProcessEncoderPlugin"/>
