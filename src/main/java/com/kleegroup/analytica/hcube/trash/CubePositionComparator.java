@@ -34,14 +34,14 @@ final class CubePositionComparator implements Comparator<CubePosition> {
 	public int compare(final CubePosition o1, final CubePosition o2) {
 		final WhatPosition what1 = o1.getWhatPosition();
 		final WhatPosition what2 = o2.getWhatPosition();
-		Assertion.invariant(what1.getDimension().equals(what2.getDimension()), "On ne compare pas des dimenssions différentes : {0} != {1}", what1, what2);
+		//	Assertion.invariant(what1.getDimension().equals(what2.getDimension()), "On ne compare pas des dimenssions différentes : {0} != {1}", what1, what2);
 		if (what1.equals(what2)) {
 			final TimePosition time1 = o1.getTimePosition();
 			final TimePosition time2 = o2.getTimePosition();
 			Assertion.invariant(time1.getDimension().equals(time2.getDimension()), "On ne compare pas des dimenssions différentes : {0} != {1}", time1, time2);
 			return time1.getValue().compareTo(time2.getValue());
 		}
-		return what1.getValue().compareTo(what2.getValue());
+		return what1.getValue().toString().compareTo(what2.getValue().toString());
 	}
 
 }

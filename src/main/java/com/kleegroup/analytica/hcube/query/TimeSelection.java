@@ -25,10 +25,13 @@ import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
 
 /**
+ * Une selection temporelle permet de définir un ensemble de position sur un niveau temporel donné.
+ * exemple : 
+ *  - tous les jours du 15 septembre 2000 au 15 novembre 2000.
+ *  - toutes les années de 1914 à 1918 
  * @author npiedeloup, pchretien
- * @version $Id: TimeSelection.java,v 1.5 2012/10/16 15:58:55 pchretien Exp $
  */
-final class TimeSelection implements Selection<TimeDimension> {
+final class TimeSelection {
 	private final TimePosition minTimePosition;
 	private final TimePosition maxTimePosition;
 	private final TimeDimension dimension;

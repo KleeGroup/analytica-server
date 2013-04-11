@@ -26,13 +26,11 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
-import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.cube.MetricBuilder;
 import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.CubePosition;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
-import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
 
@@ -86,23 +84,25 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 	 */
 	private static CubeBuilder encodeSingle(final KProcess process, final List<CubeBuilder> parentCubeBuilders) {
 		final TimePosition timePosition = new TimePosition(process.getStartDate(), TimeDimension.Minute);
-		final StringBuilder sb = new StringBuilder();
-		sb.append(WhatDimension.SEPARATOR).append(process.getType());
-		if (!process.getName().startsWith(WhatDimension.SEPARATOR)) {
-			sb.append(WhatDimension.SEPARATOR);
-		}
-		sb.append(process.getName());
-		final WhatPosition whatPosition = new WhatPosition(sb.toString(), WhatDimension.FullName);
-		final String whatTypePositionValue = new WhatPosition(sb.toString(), WhatDimension.Type).getValue().substring(1); //On retire le premier /
-		sb.setLength(0);
+		//		final StringBuilder sb = new StringBuilder();
+		//		sb.append(WhatDimension.SEPARATOR).append(process.getType());
+		//		if (!process.getName().startsWith(WhatDimension.SEPARATOR)) {
+		//			sb.append(WhatDimension.SEPARATOR);
+		//		}
+		//		sb.append(process.getName());
+		List<String> what = new ArrayList<String>();
+		what.add(process.getType());
+		what.add(process.getName());
+		final WhatPosition whatPosition = new WhatPosition(what);
+		//		final String whatTypePositionValue = new WhatPosition(sb.toString(), WhatDimension.Type).getValue().substring(1); //On retire le premier /
+		//		sb.setLength(0);
 
 		final CubePosition key = new CubePosition(timePosition, whatPosition);
 		final CubeBuilder cubeBuilder = new CubeBuilder(key);
 
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
-			addMetric(measure.getKey(), measure.getValue(), cubeBuilder, whatTypePositionValue, parentCubeBuilders, sb);
+			addMetric(measure.getKey(), measure.getValue(), cubeBuilder, /*whatTypePositionValue,*/parentCubeBuilders/*, sb*/);
 		}
-
 		//		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
 		//			cubeBuilder.withMetaData(new MetaData(metaData.getKey(), metaData.getValue()));
 		//		}
@@ -110,15 +110,15 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		return cubeBuilder;
 	}
 
-	private static void addMetric(final String measureName, final double measureValue, final CubeBuilder cubeBuilder, final String whatModulePositionValue, final List<CubeBuilder> parentCubeBuilders, final StringBuilder sb) {
-		Assertion.precondition(sb.length() == 0, "Le buffer doit être vide");
+	private static void addMetric(final String measureName, final double measureValue, final CubeBuilder cubeBuilder, /*final String whatModulePositionValue,*/final List<CubeBuilder> parentCubeBuilders/*, final StringBuilder sb*/) {
+		//Assertion.precondition(sb.length() == 0, "Le buffer doit être vide");
 		//---------------------------------------------------------------------
 		// 1- Cas général : on ajoute la mesure sous forme de métric dans le cube 
 		cubeBuilder.withMetric(new MetricBuilder(new MetricKey(measureName)).withValue(measureValue).build());
 		//---------------------------------------------------------------------
 		//---------------------------------------------------------------------
 		// 2- Cas particulier : Certaines métriques sont escaladées au niveau des processus parents.  
-		if (isClimbingMetric(measureName)) {
+		/*if (isClimbingMetric(measureName)) {
 			sb.append(whatModulePositionValue).append("_").append(measureName);
 			final Metric metric = new MetricBuilder(new MetricKey(sb.toString())).withValue(measureValue).build();
 			sb.setLength(0);
@@ -129,7 +129,7 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		// 3- Cas particulier : Certaines mesures sont déerivées sous la forme d'autres mesures (exemple : calcul des distributions)
 		if (isClusteredMetric(measureName)) {
 			doClustering(measureName, measureValue, cubeBuilder, whatModulePositionValue, parentCubeBuilders, sb);
-		}
+		}*/
 	}
 
 	private static void doClustering(final String measureType, final double value, final CubeBuilder cubeBuilder, final String whatModulePositionValue, final List<CubeBuilder> parentCubeBuilders, final StringBuilder sb) {
@@ -157,7 +157,7 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		sb.append(measureType).append("_C").append(clusterValue);
 		final String clusterMeasureName = sb.toString();
 		sb.setLength(0);
-		addMetric(clusterMeasureName, 1, cubeBuilder, whatModulePositionValue, parentCubeBuilders, sb);
+		addMetric(clusterMeasureName, 1, cubeBuilder, /*whatModulePositionValue,*/parentCubeBuilders/*, sb*/);
 
 	}
 

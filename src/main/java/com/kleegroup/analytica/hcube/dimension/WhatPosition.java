@@ -17,35 +17,46 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
-import com.kleegroup.analytica.hcube.Identity;
+import java.util.ArrayList;
+import java.util.List;
+
+import kasper.kernel.util.Assertion;
+
+import com.kleegroup.analytica.hcube.HKey;
 
 /**
- * @author npiedeloup
+ * Une position de type What est composée d'une hierarchie de terms.
+ * exemple :
+ * sql; select  all products
+ * Cet exemple illustre une requête de tous les produits (appellée 'all products') classée dans la catégorie sql, sous catégorie select.
+ * 
+ * Il doit ncessairement y avoir une catégorie parente (sql) dans notre exemple. 
+ * @author npiedeloup, pchretien
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class WhatPosition extends Identity implements Position<WhatDimension, WhatPosition> {
-	private final WhatDimension dimension;
-	private final String what;
+public final class WhatPosition extends HKey implements Position<WhatPosition> {
+	private final List<String> what;
 
-	public WhatPosition(final String fullName, final WhatDimension whatDimension) {
-		super("what:[" + whatDimension.name() + "]" + whatDimension.reduce(fullName));
+	public WhatPosition(final List<String> what) {
+		super("what:" + what.toString());
 		//---------------------------------------------------------------------
-		this.dimension = whatDimension;
-		what = whatDimension.reduce(fullName);
+		Assertion.precondition(what.size() > 0, "Categories must not be  empty");
+		this.what = what;
 	}
 
 	/** {@inheritDoc} */
 	public WhatPosition drillUp() {
-		final WhatDimension upWhatDimension = dimension.drillUp();
-		return upWhatDimension != null ? new WhatPosition(what, upWhatDimension) : null;
+		if (what.size() <= 1) {
+			return null;
+		}
+		List<String> redux = new ArrayList<String>(what.size() - 1);
+		for (int i = 0; i < what.size() - 1; i++) {
+			redux.add(what.get(i));
+		}
+		return new WhatPosition(redux);
 	}
 
-	/** {@inheritDoc} */
-	public WhatDimension getDimension() {
-		return dimension;
-	}
-
-	public String getValue() {
+	public List<String> getValue() {
 		return what;
 	}
 }

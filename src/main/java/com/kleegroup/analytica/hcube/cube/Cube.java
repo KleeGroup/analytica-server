@@ -42,18 +42,12 @@ public final class Cube {
 	private final CubePosition cubePosition;
 	private final Map<MetricKey, Metric> metrics;
 
-	//	private final Map<String, Collection<MetaData>> indexedMetadatas;
-	//	private final Collection<MetaData> metaDatas;
-
-	Cube(final CubePosition cubePosition, final Collection<Metric> metrics/*, final Collection<MetaData> metadatas*/) {
+	Cube(final CubePosition cubePosition, final Collection<Metric> metrics) {
 		Assertion.notNull(cubePosition);
 		Assertion.notNull(metrics);
-		//		Assertion.notNull(metadatas);
 		//---------------------------------------------------------------------
 		this.cubePosition = cubePosition;
 		this.metrics = index(metrics);
-		//		indexedMetadatas = indexMeta(metadatas);
-		//		this.metaDatas = metadatas;
 	}
 
 	public CubePosition getPosition() {
@@ -77,14 +71,6 @@ public final class Cube {
 		return metrics.values();
 	}
 
-	//	public Collection<MetaData> getMetaData(final String name) {
-	//		return indexedMetadatas.get(name);
-	//	}
-	//
-	//	public Collection<MetaData> getMetaDatas() {
-	//		return metaDatas;
-	//	}
-
 	private static Map<MetricKey, Metric> index(final Collection<Metric> metrics) {
 		final Map<MetricKey, Metric> indexedList = new LinkedHashMap<MetricKey, Metric>(metrics.size());
 		for (final Metric metric : metrics) {
@@ -94,30 +80,16 @@ public final class Cube {
 		return indexedList;
 	}
 
-	//	private static Map<String, Collection<MetaData>> indexMeta(final Collection<MetaData> metaDatas) {
-	//		final Map<String, Collection<MetaData>> indexedList = new LinkedHashMap<String, Collection<MetaData>>(metaDatas.size());
-	//		for (final MetaData metaData : metaDatas) {
-	//			Collection<MetaData> list = indexedList.get(metaData.getName());
-	//			if (list == null) {
-	//				list = new ArrayList<MetaData>();
-	//				indexedList.put(metaData.getName(), list);
-	//			}
-	//			list.add(metaData);
-	//		}
-	//		return indexedList;
-	//	}
-
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
-				.append(cubePosition.id()).append("{\n\tMetrics:");
+				.append(cubePosition.id()).append("\n\tmetrics:{");
 		for (final Metric metric : getMetrics()) {
-			sb.append("\n\t\t- ").append(metric.getKey()).append(" = ").append(metric.get(DataType.mean));
+			sb.append("\n\t\t ").append(metric);
 		}
-		//		sb.append("\n\tMetaDatas:");
-		//		for (final MetaData metadata : getMetaDatas()) {
-		//			sb.append("\n\t\t- ").append(metadata.getName()).append(" = ").append(metadata.getValue());
-		//		}
+		if (!getMetrics().isEmpty()) {
+			sb.append("\n\t");
+		}
 		sb.append("}");
 		return sb.toString();
 	}

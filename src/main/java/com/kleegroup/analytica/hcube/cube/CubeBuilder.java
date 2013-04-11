@@ -37,8 +37,6 @@ public final class CubeBuilder implements Builder<Cube> {
 	private final CubePosition cubePosition;
 	private final Map<MetricKey, MetricBuilder> metrics = new HashMap<MetricKey, MetricBuilder>();
 
-	//	private final Set<MetaData> metaDatas = new HashSet<MetaData>(500);
-
 	/**
 	 * Constructeur.
 	 * @param cubeKey Identifiant du cube
@@ -66,17 +64,6 @@ public final class CubeBuilder implements Builder<Cube> {
 		return this;
 	}
 
-	//	/** 
-	//	 * Ajout d'une meta-donnée.
-	//	 * @param metaData meta-donnée
-	//	 */
-	//	public CubeBuilder withMetaData(final MetaData metaData) {
-	//		Assertion.notNull(metaData);
-	//		//---------------------------------------------------------------------
-	//		metaDatas.add(metaData);
-	//		return this;
-	//	}
-
 	/**
 	 * Ajout d'un cube. 
 	 * @param cube Cube
@@ -89,9 +76,6 @@ public final class CubeBuilder implements Builder<Cube> {
 		for (final Metric metric : cube.getMetrics()) {
 			withMetric(metric);
 		}
-		//		for (final MetaData metaData : cube.getMetaDatas()) {
-		//			withMetaData(metaData);
-		//		}
 		return this;
 	}
 
@@ -100,10 +84,11 @@ public final class CubeBuilder implements Builder<Cube> {
 	 * @return cube
 	 */
 	public Cube build() {
+		//---------------------------------------------------------------------
 		final List<Metric> list = new ArrayList<Metric>(metrics.size());
 		for (final MetricBuilder metricBuilder : metrics.values()) {
 			list.add(metricBuilder.build());
 		}
-		return new Cube(cubePosition, list/*, metaDatas*/);
+		return new Cube(cubePosition, list);
 	}
 }

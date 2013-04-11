@@ -18,7 +18,6 @@
 package com.kleegroup.analyticaimpl.server;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,46 +92,53 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		for (final Cube cube : cubes) {
 			cubeStorePlugin.merge(cube);
 		}
+		System.out.println(cubeStorePlugin);
 	}
 
 	/** {@inheritDoc} */
 	public List<Data> getData(final Query query) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, true);
-		if (aggregatedCubes.isEmpty()) {
-			return Collections.emptyList(); //TODO npi que faire si pas de ligne, l'aggregation devrait retourner toujours une ligne, non ?
-		}
-		//---------------------------------------------------------------------
-		Assertion.postcondition(aggregatedCubes.size() == 1, "La liste de cube doit être agrégée sur tout les axes, il doit dont y avoir un seul élément dans la liste (size:{0})", aggregatedCubes.size());
-		//---------------------------------------------------------------------
-		final Cube aggregatedCube = aggregatedCubes.get(0);
-		//On convertit le cube en liste de Data : 1 par metrics
-		final List<Data> datas = new ArrayList<Data>(query.getKeys().size());
-		for (final DataKey dataKey : query.getKeys()) {
-			//		if (dataKey.getType() == DataType.metaData) {
-			//				final List<String> metaDataValues = new ArrayList<String>();
-			//				for (final MetaData metaData : aggregatedCube.getMetaData(dataKey.getName())) {
-			//					metaDataValues.add(metaData.getValue());
-			//				}
-			//datas.add(new Data(dataKey, metaDataValues));
-			//			} else {
-			datas.add(new Data(dataKey, getCubeValue(aggregatedCube, dataKey)));
-			//			}
-		}
-		return datas;
+		return null;
+
+		/*		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, true);
+				if (aggregatedCubes.isEmpty()) {
+					return Collections.emptyList(); //TODO npi que faire si pas de ligne, l'aggregation devrait retourner toujours une ligne, non ?
+				}
+				//---------------------------------------------------------------------
+				Assertion.postcondition(aggregatedCubes.size() == 1, "La liste de cube doit être agrégée sur tout les axes, il doit dont y avoir un seul élément dans la liste (size:{0})", aggregatedCubes.size());
+				//---------------------------------------------------------------------
+				final Cube aggregatedCube = aggregatedCubes.get(0);
+				//On convertit le cube en liste de Data : 1 par metrics
+				final List<Data> datas = new ArrayList<Data>(query.getKeys().size());
+				for (final DataKey dataKey : query.getKeys()) {
+					//		if (dataKey.getType() == DataType.metaData) {
+					//				final List<String> metaDataValues = new ArrayList<String>();
+					//				for (final MetaData metaData : aggregatedCube.getMetaData(dataKey.getName())) {
+					//					metaDataValues.add(metaData.getValue());
+					//				}
+					//datas.add(new Data(dataKey, metaDataValues));
+					//			} else {
+					datas.add(new Data(dataKey, getCubeValue(aggregatedCube, dataKey)));
+					//			}
+				}
+				return datas;*/
 	}
 
 	/** {@inheritDoc} */
 	public List<DataSet<Date, ?>> getDataTimeLine(final Query query) {
-		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, false, true);
-		//On convertit la liste de cube en liste de DataSet : 1 par metrics
-		return convertToDataSet(aggregatedCubes, true, query.getKeys());
+		return null;
+		/*		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, false, true);
+				//On convertit la liste de cube en liste de DataSet : 1 par metrics
+				return convertToDataSet(aggregatedCubes, true, query.getKeys());*/
 	}
 
 	/** {@inheritDoc} */
 	public List<DataSet<String, ?>> getDataWhatLine(final Query query) {
+		return null;
+		/*
 		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, false);
 		//On convertit la liste de cube en liste de DataSet : 1 par metrics
 		return convertToDataSet(aggregatedCubes, false, query.getKeys());
+		*/
 	}
 
 	private <X> List<DataSet<X, ?>> convertToDataSet(final List<Cube> aggregatedCubes, final boolean dateAsLabels, final List<DataKey> metrics) {
@@ -212,5 +218,10 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		public void run() {
 			store50NextProcessesAsCube();
 		}
+	}
+
+	@Override
+	public List<Cube> load(Query query) {
+		return cubeStorePlugin.load(query);
 	}
 }

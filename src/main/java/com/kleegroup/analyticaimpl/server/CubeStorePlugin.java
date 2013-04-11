@@ -38,14 +38,16 @@ public interface CubeStorePlugin extends Plugin {
 	 */
 	void merge(Cube cube);
 
-	/**
-	 * Chargement des cubes.
-	 * @param query Selection comprenant la liste des métriques attendues
-	 * @param aggregateTime Si les données sont aggrégées sur l'axe temporel
-	 * @param aggregateWhat Si les données sont aggrégées sur l'axe fonctionnel
-	 * @return Liste des cubes
-	 */
-	List<Cube> load(Query query, boolean aggregateTime, boolean aggregateWhat);
+	List<Cube> load(Query query);
+
+	//	/**
+	//	 * Chargement des cubes.
+	//	 * @param query Selection comprenant la liste des métriques attendues
+	//	 * @param aggregateTime Si les données sont aggrégées sur l'axe temporel
+	//	 * @param aggregateWhat Si les données sont aggrégées sur l'axe fonctionnel
+	//	 * @return Liste des cubes
+	//	 */
+	//	List<Cube> load(Query query, boolean aggregateTime, boolean aggregateWhat);
 
 	/**
 	 * @return Dernier id de process stocké
@@ -56,26 +58,5 @@ public interface CubeStorePlugin extends Plugin {
 	 * @param lastProcessIdStored Dernier id de process stocké
 	 */
 	void saveLastProcessIdStored(String lastProcessIdStored);
+
 }
-
-//	/**
-//	 * Liste des selections temporelles de dimension inférieurs sous la séléction passée en paramètre.
-//	 * @param timeSelection  Selection temporelle
-//	 * @return Liste des selections temporelles
-//	 */
-//	List<TimePosition> loadSubTimePositions(TimeSelection timeSelection);
-
-//	/**
-//	 * Liste des selections fonctionelles de dimension inférieurs sous la séléction passée en paramètre dans une selection temporelle donnée.
-//	 * @param timeSelection Selection temporelle
-//	 * @param whatSelection Selection fonctionelle
-//	 * @return Liste des selections fonctionelles
-//	 */
-//	List<WhatPosition> loadSubWhatPositions(Query query);
-
-//	/**
-//	 * Liste des indicateurs disponibles dans une selection temporelle et fonctionnelle.
-//	 * @param query Selection 
-//	 * @return Liste des indicateurs
-//	 */
-//	List<DataKey> loadDataKeys(Query query);

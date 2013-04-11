@@ -20,7 +20,7 @@ package com.kleegroup.analytica.hcube.dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kleegroup.analytica.hcube.Identity;
+import com.kleegroup.analytica.hcube.HKey;
 
 /**
  * Position (clé) du cube dans l'espace multidimensionnel. 
@@ -31,12 +31,12 @@ import com.kleegroup.analytica.hcube.Identity;
  * @author npiedeloup, pchretien
  * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class CubePosition extends Identity {
+public final class CubePosition extends HKey {
 	private final TimePosition timePosition;
 	private final WhatPosition whatPosition;
 
 	public CubePosition(final TimePosition timePosition, final WhatPosition whatPosition) {
-		super("cube:[" + whatPosition.id() + ";" + timePosition.id() + "]");
+		super("cube:" + timePosition.id() + ";" + whatPosition.id());
 		//---------------------------------------------------------------------
 		this.timePosition = timePosition;
 		this.whatPosition = whatPosition;

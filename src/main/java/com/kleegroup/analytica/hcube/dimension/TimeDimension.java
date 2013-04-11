@@ -29,8 +29,8 @@ import kasper.kernel.util.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: TimeDimension.java,v 1.3 2012/10/16 16:25:22 pchretien Exp $
  */
-public enum TimeDimension implements Dimension<TimeDimension> {
-	/**
+public enum TimeDimension {
+	/** 
 	 * Année.
 	 */
 	Year(null),
@@ -61,12 +61,16 @@ public enum TimeDimension implements Dimension<TimeDimension> {
 		this.up = up;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * @return Niveau supérieur ou null.
+	 */
 	public TimeDimension drillUp() {
 		return up;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * @return Niveau inférieur ou null.
+	 */
 	public TimeDimension drillDown() {
 		switch (this) {
 			case Year:
@@ -85,24 +89,13 @@ public enum TimeDimension implements Dimension<TimeDimension> {
 	}
 
 	/**
-	 * Normalise la valeur pour correspondre au niveau d'agregation de cette dimension.
-	 * @param date Valeur
-	 * @return Valeur normalisée
-	 */
-	public Date reduce(final Date date) {
-		Assertion.notNull(date);
-		//---------------------------------------------------------------------
-		return reduce(date, this);
-	}
-
-	/**
 	 * Retourne la date maximum pour cette dimenssion.
 	 * @param date Date de départ
 	 * @return Date maximum
 	 */
 	public Date getMaxDate(final Date date) {
 		Assertion.notNull(date);
-		final Date reduceDate = reduce(date, this);
+		final Date reduceDate = reduce(date);
 		Assertion.precondition(reduceDate.equals(date), "La date de début doit déjà être réduite à cette dimenssion, et correspondre au point de début de cette dimenssion");
 		//---------------------------------------------------------------------
 		final Calendar calendar = Calendar.getInstance();
@@ -127,10 +120,17 @@ public enum TimeDimension implements Dimension<TimeDimension> {
 		return calendar.getTime();
 	}
 
-	private static Date reduce(final Date date, final TimeDimension timeDimension) {
+	/**
+	 * Normalise la valeur pour correspondre au niveau d'agregation de cette dimension.
+	 * @param date Valeur
+	 * @return Valeur normalisée
+	 */
+	public Date reduce(final Date date) {
+		Assertion.notNull(date);
+		//---------------------------------------------------------------------
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		switch (timeDimension) {
+		switch (this) {
 			case Year:
 				calendar.set(Calendar.MONTH, 0);
 				//$FALL-THROUGH$
@@ -150,5 +150,22 @@ public enum TimeDimension implements Dimension<TimeDimension> {
 				calendar.set(Calendar.MILLISECOND, 0);
 		}
 		return calendar.getTime();
+	}
+
+	public String getPattern() {
+		switch (this) {
+			case Minute:
+				return "yyyy/MM/dd HH:mm";
+			case Hour:
+				return "yyyy/MM/dd HH";
+			case Day:
+				return "yyyy/MM/dd";
+			case Month:
+				return "yyyy/MM";
+			case Year:
+				return "yyyy";
+			default:
+				throw new KRuntimeException("TimeDimension inconnu");
+		}
 	}
 }

@@ -29,7 +29,6 @@ import com.kleegroup.analytica.core.KProcess;
  * @version $Id: ProcessStorePlugin.java,v 1.2 2012/04/06 16:06:46 npiedeloup Exp $
  */
 public interface ProcessStorePlugin extends Plugin {
-
 	/**
 	 * Ajout un processus identifié.
 	 * @param process processus identifié.

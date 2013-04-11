@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import kasper.AbstractTestCaseJU4;
+import kasper.kernel.lang.DateBuilder;
 import kasper.kernel.util.Assertion;
 
 import org.apache.log4j.Logger;
@@ -36,11 +37,11 @@ import org.junit.Test;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
+import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.DataType;
 import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.QueryBuilder;
 import com.kleegroup.analytica.server.data.Data;
@@ -219,8 +220,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 		//---------------------------------------------------------------------
 		final Query query = new QueryBuilder(asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean)))//
-				.on(WhatDimension.Type)//
-				.with(WhatDimension.SEPARATOR + "TEST_MEAN3")//
+				//.on(WhatDimension.Type)//
+				.with("TEST_MEAN3")//
 				.on(TimeDimension.Minute)//
 				.from(new Date(System.currentTimeMillis() - 1 * 1000))//
 				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
@@ -265,7 +266,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		//---------------------------------------------------------------------
 		serverManager.store50NextProcessesAsCube();
 		final Query query = new QueryBuilder(asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean)))//
-				.on(WhatDimension.SimpleName)//
+				//.on(WhatDimension.SimpleName)//
 				.with("/TEST_WHAT_SELECTION1/Process1", "/TEST_WHAT_SELECTION1/Process2")//
 				.on(TimeDimension.Minute)//
 				.from(new Date())//
@@ -337,8 +338,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.max), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.min), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.stdDev));
 		serverManager.store50NextProcessesAsCube();
 		final Query query = new QueryBuilder(metrics)//
-				.on(WhatDimension.Type)//
-				.with(WhatDimension.SEPARATOR + "TEST_MEAN4")//
+				//	.on(WhatDimension.Type)//
+				.with("TEST_MEAN4")//
 				.on(TimeDimension.Minute)//
 				.from(new Date(System.currentTimeMillis() - 1 * 1000))//
 				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
@@ -383,8 +384,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count));
 		serverManager.store50NextProcessesAsCube();
 		final Query query = new QueryBuilder(metrics)//
-				.on(WhatDimension.FullName)//
-				.with(WhatDimension.SEPARATOR + "TEST_MEAN5")//
+				//	.on(WhatDimension.FullName)//
+				.with("TEST_MEAN5")//
 				.on(TimeDimension.Minute)//
 				.from(new Date())//
 				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
@@ -435,8 +436,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		serverManager.store50NextProcessesAsCube();
 
 		final Query query = new QueryBuilder(metrics)//
-				.on(WhatDimension.FullName)//
-				.with(WhatDimension.SEPARATOR + "TEST_MEAN6")//
+				//.on(WhatDimension.FullName)//
+				.with("TEST_MEAN6")//
 				.on(TimeDimension.Minute)//
 				.from(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000))//
 				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
@@ -450,8 +451,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	private List<Data> getCubeToday(final String module, final DataKey... metrics) {
 		final Query query = new QueryBuilder(asList(metrics))//
-				.on(WhatDimension.Type)//
-				.with(WhatDimension.SEPARATOR + module)//
+				//.on(WhatDimension.Type)//
+				.with(module)//
 				.on(TimeDimension.Minute)//
 				.from(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000))//
 				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
@@ -490,17 +491,24 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		}
 		serverManager.store50NextProcessesAsCube();
 		final Query query = new QueryBuilder(dataKeys)//
-				.on(WhatDimension.SimpleName)//
-				.with("/")//
-				.on(TimeDimension.Day)//
+				.with("ARTICLE")//
+				.on(TimeDimension.Hour)//
 				.from(new Date())//
-				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
+				.to(new DateBuilder(new Date()).addDays(1).toDateTime())//
 				.build();
 
-		final List<Data> datas = serverManager.getData(query);
-		for (final Data data : datas) {
-			System.out.println(data);
+		final List<Cube> cubes = serverManager.load(query);
+		System.out.println("=========================");
+		System.out.println(">>>" + query);
+		System.out.println(">>>load : find " + cubes.size());
+		System.out.println("=========================");
+		for (final Cube cube : cubes) {
+			System.out.println(cube);
 		}
+		System.out.println("=========================");
+		System.out.println("<<<" + query);
+		System.out.println("<<<load : find " + cubes.size());
+		System.out.println("=========================");
 	}
 
 	/**

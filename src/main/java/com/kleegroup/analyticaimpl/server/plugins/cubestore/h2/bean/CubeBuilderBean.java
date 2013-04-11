@@ -18,6 +18,7 @@
 package com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.bean;
 
 import java.util.Date;
+import java.util.List;
 
 import kasper.kernel.lang.Builder;
 
@@ -38,7 +39,7 @@ public final class CubeBuilderBean implements Builder<CubeBuilder> {
 	private long cubId;
 	private Date time;
 	private TimeDimension timeDimension;
-	private String what;
+	private List<String> what;
 	private WhatDimension whatDimension;
 
 	/**
@@ -71,7 +72,7 @@ public final class CubeBuilderBean implements Builder<CubeBuilder> {
 		time = timePosition;
 	}
 
-	public final void setWhatPosition(final String whatPosition) {
+	public final void setWhatPosition(final List<String> whatPosition) {
 		what = whatPosition;
 	}
 }

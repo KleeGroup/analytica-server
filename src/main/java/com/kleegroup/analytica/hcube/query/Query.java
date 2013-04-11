@@ -7,7 +7,7 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
-import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
@@ -16,16 +16,16 @@ import com.kleegroup.analytica.hcube.dimension.WhatDimension;
  */
 public final class Query {
 	private final TimeSelection timeSelection;
-	private final WhatSelection whatSelection;
+	private final WhatPosition whatPosition;
 	private final List<DataKey> keys;
 
-	Query(TimeSelection timeSelection, WhatSelection whatSelection, List<DataKey> keys) {
+	Query(TimeSelection timeSelection, WhatPosition whatPosition, List<DataKey> keys) {
 		Assertion.notNull(timeSelection);
-		Assertion.notNull(whatSelection);
+		Assertion.notNull(whatPosition);
 		Assertion.notNull(keys);
 		//---------------------------------------------------------------------
 		this.timeSelection = timeSelection;
-		this.whatSelection = whatSelection;
+		this.whatPosition = whatPosition;
 		this.keys = keys;
 	}
 
@@ -34,12 +34,8 @@ public final class Query {
 	}
 
 	//-----------------------What----------------------------------------------
-	public List<String> getWhatValues() {
-		return whatSelection.getWhatValues();
-	}
-
-	public WhatDimension getWhatDimension() {
-		return whatSelection.getDimension();
+	public WhatPosition getWhatPosition() {
+		return whatPosition;
 	}
 
 	//-----------------------When----------------------------------------------
@@ -53,5 +49,9 @@ public final class Query {
 
 	public TimePosition getMaxTimePosition() {
 		return timeSelection.getMaxTimePosition();
+	}
+
+	public String toString() {
+		return ("query : {from:" + getMinTimePosition() + " to:" + getMaxTimePosition() + " with:" + getWhatPosition() + "}");
 	}
 }

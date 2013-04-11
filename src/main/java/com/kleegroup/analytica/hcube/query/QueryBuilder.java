@@ -1,5 +1,6 @@
 package com.kleegroup.analytica.hcube.query;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import kasper.kernel.lang.Builder;
 
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 
 /**
  * Builder de la requête.
@@ -19,8 +20,8 @@ public class QueryBuilder implements Builder<Query> {
 	private Date from;
 	private Date to;
 	//----
-	private WhatDimension whatDimension;
-	private String[] whatValues;
+	private List<String> what;
+
 	//---
 	private List<DataKey> keys;
 
@@ -43,20 +44,13 @@ public class QueryBuilder implements Builder<Query> {
 		return this;
 	}
 
-	public QueryBuilder on(WhatDimension whatDimension) {
-		this.whatDimension = whatDimension;
+	public QueryBuilder with(final String... what) {
+		this.what = Arrays.asList(what);
 		return this;
-	}
-
-	public QueryBuilder with(final String... whatValues) {
-		this.whatValues = whatValues;
-		return this;
-
 	}
 
 	@Override
 	public Query build() {
-		return new Query(new TimeSelection(timeDimension, from, to), new WhatSelection(whatDimension, whatValues), keys);
+		return new Query(new TimeSelection(timeDimension, from, to), new WhatPosition(what), keys);
 	}
-
 }

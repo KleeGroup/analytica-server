@@ -103,4 +103,8 @@ public final class Metric {
 				throw new IllegalArgumentException("Fonction inconnue : " + dataType);
 		}
 	}
+
+	public String toString() {
+		return metricKey + "= {count:" + count + ", mean:" + getMean() + "}";
+	}
 }

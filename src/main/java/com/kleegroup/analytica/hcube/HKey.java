@@ -20,13 +20,14 @@ package com.kleegroup.analytica.hcube;
 import kasper.kernel.util.Assertion;
 
 /**
- * @author npiedeloup
+ * Clé unique d'un objet de HCube.
+ * @author npiedeloup, pchretien
  * @version $Id: Identity.java,v 1.3 2012/10/16 13:52:38 pchretien Exp $
  */
-public abstract class Identity implements Comparable<Identity> {
+public abstract class HKey implements Comparable<HKey> {
 	private final String id;
 
-	public Identity(final String id) {
+	public HKey(final String id) {
 		Assertion.notEmpty(id);
 		//---------------------------------------------------------------------
 		this.id = id;
@@ -39,8 +40,8 @@ public abstract class Identity implements Comparable<Identity> {
 
 	@Override
 	public final boolean equals(final Object object) {
-		if (object instanceof Identity) {
-			return id.equals(((Identity) object).id());
+		if (object instanceof HKey) {
+			return id.equals(((HKey) object).id());
 		}
 		return false;
 	}
@@ -49,7 +50,7 @@ public abstract class Identity implements Comparable<Identity> {
 		return id;
 	}
 
-	public int compareTo(final Identity object) {
+	public final int compareTo(final HKey object) {
 		Assertion.notNull(object);
 		//---------------------------------------------------------------------
 		return id.compareTo(object.id());

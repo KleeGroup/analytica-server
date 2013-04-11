@@ -17,21 +17,24 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.kleegroup.analytica.hcube.Identity;
+import kasper.kernel.exception.KRuntimeException;
+import kasper.kernel.lang.DateBuilder;
+
+import com.kleegroup.analytica.hcube.HKey;
 
 /**
  * @author npiedeloup
  * @version $Id: TimePosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class TimePosition extends Identity implements Position<TimeDimension, TimePosition> {
+public final class TimePosition extends HKey implements Position<TimePosition> {
 	private final TimeDimension dimension;
 	private final Date date;
 
 	public TimePosition(final Date date, final TimeDimension timeDimension) {
-		super("time:[" + timeDimension.name() + "]" + timeDimension.reduce(date).getTime());
-		//Assertion.notNull(timeDimension); inutil
+		super("time:[" + timeDimension.name() + "]" + new SimpleDateFormat(timeDimension.getPattern()).format(date));
 		//---------------------------------------------------------------------
 		this.dimension = timeDimension;
 		this.date = timeDimension.reduce(date);
@@ -50,5 +53,29 @@ public final class TimePosition extends Identity implements Position<TimeDimensi
 
 	public Date getValue() {
 		return date;
+	}
+
+	public TimePosition next() {
+		final Date nextDate;
+		switch (dimension) {
+			case Year:
+				nextDate = new DateBuilder(date).addYears(1).toDateTime();
+				break;
+			case Month:
+				nextDate = new DateBuilder(date).addMonths(1).toDateTime();
+				break;
+			case Day:
+				nextDate = new DateBuilder(date).addDays(1).toDateTime();
+				break;
+			case Hour:
+				nextDate = new DateBuilder(date).addHours(1).toDateTime();
+				break;
+			case Minute:
+				nextDate = new DateBuilder(date).addMinutes(1).toDateTime();
+				break;
+			default:
+				throw new KRuntimeException("TimeDimension inconnu");
+		}
+		return new TimePosition(nextDate, dimension);
 	}
 }
