@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server;
+package com.kleegroup.analyticaimpl.hcube;
 
 import java.util.List;
 
@@ -30,7 +30,6 @@ import com.kleegroup.analytica.hcube.query.Query;
  * @version $Id: CubeStorePlugin.java,v 1.1 2012/03/22 09:16:40 npiedeloup Exp $
  */
 public interface CubeStorePlugin extends Plugin {
-
 	/**
 	 * Enregistre un cube.
 	 * Celui-ci sera mergé avec les autres cubes déjà enregistrés.
@@ -38,6 +37,11 @@ public interface CubeStorePlugin extends Plugin {
 	 */
 	void merge(Cube cube);
 
+	/**
+	 * Liste des cubes correspondant à une requête.
+	 * @param query Requête
+	 * @return Liste des cubes 
+	 */
 	List<Cube> load(Query query);
 
 	//	/**

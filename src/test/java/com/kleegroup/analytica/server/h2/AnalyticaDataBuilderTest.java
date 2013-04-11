@@ -238,7 +238,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 	public void testProcessToCube() {
 		int nbProcess;
 		do {
-			nbProcess = serverManager.flush();
+			nbProcess = serverManager.store50NextProcessesAsCube();
 			log.info("Stored " + nbProcess + " processes as Cubes.");
 		} while (nbProcess > 0);
 	}

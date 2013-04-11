@@ -38,6 +38,7 @@ import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.server.ServerManager;
 import com.kleegroup.analytica.server.data.Data;
 import com.kleegroup.analytica.server.data.DataSet;
+import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
 
 /**
  * Manager Serveur d'Analytica.

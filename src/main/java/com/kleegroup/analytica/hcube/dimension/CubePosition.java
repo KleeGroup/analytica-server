@@ -36,7 +36,7 @@ public final class CubePosition extends HKey {
 	private final WhatPosition whatPosition;
 
 	public CubePosition(final TimePosition timePosition, final WhatPosition whatPosition) {
-		super("cube:" + timePosition.id() + ";" + whatPosition.id());
+		super("cube:" + timePosition.id() + "; " + whatPosition.id());
 		//---------------------------------------------------------------------
 		this.timePosition = timePosition;
 		this.whatPosition = whatPosition;

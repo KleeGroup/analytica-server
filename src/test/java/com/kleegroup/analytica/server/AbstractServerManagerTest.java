@@ -63,7 +63,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	private static final MetricKey POIDS = new MetricKey("POIDS");
 
 	/** Base de données gérant les articles envoyés dans une commande. */
-	private static final String PROCESS1_TYPE = "ARTICLE";
+	private static final String PROCESS_SERVICES = "SERVICES";
+	private static final String PROCESS_SQL = "SQL";
 	private static final String PROCESS2_TYPE = "COMMANDE";
 
 	/** Logger. */
@@ -76,6 +77,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	/**
 	 * Test simple avec deux compteurs. 
+	 * Soit un service de d'envoi. 
 	 * Test sur l'envoi de 1000 articles d'un poids de 25 kg. 
 	 * Chaque article coute 10€.
 	 */
@@ -544,15 +546,16 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 * @return Kprocess resultat
 	 */
 	private static KProcess createNArticles(final int nbArticles) {
-		final KProcessBuilder kProcessBuilder2 = createProcess(PROCESS1_TYPE, nbArticles + " Articles 25 Kg", nbArticles * 10);
+		final KProcessBuilder kProcessBuilder = createProcess(PROCESS_SERVICES, "envoi " + nbArticles + " Articles 25Kg", nbArticles * 10);
 		for (int i = 0; i < nbArticles; i++) {
-			final KProcess kProcess1 = createProcess(PROCESS1_TYPE, "1 Article 25 Kg")//
+			final KProcess kProcess1 = createProcess(PROCESS_SQL, "select article 25Kg")//
 					.setMeasure(POIDS.id(), 25)//
 					.incMeasure(MONTANT.id(), 10)//
 					.build();
-			kProcessBuilder2.addSubProcess(kProcess1);
+
+			kProcessBuilder.addSubProcess(kProcess1);
 		}
-		return kProcessBuilder2.build();
+		return kProcessBuilder.build();
 	}
 
 	private final class CommandeTask implements Runnable {

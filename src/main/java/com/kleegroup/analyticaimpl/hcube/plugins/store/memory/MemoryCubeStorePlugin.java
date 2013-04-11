@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.plugins.cubestore.memory;
+package com.kleegroup.analyticaimpl.hcube.plugins.store.memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import com.kleegroup.analytica.hcube.dimension.CubePosition;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analyticaimpl.server.CubeStorePlugin;
+import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
 
 /**
  * Implémentation mémoire du stockage des Cubes.
