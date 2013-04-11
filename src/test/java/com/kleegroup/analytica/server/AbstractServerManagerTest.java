@@ -83,18 +83,13 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 */
 	@Test
 	public void test1000Articles() {
-		final KProcess process = createNArticles(1000);
-		serverManager.push(process);
-		printDatas(MONTANT);
-	}
-
-	/**
-	 * Même test après désactivation.
-	 */
-	@Test
-	public void testOff() {
-		final KProcess process = createNArticles(50);
-		serverManager.push(process);
+		Date date = new Date();
+		for (int i = 0; i < 60 * 24; i++) {
+			System.out.println(">>>>" + i);
+			final KProcess process = createNArticles(1000, date);
+			serverManager.push(process);
+			date = new DateBuilder(date).addMinutes(1).toDateTime();
+		}
 		printDatas(MONTANT);
 	}
 
@@ -493,7 +488,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		}
 		serverManager.store50NextProcessesAsCube();
 		final Query query = new QueryBuilder(dataKeys)//
-				.with("ARTICLE")//
+				.with("SERVICES")//
 				.on(TimeDimension.Hour)//
 				.from(new Date())//
 				.to(new DateBuilder(new Date()).addDays(1).toDateTime())//
@@ -536,7 +531,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		return createProcess(PROCESS2_TYPE, "1 Commande")//
 				.setMetaData(numCommande, "NUMERO")//
 				.incMeasure(MONTANT.id(), 5)//
-				.addSubProcess(createNArticles(nbArticles))//
+				.addSubProcess(createNArticles(nbArticles, new Date()))//
 				.build();
 	}
 
@@ -545,8 +540,8 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 * @param nbArticles Nombre d'article
 	 * @return Kprocess resultat
 	 */
-	private static KProcess createNArticles(final int nbArticles) {
-		final KProcessBuilder kProcessBuilder = createProcess(PROCESS_SERVICES, "envoi " + nbArticles + " Articles 25Kg", nbArticles * 10);
+	private static KProcess createNArticles(final int nbArticles, Date start) {
+		final KProcessBuilder kProcessBuilder = new KProcessBuilder(PROCESS_SERVICES, "envoi " + nbArticles + " Articles 25Kg", start, nbArticles * 10);
 		for (int i = 0; i < nbArticles; i++) {
 			final KProcess kProcess1 = createProcess(PROCESS_SQL, "select article 25Kg")//
 					.setMeasure(POIDS.id(), 25)//
