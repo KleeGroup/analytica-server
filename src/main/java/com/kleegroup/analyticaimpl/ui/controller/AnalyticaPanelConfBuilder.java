@@ -30,6 +30,7 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.DataType;
+import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.WhatDimension;
 import com.kleegroup.analytica.hcube.query.Query;
@@ -64,11 +65,11 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 	/** {@inheritDoc} */
 	public AnalyticaPanelConf build() {
 		final String panelContext = dashboardContext + "." + panelName;
-		QueryBuilder queryBuilder = new QueryBuilder(readDataKeyList(panelContext));
+		final QueryBuilder queryBuilder = new QueryBuilder(readDataKeyList(panelContext));
 		readTimeSelection(panelContext, queryBuilder);
 		readWhatSelection(panelContext, queryBuilder);
 
-		Query panelQuery = queryBuilder.build();
+		final Query panelQuery = queryBuilder.build();
 		final List<String> panelLabels = java.util.Arrays.asList(configManager.getStringValue(panelContext, "labels").split(";"));
 
 		final boolean aggregateTime;
@@ -105,7 +106,7 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 			Assertion.precondition(typeIndexOf > 0, "Le nom de la dataKey {0} est incorrect. Doit être : <MEASURE_NAME>:<DataType> avec <DataType>: MetaData, Count, Mean, Max, Min, StandardDeviation");
 			final String dataKeyName = dataKeyStr.substring(0, typeIndexOf);
 			final DataType dataKeyType = DataType.valueOf(dataKeyStr.substring(typeIndexOf + 1));
-			final DataKey dataKey = new DataKey(dataKeyName, dataKeyType);
+			final DataKey dataKey = new DataKey(new MetricKey(dataKeyName), dataKeyType);
 			dataKeys.add(dataKey);
 		}
 		return dataKeys;

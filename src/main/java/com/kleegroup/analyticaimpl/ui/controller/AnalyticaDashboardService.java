@@ -69,14 +69,14 @@ public final class AnalyticaDashboardService implements Serializable {
 			final ChartSeries serie = new ChartSeries();
 			serie.setLabel(analyticaPanelConf.getPanelTitle());
 			for (final Data data : datas) {
-				serie.set(data.getKey().getName() + "(" + data.getKey().getType().name() + ")", data.getValue());
+				serie.set(data.getKey().getMetricKey().id() + "(" + data.getKey().getType().name() + ")", data.getValue());
 			}
 			result.addSeries(serie);
 		} else if (analyticaPanelConf.isAggregateTime()) {
 			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getQuery());
 			for (final DataSet<String, ?> dataSet : datas) {
 				final LineChartSeries serie = new LineChartSeries();
-				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
+				serie.setLabel(dataSet.getKey().getMetricKey().id() + "(" + dataSet.getKey().getType().name() + ")");
 				final List<String> labels = dataSet.getLabels();
 				final List<?> values = dataSet.getValues();
 				for (int i = 0; i < labels.size(); i++) {
@@ -89,7 +89,7 @@ public final class AnalyticaDashboardService implements Serializable {
 			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getQuery());
 			for (final DataSet<Date, ?> dataSet : datas) {
 				final LineChartSeries serie = new LineChartSeries();
-				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
+				serie.setLabel(dataSet.getKey().getMetricKey().id() + "(" + dataSet.getKey().getType().name() + ")");
 				final List<Date> labels = dataSet.getLabels();
 				final List<?> values = dataSet.getValues();
 				for (int i = 0; i < labels.size(); i++) {

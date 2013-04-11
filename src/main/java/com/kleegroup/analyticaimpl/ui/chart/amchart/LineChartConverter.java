@@ -133,7 +133,7 @@ public final class LineChartConverter implements Converter {
 	}
 
 	private String encode(final DataKey dataKey) {
-		return dataKey.getName() + "_" + dataKey.getType().name();
+		return dataKey.getMetricKey().id() + "_" + dataKey.getType().name();
 	}
 
 	private void appendColors(final String colors, final int nbSeries, final StringBuilder result) {
