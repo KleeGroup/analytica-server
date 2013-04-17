@@ -23,14 +23,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import kasper.AbstractTestCaseJU4;
-import kasper.kernel.util.Assertion;
+import kasper.kernel.lang.DateBuilder;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -65,7 +62,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	/** Base de données gérant les articles envoyés dans une commande. */
 	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
-	private static final String PROCESS2_TYPE = "COMMANDE";
+	//	private static final String PROCESS2_TYPE = "COMMANDE";
 
 	/** Logger. */
 	private final Logger log = Logger.getLogger(getClass());
@@ -88,8 +85,20 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		//On se place au 10-10-2010  a 10h10
 		final Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE).parse("10/10/2010");
 		//for (int i = 0; i < 60 * 24; i++) {
+
 		final int nbSelect = 55;
-		final KProcess process = createNArticles(nbSelect, date);
+
+		final KProcessBuilder kProcessBuilder = new KProcessBuilder(PROCESS_SERVICES, "get articles", date, 2000);
+		for (int i = 0; i < nbSelect; i++) {
+			final KProcess selectProcess = new KProcessBuilder(PROCESS_SQL, "select article", new DateBuilder(date).addHours(1).toDateTime(), 100)//
+					.incMeasure(POIDS.id(), 25)//
+					.incMeasure(MONTANT.id(), 10)//
+					.build();
+
+			kProcessBuilder.addSubProcess(selectProcess);
+		}
+		final KProcess process = kProcessBuilder.build();
+
 		serverManager.push(process);
 		Query query = new QueryBuilder()//
 				.on(TimeDimension.Day)//
@@ -99,17 +108,14 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.build();
 
 		List<Cube> cubes = serverManager.findAll(query);
-		System.out.println(cubes);
 		Assert.assertEquals(1, cubes.size());
-		System.out.println(">>>é" + cubes.get(0).getMetrics());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
-		//
-		System.out.println(montantMetric);
-		Assert.assertEquals(montantMetric.get(DataType.count), nbSelect);
-		Assert.assertEquals(montantMetric.get(DataType.sum), nbSelect * 10);
-		Assert.assertEquals(montantMetric.get(DataType.min), 10);
-		Assert.assertEquals(montantMetric.get(DataType.max), 10);
+		//On 
+		Assert.assertEquals(montantMetric.get(DataType.count), Integer.valueOf(nbSelect).doubleValue(), 0);
+		Assert.assertEquals(montantMetric.get(DataType.sum), Integer.valueOf(10 * nbSelect).doubleValue(), 0);
+		Assert.assertEquals(montantMetric.get(DataType.min), Integer.valueOf(10).doubleValue(), 0);
+		Assert.assertEquals(montantMetric.get(DataType.max), Integer.valueOf(10).doubleValue(), 0);
 	}
 
 	//
@@ -136,22 +142,22 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 * Les frais d'envoi sont de 5€.
 	 * @throws InterruptedException Interruption
 	 */
-	@Test
-	public void testMultiThread() throws InterruptedException {
-		final long start = System.currentTimeMillis();
-		final ExecutorService workersPool = Executors.newFixedThreadPool(20);
-
-		for (int i = 0; i < 50; i++) {
-			workersPool.execute(new CommandeTask(String.valueOf(i), 5));
-		}
-		workersPool.shutdown();
-		workersPool.awaitTermination(2, TimeUnit.MINUTES); //On laisse 2 minute pour vider la pile   
-		Assertion.invariant(workersPool.isTerminated(), "Les threads ne sont pas tous stoppés");
-
-		log.trace("elapsed = " + (System.currentTimeMillis() - start));
-		//	printDatas(MONTANT);
-		//System.out.println(analyticaUIManager.toString(serverManager.getProcesses()));
-	}
+	//	@Test
+	//	public void testMultiThread() throws InterruptedException {
+	//		final long start = System.currentTimeMillis();
+	//		final ExecutorService workersPool = Executors.newFixedThreadPool(20);
+	//
+	//		for (int i = 0; i < 50; i++) {
+	//			workersPool.execute(new CommandeTask(String.valueOf(i), 5));
+	//		}
+	//		workersPool.shutdown();
+	//		workersPool.awaitTermination(2, TimeUnit.MINUTES); //On laisse 2 minute pour vider la pile   
+	//		Assertion.invariant(workersPool.isTerminated(), "Les threads ne sont pas tous stoppés");
+	//
+	//		log.trace("elapsed = " + (System.currentTimeMillis() - start));
+	//		//	printDatas(MONTANT);
+	//		//System.out.println(analyticaUIManager.toString(serverManager.getProcesses()));
+	//	}
 
 	private static KProcessBuilder createProcess(final String module, final String fullName, Date date) {
 		return new KProcessBuilder(module, fullName, date, 10);
@@ -548,50 +554,32 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 * @param nbArticles Nombre d'article
 	 * @return Kprocess resultat
 	 */
-	private static KProcess createOneCommande(final String numCommande, final int nbArticles) {
-		return createProcess(PROCESS2_TYPE, "1 Commande", new Date())//
-				.setMetaData(numCommande, "NUMERO")//
-				.incMeasure(MONTANT.id(), 5)//
-				.addSubProcess(createNArticles(nbArticles, new Date()))//
-				.build();
-	}
-
-	/**
-	 * Ajoute N articles.
-	 * @param nbArticles Nombre d'article
-	 * @return Kprocess resultat
-	 */
-	private static KProcess createNArticles(final int nbSelectArticles, Date start) {
-		final KProcessBuilder kProcessBuilder = new KProcessBuilder(PROCESS_SERVICES, "get articles", start, 2000);
-		for (int i = 0; i < nbSelectArticles; i++) {
-			final KProcess selectProcess = createProcess(PROCESS_SQL, "select article", start)//
-					.incMeasure(POIDS.id(), 25)//
-					.incMeasure(MONTANT.id(), 10)//
-					.build();
-
-			kProcessBuilder.addSubProcess(selectProcess);
-		}
-		return kProcessBuilder.build();
-	}
-
-	private final class CommandeTask implements Runnable {
-		private final String numCommande;
-		private final int nbArticles;
-
-		public CommandeTask(final String numCommande, final int nbArticles) {
-			this.numCommande = numCommande;
-			this.nbArticles = nbArticles;
-		}
-
-		public void run() {
-			final KProcess process = createOneCommande(numCommande, nbArticles);
-			serverManager.push(process);
-			try {
-				Thread.sleep(100);
-			} catch (final InterruptedException e) {
-				//rien
-			}
-			System.out.println("Finish commande n°" + numCommande);
-		}
-	}
+	//	private static KProcess createOneCommande(final String numCommande, final int nbArticles) {
+	//		return createProcess(PROCESS2_TYPE, "1 Commande", new Date())//
+	//				.setMetaData(numCommande, "NUMERO")//
+	//				.incMeasure(MONTANT.id(), 5)//
+	//				.addSubProcess(createNArticles(nbArticles, new Date()))//
+	//				.build();
+	//	}
+	//
+	//	private final class CommandeTask implements Runnable {
+	//		private final String numCommande;
+	//		private final int nbArticles;
+	//
+	//		public CommandeTask(final String numCommande, final int nbArticles) {
+	//			this.numCommande = numCommande;
+	//			this.nbArticles = nbArticles;
+	//		}
+	//
+	//		public void run() {
+	//			final KProcess process = createOneCommande(numCommande, nbArticles);
+	//			serverManager.push(process);
+	//			try {
+	//				Thread.sleep(100);
+	//			} catch (final InterruptedException e) {
+	//				//rien
+	//			}
+	//			System.out.println("Finish commande n°" + numCommande);
+	//		}
+	//	}
 }

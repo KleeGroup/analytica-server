@@ -9,6 +9,6 @@ import com.kleegroup.analytica.hcube.HKey;
  */
 public final class MetricKey extends HKey {
 	public MetricKey(String name) {
-		super("metric:" + name);
+		super(name);
 	}
 }
