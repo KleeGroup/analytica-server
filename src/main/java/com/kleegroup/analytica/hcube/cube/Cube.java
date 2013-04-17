@@ -60,6 +60,8 @@ public final class Cube {
 	 * @return Métrique
 	 */
 	public Metric getMetric(final MetricKey metricKey) {
+		Assertion.notNull(metricKey);
+		//---------------------------------------------------------------------
 		return metrics.get(metricKey);
 	}
 

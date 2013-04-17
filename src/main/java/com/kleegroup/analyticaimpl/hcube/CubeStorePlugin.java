@@ -42,7 +42,7 @@ public interface CubeStorePlugin extends Plugin {
 	 * @param query Requête
 	 * @return Liste des cubes 
 	 */
-	List<Cube> load(Query query);
+	List<Cube> findAll(Query query);
 
 	//	/**
 	//	 * Chargement des cubes.
@@ -52,15 +52,14 @@ public interface CubeStorePlugin extends Plugin {
 	//	 * @return Liste des cubes
 	//	 */
 	//	List<Cube> load(Query query, boolean aggregateTime, boolean aggregateWhat);
-
-	/**
-	 * @return Dernier id de process stocké
-	 */
-	String loadLastProcessIdStored();
-
-	/**
-	 * @param lastProcessIdStored Dernier id de process stocké
-	 */
-	void saveLastProcessIdStored(String lastProcessIdStored);
-
+	//
+	//	/**
+	//	 * @return Dernier id de process stocké
+	//	 */
+	//	String loadLastProcessIdStored();
+	//
+	//	/**
+	//	 * @param lastProcessIdStored Dernier id de process stocké
+	//	 */
+	//	void saveLastProcessIdStored(String lastProcessIdStored);
 }

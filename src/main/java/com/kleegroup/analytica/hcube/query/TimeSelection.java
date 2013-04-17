@@ -39,7 +39,7 @@ final class TimeSelection {
 	TimeSelection(final TimeDimension dimension, final Date minDate, final Date maxDate) {
 		Assertion.notNull(minDate);
 		Assertion.notNull(maxDate);
-		Assertion.precondition(minDate.before(maxDate), "la date min doit être inférieure à la date max");
+		Assertion.precondition(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
 		Assertion.notNull(dimension);
 		//---------------------------------------------------------------------
 		this.minTimePosition = new TimePosition(minDate, dimension);

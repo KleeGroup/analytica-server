@@ -47,7 +47,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	private final Map<String, String> metaDatas;
 
 	private final long start;
-	private Double duration = null;
+	private Double durationMs = null;
 	private final List<KProcess> subProcesses;
 
 	/**
@@ -66,12 +66,12 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param type Type du processus
 	 * @param name Nom du processus
 	 * @param startDate Date de début processus
-	 * @param duration Durée du processus
+	 * @param duration Durée du processus (Millisecondes)
 	 */
-	public KProcessBuilder(final String type, final String name, final Date startDate, final double duration) {
+	public KProcessBuilder(final String type, final String name, final Date startDate, final double durationMs) {
 		this(type, name, startDate);
 		//---------------------------------------------------------------------
-		this.duration = duration;
+		this.durationMs = durationMs;
 	}
 
 	private KProcessBuilder(final String type, final String name, final Date startDate) {
@@ -145,11 +145,11 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 */
 	public KProcess build() {
 		//Si on est dans le mode de construction en runtime, on ajoute la durée.
-		if (duration == null) {
-			duration = Long.valueOf(System.currentTimeMillis() - start).doubleValue();
+		if (durationMs == null) {
+			durationMs = Long.valueOf(System.currentTimeMillis() - start).doubleValue();
 		}
 		//On ajoute la mesure obligatoire : durée
-		setMeasure(KProcess.DURATION, duration);
+		setMeasure(KProcess.DURATION, durationMs);
 		return new KProcess(type, name, startDate, measures, metaDatas, subProcesses);
 	}
 }

@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√®re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -17,10 +17,12 @@
  */
 package com.kleegroup.analytica.server;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import kasper.AbstractTestCaseJU4;
-import kasper.kernel.lang.DateBuilder;
 import kasper.kernel.util.Assertion;
 
 import org.apache.log4j.Logger;
@@ -40,12 +41,11 @@ import com.kleegroup.analytica.core.KProcessBuilder;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.DataKey;
 import com.kleegroup.analytica.hcube.cube.DataType;
+import com.kleegroup.analytica.hcube.cube.Metric;
 import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.QueryBuilder;
-import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataSet;
 
 /**
  * Cas de Test JUNIT de l'API Analytics.
@@ -62,7 +62,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	private static final MetricKey MONTANT = new MetricKey("MONTANT");
 	private static final MetricKey POIDS = new MetricKey("POIDS");
 
-	/** Base de donnÈes gÈrant les articles envoyÈs dans une commande. */
+	/** Base de donn√©es g√©rant les articles envoy√©s dans une commande. */
 	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
 	private static final String PROCESS2_TYPE = "COMMANDE";
@@ -76,44 +76,64 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	//-------------------------------------------------------------------------
 
 	/**
-	 * Test simple avec deux compteurs. 
-	 * Soit un service de d'envoi. 
-	 * Test sur l'envoi de 1000 articles d'un poids de 25 kg. 
-	 * Chaque article coute 10Ä.
+	 * Test simple 
+	 * - d'un processus maitre : //services/get articles
+	 * - consititu√© de n sous-processus : //sql/select article
+	 * les sous processus poss√®dent deux mesures
+	*  - Poids des articles (25 kg) par sous processus
+	*  - Prix des articles 10‚Ç¨	
 	 */
 	@Test
-	public void test1000Articles() {
-		Date date = new Date();
-		for (int i = 0; i < 60 * 24; i++) {
-			System.out.println(">>>>" + i);
-			final KProcess process = createNArticles(1000, date);
-			serverManager.push(process);
-			date = new DateBuilder(date).addMinutes(1).toDateTime();
-		}
-		printDatas(MONTANT);
-	}
-
-	/**
-	 * Test de rÈcursivitÈ. 
-	 * Test sur l'envoi de 500 commandes contenant chacune 500 articles d'un poids de 25 kg. 
-	 * Chaque article coute 10Ä. 
-	 * Les frais d'envoi sont de 5Ä.
-	 */
-	@Test
-	public void test500Commandes() {
-		final long start = System.currentTimeMillis();
-		final KProcess process = createNCommande(5, 15);
+	public void testServicesGetArticles() throws ParseException {
+		//On se place au 10-10-2010  a 10h10
+		final Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE).parse("10/10/2010");
+		//for (int i = 0; i < 60 * 24; i++) {
+		final int nbSelect = 55;
+		final KProcess process = createNArticles(nbSelect, date);
 		serverManager.push(process);
-		log.trace("elapsed = " + (System.currentTimeMillis() - start));
-		printDatas(MONTANT);
+		Query query = new QueryBuilder()//
+				.on(TimeDimension.Day)//
+				.from(date)//
+				.to(date)//
+				.with("SQL")//
+				.build();
+
+		List<Cube> cubes = serverManager.findAll(query);
+		System.out.println(cubes);
+		Assert.assertEquals(1, cubes.size());
+		System.out.println(">>>√©" + cubes.get(0).getMetrics());
+		//
+		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
+		//
+		System.out.println(montantMetric);
+		Assert.assertEquals(montantMetric.get(DataType.count), nbSelect);
+		Assert.assertEquals(montantMetric.get(DataType.sum), nbSelect * 10);
+		Assert.assertEquals(montantMetric.get(DataType.min), 10);
+		Assert.assertEquals(montantMetric.get(DataType.max), 10);
 	}
 
+	//
+	//	/**
+	//	 * Test de r√©cursivit√©. 
+	//	 * Test sur l'envoi de 500 commandes contenant chacune 500 articles d'un poids de 25 kg. 
+	//	 * Chaque article coute 10‚Ç¨. 
+	//	 * Les frais d'envoi sont de 5‚Ç¨.
+	//	 */
+	//	@Test
+	//	public void test500Commandes() {
+	//		final long start = System.currentTimeMillis();
+	//		final KProcess process = createNCommande(5, 15);
+	//		serverManager.push(process);
+	//		log.trace("elapsed = " + (System.currentTimeMillis() - start));
+	//		printDatas(MONTANT);
+	//	}
+
 	/**
-	 * Test de parallÈlisme. 
+	 * Test de parall√©lisme. 
 	 * Test sur l'envoi de 500 commandes contenant chacune 1000 articles d'un poids de 25 kg.
 	 * L'envoi est simuler avec 20 clients (thread).
-	 * Chaque article coute 10Ä. 
-	 * Les frais d'envoi sont de 5Ä.
+	 * Chaque article coute 10‚Ç¨. 
+	 * Les frais d'envoi sont de 5‚Ç¨.
 	 * @throws InterruptedException Interruption
 	 */
 	@Test
@@ -126,15 +146,15 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		}
 		workersPool.shutdown();
 		workersPool.awaitTermination(2, TimeUnit.MINUTES); //On laisse 2 minute pour vider la pile   
-		Assertion.invariant(workersPool.isTerminated(), "Les threads ne sont pas tous stoppÈs");
+		Assertion.invariant(workersPool.isTerminated(), "Les threads ne sont pas tous stopp√©s");
 
 		log.trace("elapsed = " + (System.currentTimeMillis() - start));
-		printDatas(MONTANT);
+		//	printDatas(MONTANT);
 		//System.out.println(analyticaUIManager.toString(serverManager.getProcesses()));
 	}
 
-	private static KProcessBuilder createProcess(final String module, final String fullName) {
-		return new KProcessBuilder(module, fullName, new Date(), 10);
+	private static KProcessBuilder createProcess(final String module, final String fullName, Date date) {
+		return new KProcessBuilder(module, fullName, date, 10);
 	}
 
 	private static KProcessBuilder createProcess(final String module, final String fullName, final long time) {
@@ -168,65 +188,65 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testMean() {
-		final KProcess kProcess1 = createProcess("TEST_MEAN1", "Process1")//
+		final KProcess kProcess1 = createProcess("TEST_MEAN1", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 100)//
 				.build();
 		serverManager.push(kProcess1);
 
-		final KProcess kProcess2 = createProcess("TEST_MEAN1", "Process2")//
+		final KProcess kProcess2 = createProcess("TEST_MEAN1", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 50)//
 				.build();
 		serverManager.push(kProcess2);
 		//---------------------------------------------------------------------
-		final DataKey[] metrics = new DataKey[] { new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean) };
-		final List<Data> datas = getCubeToday("TEST_MEAN1", metrics);
-		final double valueMean = getMean(datas, TEST_METRIC_MEAN_VALUE);
-		Assert.assertEquals("Le cube ne contient pas la moyenne attendue\n" + datas, 75.0, valueMean, 0);
+		//final DataKey[] metrics = new DataKey[] { new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean) };
+		//		final List<Data> datas = getCubeToday("TEST_MEAN1", metrics);
+		//		final double valueMean = getMean(datas, TEST_METRIC_MEAN_VALUE);
+		//		Assert.assertEquals("Le cube ne contient pas la moyenne attendue\n" + datas, 75.0, valueMean, 0);
 	}
 
 	@Test
 	public void testMeanZero() {
-		final KProcess kProcess1 = createProcess("TEST_MEAN2", "Process1")//
+		final KProcess kProcess1 = createProcess("TEST_MEAN2", "Process1", new Date())//
 				.incMeasure(TEST_VALUE_PCT.id(), 90)//
 				.build();
 		serverManager.push(kProcess1);
 
-		final KProcess kProcess2 = createProcess("TEST_MEAN2", "Process2")//
+		final KProcess kProcess2 = createProcess("TEST_MEAN2", "Process2", new Date())//
 				.build();
 		//TEST_VALUE_PCT = 0 implicite
 		serverManager.push(kProcess2);
 
 		//---------------------------------------------------------------------
-		final DataKey[] metrics = new DataKey[] { new DataKey(TEST_VALUE_PCT, DataType.mean) };
-		final List<Data> datas = getCubeToday("TEST_MEAN2", metrics);
-		final double valueMean = getMean(datas, TEST_VALUE_PCT);
-		Assert.assertEquals("Le cube ne contient pas la moyenne attendue\n" + datas, 45.0, valueMean, 0);
+		//final DataKey[] metrics = new DataKey[] { new DataKey(TEST_VALUE_PCT, DataType.mean) };
+		//		final List<Data> datas = getCubeToday("TEST_MEAN2", metrics);
+		//		final double valueMean = getMean(datas, TEST_VALUE_PCT);
+		//		Assert.assertEquals("Le cube ne contient pas la moyenne attendue\n" + datas, 45.0, valueMean, 0);
 	}
 
 	@Test
 	public void testData() {
-		final KProcess kProcess1 = createProcess("TEST_MEAN3", "Process1")//
+		final KProcess kProcess1 = createProcess("TEST_MEAN3", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 100)//
 				.build();
 		serverManager.push(kProcess1);
 
-		final KProcess kProcess2 = createProcess("TEST_MEAN3", "Process2")//
+		final KProcess kProcess2 = createProcess("TEST_MEAN3", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 50)//
 				.build();
 		serverManager.push(kProcess2);
 
 		//---------------------------------------------------------------------
-		final Query query = new QueryBuilder(asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean)))//
-				//.on(WhatDimension.Type)//
-				.with("TEST_MEAN3")//
-				.on(TimeDimension.Minute)//
-				.from(new Date(System.currentTimeMillis() - 1 * 1000))//
-				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
-				.build();
-		serverManager.store50NextProcessesAsCube();
-		final List<Data> datas = serverManager.getData(query);
-		final double valueMean = datas.get(0).getValue();
-		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 75.0, valueMean, 0);
+		//		final Query query = new QueryBuilder(asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean)))//
+		//				//.on(WhatDimension.Type)//
+		//				.with("TEST_MEAN3")//
+		//				.on(TimeDimension.Minute)//
+		//				.from(new Date(System.currentTimeMillis() - 1 * 1000))//
+		//				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
+		//				.build();
+		//		serverManager.store50NextProcessesAsCube();
+		//		final List<Data> datas = serverManager.getData(query);
+		//		final double valueMean = datas.get(0).getValue();
+		//		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 75.0, valueMean, 0);
 	}
 
 	private static List<DataKey> asList(final DataKey... dataKey) {
@@ -235,43 +255,43 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testDataWhatSelection() {
-		final KProcess kProcess1 = createProcess("TEST_WHAT_SELECTION1", "Process1")//
+		final KProcess kProcess1 = createProcess("TEST_WHAT_SELECTION1", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 100)//
 				.build();
 		serverManager.push(kProcess1);
 
-		final KProcess kProcess2 = createProcess("TEST_WHAT_SELECTION1", "Process1")//
+		final KProcess kProcess2 = createProcess("TEST_WHAT_SELECTION1", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 50)//
 				.build();
 		serverManager.push(kProcess2);
 
-		final KProcess kProcess3 = createProcess("TEST_WHAT_SELECTION1", "Process2")//
+		final KProcess kProcess3 = createProcess("TEST_WHAT_SELECTION1", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 80)//
 				.build();
 		serverManager.push(kProcess3);
 
-		final KProcess kProcess4 = createProcess("TEST_WHAT_SELECTION1", "Process2")//
+		final KProcess kProcess4 = createProcess("TEST_WHAT_SELECTION1", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 50)//
 				.build();
 		serverManager.push(kProcess4);
 
-		final KProcess kProcess5 = createProcess("TEST_WHAT_SELECTION1", "Process3")//
+		final KProcess kProcess5 = createProcess("TEST_WHAT_SELECTION1", "Process3", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 10)//
 				.build();
 		serverManager.push(kProcess5);
 
 		//---------------------------------------------------------------------
-		serverManager.store50NextProcessesAsCube();
-		final Query query = new QueryBuilder(asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean)))//
-				//.on(WhatDimension.SimpleName)//
-				.with("/TEST_WHAT_SELECTION1/Process1", "/TEST_WHAT_SELECTION1/Process2")//
-				.on(TimeDimension.Minute)//
-				.from(new Date())//
-				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
-				.build();
-		final List<Data> datas = serverManager.getData(query);
-		final double valueMean = datas.get(0).getValue();
-		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 70.0, valueMean, 0);
+		//		serverManager.store50NextProcessesAsCube();
+		//		final Query query = new QueryBuilder(asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean)))//
+		//				//.on(WhatDimension.SimpleName)//
+		//				.with("/TEST_WHAT_SELECTION1/Process1", "/TEST_WHAT_SELECTION1/Process2")//
+		//				.on(TimeDimension.Minute)//
+		//				.from(new Date())//
+		//				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
+		//				.build();
+		//		final List<Data> datas = serverManager.getData(query);
+		//		final double valueMean = datas.get(0).getValue();
+		//		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 70.0, valueMean, 0);
 	}
 
 	//
@@ -312,162 +332,163 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testDataMultiMetric() {
-		final KProcess kProcess1 = createProcess("TEST_MEAN4", "Process1")//
+		final KProcess kProcess1 = createProcess("TEST_MEAN4", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 100)//
 				.build();
 		serverManager.push(kProcess1);
 
-		final KProcess kProcess2 = createProcess("TEST_MEAN4", "Process2")//
+		final KProcess kProcess2 = createProcess("TEST_MEAN4", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 50)//
 				.build();
 		serverManager.push(kProcess2);
 
-		final KProcess kProcess3 = createProcess("TEST_MEAN4", "Process1")//
+		final KProcess kProcess3 = createProcess("TEST_MEAN4", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 60)//
 				.build();
 		serverManager.push(kProcess3);
 
-		final KProcessBuilder kProcessBuilder4 = createProcess("TEST_MEAN4", "Process2");
-		kProcessBuilder4.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 90);
-		serverManager.push(kProcessBuilder4.build());
+		final KProcess kProcess4 = createProcess("TEST_MEAN4", "Process2", new Date())//
+				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 90)//
+				.build();
+		serverManager.push(kProcess4);
 
 		//---------------------------------------------------------------------
-		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.max), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.min), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.stdDev));
-		serverManager.store50NextProcessesAsCube();
-		final Query query = new QueryBuilder(metrics)//
-				//	.on(WhatDimension.Type)//
-				.with("TEST_MEAN4")//
-				.on(TimeDimension.Minute)//
-				.from(new Date(System.currentTimeMillis() - 1 * 1000))//
-				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
-				.build();
-		final List<Data> datas = serverManager.getData(query);
-		final double valueMean = datas.get(0).getValue();
-		final double valueMax = datas.get(1).getValue();
-		final double valueMin = datas.get(2).getValue();
-		final double valueCount = datas.get(3).getValue();
-		final double valueStdDev = datas.get(4).getValue();
-		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 75.0, valueMean, 0);
-		Assert.assertEquals("Les datas ne contiennent pas le max attendu\n" + datas, 100.0, valueMax, 0);
-		Assert.assertEquals("Les datas ne contiennent pas le min attendu\n" + datas, 50.0, valueMin, 0);
-		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 4.0, valueCount, 0);
-		//L'ecart type attendu est arrondit a 2 chiffres : le rÈel est 23.80476143
-		Assert.assertEquals("Les datas ne contiennent pas l'Ècart type attendu\n" + datas, 23.80, valueStdDev, 0);
+		//		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.max), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.min), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.stdDev));
+		//		serverManager.store50NextProcessesAsCube();
+		//		final Query query = new QueryBuilder(metrics)//
+		//				//	.on(WhatDimension.Type)//
+		//				.with("TEST_MEAN4")//
+		//				.on(TimeDimension.Minute)//
+		//				.from(new Date(System.currentTimeMillis() - 1 * 1000))//
+		//				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
+		//				.build();
+		//		final List<Data> datas = serverManager.getData(query);
+		//		final double valueMean = datas.get(0).getValue();
+		//		final double valueMax = datas.get(1).getValue();
+		//		final double valueMin = datas.get(2).getValue();
+		//		final double valueCount = datas.get(3).getValue();
+		//		final double valueStdDev = datas.get(4).getValue();
+		//		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 75.0, valueMean, 0);
+		//		Assert.assertEquals("Les datas ne contiennent pas le max attendu\n" + datas, 100.0, valueMax, 0);
+		//		Assert.assertEquals("Les datas ne contiennent pas le min attendu\n" + datas, 50.0, valueMin, 0);
+		//		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 4.0, valueCount, 0);
+		//		//L'ecart type attendu est arrondit a 2 chiffres : le r√©el est 23.80476143
+		//		Assert.assertEquals("Les datas ne contiennent pas l'√©cart type attendu\n" + datas, 23.80, valueStdDev, 0);
 	}
 
 	@Test
 	public void testDataSetWhatLine() {
-		final KProcess kProcess1 = createProcess("TEST_MEAN5", "Process1")//
+		final KProcess kProcess1 = createProcess("TEST_MEAN5", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 100)//
 				.build();
 		serverManager.push(kProcess1);
 
-		final KProcess kProcess2 = createProcess("TEST_MEAN5", "Process2")//
+		final KProcess kProcess2 = createProcess("TEST_MEAN5", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 50)//
 				.build();
 		serverManager.push(kProcess2);
 
-		final KProcess kProcess3 = createProcess("TEST_MEAN5", "Process2")//
+		final KProcess kProcess3 = createProcess("TEST_MEAN5", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 60)//
 				.build();
 		serverManager.push(kProcess3);
 
-		final KProcess kProcess4 = createProcess("TEST_MEAN5", "Process3")//
+		final KProcess kProcess4 = createProcess("TEST_MEAN5", "Process3", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 90)//
 				.build();
 		serverManager.push(kProcess4);
 
 		//---------------------------------------------------------------------
-		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count));
-		serverManager.store50NextProcessesAsCube();
-		final Query query = new QueryBuilder(metrics)//
-				//	.on(WhatDimension.FullName)//
-				.with("TEST_MEAN5")//
-				.on(TimeDimension.Minute)//
-				.from(new Date())//
-				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
-				.build();
+		//		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count));
+		//		serverManager.store50NextProcessesAsCube();
+		//		final Query query = new QueryBuilder(metrics)//
+		//				//	.on(WhatDimension.FullName)//
+		//				.with("TEST_MEAN5")//
+		//				.on(TimeDimension.Minute)//
+		//				.from(new Date())//
+		//				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
+		//				.build();
 
-		final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(query);
-		final DataSet<String, ?> dataSetMean = datas.get(0);
-		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process1", dataSetMean.getLabels().get(0));
-		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process2", dataSetMean.getLabels().get(1));
-		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process3", dataSetMean.getLabels().get(2));
-		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 100d, dataSetMean.getValues().get(0));
-		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 55d, dataSetMean.getValues().get(1));
-		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 90d, dataSetMean.getValues().get(2));
-
-		final DataSet<String, ?> dataSetCount = datas.get(1);
-		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process1", dataSetCount.getLabels().get(0));
-		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process2", dataSetCount.getLabels().get(1));
-		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process3", dataSetCount.getLabels().get(2));
-		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 1d, dataSetCount.getValues().get(0));
-		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 2d, dataSetCount.getValues().get(1));
-		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 1d, dataSetCount.getValues().get(2));
+		//		final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(query);
+		//		final DataSet<String, ?> dataSetMean = datas.get(0);
+		//		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process1", dataSetMean.getLabels().get(0));
+		//		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process2", dataSetMean.getLabels().get(1));
+		//		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process3", dataSetMean.getLabels().get(2));
+		//		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 100d, dataSetMean.getValues().get(0));
+		//		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 55d, dataSetMean.getValues().get(1));
+		//		Assert.assertEquals("Les datas ne contiennent pas la moyenne attendue\n" + datas, 90d, dataSetMean.getValues().get(2));
+		//
+		//		final DataSet<String, ?> dataSetCount = datas.get(1);
+		//		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process1", dataSetCount.getLabels().get(0));
+		//		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process2", dataSetCount.getLabels().get(1));
+		//		Assert.assertEquals("Les datas ne contiennent pas le label attendu\n" + datas, "/TEST_MEAN5/Process3", dataSetCount.getLabels().get(2));
+		//		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 1d, dataSetCount.getValues().get(0));
+		//		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 2d, dataSetCount.getValues().get(1));
+		//		Assert.assertEquals("Les datas ne contiennent pas le count attendu\n" + datas, 1d, dataSetCount.getValues().get(2));
 	}
 
 	@Test
 	public void testDataSetTimeLine() {
-		final KProcess kProcess1 = createProcess("TEST_MEAN6", "Process1")//
+		final KProcess kProcess1 = createProcess("TEST_MEAN6", "Process1", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 100)//
 				.build();
 		serverManager.push(kProcess1);
 
-		final KProcess kProcess2 = createProcess("TEST_MEAN6", "Process2")//
+		final KProcess kProcess2 = createProcess("TEST_MEAN6", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 50)//
 				.build();
 		serverManager.push(kProcess2);
 
-		final KProcess kProcess3 = createProcess("TEST_MEAN6", "Process2")//
+		final KProcess kProcess3 = createProcess("TEST_MEAN6", "Process2", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 60)//
 				.build();
 		serverManager.push(kProcess3);
 
-		final KProcess kProcess4 = createProcess("TEST_MEAN6", "Process3")//
+		final KProcess kProcess4 = createProcess("TEST_MEAN6", "Process3", new Date())//
 				.incMeasure(TEST_METRIC_MEAN_VALUE.id(), 90)//
 				.build();
 		serverManager.push(kProcess4);
 
 		//---------------------------------------------------------------------
-		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count));
-		serverManager.store50NextProcessesAsCube();
-
-		final Query query = new QueryBuilder(metrics)//
-				//.on(WhatDimension.FullName)//
-				.with("TEST_MEAN6")//
-				.on(TimeDimension.Minute)//
-				.from(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000))//
-				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
-				.build();
-
-		final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(query);
-		System.out.println(datas);
+		//		final List<DataKey> metrics = asList(new DataKey(TEST_METRIC_MEAN_VALUE, DataType.mean), new DataKey(TEST_METRIC_MEAN_VALUE, DataType.count));
+		//		serverManager.store50NextProcessesAsCube();
+		//
+		//		final Query query = new QueryBuilder(metrics)//
+		//				//.on(WhatDimension.FullName)//
+		//				.with("TEST_MEAN6")//
+		//				.on(TimeDimension.Minute)//
+		//				.from(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000))//
+		//				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
+		//				.build();
+		//
+		//		final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(query);
+		//		System.out.println(datas);
 		//		final DataSet<Date, ?> dataSetMean = datas.get(0);
 		//		final DataSet<Date, ?> dataSetCount = datas.get(1);
 	}
 
-	private List<Data> getCubeToday(final String module, final DataKey... metrics) {
-		final Query query = new QueryBuilder(asList(metrics))//
-				//.on(WhatDimension.Type)//
-				.with(module)//
-				.on(TimeDimension.Minute)//
-				.from(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000))//
-				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
-				.build();
-
-		serverManager.store50NextProcessesAsCube();
-
-		return serverManager.getData(query);
-	}
-
-	private static double getMean(final List<Data> datas, final MetricKey metricKey) {
-		for (final Data data : datas) {
-			if (data.getKey().getType() == DataType.mean && metricKey.equals(data.getKey().getMetricKey())) {
-				return data.getValue();
-			}
-		}
-		throw new IllegalArgumentException("La mesure " + metricKey + " n'est pas trouvÈe dans le module \n" + datas);
-	}
+	//	private List<Data> getCubeToday(final String module, final DataKey... metrics) {
+	//		final Query query = new QueryBuilder(asList(metrics))//
+	//				//.on(WhatDimension.Type)//
+	//				.with(module)//
+	//				.on(TimeDimension.Minute)//
+	//				.from(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000))//
+	//				.to(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))//
+	//				.build();
+	//
+	//		serverManager.store50NextProcessesAsCube();
+	//
+	//		return serverManager.getData(query);
+	//	}
+	//
+	//	private static double getMean(final List<Data> datas, final MetricKey metricKey) {
+	//		for (final Data data : datas) {
+	//			if (data.getKey().getType() == DataType.mean && metricKey.equals(data.getKey().getMetricKey())) {
+	//				return data.getValue();
+	//			}
+	//		}
+	//		throw new IllegalArgumentException("La mesure " + metricKey + " n'est pas trouv√©e dans le module \n" + datas);
+	//	}
 
 	//	private static Set<String> getMetaData(final List<Data> datas, final String metadataName) {
 	//		final Set<String> metaDatas = new HashSet<String>();
@@ -476,50 +497,50 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	//				metaDatas.addAll(data.getStringValues());
 	//			}
 	//		}
-	//		Assert.assertTrue("La metaData " + metadataName + " n'est pas trouvÈe dans le module\n" + datas, metaDatas.size() >= 1);
+	//		Assert.assertTrue("La metaData " + metadataName + " n'est pas trouv√©e dans le module\n" + datas, metaDatas.size() >= 1);
 	//		return metaDatas;
 	//	}
 
-	private void printDatas(final MetricKey... metricKeys) {
-		final List<DataKey> dataKeys = new ArrayList<DataKey>(metricKeys.length);
-		for (final MetricKey metricKey : metricKeys) {
-			dataKeys.add(new DataKey(metricKey, DataType.count));
-			dataKeys.add(new DataKey(metricKey, DataType.mean));
-		}
-		serverManager.store50NextProcessesAsCube();
-		final Query query = new QueryBuilder(dataKeys)//
-				.with("SERVICES")//
-				.on(TimeDimension.Hour)//
-				.from(new Date())//
-				.to(new DateBuilder(new Date()).addDays(1).toDateTime())//
-				.build();
-
-		final List<Cube> cubes = serverManager.load(query);
-		System.out.println("=========================");
-		System.out.println(">>>" + query);
-		System.out.println(">>>load : find " + cubes.size());
-		System.out.println("=========================");
-		for (final Cube cube : cubes) {
-			System.out.println(cube);
-		}
-		System.out.println("=========================");
-		System.out.println("<<<" + query);
-		System.out.println("<<<load : find " + cubes.size());
-		System.out.println("=========================");
-	}
-
-	/**
-	 * Passe N commandes.
-	 * @param nbCommandes Numero de la commande
-	 * @param nbArticles Nombre d'article
-	 */
-	private static KProcess createNCommande(final int nbCommandes, final int nbArticles) {
-		final KProcessBuilder kProcessBuilder1 = createProcess(PROCESS2_TYPE, nbCommandes + " Commandes");
-		for (int i = 0; i < nbCommandes; i++) {
-			kProcessBuilder1.addSubProcess(createOneCommande(String.valueOf(i), nbArticles));
-		}
-		return kProcessBuilder1.build();
-	}
+	//	private void printDatas(final MetricKey... metricKeys) {
+	//		final List<DataKey> dataKeys = new ArrayList<DataKey>(metricKeys.length);
+	//		for (final MetricKey metricKey : metricKeys) {
+	//			dataKeys.add(new DataKey(metricKey, DataType.count));
+	//			dataKeys.add(new DataKey(metricKey, DataType.mean));
+	//		}
+	//		serverManager.store50NextProcessesAsCube();
+	//		final Query query = new QueryBuilder(dataKeys)//
+	//				.with("SERVICES")//
+	//				.on(TimeDimension.Hour)//
+	//				.from(new Date())//
+	//				.to(new DateBuilder(new Date()).addDays(1).toDateTime())//
+	//				.build();
+	//
+	//		final List<Cube> cubes = serverManager.load(query);
+	//		System.out.println("=========================");
+	//		System.out.println(">>>" + query);
+	//		System.out.println(">>>load : find " + cubes.size());
+	//		System.out.println("=========================");
+	//		for (final Cube cube : cubes) {
+	//			System.out.println(cube);
+	//		}
+	//		System.out.println("=========================");
+	//		System.out.println("<<<" + query);
+	//		System.out.println("<<<load : find " + cubes.size());
+	//		System.out.println("=========================");
+	//	}
+	//
+	//	/**
+	//	 * Passe N commandes.
+	//	 * @param nbCommandes Numero de la commande
+	//	 * @param nbArticles Nombre d'article
+	//	 */
+	//	private static KProcess createNCommande(final int nbCommandes, final int nbArticles) {
+	//		final KProcessBuilder kProcessBuilder1 = createProcess(PROCESS2_TYPE, nbCommandes + " Commandes", new Date());
+	//		for (int i = 0; i < nbCommandes; i++) {
+	//			kProcessBuilder1.addSubProcess(createOneCommande(String.valueOf(i), nbArticles));
+	//		}
+	//		return kProcessBuilder1.build();
+	//	}
 
 	/**
 	 * Passe une commande.
@@ -528,7 +549,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 * @return Kprocess resultat
 	 */
 	private static KProcess createOneCommande(final String numCommande, final int nbArticles) {
-		return createProcess(PROCESS2_TYPE, "1 Commande")//
+		return createProcess(PROCESS2_TYPE, "1 Commande", new Date())//
 				.setMetaData(numCommande, "NUMERO")//
 				.incMeasure(MONTANT.id(), 5)//
 				.addSubProcess(createNArticles(nbArticles, new Date()))//
@@ -540,15 +561,15 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	 * @param nbArticles Nombre d'article
 	 * @return Kprocess resultat
 	 */
-	private static KProcess createNArticles(final int nbArticles, Date start) {
-		final KProcessBuilder kProcessBuilder = new KProcessBuilder(PROCESS_SERVICES, "envoi " + nbArticles + " Articles 25Kg", start, nbArticles * 10);
-		for (int i = 0; i < nbArticles; i++) {
-			final KProcess kProcess1 = createProcess(PROCESS_SQL, "select article 25Kg")//
-					.setMeasure(POIDS.id(), 25)//
+	private static KProcess createNArticles(final int nbSelectArticles, Date start) {
+		final KProcessBuilder kProcessBuilder = new KProcessBuilder(PROCESS_SERVICES, "get articles", start, 2000);
+		for (int i = 0; i < nbSelectArticles; i++) {
+			final KProcess selectProcess = createProcess(PROCESS_SQL, "select article", start)//
+					.incMeasure(POIDS.id(), 25)//
 					.incMeasure(MONTANT.id(), 10)//
 					.build();
 
-			kProcessBuilder.addSubProcess(kProcess1);
+			kProcessBuilder.addSubProcess(selectProcess);
 		}
 		return kProcessBuilder.build();
 	}
@@ -570,7 +591,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 			} catch (final InterruptedException e) {
 				//rien
 			}
-			System.out.println("Finish commande n∞" + numCommande);
+			System.out.println("Finish commande n¬∞" + numCommande);
 		}
 	}
 }

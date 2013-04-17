@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.Cube;
@@ -39,7 +40,8 @@ import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
  */
 final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	private final Map<CubePosition, Cube> store = new HashMap<CubePosition, Cube>();
-	private String lastProcessIdStored;
+
+	//	private String lastProcessIdStored;
 
 	/**
 	 * Constructeur.
@@ -71,16 +73,16 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	//	/** {@inheritDoc} */
-	public List<Cube> load(Query query) {
+	public List<Cube> findAll(Query query) {
 		//On prépare les bornes de temps
 		final TimePosition minTimePosition = query.getMinTimePosition();
 		final TimePosition maxTimePosition = query.getMaxTimePosition();
 		final WhatPosition whatPosition = query.getWhatPosition();
 
 		//Sécurité pour éviter une boucle infinie
-		int loops = 0;
 		List<Cube> cubes = new ArrayList<Cube>();
 
+		int loops = 0;
 		TimePosition currentTimePosition = minTimePosition;
 		do {
 			CubePosition cubePosition = new CubePosition(currentTimePosition, whatPosition);
@@ -90,7 +92,10 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 			//---
 			currentTimePosition = currentTimePosition.next();
 			loops++;
-		} while (loops < 1000 && !currentTimePosition.equals(maxTimePosition));
+			if (loops > 1000) {
+				throw new KRuntimeException("Segment temporel trop grand : plus de 1000 positions");
+			}
+		} while (currentTimePosition.getValue().before(maxTimePosition.getValue()));
 
 		return cubes;
 	}
@@ -145,16 +150,16 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//		}
 	//		return cubeBuilder;
 	//	}
-
-	/** {@inheritDoc} */
-	public String loadLastProcessIdStored() {
-		return lastProcessIdStored;
-	}
-
-	/** {@inheritDoc} */
-	public void saveLastProcessIdStored(final String newLastProcessIdStored) {
-		lastProcessIdStored = newLastProcessIdStored;
-	}
+	//
+	//	/** {@inheritDoc} */
+	//	public String loadLastProcessIdStored() {
+	//		return lastProcessIdStored;
+	//	}
+	//
+	//	/** {@inheritDoc} */
+	//	public void saveLastProcessIdStored(final String newLastProcessIdStored) {
+	//		lastProcessIdStored = newLastProcessIdStored;
+	//	}
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
