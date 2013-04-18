@@ -58,17 +58,17 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
 
+	@Inject
+	private ServerManager serverManager;
+
 	private Date date;
-	private int price = 8;
+	private final int price = 8;
 
 	@Before
 	public void init() throws ParseException {
 		//On se place au 10-10-2010  a 10h10
 		date = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRANCE).parse("10/10/2010 10:10");
 	}
-
-	@Inject
-	private ServerManager serverManager;
 
 	//-------------------------------------------------------------------------
 

@@ -15,9 +15,7 @@ public final class Query {
 	private final TimeSelection timeSelection;
 	private final WhatPosition whatPosition;
 
-	//	private final List<DataKey> keys;
-
-	Query(TimeSelection timeSelection, WhatPosition whatPosition /*List<DataKey> keys*/) {
+	Query(TimeSelection timeSelection, WhatPosition whatPosition) {
 		Assertion.notNull(timeSelection);
 		Assertion.notNull(whatPosition);
 		//		Assertion.notNull(keys);
@@ -26,10 +24,6 @@ public final class Query {
 		this.whatPosition = whatPosition;
 		//		this.keys = keys;
 	}
-
-	//	public List<DataKey> getKeys() {
-	//		return keys;
-	//	}
 
 	//-----------------------What----------------------------------------------
 	public WhatPosition getWhatPosition() {

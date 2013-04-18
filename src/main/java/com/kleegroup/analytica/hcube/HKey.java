@@ -24,13 +24,17 @@ import kasper.kernel.util.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: Identity.java,v 1.3 2012/10/16 13:52:38 pchretien Exp $
  */
-public abstract class HKey implements Comparable<HKey> {
+public abstract class HKey {
 	private final String id;
 
 	public HKey(final String id) {
 		Assertion.notEmpty(id);
 		//---------------------------------------------------------------------
 		this.id = id;
+	}
+
+	public final String id() {
+		return id;
 	}
 
 	@Override
@@ -46,19 +50,8 @@ public abstract class HKey implements Comparable<HKey> {
 		return false;
 	}
 
-	public final String id() {
-		return id;
-	}
-
-	public final int compareTo(final HKey object) {
-		Assertion.notNull(object);
-		//---------------------------------------------------------------------
-		return id.compareTo(object.id());
-	}
-
 	@Override
 	public final String toString() {
 		return id;
 	}
-
 }
