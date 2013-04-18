@@ -35,13 +35,12 @@ import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
 
 /**
  * Implémentation mémoire du stockage des Cubes.
- * @author npiedeloup
+ * 
+ * @author npiedeloup, pchretien
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
 final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	private final Map<CubePosition, Cube> store = new HashMap<CubePosition, Cube>();
-
-	//	private String lastProcessIdStored;
 
 	/**
 	 * Constructeur.
@@ -51,7 +50,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public void merge(final Cube lowLevelCube) {
+	public synchronized void merge(final Cube lowLevelCube) {
 		Assertion.notNull(lowLevelCube);
 		//---------------------------------------------------------------------
 		for (CubePosition upCubePosition : lowLevelCube.getPosition().drillUp()) {
@@ -73,7 +72,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	//	/** {@inheritDoc} */
-	public List<Cube> findAll(Query query) {
+	public synchronized List<Cube> findAll(Query query) {
 		//On prépare les bornes de temps
 		final TimePosition minTimePosition = query.getMinTimePosition();
 		final TimePosition maxTimePosition = query.getMaxTimePosition();
@@ -100,68 +99,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		return cubes;
 	}
 
-	//	/** {@inheritDoc} */
-	//	public List<Cube> load(final Query query, final boolean aggregateTime, final boolean aggregateWhat) {
-	//		//On prépare les bornes de temps
-	//		final TimePosition minTimePosition = query.getMinTimePosition();
-	//		final TimePosition maxTimePosition = query.getMaxTimePosition();
-	//		final List<String> what = query.getWhat();
-	//		//On remplit une liste de cube avec tous les what voulu.
-	//		final List<Cube> allCubes = new ArrayList<Cube>();
-	//		final WhatPosition whatPosition = new WhatPosition(what);
-	//		final CubePosition fromKey = new CubePosition(minTimePosition, whatPosition);
-	//		final CubePosition toKey = new CubePosition(maxTimePosition, whatPosition);
-	//
-	//		//On prepare un index de metric attendu
-	//		final Set<MetricKey> metricKeys = new HashSet<MetricKey>();
-	//		for (final DataKey dataKey : query.getKeys()) {
-	//			metricKeys.add(dataKey.getMetricKey());
-	//		}
-	//
-	//		//On aggrege les metrics/meta demandées en fonction des parametres 
-	//		final WhatPosition allWhat = new WhatPosition(Collections.<String> emptyList());
-	//		final SortedMap<CubePosition, CubeBuilder> cubeBuilderIndex = new TreeMap<CubePosition, CubeBuilder>(cubeKeyComparator);
-	//		for (final Cube cube : allCubes) {
-	//			//Si on aggrege sur une dimension, on la fige plutot que prendre la position de la donnée
-	//			final WhatPosition useWhat = aggregateWhat ? allWhat : cube.getPosition().getWhatPosition();
-	//			final TimePosition useTime = aggregateTime ? minTimePosition : cube.getPosition().getTimePosition();
-	//			final CubePosition key = new CubePosition(useTime, useWhat);
-	//
-	//			final CubeBuilder cubeBuilder = obtainCubeBuilder(key, cubeBuilderIndex);
-	//
-	//			for (final Metric metric : cube.getMetrics()) {
-	//				if (metricKeys.contains(metric.getKey())) {
-	//					cubeBuilder.withMetric(metric);
-	//				}
-	//			}
-	//		}
-	//		final List<Cube> cubes = new ArrayList<Cube>(cubeBuilderIndex.size());
-	//		for (final CubeBuilder cubeBuilder : cubeBuilderIndex.values()) {
-	//			cubes.add(cubeBuilder.build());
-	//		}
-	//		return cubes;
-	//	}
-	//
-	//	private CubeBuilder obtainCubeBuilder(final CubePosition cubePosition, final SortedMap<CubePosition, CubeBuilder> timeIndex) {
-	//		CubeBuilder cubeBuilder = timeIndex.get(cubePosition);
-	//		if (cubeBuilder == null) {
-	//			cubeBuilder = new CubeBuilder(cubePosition);
-	//			timeIndex.put(cubePosition, cubeBuilder);
-	//		}
-	//		return cubeBuilder;
-	//	}
-	//
-	//	/** {@inheritDoc} */
-	//	public String loadLastProcessIdStored() {
-	//		return lastProcessIdStored;
-	//	}
-	//
-	//	/** {@inheritDoc} */
-	//	public void saveLastProcessIdStored(final String newLastProcessIdStored) {
-	//		lastProcessIdStored = newLastProcessIdStored;
-	//	}
-
-	public String toString() {
+	public synchronized String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (Cube cube : store.values()) {
 			sb.append(cube);

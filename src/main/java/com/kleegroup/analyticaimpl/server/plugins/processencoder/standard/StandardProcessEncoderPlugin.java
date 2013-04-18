@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import kasper.kernel.util.Assertion;
-
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.cube.CubeBuilder;
@@ -51,128 +49,113 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 	/** {@inheritDoc} */
 	public List<Cube> encode(final KProcess process) {
 		final List<Cube> result = new ArrayList<Cube>();
-		final List<CubeBuilder> parentCubeBuilders = new ArrayList<CubeBuilder>();
-
-		final Cube cube = doEncode(process, parentCubeBuilders, result);
-		result.add(cube);
+		doEncode(process, result);
 		return result;
 	}
 
 	/**
 	 * On transforme un Process en un cube.
 	 * @param process KProcess a transformer
-	 * @param parentCubeBuilders Pile des CubeBuilder des parents
 	 * @param result Liste des cubes résultat
 	 * @return Cube du process de premier niveau
 	 */
-	private static Cube doEncode(final KProcess process, final List<CubeBuilder> parentCubeBuilders, final List<Cube> result) {
-		final CubeBuilder cubeBuilder = encodeSingle(process, parentCubeBuilders);
-		parentCubeBuilders.add(cubeBuilder);
+	private static void doEncode(final KProcess process, final List<Cube> result) {
+		//On ajoute les mesures
+		result.add(encodeMeasures(process));
+		//On ajoute les sous-process
 		for (final KProcess subProcess : process.getSubProcesses()) {
-			final Cube subCube = doEncode(subProcess, parentCubeBuilders, result);
-			result.add(subCube);
+			doEncode(subProcess, result);
 		}
-		parentCubeBuilders.remove(cubeBuilder);
-		return cubeBuilder.build();
+	}
+
+	private static CubeBuilder createCubeBuilder(KProcess process) {
+		final TimePosition timePosition = new TimePosition(process.getStartDate(), TimeDimension.Minute);
+		final List<String> what = new ArrayList<String>();
+		what.add(process.getType());
+		what.add(process.getName());
+		final WhatPosition whatPosition = new WhatPosition(what);
+		final CubePosition cubePosition = new CubePosition(timePosition, whatPosition);
+		return new CubeBuilder(cubePosition);
 	}
 
 	/**
-	 * Transforme le Process de premier niveau en un cub
+	 * Transforme le Process de premier niveau en un cube.
 	 * @param process
 	 * @param parentCubeBuilders
 	 * @return
 	 */
-	private static CubeBuilder encodeSingle(final KProcess process, final List<CubeBuilder> parentCubeBuilders) {
-		final TimePosition timePosition = new TimePosition(process.getStartDate(), TimeDimension.Minute);
-		//		final StringBuilder sb = new StringBuilder();
-		//		sb.append(WhatDimension.SEPARATOR).append(process.getType());
-		//		if (!process.getName().startsWith(WhatDimension.SEPARATOR)) {
-		//			sb.append(WhatDimension.SEPARATOR);
-		//		}
-		//		sb.append(process.getName());
-		List<String> what = new ArrayList<String>();
-		what.add(process.getType());
-		what.add(process.getName());
-		final WhatPosition whatPosition = new WhatPosition(what);
-		//		final String whatTypePositionValue = new WhatPosition(sb.toString(), WhatDimension.Type).getValue().substring(1); //On retire le premier /
-		//		sb.setLength(0);
-
-		final CubePosition key = new CubePosition(timePosition, whatPosition);
-		final CubeBuilder cubeBuilder = new CubeBuilder(key);
-
+	private static Cube encodeMeasures(final KProcess process/*, final List<CubeBuilder> parentCubeBuilders*/) {
+		CubeBuilder cubeBuilder = createCubeBuilder(process);
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
-			addMetric(measure.getKey(), measure.getValue(), cubeBuilder, /*whatTypePositionValue,*/parentCubeBuilders/*, sb*/);
+			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
+			cubeBuilder.withMetric(new MetricBuilder(new MetricKey(measure.getKey())).withValue(measure.getValue()).build());
 		}
-		//		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
-		//			cubeBuilder.withMetaData(new MetaData(metaData.getKey(), metaData.getValue()));
-		//		}
-
-		return cubeBuilder;
+		return cubeBuilder.build();
 	}
 
-	private static void addMetric(final String measureName, final double measureValue, final CubeBuilder cubeBuilder, /*final String whatModulePositionValue,*/final List<CubeBuilder> parentCubeBuilders/*, final StringBuilder sb*/) {
-		//Assertion.precondition(sb.length() == 0, "Le buffer doit être vide");
-		//---------------------------------------------------------------------
-		// 1- Cas général : on ajoute la mesure sous forme de métric dans le cube 
-		cubeBuilder.withMetric(new MetricBuilder(new MetricKey(measureName)).withValue(measureValue).build());
-		//---------------------------------------------------------------------
-		//---------------------------------------------------------------------
-		// 2- Cas particulier : Certaines métriques sont escaladées au niveau des processus parents.  
-		/*if (isClimbingMetric(measureName)) {
-			sb.append(whatModulePositionValue).append("_").append(measureName);
-			final Metric metric = new MetricBuilder(new MetricKey(sb.toString())).withValue(measureValue).build();
-			sb.setLength(0);
-			for (final CubeBuilder parentCubeBuilder : parentCubeBuilders) {
-				parentCubeBuilder.withMetric(metric);
-			}
-		}
-		// 3- Cas particulier : Certaines mesures sont déerivées sous la forme d'autres mesures (exemple : calcul des distributions)
-		if (isClusteredMetric(measureName)) {
-			doClustering(measureName, measureValue, cubeBuilder, whatModulePositionValue, parentCubeBuilders, sb);
-		}*/
-	}
-
-	private static void doClustering(final String measureType, final double value, final CubeBuilder cubeBuilder, final String whatModulePositionValue, final List<CubeBuilder> parentCubeBuilders, final StringBuilder sb) {
-		Assertion.precondition(sb.length() == 0, "Le buffer doit être vide");
-		final long[] minMax = getClusteredMetricMinMax(measureType);
-		//On crée une répartion : 10,20,50 ...
-		final String strValue = String.valueOf(Math.round(value));
-		long clusterValue = value == 0 ? 0 : -1;
-		long indice = (long) Math.pow(10, strValue.length() - 1);
-		while (clusterValue == -1) {
-			if (value <= 1 * indice) {
-				clusterValue = 1 * indice;
-			} else if (value <= 2 * indice) {
-				clusterValue = 2 * indice;
-			} else if (value <= 5 * indice) {
-				clusterValue = 5 * indice;
-			} else if (value <= 10 * indice) {
-				clusterValue = 10 * indice;
-			}
-			indice *= 10;
-		}
-		clusterValue = Math.max(clusterValue, minMax[0]); //check min 
-		clusterValue = Math.min(clusterValue, minMax[1]); //check max
-
-		sb.append(measureType).append("_C").append(clusterValue);
-		final String clusterMeasureName = sb.toString();
-		sb.setLength(0);
-		addMetric(clusterMeasureName, 1, cubeBuilder, /*whatModulePositionValue,*/parentCubeBuilders/*, sb*/);
-
-	}
-
-	private static boolean isClimbingMetric(final String measureName) {
-		return true;
-	}
-
-	private static boolean isClusteredMetric(final String measureName) {
-		return !measureName.contains("_C") && measureName.contains(KProcess.DURATION);
-	}
-
-	private static long[] getClusteredMetricMinMax(final String measureName) {
-		if (measureName.contains(KProcess.DURATION)) {
-			return new long[] { 100, 10000 };
-		}
-		return new long[] { 1, 100000 };
-	}
+	//	private static void addMetric(final String measureName, final double measureValue, final CubeBuilder cubeBuilder) {
+	//		//Assertion.precondition(sb.length() == 0, "Le buffer doit être vide");
+	//		//---------------------------------------------------------------------
+	//		// 1- Cas général : on ajoute la mesure sous forme de métric dans le cube 
+	//		cubeBuilder.withMetric(new MetricBuilder(new MetricKey(measureName)).withValue(measureValue).build());
+	//		//---------------------------------------------------------------------
+	//		//---------------------------------------------------------------------
+	//		// 2- Cas particulier : Certaines métriques sont escaladées au niveau des processus parents.  
+	//		/*if (isClimbingMetric(measureName)) {
+	//			sb.append(whatModulePositionValue).append("_").append(measureName);
+	//			final Metric metric = new MetricBuilder(new MetricKey(sb.toString())).withValue(measureValue).build();
+	//			sb.setLength(0);
+	//			for (final CubeBuilder parentCubeBuilder : parentCubeBuilders) {
+	//				parentCubeBuilder.withMetric(metric);
+	//			}
+	//		}
+	//		// 3- Cas particulier : Certaines mesures sont déerivées sous la forme d'autres mesures (exemple : calcul des distributions)
+	//		if (isClusteredMetric(measureName)) {
+	//			doClustering(measureName, measureValue, cubeBuilder, whatModulePositionValue, parentCubeBuilders, sb);
+	//		}*/
+	//	}
+	//
+	//	private static void doClustering(final String measureType, final double value, final CubeBuilder cubeBuilder, final String whatModulePositionValue, final List<CubeBuilder> parentCubeBuilders, final StringBuilder sb) {
+	//		Assertion.precondition(sb.length() == 0, "Le buffer doit être vide");
+	//		final long[] minMax = getClusteredMetricMinMax(measureType);
+	//		//On crée une répartion : 10,20,50 ...
+	//		final String strValue = String.valueOf(Math.round(value));
+	//		long clusterValue = value == 0 ? 0 : -1;
+	//		long indice = (long) Math.pow(10, strValue.length() - 1);
+	//		while (clusterValue == -1) {
+	//			if (value <= 1 * indice) {
+	//				clusterValue = 1 * indice;
+	//			} else if (value <= 2 * indice) {
+	//				clusterValue = 2 * indice;
+	//			} else if (value <= 5 * indice) {
+	//				clusterValue = 5 * indice;
+	//			} else if (value <= 10 * indice) {
+	//				clusterValue = 10 * indice;
+	//			}
+	//			indice *= 10;
+	//		}
+	//		clusterValue = Math.max(clusterValue, minMax[0]); //check min 
+	//		clusterValue = Math.min(clusterValue, minMax[1]); //check max
+	//
+	//		sb.append(measureType).append("_C").append(clusterValue);
+	//		final String clusterMeasureName = sb.toString();
+	//		sb.setLength(0);
+	//		addMetric(clusterMeasureName, 1, cubeBuilder, /*whatModulePositionValue,*/parentCubeBuilders/*, sb*/);
+	//
+	//	}
+	//
+	//	private static boolean isClimbingMetric(final String measureName) {
+	//		return true;
+	//	}
+	//
+	//	private static boolean isClusteredMetric(final String measureName) {
+	//		return !measureName.contains("_C") && measureName.contains(KProcess.DURATION);
+	//	}
+	//
+	//	private static long[] getClusteredMetricMinMax(final String measureName) {
+	//		if (measureName.contains(KProcess.DURATION)) {
+	//			return new long[] { 100, 10000 };
+	//		}
+	//		return new long[] { 1, 100000 };
+	//	}
 }

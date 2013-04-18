@@ -115,4 +115,8 @@ public final class KProcess {
 	public List<KProcess> getSubProcesses() {
 		return subProcesses;
 	}
+
+	public String toString() {
+		return "process:{startDate:" + startDate + "; name:" + name + "}";
+	}
 }
