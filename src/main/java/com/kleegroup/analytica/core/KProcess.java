@@ -50,7 +50,7 @@ public final class KProcess {
 	public static final Pattern TYPE_REGEX = Pattern.compile("[A-Z][A-Z0-9_]*");
 
 	private final String type;
-	private final String name;
+	private final String[] names;
 	private final Date startDate;
 
 	private final Map<String, Double> measures;
@@ -60,14 +60,14 @@ public final class KProcess {
 	/*
 	 * Le constructeur est package car il faut passer par le builder.
 	 */
-	KProcess(final String type, final String name, final Date startDate, final Map<String, Double> measures, final Map<String, String> metaDatas, final List<KProcess> subProcesses) {
+	KProcess(final String type, final String[] names, final Date startDate, final Map<String, Double> measures, final Map<String, String> metaDatas, final List<KProcess> subProcesses) {
 		Assertion.notEmpty(type);
-		Assertion.notEmpty(name);
+		Assertion.notNull(names);
 		Assertion.precondition(TYPE_REGEX.matcher(type).matches(), "le type du processus ne respecte pas la regex {0}", TYPE_REGEX);
 		Assertion.precondition(measures.containsKey(DURATION), "durée est obligatoire");
 		//---------------------------------------------------------------------
 		this.type = type;
-		this.name = name;
+		this.names = names;
 		this.startDate = startDate;
 		this.measures = Collections.unmodifiableMap(new HashMap<String, Double>(measures));
 		this.metaDatas = Collections.unmodifiableMap(new HashMap<String, String>(metaDatas));
@@ -84,8 +84,8 @@ public final class KProcess {
 	/**
 	 * @return Nom du processus
 	 */
-	public String getName() {
-		return name;
+	public String[] getNames() {
+		return names;
 	}
 
 	/**
@@ -117,6 +117,6 @@ public final class KProcess {
 	}
 
 	public String toString() {
-		return "process:{startDate:" + startDate + "; name:" + name + "}";
+		return "process:{name:" + names + "; startDate:" + startDate + "}";
 	}
 }

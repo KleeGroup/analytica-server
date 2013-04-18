@@ -37,7 +37,7 @@ import kasper.kernel.util.Assertion;
  */
 public final class KProcessBuilder implements Builder<KProcess> {
 	private final String type;
-	private final String name;
+	private final String[] names;
 	private final Date startDate;
 
 	//Tableau des mesures identifiées par leur nom. 
@@ -57,26 +57,26 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param type Type du processus
 	 * @param name Nom du processus
 	 */
-	public KProcessBuilder(final String type, final String name) {
-		this(type, name, new Date());
+	public KProcessBuilder(final String type, final String... names) {
+		this(type, names, new Date());
 	}
 
 	/**
 	 * Constructeur pour deserialization.
 	 * @param type Type du processus
-	 * @param name Nom du processus
+	 * @param names Nom du processus
 	 * @param startDate Date de début processus
 	 * @param duration Durée du processus (Millisecondes)
 	 */
-	public KProcessBuilder(final String type, final String name, final Date startDate, final double durationMs) {
-		this(type, name, startDate);
+	public KProcessBuilder(final String type, final String[] names, final Date startDate, final double durationMs) {
+		this(type, names, startDate);
 		//---------------------------------------------------------------------
 		this.durationMs = durationMs;
 	}
 
-	private KProcessBuilder(final String type, final String name, final Date startDate) {
+	private KProcessBuilder(final String type, final String[] names, final Date startDate) {
 		Assertion.notEmpty(type);
-		Assertion.notEmpty(name);
+		Assertion.notNull(names);
 		Assertion.notNull(startDate);
 		Assertion.precondition(KProcess.TYPE_REGEX.matcher(type).matches(), "le type du processus ne respecte pas la regex {0}", KProcess.TYPE_REGEX);
 		//---------------------------------------------------------------------
@@ -86,7 +86,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 		this.startDate = startDate;
 		start = startDate.getTime();
 		this.type = type;
-		this.name = name;
+		this.names = names;
 	}
 
 	/**
@@ -150,6 +150,6 @@ public final class KProcessBuilder implements Builder<KProcess> {
 		}
 		//On ajoute la mesure obligatoire : durée
 		setMeasure(KProcess.DURATION, durationMs);
-		return new KProcess(type, name, startDate, measures, metaDatas, subProcesses);
+		return new KProcess(type, names, startDate, measures, metaDatas, subProcesses);
 	}
 }

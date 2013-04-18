@@ -299,7 +299,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		serverManager.push(pageProcess);
 		// System.out.println(dateT0.getTime() + "\t=>\t1000\t+" + coef + "\t" +
 		// pageProcess.getDuration());
-		log.debug(pageProcess.getName());
+		log.debug(pageProcess.getNames());
 		return new Date(dateT0.getTime() + pageProcess.getMeasures().get(KProcess.DURATION).longValue());
 	}
 
@@ -313,7 +313,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		pageProcessBuilder.addSubProcess(serviceProcessBuilder.build());
 		final KProcess pageProcess = pageProcessBuilder.build();
 		serverManager.push(pageProcess);
-		log.debug(pageProcess.getName());
+		log.debug(pageProcess.getNames());
 		return new Date(dateT0.getTime() + pageProcess.getMeasures().get(KProcess.DURATION).longValue());
 	}
 
@@ -329,7 +329,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		pageProcessBuilder.addSubProcess(serviceProcessBuilder.build());
 		final KProcess pageProcess = pageProcessBuilder.build();
 		serverManager.push(pageProcess);
-		log.debug(pageProcess.getName());
+		log.debug(pageProcess.getNames());
 		return new Date(dateT0.getTime() + pageProcess.getMeasures().get(KProcess.DURATION).longValue());
 	}
 
@@ -338,7 +338,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		addLoadUserProcess(pageProcessBuilder, coef);
 		final KProcess pageProcess = pageProcessBuilder.build();
 		serverManager.push(pageProcess);
-		log.debug(pageProcess.getName());
+		log.debug(pageProcess.getNames());
 		return new Date(dateT0.getTime() + pageProcess.getMeasures().get(KProcess.DURATION).longValue());
 	}
 
@@ -353,7 +353,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		addLoadUserProcess(pageProcessBuilder, coef);
 		final KProcess pageProcess = pageProcessBuilder.build();
 		serverManager.push(pageProcess);
-		log.debug(pageProcess.getName());
+		log.debug(pageProcess.getNames());
 		return new Date(dateT0.getTime() + pageProcess.getMeasures().get(KProcess.DURATION).longValue());
 	}
 

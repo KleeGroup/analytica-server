@@ -72,7 +72,9 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 		final TimePosition timePosition = new TimePosition(process.getStartDate(), TimeDimension.Minute);
 		final List<String> what = new ArrayList<String>();
 		what.add(process.getType());
-		what.add(process.getName());
+		for (String name : process.getNames()) {
+			what.add(name);
+		}
 		final WhatPosition whatPosition = new WhatPosition(what);
 		final CubePosition cubePosition = new CubePosition(timePosition, whatPosition);
 		return new CubeBuilder(cubePosition);
