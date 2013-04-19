@@ -15,29 +15,28 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server;
+package com.kleegroup.analytica.hcube;
 
 import java.util.List;
 
-import kasper.kernel.manager.Plugin;
+import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.cube.Cube;
+import com.kleegroup.analytica.hcube.query.Query;
 
 /**
- * Transformation d'un process en cubes.
- * Un process est écrasé, chaque sous process crée un cube 
- * et remonte certaines données dans le cube parent. 
- *
- * @author npiedeloup, pchretien
- * @version $Id: ProcessEncoderPlugin.java,v 1.3 2012/10/16 13:45:02 pchretien Exp $
+ * Base de données temporelles.
+ * 
+ * @author pchretien, npiedeloup
+ * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
-public interface ProcessEncoderPlugin extends Plugin {
-
+public interface HCubeManager extends Manager {
 	/**
-	 * Transforme un KProcess et ses sous process en cubes.
-	 * @param process Process à convertir
-	 * @return Liste des Cubes associés
+	 * Ajout d'un process.
+	 * @param process Process à ajouter 
 	 */
-	List<Cube> encode(final KProcess process);
+	void push(KProcess process);
+
+	List<Cube> findAll(Query query);
 }

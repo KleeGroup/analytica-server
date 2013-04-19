@@ -20,9 +20,7 @@
 -->
 <modules>
 	<module name="analytica">
-		<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl">
-			<plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.memory.MemoryProcessStorePlugin" />
-			<plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin"/>
+		<manager name="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
 			<plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin">
 			</plugin>
 		</manager>

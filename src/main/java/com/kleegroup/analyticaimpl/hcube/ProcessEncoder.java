@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analyticaimpl.server.plugins.processencoder.standard;
+package com.kleegroup.analyticaimpl.hcube;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,6 @@ import com.kleegroup.analytica.hcube.dimension.CubePosition;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
-import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
 
 /**
  * Implémentation de la transformation des Process en cubes.
@@ -44,10 +43,14 @@ import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
  * @author npiedeloup
  * @version $Id: StandardProcessEncoderPlugin.java,v 1.16 2012/10/16 17:27:12 pchretien Exp $
  */
-public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin {
+final class ProcessEncoder {
 
-	/** {@inheritDoc} */
-	public List<Cube> encode(final KProcess process) {
+	/**
+	 * Transforme un KProcess et ses sous process en cubes.
+	 * @param process Process à convertir
+	 * @return Liste des Cubes associés
+	 */
+	List<Cube> encode(final KProcess process) {
 		final List<Cube> result = new ArrayList<Cube>();
 		doEncode(process, result);
 		return result;

@@ -21,8 +21,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.kleegroup.analytica.hcube.HCubeManagerTest;
 import com.kleegroup.analytica.server.h2.ServerManagerH2Test;
-import com.kleegroup.analytica.server.memory.ServerManagerMemoryTest;
 
 /**
  * Test de l'implémentation standard.
@@ -31,7 +31,7 @@ import com.kleegroup.analytica.server.memory.ServerManagerMemoryTest;
  * @version $Id: TestSuite.java,v 1.6 2012/10/16 12:42:39 npiedeloup Exp $
  */
 @RunWith(Suite.class)
-@SuiteClasses({ ServerManagerMemoryTest.class,//
+@SuiteClasses({ HCubeManagerTest.class,//
 		ServerManagerH2Test.class //
 })
 public final class TestSuite {

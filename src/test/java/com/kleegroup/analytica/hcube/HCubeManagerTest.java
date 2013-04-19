@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiÃ¨re - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analytica.server;
+package com.kleegroup.analytica.hcube;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,9 +49,9 @@ import com.kleegroup.analytica.hcube.query.QueryBuilder;
  * Cas de Test JUNIT de l'API Analytics.
  * 
  * @author pchretien, npiedeloup
- * @version $Id: AbstractAnalyticaTest.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
+ * @version $Id: ServerManagerMemoryTest.java,v 1.2 2012/03/22 18:33:04 pchretien Exp $
  */
-public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
+public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 	private static final MetricKey MONTANT = new MetricKey("MONTANT");
 	private static final MetricKey POIDS = new MetricKey("POIDS");
 
@@ -59,7 +59,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	private static final String PROCESS_SQL = "SQL";
 
 	@Inject
-	private ServerManager serverManager;
+	private HCubeManager hcubeManager;
 
 	private Date date;
 	private final int price = 8;
@@ -86,7 +86,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		serverManager.push(selectProcess1);
+		hcubeManager.push(selectProcess1);
 
 		final Query daySqlQuery = new QueryBuilder()//
 				.on(TimeDimension.Day)//
@@ -95,7 +95,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = serverManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -105,10 +105,10 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	/**
 	 * Test simple 
 	 * - d'un processus maitre : //services/get articles
-	 * - consitituÃ© de n sous-processus : //sql/select article
-	 * les sous processus possÃ¨dent deux mesures
+	 * - consititué de n sous-processus : //sql/select article
+	 * les sous processus possèdent deux mesures
 	*  - Poids des articles (25 kg) par sous processus
-	*  - Prix des articles 10â‚¬	
+	*  - Prix des articles 10€	
 	 */
 	@Test
 	public void testCompositeProcess() throws ParseException {
@@ -129,7 +129,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		}
 		final KProcess process = kProcessBuilder.build();
 
-		serverManager.push(process);
+		hcubeManager.push(process);
 		//
 		final Query daySqlQuery = new QueryBuilder()//
 				.on(TimeDimension.Day)//
@@ -138,7 +138,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = serverManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -150,7 +150,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.to(new DateBuilder(date).addDays(1).build())//
 				.with("SQL")//
 				.build();
-		cubes = serverManager.findAll(hourQuery);
+		cubes = hcubeManager.findAll(hourQuery);
 		Assert.assertEquals(14, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		System.out.println(">>>" + cubes);
@@ -166,7 +166,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.incMeasure(MONTANT.id(), price)//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		serverManager.push(selectProcess1);
+		hcubeManager.push(selectProcess1);
 
 		final Query daySqlQuery = new QueryBuilder()//
 				.on(TimeDimension.Day)//
@@ -175,7 +175,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = serverManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -187,17 +187,17 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#1")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		serverManager.push(selectProcess1);
+		hcubeManager.push(selectProcess1);
 
 		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#2")//
 				//.incMeasure(MONTANT.id(), price)//
 				.build();
-		serverManager.push(selectProcess2);
+		hcubeManager.push(selectProcess2);
 
 		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#3")//
 				.incMeasure(MONTANT.id(), price * 3)//
 				.build();
-		serverManager.push(selectProcess3);
+		hcubeManager.push(selectProcess3);
 
 		final Query daySqlQuery = new QueryBuilder()//
 				.on(TimeDimension.Day)//
@@ -206,7 +206,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = serverManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -219,7 +219,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL", "select article#3")//
 				.build();
 
-		cubes = serverManager.findAll(daySelectQuery);
+		cubes = hcubeManager.findAll(daySelectQuery);
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -237,13 +237,13 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 					final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
 							.incMeasure(MONTANT.id(), price)//
 							.build();
-					serverManager.push(selectProcess1);
+					hcubeManager.push(selectProcess1);
 				}
 			});
 		}
 		workersPool.shutdown();
 		workersPool.awaitTermination(30, TimeUnit.SECONDS); //On laisse 30 secondes pour vider la pile   
-		Assert.assertTrue("Les threads ne sont pas tous stoppÃ©s", workersPool.isTerminated());
+		Assert.assertTrue("Les threads ne sont pas tous stoppés", workersPool.isTerminated());
 
 		final Query daySqlQuery = new QueryBuilder()//
 				.on(TimeDimension.Day)//
@@ -252,7 +252,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = serverManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
