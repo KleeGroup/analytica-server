@@ -17,9 +17,6 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.HKey;
@@ -35,28 +32,34 @@ import com.kleegroup.analytica.hcube.HKey;
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
 public final class WhatPosition extends HKey implements Position<WhatPosition> {
-	private final List<String> what;
+	private final String type;
+	private final String[] what;
 
-	public WhatPosition(final List<String> what) {
-		super("what:" + what.toString());
+	public WhatPosition(final String type, final String[] what) {
+		super(buildKey(type, what));
+		Assertion.notEmpty(type);
 		//---------------------------------------------------------------------
-		Assertion.precondition(what.size() > 0, "Categories must not be  empty");
 		this.what = what;
+		this.type = type;
 	}
 
 	/** {@inheritDoc} */
 	public WhatPosition drillUp() {
-		if (what.size() <= 1) {
+		if (what.length == 0) {
 			return null;
 		}
-		List<String> redux = new ArrayList<String>(what.size() - 1);
-		for (int i = 0; i < what.size() - 1; i++) {
-			redux.add(what.get(i));
+		String[] redux = new String[what.length - 1];
+		for (int i = 0; i < what.length - 1; i++) {
+			redux[i] = what[i];
 		}
-		return new WhatPosition(redux);
+		return new WhatPosition(type, redux);
 	}
 
-	public List<String> getValue() {
-		return what;
+	private static String buildKey(String type, final String[] what) {
+		StringBuilder sb = new StringBuilder("what::").append(type);
+		for (String element : what) {
+			sb.append("/").append(element);
+		}
+		return sb.toString();
 	}
 }

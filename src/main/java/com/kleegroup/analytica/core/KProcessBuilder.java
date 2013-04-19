@@ -58,7 +58,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param name Nom du processus
 	 */
 	public KProcessBuilder(final String type, final String... names) {
-		this(type, names, new Date());
+		this(new Date(), type, names);
 	}
 
 	/**
@@ -68,13 +68,13 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param startDate Date de début processus
 	 * @param duration Durée du processus (Millisecondes)
 	 */
-	public KProcessBuilder(final String type, final String[] names, final Date startDate, final double durationMs) {
-		this(type, names, startDate);
+	public KProcessBuilder(final Date startDate, final double durationMs, final String type, final String... names) {
+		this(startDate, type, names);
 		//---------------------------------------------------------------------
 		this.durationMs = durationMs;
 	}
 
-	private KProcessBuilder(final String type, final String[] names, final Date startDate) {
+	private KProcessBuilder(final Date startDate, final String type, final String[] names) {
 		Assertion.notEmpty(type);
 		Assertion.notNull(names);
 		Assertion.notNull(startDate);

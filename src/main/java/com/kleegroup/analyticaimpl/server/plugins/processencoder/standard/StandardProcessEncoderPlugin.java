@@ -70,12 +70,7 @@ public final class StandardProcessEncoderPlugin implements ProcessEncoderPlugin 
 
 	private static CubeBuilder createCubeBuilder(KProcess process) {
 		final TimePosition timePosition = new TimePosition(process.getStartDate(), TimeDimension.Minute);
-		final List<String> what = new ArrayList<String>();
-		what.add(process.getType());
-		for (String name : process.getNames()) {
-			what.add(name);
-		}
-		final WhatPosition whatPosition = new WhatPosition(what);
+		final WhatPosition whatPosition = new WhatPosition(process.getType(), process.getNames());
 		final CubePosition cubePosition = new CubePosition(timePosition, whatPosition);
 		return new CubeBuilder(cubePosition);
 	}

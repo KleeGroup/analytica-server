@@ -83,7 +83,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 	//-------------------------------------------------------------------------
 	@Test
 	public void testSimpleProcess() {
-		final KProcess selectProcess1 = new KProcessBuilder(PROCESS_SQL, "select article", date, 100)//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		serverManager.push(selectProcess1);
@@ -116,10 +116,10 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 		final int nbSelect = 12;
 
-		final KProcessBuilder kProcessBuilder = new KProcessBuilder(PROCESS_SERVICES, "get articles", date, 2000);
+		final KProcessBuilder kProcessBuilder = new KProcessBuilder(date, 2000, PROCESS_SERVICES, "get articles");
 		Date selectDate = date;
 		for (int i = 0; i < nbSelect; i++) {
-			final KProcess selectProcess = new KProcessBuilder(PROCESS_SQL, "select article", selectDate, 100)//
+			final KProcess selectProcess = new KProcessBuilder(selectDate, 100, PROCESS_SQL, "select article")//
 					.incMeasure(POIDS.id(), 25)//
 					.incMeasure(MONTANT.id(), price)//
 					.build();
@@ -160,7 +160,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testSimpleProcessWithMultiIncMeasure() {
-		final KProcess selectProcess1 = new KProcessBuilder(PROCESS_SQL, "select article", date, 100)//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.incMeasure(MONTANT.id(), price)//
 				.incMeasure(MONTANT.id(), price)//
@@ -184,17 +184,17 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testMultiProcesses() {
-		final KProcess selectProcess1 = new KProcessBuilder(PROCESS_SQL, "select article#1", date, 100)//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#1")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		serverManager.push(selectProcess1);
 
-		final KProcess selectProcess2 = new KProcessBuilder(PROCESS_SQL, "select article#2", date, 100)//
+		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#2")//
 				//.incMeasure(MONTANT.id(), price)//
 				.build();
 		serverManager.push(selectProcess2);
 
-		final KProcess selectProcess3 = new KProcessBuilder(PROCESS_SQL, "select article#3", date, 100)//
+		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#3")//
 				.incMeasure(MONTANT.id(), price * 3)//
 				.build();
 		serverManager.push(selectProcess3);
@@ -234,7 +234,7 @@ public abstract class AbstractServerManagerTest extends AbstractTestCaseJU4 {
 			workersPool.execute(new Runnable() {
 				@Override
 				public void run() {
-					final KProcess selectProcess1 = new KProcessBuilder(PROCESS_SQL, "select article", date, 100)//
+					final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
 							.incMeasure(MONTANT.id(), price)//
 							.build();
 					serverManager.push(selectProcess1);

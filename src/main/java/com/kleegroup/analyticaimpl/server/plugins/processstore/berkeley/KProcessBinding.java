@@ -65,7 +65,7 @@ final class KProcessBinding extends TupleBinding {
 		final String name = ti.readString();
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(type, name, startDate, duration);
+		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, type, name);
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {

@@ -113,7 +113,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 	}
 
 	private void addHealthInfo(final Date dateMinute, final double coef, final Map<String, Integer> subSystemHealthState) {
-		KProcessBuilder healthProcess = new KProcessBuilder("HEALTH", "/physical", dateMinute, 0);
+		KProcessBuilder healthProcess = new KProcessBuilder(dateMinute, 0, "HEALTH", "/physical");
 		final double tendance = random(6000d, 1 + (1 - coef) / 2); // 6000 +/-
 		// 1500
 		healthProcess.setMeasure("CPU", tendance * 15 / 6000 + random(3d, coef));
@@ -121,12 +121,12 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		healthProcess.setMeasure("IO", tendance + random(1000d, coef));
 		serverManager.push(healthProcess.build());
 
-		healthProcess = new KProcessBuilder("HEALTH", "/technical/web", dateMinute, 0);// séparer car les sondes seront a des
+		healthProcess = new KProcessBuilder(dateMinute, 0, "HEALTH", "/technical/web");// séparer car les sondes seront a des
 		// emplacements différents
 		healthProcess.setMeasure("SESSION HTTP", tendance * 50 / 6000 + random(10d, coef));
 		serverManager.push(healthProcess.build());
 
-		healthProcess = new KProcessBuilder("HEALTH", "/technical/cache", dateMinute, 0);
+		healthProcess = new KProcessBuilder(dateMinute, 0, "HEALTH", "/technical/cache");
 		healthProcess.setMeasure("CACHE", tendance * 85 / 6000 + random(10d, coef));
 		serverManager.push(healthProcess.build());
 
@@ -137,7 +137,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 			final int chanceToBeOk = Math.abs(entry.getValue());
 			final int initChanceToBeOk = subSystemHealthState.get(entry.getKey() + "_INIT");
 			final boolean isOk = entry.getValue() >= initChanceToBeOk;
-			healthProcess = new KProcessBuilder("HEALTH", "/subsystem/" + entry.getKey(), dateMinute, 0);
+			healthProcess = new KProcessBuilder(dateMinute, 0, "HEALTH", "/subsystem/" + entry.getKey());
 			healthProcess.setMeasure("HEALTH", isOk ? 100 : 0);
 			serverManager.push(healthProcess.build());
 			if (!isOk) { // si system KO, on a 'value' chance de revenir en
@@ -173,19 +173,19 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		subSystemHealthState.put("Mail_INIT", 90); // chance d'etre OK
 		subSystemHealthState.put("LDAP_INIT", 99); // chance d'etre OK
 
-		KProcessBuilder confEvent = new KProcessBuilder("CONF", "/Managers/RessourceManager", dateSemaine, 0);
+		KProcessBuilder confEvent = new KProcessBuilder(dateSemaine, 0, "CONF", "/Managers/RessourceManager");
 		confEvent.setMeasure("START", 1);
 		confEvent.setMetaData("CONF:RES", "256 Ressources");
 		confEvent.setMetaData("CONF:LANG", "1 langue");
 		serverManager.push(confEvent.build());
 
-		confEvent = new KProcessBuilder("CONF", "/Managers/SecurityManager", dateSemaine, 0);
+		confEvent = new KProcessBuilder(dateSemaine, 0, "CONF", "/Managers/SecurityManager");
 		confEvent.setMeasure("START", 1);
 		confEvent.setMetaData("CONF:SEC", "18 roles");
 		confEvent.setMetaData("CONF:ROLES", "R_ADMIN;R_AUTHENTIFIED;R_UTILISATEUR_ADMIN;R_UTILISATEUR_READ;R_UTILISATEUR_WRITE;R_UTILISATEUR_EXEC;R_DOSSIER_ADMIN;R_DOSSIER_READ;R_DOSSIER_WRITE;R_DOSSIER_EXEC");
 		serverManager.push(confEvent.build());
 
-		confEvent = new KProcessBuilder("CONF", "/Managers/SystemManager", dateSemaine, 0);
+		confEvent = new KProcessBuilder(dateSemaine, 0, "CONF", "/Managers/SystemManager");
 		confEvent.setMeasure("START", 1);
 		confEvent.setMetaData("CONF:JDK", "Système Java: 1.6.0_20, OS: Linux/2.6.18-238.9.1.el5, host: 127.0.0.1, hostName: 127.0.0.1, Log level (root) : INFO");
 		if (randomBoolean(10)) {// 10% de chance d'une erreur de conf
@@ -199,19 +199,19 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 
 		serverManager.push(confEvent.build());
 
-		confEvent = new KProcessBuilder("CONF", "/Managers/CodecManager", dateSemaine, 0);
+		confEvent = new KProcessBuilder(dateSemaine, 0, "CONF", "/Managers/CodecManager");
 		confEvent.setMeasure("START", 1);
 		confEvent.setMetaData("CONF:CRYPTO", "Cryptographie : [algorithme=DESede , clé=168] ");
 		confEvent.setMetaData("CONF:ZIP", "Compression zip: [taille min= 100octets , niveau de compression=1]");
 		serverManager.push(confEvent.build());
 
-		confEvent = new KProcessBuilder("CONF", "/Managers/CacheManager", dateSemaine, 0);
+		confEvent = new KProcessBuilder(dateSemaine, 0, "CONF", "/Managers/CacheManager");
 		confEvent.setMeasure("START", 1);
 		confEvent.setMetaData("CONF:EH_CACHE", "Paramétrage : EHCache [ name = DataCache, isOverflowToDisk = true, maxElementsInMemory = 1,000, maxElementsOnDisk = 0, timeToIdleSeconds = 1,800, timeToLiveSeconds = 3,600, eternal = false]");
 		confEvent.setMetaData("CONF:DT", "DT_UTILISATEUR;DT_ETAT_DOSSIER;DT_TYPE_DOSSIER;DT_ROLE");
 		serverManager.push(confEvent.build());
 
-		confEvent = new KProcessBuilder("CONF", "/Managers/DataBaseManager", dateSemaine, 0);
+		confEvent = new KProcessBuilder(dateSemaine, 0, "CONF", "/Managers/DataBaseManager");
 		confEvent.setMeasure("START", 1);
 		if (randomBoolean(5)) {// 5% de chance d'une erreur de conf
 			confEvent.setMetaData("CONF:BDD", "Bdd = Oracle / Oracle Database 11g Enterprise Edition Release 11.2.0.2.0 - 64bit Production\\With the Partitioning option, Driver JDBC = Oracle JDBC driver / 11.1.0.7.0-Production, URL JDBC = jdbc:oracle:thin:@blackhole.dev.klee.lan.net:1521:O11W1252");
@@ -222,7 +222,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 		}
 		serverManager.push(confEvent.build());
 
-		confEvent = new KProcessBuilder("CONF", "/Managers/LDAPManager", dateSemaine, 0);
+		confEvent = new KProcessBuilder(dateSemaine, 0, "CONF", "/Managers/LDAPManager");
 		confEvent.setMeasure("START", 1);
 		if (randomBoolean(10)) {// 10% de chance d'une erreur de conf
 			confEvent.setMetaData("CONF:HOST", "Host:mrveille;Port:1999;SSL:non;Racine:ou=INT,ou=USERS,o=ADM;Attributs binaires:null");
@@ -381,7 +381,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 	}
 
 	private KProcessBuilder createProcess(final Date dataT0, final int averageTime, final double coef, final String module, final String fullName) {
-		return new KProcessBuilder(module, fullName, dataT0, random(averageTime, coef));
+		return new KProcessBuilder(dataT0, random(averageTime, coef), module, fullName);
 	}
 
 	private KProcessBuilder createSubProcess(final int averageTime, final double coef, final String module, final String fullName, final KProcessBuilder parentProcess) {
@@ -392,7 +392,7 @@ public final class AnalyticaDataBuilderTest extends AbstractTestCaseJU4 {
 			startTime += process.getMeasures().get(KProcess.DURATION).longValue() + 10;// 10ms entre process
 		}
 		final long thisDuration = Math.max(Math.min(random(averageTime, coef), parentStartTime + parent.getMeasures().get(KProcess.DURATION).longValue() - startTime), 0);
-		final KProcessBuilder processBuilder = new KProcessBuilder(module, fullName, new Date(startTime), thisDuration);
+		final KProcessBuilder processBuilder = new KProcessBuilder(new Date(startTime), thisDuration, module, fullName);
 		return processBuilder;
 	}
 
