@@ -22,7 +22,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.kleegroup.analytica.hcube.HCubeManagerTest;
-import com.kleegroup.analytica.server.h2.ServerManagerH2Test;
 
 /**
  * Test de l'implémentation standard.
@@ -32,7 +31,6 @@ import com.kleegroup.analytica.server.h2.ServerManagerH2Test;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ HCubeManagerTest.class,//
-		ServerManagerH2Test.class //
 })
 public final class TestSuite {
 	//

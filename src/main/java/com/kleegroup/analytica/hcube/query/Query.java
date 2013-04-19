@@ -18,11 +18,9 @@ public final class Query {
 	Query(TimeSelection timeSelection, WhatPosition whatPosition) {
 		Assertion.notNull(timeSelection);
 		Assertion.notNull(whatPosition);
-		//		Assertion.notNull(keys);
 		//---------------------------------------------------------------------
 		this.timeSelection = timeSelection;
 		this.whatPosition = whatPosition;
-		//		this.keys = keys;
 	}
 
 	//-----------------------What----------------------------------------------

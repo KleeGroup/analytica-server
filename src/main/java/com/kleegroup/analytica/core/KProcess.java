@@ -89,6 +89,13 @@ public final class KProcess {
 	}
 
 	/**
+	 * @return Durée du process
+	 */
+	public double getDuration() {
+		return measures.get(DURATION);
+	}
+
+	/**
 	 * @return Date de début du processus
 	 */
 	public Date getStartDate() {

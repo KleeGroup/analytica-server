@@ -68,57 +68,57 @@ public enum TimeDimension {
 		return up;
 	}
 
-	/**
-	 * @return Niveau inférieur ou null.
-	 */
-	public TimeDimension drillDown() {
-		switch (this) {
-			case Year:
-				return Month;
-			case Month:
-				return Day;
-			case Day:
-				return Hour;
-			case Hour:
-				return Minute;
-			case Minute:
-				return null;
-			default:
-				throw new KRuntimeException("TimeDimension inconnu");
-		}
-	}
-
-	/**
-	 * Retourne la date maximum pour cette dimenssion.
-	 * @param date Date de départ
-	 * @return Date maximum
-	 */
-	public Date getMaxDate(final Date date) {
-		Assertion.notNull(date);
-		final Date reduceDate = reduce(date);
-		Assertion.precondition(reduceDate.equals(date), "La date de début doit déjà être réduite à cette dimenssion, et correspondre au point de début de cette dimenssion");
-		//---------------------------------------------------------------------
-		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(reduceDate);
-		switch (this) {
-			case Year:
-				calendar.add(Calendar.YEAR, 1);
-				break;
-			case Month:
-				calendar.add(Calendar.MONTH, 1);
-				break;
-			case Day:
-				calendar.add(Calendar.DAY_OF_YEAR, 1);
-				break;
-			case Hour:
-				calendar.add(Calendar.HOUR_OF_DAY, 1);
-				break;
-			case Minute:
-				calendar.add(Calendar.MINUTE, 1);
-				break;
-		}
-		return calendar.getTime();
-	}
+	//	/**
+	//	 * @return Niveau inférieur ou null.
+	//	 */
+	//	public TimeDimension drillDown() {
+	//		switch (this) {
+	//			case Year:
+	//				return Month;
+	//			case Month:
+	//				return Day;
+	//			case Day:
+	//				return Hour;
+	//			case Hour:
+	//				return Minute;
+	//			case Minute:
+	//				return null;
+	//			default:
+	//				throw new KRuntimeException("TimeDimension inconnu");
+	//		}
+	//	}
+	//
+	//	/**
+	//	 * Retourne la date maximum pour cette dimenssion.
+	//	 * @param date Date de départ
+	//	 * @return Date maximum
+	//	 */
+	//	public Date getMaxDate(final Date date) {
+	//		Assertion.notNull(date);
+	//		final Date reduceDate = reduce(date);
+	//		Assertion.precondition(reduceDate.equals(date), "La date de début doit déjà être réduite à cette dimenssion, et correspondre au point de début de cette dimenssion");
+	//		//---------------------------------------------------------------------
+	//		final Calendar calendar = Calendar.getInstance();
+	//		calendar.setTime(reduceDate);
+	//		switch (this) {
+	//			case Year:
+	//				calendar.add(Calendar.YEAR, 1);
+	//				break;
+	//			case Month:
+	//				calendar.add(Calendar.MONTH, 1);
+	//				break;
+	//			case Day:
+	//				calendar.add(Calendar.DAY_OF_YEAR, 1);
+	//				break;
+	//			case Hour:
+	//				calendar.add(Calendar.HOUR_OF_DAY, 1);
+	//				break;
+	//			case Minute:
+	//				calendar.add(Calendar.MINUTE, 1);
+	//				break;
+	//		}
+	//		return calendar.getTime();
+	//	}
 
 	/**
 	 * Normalise la valeur pour correspondre au niveau d'agregation de cette dimension.

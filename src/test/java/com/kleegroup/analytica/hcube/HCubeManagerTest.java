@@ -130,8 +130,8 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		final KProcess process = kProcessBuilder.build();
 
 		hcubeManager.push(process);
-		//
-		final Query daySqlQuery = new QueryBuilder()//
+		//---------------------------------------------------------------------
+		Query daySqlQuery = new QueryBuilder()//
 				.on(TimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -143,7 +143,10 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, nbSelect, price * nbSelect, price, price, price);
-
+		//Durée	
+		Metric durationMetric = cubes.get(0).getMetric(new MetricKey(KProcess.DURATION));
+		assertMetricEquals(durationMetric, nbSelect, nbSelect * 100, 100, 100, 100);
+		//---------------------------------------------------------------------
 		final Query hourQuery = new QueryBuilder()//
 				.on(TimeDimension.Hour)//
 				.from(date)//
@@ -153,9 +156,25 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		cubes = hcubeManager.findAll(hourQuery);
 		Assert.assertEquals(14, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
-		System.out.println(">>>" + cubes);
 		montantMetric = cubes.get(5).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
+		//---------------------------------------------------------------------
+		Query dayServiceslQuery = new QueryBuilder()//
+				.on(TimeDimension.Day)//
+				.from(date)//
+				.to(date)//
+				.with("SERVICES")//
+				.build();
+
+		cubes = hcubeManager.findAll(dayServiceslQuery);
+		System.out.println(">>>services::" + cubes);
+		Assert.assertEquals(1, cubes.size());
+		//Vérification de la durée du process principal
+		durationMetric = cubes.get(0).getMetric(new MetricKey(KProcess.DURATION));
+		assertMetricEquals(durationMetric, 1, 2000, 2000, 2000, 2000);
+		//Vérification de la durée des sous-process 
+		Metric sqlMetric = cubes.get(0).getMetric(new MetricKey(PROCESS_SQL));
+		assertMetricEquals(sqlMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 	}
 
 	@Test

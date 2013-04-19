@@ -90,6 +90,11 @@ final class ProcessEncoder {
 			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
 			cubeBuilder.withMetric(new MetricBuilder(new MetricKey(measure.getKey())).withValue(measure.getValue()).build());
 		}
+		//On ajoute les durées sous-process
+		for (final KProcess subProcess : process.getSubProcesses()) {
+			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
+			cubeBuilder.withMetric(new MetricBuilder(new MetricKey(subProcess.getType())).withValue(subProcess.getDuration()).build());
+		}
 		return cubeBuilder.build();
 	}
 
