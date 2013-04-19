@@ -35,7 +35,7 @@ import com.kleegroup.analytica.hcube.dimension.CubePosition;
  * @author npiedeloup, pchretien
  * @version $Id: Cube.java,v 1.6 2012/10/16 13:34:49 pchretien Exp $
  */
-public final class Cube {
+public final class Cube implements VirtualCube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
@@ -47,39 +47,27 @@ public final class Cube {
 		Assertion.notNull(metrics);
 		//---------------------------------------------------------------------
 		this.cubePosition = cubePosition;
-		this.metrics = index(metrics);
+		this.metrics = new LinkedHashMap<MetricKey, Metric>(metrics.size());
+		for (final Metric metric : metrics) {
+			final Object old = this.metrics.put(metric.getKey(), metric);
+			Assertion.isNull(old, "La liste de Metric ne doit pas contenir de doublon");
+		}
 	}
 
 	public CubePosition getPosition() {
 		return cubePosition;
 	}
 
-	/**
-	 * Accès d'une métrique par son nom
-	 * @param name Nom de la métrique
-	 * @return Métrique
-	 */
+	/** {@inheritDoc} */
 	public Metric getMetric(final MetricKey metricKey) {
 		Assertion.notNull(metricKey);
 		//---------------------------------------------------------------------
 		return metrics.get(metricKey);
 	}
 
-	/**
-	 * Liste de toutes les métriques
-	 * @return Métriques du cube
-	 */
+	/** {@inheritDoc} */
 	public Collection<Metric> getMetrics() {
 		return metrics.values();
-	}
-
-	private static Map<MetricKey, Metric> index(final Collection<Metric> metrics) {
-		final Map<MetricKey, Metric> indexedList = new LinkedHashMap<MetricKey, Metric>(metrics.size());
-		for (final Metric metric : metrics) {
-			final Object old = indexedList.put(metric.getKey(), metric);
-			Assertion.isNull(old, "La liste de Metric ne doit pas contenir de doublon");
-		}
-		return indexedList;
 	}
 
 	@Override

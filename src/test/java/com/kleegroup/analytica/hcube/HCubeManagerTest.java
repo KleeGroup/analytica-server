@@ -44,6 +44,7 @@ import com.kleegroup.analytica.hcube.cube.MetricKey;
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
 import com.kleegroup.analytica.hcube.query.Query;
 import com.kleegroup.analytica.hcube.query.QueryBuilder;
+import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
  * Cas de Test JUNIT de l'API Analytics.
@@ -95,7 +96,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -138,7 +139,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -153,7 +154,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.to(new DateBuilder(date).addDays(1).build())//
 				.with("SQL")//
 				.build();
-		cubes = hcubeManager.findAll(hourQuery);
+		cubes = hcubeManager.execute(hourQuery).getCubes();
 		Assert.assertEquals(14, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		montantMetric = cubes.get(5).getMetric(MONTANT);
@@ -166,7 +167,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SERVICES")//
 				.build();
 
-		cubes = hcubeManager.findAll(dayServiceslQuery);
+		cubes = hcubeManager.execute(dayServiceslQuery).getCubes();
 		System.out.println(">>>services::" + cubes);
 		Assert.assertEquals(1, cubes.size());
 		//Vérification de la durée du process principal
@@ -194,7 +195,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -225,7 +226,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -238,7 +239,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL", "select article#3")//
 				.build();
 
-		cubes = hcubeManager.findAll(daySelectQuery);
+		cubes = hcubeManager.execute(daySelectQuery).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -271,23 +272,41 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		List<Cube> cubes = hcubeManager.findAll(daySqlQuery);
+		List<Cube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 50, price * 50, price, price, price);
 	}
-	//
-	//		log.trace("elapsed = " + (System.currentTimeMillis() - start));
-	//		//	printDatas(MONTANT);
-	//		//System.out.println(analyticaUIManager.toString(serverManager.getProcesses()));
-	//	}
-	//
-	//	private static KProcessBuilder createProcess(final String module, final String fullName, Date date) {
-	//		return new KProcessBuilder(module, fullName, date, 10);
-	//	}
-	//
-	//	private static KProcessBuilder createProcess(final String module, final String fullName, final long time) {
-	//		return new KProcessBuilder(module, fullName, new Date(), time);
-	//	}
+
+	@Test
+	public void testHCube() {
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#1")//
+				.incMeasure(MONTANT.id(), price)//
+				.build();
+		hcubeManager.push(selectProcess1);
+
+		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#2")//
+				.incMeasure(MONTANT.id(), price * 3)//
+				.incMeasure(POIDS.id(), 50)//
+				.build();
+		hcubeManager.push(selectProcess2);
+
+		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#3")//
+				.incMeasure(POIDS.id(), 70)//
+				.build();
+		hcubeManager.push(selectProcess3);
+
+		final Query daySqlQuery = new QueryBuilder()//
+				.on(TimeDimension.Day)//
+				.from(date)//
+				.to(date)//
+				.with("SQL")//
+				.build();
+
+		HResult hresult = hcubeManager.execute(daySqlQuery);
+
+		assertMetricEquals(hresult.getMetric(POIDS), 2, 120, 60, 50, 70);
+		assertMetricEquals(hresult.getMetric(MONTANT), 2, price * 4, price * 2, price, price * 3);
+	}
 }

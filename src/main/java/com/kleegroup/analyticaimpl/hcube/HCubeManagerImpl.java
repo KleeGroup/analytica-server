@@ -27,6 +27,7 @@ import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
  * @author pchretien, npiedeloup
@@ -57,7 +58,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 	}
 
 	/** {@inheritDoc} */
-	public List<Cube> findAll(Query query) {
-		return cubeStorePlugin.findAll(query);
+	public HResult execute(Query query) {
+		return new HResult(query, cubeStorePlugin.findAll(query));
 	}
 }

@@ -11,7 +11,7 @@ import com.kleegroup.analytica.hcube.dimension.WhatPosition;
  * Builder de la requête.
  * @author npiedeloup, pchretien
  */
-public class QueryBuilder implements Builder<Query> {
+public final class QueryBuilder implements Builder<Query> {
 	//---	
 	private TimeDimension timeDimension;
 	private Date from;

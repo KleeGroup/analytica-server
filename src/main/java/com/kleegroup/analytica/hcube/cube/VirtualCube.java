@@ -15,26 +15,33 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package com.kleegroup.analytica.hcube;
+package com.kleegroup.analytica.hcube.cube;
 
-import kasper.kernel.manager.Manager;
-
-import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.hcube.result.HResult;
+import java.util.Collection;
 
 /**
- * Base de données temporelles.
- * 
- * @author pchretien, npiedeloup
- * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
+ * Un cube contient :
+ *  - des métriques nommées
+ *  	exemple : temps réponse, nombre de mails envoyés
+ *  - des métadonnées 
+ *  	exemple : tags, users
+ *  
+ * @author npiedeloup, pchretien
+ * @version $Id: Cube.java,v 1.6 2012/10/16 13:34:49 pchretien Exp $
  */
-public interface HCubeManager extends Manager {
-	/**
-	 * Ajout d'un process.
-	 * @param process Process à ajouter 
-	 */
-	void push(KProcess process);
+public interface VirtualCube {
 
-	HResult execute(Query query);
+	/**
+	 * Accès d'une métrique par son nom
+	 * @param name Nom de la métrique
+	 * @return Métrique
+	 */
+	Metric getMetric(final MetricKey metricKey);
+
+	/**
+	 * Liste de toutes les métriques
+	 * @return Métriques du cube
+	 */
+	Collection<Metric> getMetrics();
+
 }
