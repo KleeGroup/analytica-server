@@ -36,5 +36,8 @@ public interface HCubeManager extends Manager {
 	 */
 	void push(KProcess process);
 
+	/**
+	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
+	 */
 	HResult execute(Query query);
 }

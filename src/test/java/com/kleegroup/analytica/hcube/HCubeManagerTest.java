@@ -103,6 +103,53 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 	}
 
+	@Test
+	public void testSimpleProcessWithAllTimeDimensions() {
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
+				.incMeasure(MONTANT.id(), price)//
+				.build();
+		hcubeManager.push(selectProcess1);
+
+		final Query daySqlQuery = new QueryBuilder()//
+				.on(TimeDimension.Day)//
+				.from(date)//
+				.to(date)//
+				.with("SQL")//
+				.build();
+
+		List<Cube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		Assert.assertEquals(1, cubes.size());
+		//
+		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
+		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
+
+		final Query monthSqlQuery = new QueryBuilder()//
+				.on(TimeDimension.Month)//
+				.from(date)//
+				.to(date)//
+				.with("SQL")//
+				.build();
+
+		cubes = hcubeManager.execute(monthSqlQuery).getCubes();
+		Assert.assertEquals(1, cubes.size());
+		//
+		montantMetric = cubes.get(0).getMetric(MONTANT);
+		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
+
+		final Query yearSqlQuery = new QueryBuilder()//
+				.on(TimeDimension.Month)//
+				.from(date)//
+				.to(date)//
+				.with("SQL")//
+				.build();
+
+		cubes = hcubeManager.execute(yearSqlQuery).getCubes();
+		Assert.assertEquals(1, cubes.size());
+		//
+		montantMetric = cubes.get(0).getMetric(MONTANT);
+		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
+	}
+
 	/**
 	 * Test simple 
 	 * - d'un processus maitre : //services/get articles

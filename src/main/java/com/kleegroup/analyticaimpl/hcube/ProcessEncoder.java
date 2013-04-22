@@ -84,7 +84,7 @@ final class ProcessEncoder {
 	 * @param parentCubeBuilders
 	 * @return
 	 */
-	private static Cube encodeMeasures(final KProcess process/*, final List<CubeBuilder> parentCubeBuilders*/) {
+	private static Cube encodeMeasures(final KProcess process) {
 		CubeBuilder cubeBuilder = createCubeBuilder(process);
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
 			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
