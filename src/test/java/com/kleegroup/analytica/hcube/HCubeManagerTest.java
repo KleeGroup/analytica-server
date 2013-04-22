@@ -75,8 +75,11 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 	private static void assertMetricEquals(Metric metric, double count, double sum, double mean, double min, double max) {
 		Assert.assertEquals(count, metric.get(DataType.count), 0);
-		Assert.assertEquals(sum, metric.get(DataType.sum), 0);
+		Assert.assertEquals(count, metric.getCount(), 0); //test accesseur rapide
+		Assert.assertEquals(sum, metric.get(DataType.sum), 0);//test accesseur rapide 0);
+		Assert.assertEquals(sum, metric.getSum(), 0);
 		Assert.assertEquals(mean, metric.get(DataType.mean), 0);
+		Assert.assertEquals(mean, metric.getMean(), 0);//test accesseur rapide
 		Assert.assertEquals(min, metric.get(DataType.min), 0);
 		Assert.assertEquals(max, metric.get(DataType.max), 0);
 	}

@@ -60,16 +60,6 @@ public final class Metric {
 	}
 
 	/**
-	 * @return Moyenne
-	 */
-	private double getMean() {
-		if (count > 0) {
-			return sum / count;
-		}
-		return Double.NaN;
-	}
-
-	/**
 	 * @return Ecart type
 	 */
 	private double getStandardDeviation() {
@@ -102,6 +92,24 @@ public final class Metric {
 			default:
 				throw new IllegalArgumentException("Fonction inconnue : " + dataType);
 		}
+	}
+
+	public long getCount() {
+		return count;
+	}
+
+	public double getSum() {
+		return sum;
+	}
+
+	/**
+	 * @return Moyenne
+	 */
+	public double getMean() {
+		if (count > 0) {
+			return sum / count;
+		}
+		return Double.NaN;
 	}
 
 	public String toString() {
