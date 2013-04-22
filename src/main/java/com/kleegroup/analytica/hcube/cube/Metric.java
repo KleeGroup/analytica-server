@@ -17,6 +17,8 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
+import java.util.Map;
+
 import kasper.kernel.util.Assertion;
 
 /**
@@ -40,9 +42,11 @@ public final class Metric {
 	private final double max;
 	private final double sum;
 	private final double sqrSum;
+	private final Map<Double, Long> clusteredValues;
 
-	public Metric(final MetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum) {
+	Metric(final MetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, Map<Double, Long> clusteredValues) {
 		Assertion.notNull(metricKey);
+		//Assertion.precondition(metricKey.isClustered() ^ clusteredValues != null, "la metric {0} cluster doit avoir des données clusterisées", metricKey);
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
 		this.count = count;
@@ -50,6 +54,8 @@ public final class Metric {
 		this.max = max;
 		this.sum = sum;
 		this.sqrSum = sqrSum;
+		//---------------------------------------------------------------------
+		this.clusteredValues = clusteredValues;
 	}
 
 	/**
@@ -112,7 +118,12 @@ public final class Metric {
 		return Double.NaN;
 	}
 
-	public String toString() {
-		return metricKey + "= {count:" + count + ", mean:" + getMean() + "}";
+	public Map<Double, Long> getClusteredValues() {
+		return clusteredValues;
 	}
+
+	public String toString() {
+		return metricKey + "= {count:" + count + ", mean:" + getMean() + (clusteredValues == null ? " " : ", clustered:" + clusteredValues) + "}";
+	}
+
 }

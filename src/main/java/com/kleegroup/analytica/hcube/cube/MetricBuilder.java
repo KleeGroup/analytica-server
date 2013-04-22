@@ -17,6 +17,10 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
@@ -43,6 +47,11 @@ public final class MetricBuilder implements Builder<Metric> {
 		Assertion.notNull(metricKey);
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
+		if (metricKey.isClustered()) {
+			clusteredValues = new HashMap<Double, Long>();
+		} else {
+			clusteredValues = null;
+		}
 	}
 
 	/**
@@ -56,6 +65,9 @@ public final class MetricBuilder implements Builder<Metric> {
 		min = min(min, value);
 		sum += value;
 		sqrSum += value * value;
+		if (metricKey.isClustered()) {
+			clusterValue(value);
+		}
 		return this;
 	}
 
@@ -67,12 +79,19 @@ public final class MetricBuilder implements Builder<Metric> {
 	public MetricBuilder withMetric(final Metric metric) {
 		Assertion.notNull(metric);
 		Assertion.precondition(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
+		Assertion.precondition(metricKey.isClustered() ^ !metric.getKey().isClustered(), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
 		//---------------------------------------------------------------------
 		count += metric.get(DataType.count);
 		max = max(max, metric.get(DataType.max));
 		min = min(min, metric.get(DataType.min));
 		sum += metric.get(DataType.sum);
 		sqrSum += metric.get(DataType.sqrSum);
+		//---------------------------------------------------------------------
+		if (metricKey.isClustered()) {
+			for (Entry<Double, Long> entry : metric.getClusteredValues().entrySet()) {
+				incTreshold(entry.getKey(), entry.getValue());
+			}
+		}
 		return this;
 	}
 
@@ -83,7 +102,7 @@ public final class MetricBuilder implements Builder<Metric> {
 	public Metric build() {
 		Assertion.precondition(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
 		//---------------------------------------------------------------------
-		return new Metric(metricKey, count, min, max, sum, sqrSum);
+		return new Metric(metricKey, count, min, max, sum, sqrSum, clusteredValues);
 	}
 
 	private static double max(double d1, double d2) {
@@ -92,5 +111,35 @@ public final class MetricBuilder implements Builder<Metric> {
 
 	private static double min(double d1, double d2) {
 		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : Math.min(d1, d2);
+	}
+
+	//-----------------------------------------------------------------------------------
+	//---------------------------Cluster-------------------------------------------------
+	//-----------------------------------------------------------------------------------
+	private final Map<Double, Long> clusteredValues;
+
+	private void incTreshold(final double treshold, long incBy) {
+		Long count = clusteredValues.get(treshold);
+		clusteredValues.put(treshold, incBy + (count == null ? 0 : count));
+		//---
+	}
+
+	private void clusterValue(final double value) {
+		//On crée une répartion : 1, 2, 5 - 10, 20, 50 - 100, 200, 500...
+		if (value <= 0) {
+			incTreshold(0, 1);
+		} else {
+			double index = Math.floor(Math.log10(value));
+			double treshold = Math.pow(10, index);
+			if (value <= treshold) {
+				incTreshold(treshold, 1);
+			} else if (value <= 2 * treshold) {
+				incTreshold(2 * treshold, 1);
+			} else if (value <= 5 * treshold) {
+				incTreshold(5 * treshold, 1);
+			} else {
+				incTreshold(10 * treshold, 1);
+			}
+		}
 	}
 }

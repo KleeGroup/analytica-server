@@ -53,8 +53,9 @@ import com.kleegroup.analytica.hcube.result.HResult;
  * @version $Id: ServerManagerMemoryTest.java,v 1.2 2012/03/22 18:33:04 pchretien Exp $
  */
 public final class HCubeManagerTest extends AbstractTestCaseJU4 {
-	private static final MetricKey MONTANT = new MetricKey("MONTANT");
-	private static final MetricKey POIDS = new MetricKey("POIDS");
+	private static final MetricKey MONTANT = new MetricKey("MONTANT", false);
+	private static final MetricKey POIDS = new MetricKey("POIDS", false);
+	private static final MetricKey DURATION = new MetricKey(KProcess.DURATION, true);
 
 	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
@@ -195,7 +196,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, nbSelect, price * nbSelect, price, price, price);
 		//Durée	
-		Metric durationMetric = cubes.get(0).getMetric(new MetricKey(KProcess.DURATION));
+		Metric durationMetric = cubes.get(0).getMetric(DURATION);
 		assertMetricEquals(durationMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 		//---------------------------------------------------------------------
 		final Query hourQuery = new QueryBuilder()//
@@ -218,13 +219,12 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 
 		cubes = hcubeManager.execute(dayServiceslQuery).getCubes();
-		System.out.println(">>>services::" + cubes);
 		Assert.assertEquals(1, cubes.size());
 		//Vérification de la durée du process principal
-		durationMetric = cubes.get(0).getMetric(new MetricKey(KProcess.DURATION));
+		durationMetric = cubes.get(0).getMetric(DURATION);
 		assertMetricEquals(durationMetric, 1, 2000, 2000, 2000, 2000);
 		//Vérification de la durée des sous-process 
-		Metric sqlMetric = cubes.get(0).getMetric(new MetricKey(PROCESS_SQL));
+		Metric sqlMetric = cubes.get(0).getMetric(new MetricKey(PROCESS_SQL, true));
 		assertMetricEquals(sqlMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 	}
 
@@ -358,5 +358,58 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 		assertMetricEquals(hresult.getMetric(POIDS), 2, 120, 60, 50, 70);
 		assertMetricEquals(hresult.getMetric(MONTANT), 2, price * 4, price * 2, price, price * 3);
+	}
+
+	private KProcess createSqlProcess(int duration) {
+		return new KProcessBuilder(date, duration, PROCESS_SQL, "select article")//
+				.incMeasure(MONTANT.id(), price)//
+				.build();
+	}
+
+	@Test
+	public void testClusteredValuesProcess() {
+		hcubeManager.push(createSqlProcess(0)); //<=0
+		hcubeManager.push(createSqlProcess(1)); //<=1
+		hcubeManager.push(createSqlProcess(2)); //<=2
+		hcubeManager.push(createSqlProcess(3)); //<=5
+		hcubeManager.push(createSqlProcess(4)); //<=5
+		hcubeManager.push(createSqlProcess(5)); //<=5
+		hcubeManager.push(createSqlProcess(8)); //<=10
+		hcubeManager.push(createSqlProcess(9)); //<=10
+		hcubeManager.push(createSqlProcess(17)); //<=20
+		hcubeManager.push(createSqlProcess(18)); //<=20
+		hcubeManager.push(createSqlProcess(26)); //<=50
+		hcubeManager.push(createSqlProcess(63)); //<=100
+		hcubeManager.push(createSqlProcess(73)); //<=100
+		hcubeManager.push(createSqlProcess(83)); //<=100
+		hcubeManager.push(createSqlProcess(100)); //<=100
+		hcubeManager.push(createSqlProcess(99)); //<=100
+		hcubeManager.push(createSqlProcess(486)); //<=500
+		hcubeManager.push(createSqlProcess(15623)); //<=20000
+
+		final Query daySqlQuery = new QueryBuilder()//
+				.on(TimeDimension.Day)//
+				.from(date)//
+				.to(date)//
+				.with("SQL")//
+				.build();
+
+		List<Cube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		Assert.assertEquals(1, cubes.size());
+		//
+		Metric montantMetric = cubes.get(0).getMetric(MONTANT);
+		assertMetricEquals(montantMetric, 18, price * 18, price, price, price);
+
+		Metric durationMetric = cubes.get(0).getMetric(DURATION);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(0d), 0);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(1d), 1);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(2d), 1);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(5d), 3);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(10d), 2);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(20d), 3);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(50d), 1);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(100d), 5);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(500d), 1);
+		Assert.assertEquals(1, durationMetric.getClusteredValues().get(20000d), 1);
 	}
 }

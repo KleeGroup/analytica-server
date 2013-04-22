@@ -8,7 +8,15 @@ import com.kleegroup.analytica.hcube.HKey;
  * @version $Id: Metric.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class MetricKey extends HKey {
-	public MetricKey(String name) {
+	private final boolean clustered;
+
+	public MetricKey(String name, boolean clustered) {
 		super(name);
+		this.clustered = clustered;
 	}
+
+	public boolean isClustered() {
+		return clustered;
+	}
+
 }
