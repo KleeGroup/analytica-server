@@ -9,12 +9,12 @@ import java.util.Map.Entry;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.cube.Cube;
-import com.kleegroup.analytica.hcube.cube.Metric;
-import com.kleegroup.analytica.hcube.cube.MetricBuilder;
-import com.kleegroup.analytica.hcube.cube.MetricKey;
-import com.kleegroup.analytica.hcube.cube.VirtualCube;
-import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.cube.HCube;
+import com.kleegroup.analytica.hcube.cube.HMetric;
+import com.kleegroup.analytica.hcube.cube.HMetricBuilder;
+import com.kleegroup.analytica.hcube.cube.HMetricKey;
+import com.kleegroup.analytica.hcube.cube.HVirtualCube;
+import com.kleegroup.analytica.hcube.query.HQuery;
 
 /**
  * Résultat d'une requête.
@@ -23,12 +23,12 @@ import com.kleegroup.analytica.hcube.query.Query;
  * @author pchretien, npiedeloup
  * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
-public final class HResult implements VirtualCube {
-	private final Query query;
-	private final List<Cube> cubes;
-	private Map<MetricKey, Metric> metrics; //lazy
+public final class HResult implements HVirtualCube {
+	private final HQuery query;
+	private final List<HCube> cubes;
+	private Map<HMetricKey, HMetric> metrics; //lazy
 
-	public HResult(final Query query, final List<Cube> cubes) {
+	public HResult(final HQuery query, final List<HCube> cubes) {
 		Assertion.notNull(query);
 		Assertion.notNull(cubes);
 		//---------------------------------------------------------------------
@@ -36,30 +36,30 @@ public final class HResult implements VirtualCube {
 		this.cubes = cubes;
 	}
 
-	public Query getQuery() {
+	public HQuery getQuery() {
 		return query;
 	}
 
-	public List<Cube> getCubes() {
+	public List<HCube> getCubes() {
 		return Collections.unmodifiableList(cubes);
 	}
 
 	//-------------------------------------------------------------------------
-	private Map<MetricKey, Metric> getLazyMetrics() {
+	private Map<HMetricKey, HMetric> getLazyMetrics() {
 		if (metrics == null) {
-			Map<MetricKey, MetricBuilder> metricBuilders = new HashMap<MetricKey, MetricBuilder>();
-			for (Cube cube : cubes) {
-				for (Metric metric : cube.getMetrics()) {
-					MetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
+			Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<HMetricKey, HMetricBuilder>();
+			for (HCube cube : cubes) {
+				for (HMetric metric : cube.getMetrics()) {
+					HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
 					if (metricBuilder == null) {
-						metricBuilder = new MetricBuilder(metric.getKey());
+						metricBuilder = new HMetricBuilder(metric.getKey());
 						metricBuilders.put(metric.getKey(), metricBuilder);
 					}
 					metricBuilder.withMetric(metric);
 				}
 			}
-			metrics = new HashMap<MetricKey, Metric>();
-			for (Entry<MetricKey, MetricBuilder> entry : metricBuilders.entrySet()) {
+			metrics = new HashMap<HMetricKey, HMetric>();
+			for (Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
 				metrics.put(entry.getKey(), entry.getValue().build());
 			}
 		}
@@ -67,14 +67,14 @@ public final class HResult implements VirtualCube {
 	}
 
 	/** {@inheritDoc} */
-	public Metric getMetric(final MetricKey metricKey) {
+	public HMetric getMetric(final HMetricKey metricKey) {
 		Assertion.notNull(metricKey);
 		//---------------------------------------------------------------------
 		return getLazyMetrics().get(metricKey);
 	}
 
 	/** {@inheritDoc} */
-	public Collection<Metric> getMetrics() {
+	public Collection<HMetric> getMetrics() {
 		return getLazyMetrics().values();
 	}
 }

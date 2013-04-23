@@ -4,37 +4,37 @@ import java.util.List;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.TimePosition;
-import com.kleegroup.analytica.hcube.dimension.WhatPosition;
+import com.kleegroup.analytica.hcube.dimension.HTimePosition;
+import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
  * Cette requête doit être construite avec QueryBuilder.
  * @author npiedeloup, pchretien
  */
-public final class Query {
-	private final TimeSelection timeSelection;
-	private final WhatPosition whatPosition;
+public final class HQuery {
+	private final HTimeSelection timeSelection;
+	private final HCategoryPosition categoryPosition;
 
-	Query(TimeSelection timeSelection, WhatPosition whatPosition) {
+	HQuery(HTimeSelection timeSelection, HCategoryPosition categoryPosition) {
 		Assertion.notNull(timeSelection);
-		Assertion.notNull(whatPosition);
+		Assertion.notNull(categoryPosition);
 		//---------------------------------------------------------------------
 		this.timeSelection = timeSelection;
-		this.whatPosition = whatPosition;
+		this.categoryPosition = categoryPosition;
 	}
 
 	//-----------------------What----------------------------------------------
-	public WhatPosition getWhatPosition() {
-		return whatPosition;
+	public HCategoryPosition getCategoryPosition() {
+		return categoryPosition;
 	}
 
 	//-----------------------When----------------------------------------------
-	public List<TimePosition> getAllTimePositions() {
+	public List<HTimePosition> getAllTimePositions() {
 		return timeSelection.getAllTimePositions();
 	}
 
 	public String toString() {
-		return ("query : {" + timeSelection + " with:" + getWhatPosition() + "}");
+		return ("query : {" + timeSelection + " with:" + getCategoryPosition() + "}");
 	}
 }

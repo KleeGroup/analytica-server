@@ -31,7 +31,7 @@ import kasper.kernel.lang.Activeable;
 
 import com.google.gson.Gson;
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.cube.Cube;
+import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analyticaimpl.server.ProcessEncoderPlugin;
 import com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin;
 
@@ -56,7 +56,7 @@ public final class StackProcessEncoderPlugin implements ProcessEncoderPlugin, Ac
 	}
 
 	/** {@inheritDoc} */
-	public List<Cube> encode(final KProcess process) {
+	public List<HCube> encode(final KProcess process) {
 		processQueue.add(process);
 		return standardProcessEncoderPlugin.encode(process);
 	}

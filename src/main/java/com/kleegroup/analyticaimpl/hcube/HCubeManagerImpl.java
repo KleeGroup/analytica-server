@@ -25,8 +25,8 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
-import com.kleegroup.analytica.hcube.cube.Cube;
-import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.cube.HCube;
+import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
@@ -51,14 +51,14 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	/** {@inheritDoc} */
 	public void push(final KProcess process) {
-		List<Cube> cubes = processEncoder.encode(process);
-		for (Cube cube : cubes) {
+		List<HCube> cubes = processEncoder.encode(process);
+		for (HCube cube : cubes) {
 			cubeStorePlugin.merge(cube);
 		}
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(Query query) {
+	public HResult execute(HQuery query) {
 		return new HResult(query, cubeStorePlugin.findAll(query));
 	}
 }

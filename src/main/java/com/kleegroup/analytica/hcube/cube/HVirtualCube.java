@@ -29,19 +29,19 @@ import java.util.Collection;
  * @author npiedeloup, pchretien
  * @version $Id: Cube.java,v 1.6 2012/10/16 13:34:49 pchretien Exp $
  */
-public interface VirtualCube {
+public interface HVirtualCube {
 
 	/**
 	 * Accès d'une métrique par son nom
 	 * @param name Nom de la métrique
 	 * @return Métrique
 	 */
-	Metric getMetric(final MetricKey metricKey);
+	HMetric getMetric(final HMetricKey metricKey);
 
 	/**
 	 * Liste de toutes les métriques
 	 * @return Métriques du cube
 	 */
-	Collection<Metric> getMetrics();
+	Collection<HMetric> getMetrics();
 
 }

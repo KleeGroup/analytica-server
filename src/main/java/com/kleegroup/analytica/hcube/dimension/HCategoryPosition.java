@@ -31,33 +31,33 @@ import com.kleegroup.analytica.hcube.HKey;
  * @author npiedeloup, pchretien
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class WhatPosition extends HKey implements Position<WhatPosition> {
-	private final String type;
-	private final String[] what;
+public final class HCategoryPosition extends HKey implements HPosition<HCategoryPosition> {
+	private final String category;
+	private final String[] subCategory;
 
-	public WhatPosition(final String type, final String[] what) {
-		super(buildKey(type, what));
-		Assertion.notEmpty(type);
+	public HCategoryPosition(final String category, final String[] subCategory) {
+		super(buildKey(category, subCategory));
+		Assertion.notEmpty(category);
 		//---------------------------------------------------------------------
-		this.what = what;
-		this.type = type;
+		this.subCategory = subCategory;
+		this.category = category;
 	}
 
 	/** {@inheritDoc} */
-	public WhatPosition drillUp() {
-		if (what.length == 0) {
+	public HCategoryPosition drillUp() {
+		if (subCategory.length == 0) {
 			return null;
 		}
-		String[] redux = new String[what.length - 1];
-		for (int i = 0; i < what.length - 1; i++) {
-			redux[i] = what[i];
+		String[] redux = new String[subCategory.length - 1];
+		for (int i = 0; i < subCategory.length - 1; i++) {
+			redux[i] = subCategory[i];
 		}
-		return new WhatPosition(type, redux);
+		return new HCategoryPosition(category, redux);
 	}
 
-	private static String buildKey(String type, final String[] what) {
-		StringBuilder sb = new StringBuilder("what::").append(type);
-		for (String element : what) {
+	private static String buildKey(String type, final String[] subCategory) {
+		StringBuilder sb = new StringBuilder("subCategory::").append(type);
+		for (String element : subCategory) {
 			sb.append("/").append(element);
 		}
 		return sb.toString();

@@ -24,12 +24,12 @@ import java.util.Map;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.cube.Cube;
-import com.kleegroup.analytica.hcube.cube.CubeBuilder;
-import com.kleegroup.analytica.hcube.dimension.CubePosition;
-import com.kleegroup.analytica.hcube.dimension.TimePosition;
-import com.kleegroup.analytica.hcube.dimension.WhatPosition;
-import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.cube.HCube;
+import com.kleegroup.analytica.hcube.cube.HCubeBuilder;
+import com.kleegroup.analytica.hcube.dimension.HCubePosition;
+import com.kleegroup.analytica.hcube.dimension.HTimePosition;
+import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
+import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
 
 /**
@@ -39,7 +39,7 @@ import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
 final class MemoryCubeStorePlugin implements CubeStorePlugin {
-	private final Map<CubePosition, Cube> store = new HashMap<CubePosition, Cube>();
+	private final Map<HCubePosition, HCube> store = new HashMap<HCubePosition, HCube>();
 
 	/**
 	 * Constructeur.
@@ -49,21 +49,21 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized void merge(final Cube lowLevelCube) {
+	public synchronized void merge(final HCube lowLevelCube) {
 		Assertion.notNull(lowLevelCube);
 		//---------------------------------------------------------------------
-		for (CubePosition upCubePosition : lowLevelCube.getPosition().drillUp()) {
-			Cube cube = merge(lowLevelCube, upCubePosition);
+		for (HCubePosition upCubePosition : lowLevelCube.getPosition().drillUp()) {
+			HCube cube = merge(lowLevelCube, upCubePosition);
 			store.put(cube.getPosition(), cube);
 		}
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
-	private final Cube merge(final Cube cube, final CubePosition cubePosition) {
-		final CubeBuilder cubeBuilder = new CubeBuilder(cubePosition)//
+	private final HCube merge(final HCube cube, final HCubePosition cubePosition) {
+		final HCubeBuilder cubeBuilder = new HCubeBuilder(cubePosition)//
 				.withCube(cube);
 
-		final Cube oldCube = store.get(cubePosition);
+		final HCube oldCube = store.get(cubePosition);
 		if (oldCube != null) {
 			cubeBuilder.withCube(oldCube);
 		}
@@ -71,18 +71,18 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	//	/** {@inheritDoc} */
-	public synchronized List<Cube> findAll(Query query) {
+	public synchronized List<HCube> findAll(HQuery query) {
 		//On prépare les bornes de temps
-		final WhatPosition whatPosition = query.getWhatPosition();
+		final HCategoryPosition categoryPosition = query.getCategoryPosition();
 
 		//Sécurité pour éviter une boucle infinie
-		List<Cube> cubes = new ArrayList<Cube>();
+		List<HCube> cubes = new ArrayList<HCube>();
 
-		for (TimePosition currentTimePosition : query.getAllTimePositions()) {
-			CubePosition cubePosition = new CubePosition(currentTimePosition, whatPosition);
-			Cube cube = store.get(cubePosition);
+		for (HTimePosition currentTimePosition : query.getAllTimePositions()) {
+			HCubePosition cubePosition = new HCubePosition(currentTimePosition, categoryPosition);
+			HCube cube = store.get(cubePosition);
 			//---
-			cubes.add(cube == null ? new CubeBuilder(cubePosition).build() : cube);
+			cubes.add(cube == null ? new HCubeBuilder(cubePosition).build() : cube);
 			//---
 			currentTimePosition = currentTimePosition.next();
 		}
@@ -91,7 +91,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	public synchronized String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (Cube cube : store.values()) {
+		for (HCube cube : store.values()) {
 			sb.append(cube);
 			sb.append("\r\n");
 		}

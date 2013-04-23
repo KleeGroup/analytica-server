@@ -6,7 +6,7 @@ package com.kleegroup.analytica.hcube.dimension;
 
  * @author pchretien
  */
-interface Position<P extends Position<P>> {
+interface HPosition<P extends HPosition<P>> {
 	/**
 	 * @return Position dans la dimension de niveau supérieure, ou null si plus de niveau au dessus.
 	 */

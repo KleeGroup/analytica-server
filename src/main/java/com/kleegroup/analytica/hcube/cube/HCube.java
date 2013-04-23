@@ -23,7 +23,7 @@ import java.util.Map;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.CubePosition;
+import com.kleegroup.analytica.hcube.dimension.HCubePosition;
 
 /**
  * Un cube contient :
@@ -35,38 +35,38 @@ import com.kleegroup.analytica.hcube.dimension.CubePosition;
  * @author npiedeloup, pchretien
  * @version $Id: Cube.java,v 1.6 2012/10/16 13:34:49 pchretien Exp $
  */
-public final class Cube implements VirtualCube {
+public final class HCube implements HVirtualCube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
-	private final CubePosition cubePosition;
-	private final Map<MetricKey, Metric> metrics;
+	private final HCubePosition cubePosition;
+	private final Map<HMetricKey, HMetric> metrics;
 
-	Cube(final CubePosition cubePosition, final Collection<Metric> metrics) {
+	HCube(final HCubePosition cubePosition, final Collection<HMetric> metrics) {
 		Assertion.notNull(cubePosition);
 		Assertion.notNull(metrics);
 		//---------------------------------------------------------------------
 		this.cubePosition = cubePosition;
-		this.metrics = new LinkedHashMap<MetricKey, Metric>(metrics.size());
-		for (final Metric metric : metrics) {
+		this.metrics = new LinkedHashMap<HMetricKey, HMetric>(metrics.size());
+		for (final HMetric metric : metrics) {
 			final Object old = this.metrics.put(metric.getKey(), metric);
 			Assertion.isNull(old, "La liste de Metric ne doit pas contenir de doublon");
 		}
 	}
 
-	public CubePosition getPosition() {
+	public HCubePosition getPosition() {
 		return cubePosition;
 	}
 
 	/** {@inheritDoc} */
-	public Metric getMetric(final MetricKey metricKey) {
+	public HMetric getMetric(final HMetricKey metricKey) {
 		Assertion.notNull(metricKey);
 		//---------------------------------------------------------------------
 		return metrics.get(metricKey);
 	}
 
 	/** {@inheritDoc} */
-	public Collection<Metric> getMetrics() {
+	public Collection<HMetric> getMetrics() {
 		return metrics.values();
 	}
 
@@ -74,7 +74,7 @@ public final class Cube implements VirtualCube {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
 				.append(cubePosition.id()).append("\n\tmetrics:{");
-		for (final Metric metric : getMetrics()) {
+		for (final HMetric metric : getMetrics()) {
 			sb.append("\n\t\t ").append(metric);
 		}
 		if (!getMetrics().isEmpty()) {

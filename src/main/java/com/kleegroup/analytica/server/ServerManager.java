@@ -20,7 +20,7 @@ package com.kleegroup.analytica.server;
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
@@ -44,10 +44,10 @@ public interface ServerManager extends Manager {
 	//	 */
 	//	int store50NextProcessesAsCube();
 
-	HResult execute(Query query);
+	HResult execute(HQuery query);
 	//
 	//	/**
-	//	 * Fournit une liste de metric agreggée sur des dates et des what.
+	//	 * Fournit une liste de metric agreggée sur des dates et des categories.
 	//	 * @param query  Requête précisant les selections a aggréger avant resultat
 	//	 * @return Liste de métric pour l'ensemble des WhatPosition sur l'interval de date
 	//	 */
@@ -56,14 +56,14 @@ public interface ServerManager extends Manager {
 	//	/**
 	//	 * Fournit une liste de données sur un interval de date, en ASSEMBLANT les WhatPosition récupérés (par exemple un essemble cohérent de What).
 	//	 * @param query  Requête précisant les selections
-	//	 * @return Liste de valeur par métric pour l'ensemble des WhatPosition et par date (permet des courbes de metrics entre deux dates pour un ensemble de what)
+	//	 * @return Liste de valeur par métric pour l'ensemble des WhatPosition et par date (permet des courbes de metrics entre deux dates pour un ensemble de Categories)
 	//	 */
 	//	List<DataSet<Date, ?>> getDataTimeLine(final Query query);
 	//
 	//	/**
-	//	 * Fournit une liste de données sur un ensemble de what, en ASSEMBLANT les TimePosition récupérés (par exemple 30 jours glissant).
+	//	 * Fournit une liste de données sur un ensemble de Categories, en ASSEMBLANT les TimePosition récupérés (par exemple 30 jours glissant).
 	//	 * @param query  Requête précisant les selections
-	//	 * @return Liste de valeur par métric pour l'ensemble des TimePosition et par what (permet des courbes de metrics entre deux what sur une période)
+	//	 * @return Liste de valeur par métric pour l'ensemble des TimePosition et par Categories(permet des courbes de metrics entre deux categories sur une période)
 	//	 */
 	//	List<DataSet<String, ?>> getDataWhatLine(final Query query);
 

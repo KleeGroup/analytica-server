@@ -31,23 +31,23 @@ import com.kleegroup.analytica.hcube.HKey;
  * @author npiedeloup, pchretien
  * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class CubePosition extends HKey {
-	private final TimePosition timePosition;
-	private final WhatPosition whatPosition;
+public final class HCubePosition extends HKey {
+	private final HTimePosition timePosition;
+	private final HCategoryPosition categoryPosition;
 
-	public CubePosition(final TimePosition timePosition, final WhatPosition whatPosition) {
-		super("cube:" + timePosition.id() + "; " + whatPosition.id());
+	public HCubePosition(final HTimePosition timePosition, final HCategoryPosition categoryPosition) {
+		super("cube:" + timePosition.id() + "; " + categoryPosition.id());
 		//---------------------------------------------------------------------
 		this.timePosition = timePosition;
-		this.whatPosition = whatPosition;
+		this.categoryPosition = categoryPosition;
 	}
 
-	public TimePosition getTimePosition() {
+	public HTimePosition getTimePosition() {
 		return timePosition;
 	}
 
-	public WhatPosition getWhatPosition() {
-		return whatPosition;
+	public HCategoryPosition getCategoryPosition() {
+		return categoryPosition;
 	}
 
 	/**
@@ -55,16 +55,16 @@ public final class CubePosition extends HKey {
 	 * Cette méthode permet de préparer toutes les agrégations.
 	 * @return Liste de tous les cubes auxquels le présent cube appartient
 	 */
-	public List<CubePosition> drillUp() {
-		List<CubePosition> upperCubePositions = new ArrayList<CubePosition>();
+	public List<HCubePosition> drillUp() {
+		List<HCubePosition> upperCubePositions = new ArrayList<HCubePosition>();
 		//on remonte les axes, le premier sera le plus bas niveau
-		TimePosition timePosition = getTimePosition();
+		HTimePosition timePosition = getTimePosition();
 		while (timePosition != null) {
-			WhatPosition whatPosition = getWhatPosition();
-			while (whatPosition != null) {
-				upperCubePositions.add(new CubePosition(timePosition, whatPosition));
-				//On remonte what
-				whatPosition = whatPosition.drillUp();
+			HCategoryPosition categoryPosition = getCategoryPosition();
+			while (categoryPosition != null) {
+				upperCubePositions.add(new HCubePosition(timePosition, categoryPosition));
+				//On remonte l'arbre des categories
+				categoryPosition = categoryPosition.drillUp();
 			}
 			//On remonte time
 			timePosition = timePosition.drillUp();
@@ -77,11 +77,11 @@ public final class CubePosition extends HKey {
 	 * @param cubePosition Clé dont on veut vérifier l'inclusion
 	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
 	 */
-	public boolean contains(final CubePosition cubePosition) {
+	public boolean contains(final HCubePosition cubePosition) {
 		if (this.equals(cubePosition)) {
 			return true;
 		}
-		return contains(timePosition, cubePosition.timePosition) && contains(whatPosition, cubePosition.whatPosition);
+		return contains(timePosition, cubePosition.timePosition) && contains(categoryPosition, cubePosition.categoryPosition);
 	}
 
 	/**
@@ -92,12 +92,12 @@ public final class CubePosition extends HKey {
 	 * @param otherPosition
 	 * @return
 	 */
-	private static boolean contains(final Position position, final Position otherPosition) {
+	private static boolean contains(final HPosition position, final HPosition otherPosition) {
 		//On vérifie que l'autre position est contenue dans la première
 		//========[----position-----]====
 		//=============[other]===========
 		//pour ce faire on remonte les positions jusqu'à les faire coincider.
-		Position upperPosition = otherPosition;
+		HPosition upperPosition = otherPosition;
 		while (upperPosition != null) {
 			if (position.equals(upperPosition)) {
 				return true;

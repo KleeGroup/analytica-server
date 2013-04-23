@@ -24,8 +24,8 @@ import java.util.List;
 import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.TimePosition;
+import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
+import com.kleegroup.analytica.hcube.dimension.HTimePosition;
 
 /**
  * Selection temporelle permettant de définir un ensemble de positions sur un niveau temporel donné.
@@ -34,20 +34,20 @@ import com.kleegroup.analytica.hcube.dimension.TimePosition;
  *  - toutes les années de 1914 à 1918 
  * @author npiedeloup, pchretien
  */
-final class TimeSelection {
-	private final TimePosition minTimePosition;
-	private final TimePosition maxTimePosition;
+final class HTimeSelection {
+	private final HTimePosition minTimePosition;
+	private final HTimePosition maxTimePosition;
 
 	//	private final TimeDimension dimension;
 
-	TimeSelection(final TimeDimension dimension, final Date minDate, final Date maxDate) {
+	HTimeSelection(final HTimeDimension dimension, final Date minDate, final Date maxDate) {
 		Assertion.notNull(minDate);
 		Assertion.notNull(maxDate);
 		Assertion.precondition(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
 		Assertion.notNull(dimension);
 		//---------------------------------------------------------------------
-		this.minTimePosition = new TimePosition(minDate, dimension);
-		this.maxTimePosition = new TimePosition(maxDate, dimension);
+		this.minTimePosition = new HTimePosition(minDate, dimension);
+		this.maxTimePosition = new HTimePosition(maxDate, dimension);
 		//	this.dimension = dimension;
 	}
 
@@ -63,11 +63,11 @@ final class TimeSelection {
 	//		return maxTimePosition;
 	//	}
 
-	List<TimePosition> getAllTimePositions() {
-		List<TimePosition> timePositions = new ArrayList<TimePosition>();
+	List<HTimePosition> getAllTimePositions() {
+		List<HTimePosition> timePositions = new ArrayList<HTimePosition>();
 		//On prépare les bornes de temps
 		int loops = 0;
-		TimePosition currentTimePosition = minTimePosition;
+		HTimePosition currentTimePosition = minTimePosition;
 		do {
 			timePositions.add(currentTimePosition);
 			//---------------

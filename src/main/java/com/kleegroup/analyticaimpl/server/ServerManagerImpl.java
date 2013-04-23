@@ -23,7 +23,7 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
-import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
 
@@ -56,7 +56,7 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 		hcubeManager.push(process);
 	}
 
-	public HResult execute(Query query) {
+	public HResult execute(HQuery query) {
 		return hcubeManager.execute(query);
 	}
 }

@@ -31,8 +31,8 @@ import kasper.kernel.util.Assertion;
  * @author npiedeloup
  * @version $Id: MetricBuilder.java,v 1.3 2012/10/16 12:53:40 pchretien Exp $
  */
-public final class MetricBuilder implements Builder<Metric> {
-	private final MetricKey metricKey;
+public final class HMetricBuilder implements Builder<HMetric> {
+	private final HMetricKey metricKey;
 	private long count = 0;
 	private double min = Double.NaN; //Par défaut pas de min
 	private double max = Double.NaN; //Par défaut pas de max
@@ -43,7 +43,7 @@ public final class MetricBuilder implements Builder<Metric> {
 	 * Constructeur.
 	 * @param metricName Nom de la metric
 	 */
-	public MetricBuilder(final MetricKey metricKey) {
+	public HMetricBuilder(final HMetricKey metricKey) {
 		Assertion.notNull(metricKey);
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
@@ -59,7 +59,7 @@ public final class MetricBuilder implements Builder<Metric> {
 	 * @param value Value to add 
 	 * @return MetricBuilder builder
 	 */
-	public MetricBuilder withValue(final double value) {
+	public HMetricBuilder withValue(final double value) {
 		count++;
 		max = max(max, value);
 		min = min(min, value);
@@ -76,16 +76,16 @@ public final class MetricBuilder implements Builder<Metric> {
 	 * @param metric Metric
 	 * @return MetricBuilder builder
 	 */
-	public MetricBuilder withMetric(final Metric metric) {
+	public HMetricBuilder withMetric(final HMetric metric) {
 		Assertion.notNull(metric);
 		Assertion.precondition(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
 		Assertion.precondition(metricKey.isClustered() ^ !metric.getKey().isClustered(), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
 		//---------------------------------------------------------------------
-		count += metric.get(DataType.count);
-		max = max(max, metric.get(DataType.max));
-		min = min(min, metric.get(DataType.min));
-		sum += metric.get(DataType.sum);
-		sqrSum += metric.get(DataType.sqrSum);
+		count += metric.get(HCounterType.count);
+		max = max(max, metric.get(HCounterType.max));
+		min = min(min, metric.get(HCounterType.min));
+		sum += metric.get(HCounterType.sum);
+		sqrSum += metric.get(HCounterType.sqrSum);
 		//---------------------------------------------------------------------
 		if (metricKey.isClustered()) {
 			for (Entry<Double, Long> entry : metric.getClusteredValues().entrySet()) {
@@ -99,10 +99,10 @@ public final class MetricBuilder implements Builder<Metric> {
 	 * Construction de la Metric du cube.
 	 * @return Metric du cube
 	 */
-	public Metric build() {
+	public HMetric build() {
 		Assertion.precondition(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
 		//---------------------------------------------------------------------
-		return new Metric(metricKey, count, min, max, sum, sqrSum, clusteredValues);
+		return new HMetric(metricKey, count, min, max, sum, sqrSum, clusteredValues);
 	}
 
 	private static double max(double d1, double d2) {

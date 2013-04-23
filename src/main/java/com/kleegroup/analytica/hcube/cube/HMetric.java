@@ -34,8 +34,8 @@ import kasper.kernel.util.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: Metric.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
-public final class Metric {
-	private final MetricKey metricKey;
+public final class HMetric {
+	private final HMetricKey metricKey;
 
 	private final long count;
 	private final double min;
@@ -44,7 +44,7 @@ public final class Metric {
 	private final double sqrSum;
 	private final Map<Double, Long> clusteredValues;
 
-	Metric(final MetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, Map<Double, Long> clusteredValues) {
+	HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, Map<Double, Long> clusteredValues) {
 		Assertion.notNull(metricKey);
 		//Assertion.precondition(metricKey.isClustered() ^ clusteredValues != null, "la metric {0} cluster doit avoir des données clusterisées", metricKey);
 		//---------------------------------------------------------------------
@@ -61,7 +61,7 @@ public final class Metric {
 	/**
 	 * @return Nom de metric
 	 */
-	public MetricKey getKey() {
+	public HMetricKey getKey() {
 		return metricKey;
 	}
 
@@ -77,7 +77,7 @@ public final class Metric {
 		return Double.NaN;
 	}
 
-	public double get(final DataType dataType) {
+	public double get(final HCounterType dataType) {
 		Assertion.notNull(dataType);
 		//---------------------------------------------------------------------
 		switch (dataType) {

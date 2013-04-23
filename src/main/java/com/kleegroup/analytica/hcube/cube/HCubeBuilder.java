@@ -25,7 +25,7 @@ import java.util.Map;
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.CubePosition;
+import com.kleegroup.analytica.hcube.dimension.HCubePosition;
 
 /**
  * Builder permettant de contruire un cube.
@@ -33,15 +33,15 @@ import com.kleegroup.analytica.hcube.dimension.CubePosition;
  * @author npiedeloup, pchretien
  * @version $Id: CubeBuilder.java,v 1.6 2012/11/08 17:06:41 pchretien Exp $
  */
-public final class CubeBuilder implements Builder<Cube> {
-	private final CubePosition cubePosition;
-	private final Map<MetricKey, MetricBuilder> metrics = new HashMap<MetricKey, MetricBuilder>();
+public final class HCubeBuilder implements Builder<HCube> {
+	private final HCubePosition cubePosition;
+	private final Map<HMetricKey, HMetricBuilder> metrics = new HashMap<HMetricKey, HMetricBuilder>();
 
 	/**
 	 * Constructeur.
 	 * @param cubeKey Identifiant du cube
 	 */
-	public CubeBuilder(CubePosition cubePosition) {
+	public HCubeBuilder(HCubePosition cubePosition) {
 		Assertion.notNull(cubePosition);
 		//---------------------------------------------------------------------
 		this.cubePosition = cubePosition;
@@ -51,12 +51,12 @@ public final class CubeBuilder implements Builder<Cube> {
 	 * Ajout d'une metric. 
 	 * @param metric Metric
 	 */
-	public CubeBuilder withMetric(final Metric metric) {
+	public HCubeBuilder withMetric(final HMetric metric) {
 		Assertion.notNull(metric);
 		//---------------------------------------------------------------------
-		MetricBuilder metricBuilder = metrics.get(metric.getKey());
+		HMetricBuilder metricBuilder = metrics.get(metric.getKey());
 		if (metricBuilder == null) {
-			metricBuilder = new MetricBuilder(metric.getKey());
+			metricBuilder = new HMetricBuilder(metric.getKey());
 			metrics.put(metric.getKey(), metricBuilder);
 		}
 		//On ajoute metric
@@ -68,12 +68,12 @@ public final class CubeBuilder implements Builder<Cube> {
 	 * Ajout d'un cube. 
 	 * @param cube Cube
 	 */
-	public CubeBuilder withCube(final Cube cube) {
+	public HCubeBuilder withCube(final HCube cube) {
 		Assertion.notNull(cube);
 		//Assertion util mais 50% des perfs !!
 		Assertion.precondition(cubePosition.contains(cube.getPosition()), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubePosition, cube.getPosition());
 		//---------------------------------------------------------------------
-		for (final Metric metric : cube.getMetrics()) {
+		for (final HMetric metric : cube.getMetrics()) {
 			withMetric(metric);
 		}
 		return this;
@@ -83,12 +83,12 @@ public final class CubeBuilder implements Builder<Cube> {
 	 * Construction du Cube.
 	 * @return cube
 	 */
-	public Cube build() {
+	public HCube build() {
 		//---------------------------------------------------------------------
-		final List<Metric> list = new ArrayList<Metric>(metrics.size());
-		for (final MetricBuilder metricBuilder : metrics.values()) {
+		final List<HMetric> list = new ArrayList<HMetric>(metrics.size());
+		for (final HMetricBuilder metricBuilder : metrics.values()) {
 			list.add(metricBuilder.build());
 		}
-		return new Cube(cubePosition, list);
+		return new HCube(cubePosition, list);
 	}
 }

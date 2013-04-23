@@ -29,11 +29,11 @@ import com.kleegroup.analytica.hcube.HKey;
  * @author npiedeloup
  * @version $Id: TimePosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class TimePosition extends HKey implements Position<TimePosition> {
-	private final TimeDimension dimension;
+public final class HTimePosition extends HKey implements HPosition<HTimePosition> {
+	private final HTimeDimension dimension;
 	private final Date date;
 
-	public TimePosition(final Date date, final TimeDimension timeDimension) {
+	public HTimePosition(final Date date, final HTimeDimension timeDimension) {
 		super("time:[" + timeDimension.name() + "]" + new SimpleDateFormat(timeDimension.getPattern()).format(date));
 		//---------------------------------------------------------------------
 		this.dimension = timeDimension;
@@ -41,13 +41,13 @@ public final class TimePosition extends HKey implements Position<TimePosition> {
 	}
 
 	/** {@inheritDoc} */
-	public TimePosition drillUp() {
-		final TimeDimension upTimeDimension = dimension.drillUp();
-		return upTimeDimension != null ? new TimePosition(date, upTimeDimension) : null;
+	public HTimePosition drillUp() {
+		final HTimeDimension upTimeDimension = dimension.drillUp();
+		return upTimeDimension != null ? new HTimePosition(date, upTimeDimension) : null;
 	}
 
 	/** {@inheritDoc} */
-	public TimeDimension getDimension() {
+	public HTimeDimension getDimension() {
 		return dimension;
 	}
 
@@ -55,7 +55,7 @@ public final class TimePosition extends HKey implements Position<TimePosition> {
 		return date;
 	}
 
-	public TimePosition next() {
+	public HTimePosition next() {
 		final Date nextDate;
 		switch (dimension) {
 			case Year:
@@ -76,6 +76,6 @@ public final class TimePosition extends HKey implements Position<TimePosition> {
 			default:
 				throw new KRuntimeException("TimeDimension inconnu");
 		}
-		return new TimePosition(nextDate, dimension);
+		return new HTimePosition(nextDate, dimension);
 	}
 }

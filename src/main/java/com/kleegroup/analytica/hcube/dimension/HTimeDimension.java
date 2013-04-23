@@ -29,7 +29,7 @@ import kasper.kernel.util.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: TimeDimension.java,v 1.3 2012/10/16 16:25:22 pchretien Exp $
  */
-public enum TimeDimension {
+public enum HTimeDimension {
 	/** 
 	 * Année.
 	 */
@@ -51,20 +51,20 @@ public enum TimeDimension {
 	 */
 	Minute(Hour);
 
-	private final TimeDimension up;
+	private final HTimeDimension up;
 
 	/**
 	 * Constructeur.
 	 * @param up Niveau supérieur
 	 */
-	TimeDimension(final TimeDimension up) {
+	HTimeDimension(final HTimeDimension up) {
 		this.up = up;
 	}
 
 	/**
 	 * @return Niveau supérieur ou null.
 	 */
-	public TimeDimension drillUp() {
+	public HTimeDimension drillUp() {
 		return up;
 	}
 

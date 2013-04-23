@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.cube.Cube;
-import com.kleegroup.analytica.hcube.cube.CubeBuilder;
-import com.kleegroup.analytica.hcube.cube.MetricBuilder;
-import com.kleegroup.analytica.hcube.cube.MetricKey;
-import com.kleegroup.analytica.hcube.dimension.CubePosition;
-import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.TimePosition;
-import com.kleegroup.analytica.hcube.dimension.WhatPosition;
+import com.kleegroup.analytica.hcube.cube.HCube;
+import com.kleegroup.analytica.hcube.cube.HCubeBuilder;
+import com.kleegroup.analytica.hcube.cube.HMetricBuilder;
+import com.kleegroup.analytica.hcube.cube.HMetricKey;
+import com.kleegroup.analytica.hcube.dimension.HCubePosition;
+import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
+import com.kleegroup.analytica.hcube.dimension.HTimePosition;
+import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
 
 /**
  * Implémentation de la transformation des Process en cubes.
@@ -50,8 +50,8 @@ final class ProcessEncoder {
 	 * @param process Process à convertir
 	 * @return Liste des Cubes associés
 	 */
-	List<Cube> encode(final KProcess process) {
-		final List<Cube> result = new ArrayList<Cube>();
+	List<HCube> encode(final KProcess process) {
+		final List<HCube> result = new ArrayList<HCube>();
 		doEncode(process, result);
 		return result;
 	}
@@ -62,7 +62,7 @@ final class ProcessEncoder {
 	 * @param result Liste des cubes résultat
 	 * @return Cube du process de premier niveau
 	 */
-	private static void doEncode(final KProcess process, final List<Cube> result) {
+	private static void doEncode(final KProcess process, final List<HCube> result) {
 		//On ajoute les mesures
 		result.add(encodeMeasures(process));
 		//On ajoute les sous-process
@@ -71,11 +71,11 @@ final class ProcessEncoder {
 		}
 	}
 
-	private static CubeBuilder createCubeBuilder(KProcess process) {
-		final TimePosition timePosition = new TimePosition(process.getStartDate(), TimeDimension.Minute);
-		final WhatPosition whatPosition = new WhatPosition(process.getType(), process.getNames());
-		final CubePosition cubePosition = new CubePosition(timePosition, whatPosition);
-		return new CubeBuilder(cubePosition);
+	private static HCubeBuilder createCubeBuilder(KProcess process) {
+		final HTimePosition timePosition = new HTimePosition(process.getStartDate(), HTimeDimension.Minute);
+		final HCategoryPosition categoryPosition = new HCategoryPosition(process.getType(), process.getNames());
+		final HCubePosition cubePosition = new HCubePosition(timePosition, categoryPosition);
+		return new HCubeBuilder(cubePosition);
 	}
 
 	/**
@@ -84,17 +84,17 @@ final class ProcessEncoder {
 	 * @param parentCubeBuilders
 	 * @return
 	 */
-	private static Cube encodeMeasures(final KProcess process) {
-		CubeBuilder cubeBuilder = createCubeBuilder(process);
+	private static HCube encodeMeasures(final KProcess process) {
+		HCubeBuilder cubeBuilder = createCubeBuilder(process);
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
 			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
 			boolean cluster = KProcess.DURATION.equals(measure.getKey());
-			cubeBuilder.withMetric(new MetricBuilder(new MetricKey(measure.getKey(), cluster)).withValue(measure.getValue()).build());
+			cubeBuilder.withMetric(new HMetricBuilder(new HMetricKey(measure.getKey(), cluster)).withValue(measure.getValue()).build());
 		}
 		//On ajoute les durées sous-process
 		for (final KProcess subProcess : process.getSubProcesses()) {
 			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
-			cubeBuilder.withMetric(new MetricBuilder(new MetricKey(subProcess.getType(), true)).withValue(subProcess.getDuration()).build());
+			cubeBuilder.withMetric(new HMetricBuilder(new HMetricKey(subProcess.getType(), true)).withValue(subProcess.getDuration()).build());
 		}
 		return cubeBuilder.build();
 	}

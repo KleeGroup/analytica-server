@@ -21,8 +21,8 @@ import java.util.List;
 
 import kasper.kernel.manager.Plugin;
 
-import com.kleegroup.analytica.hcube.cube.Cube;
-import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.cube.HCube;
+import com.kleegroup.analytica.hcube.query.HQuery;
 
 /**
  * Plugin gérant le stockage des cubes.
@@ -35,12 +35,12 @@ public interface CubeStorePlugin extends Plugin {
 	 * Celui-ci sera mergé avec les autres cubes déjà enregistrés.
 	 * @param cube Cube.
 	 */
-	void merge(Cube cube);
+	void merge(HCube cube);
 
 	/**
 	 * Liste des cubes correspondant à une requête.
 	 * @param query Requête
 	 * @return Liste des cubes 
 	 */
-	List<Cube> findAll(Query query);
+	List<HCube> findAll(HQuery query);
 }
