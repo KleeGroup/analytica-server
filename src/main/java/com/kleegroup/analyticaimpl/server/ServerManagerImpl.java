@@ -17,16 +17,14 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
-import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
 
 /**
@@ -58,8 +56,8 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 		hcubeManager.push(process);
 	}
 
-	public List<Cube> findAll(Query query) {
-		return hcubeManager.findAll(query);
+	public HResult execute(Query query) {
+		return hcubeManager.execute(query);
 	}
 }
 //	/** {@inheritDoc} */

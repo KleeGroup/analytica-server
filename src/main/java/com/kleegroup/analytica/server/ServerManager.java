@@ -17,13 +17,11 @@
  */
 package com.kleegroup.analytica.server;
 
-import java.util.List;
-
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.cube.Cube;
 import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
  * Serveur de Analytica.
@@ -46,7 +44,7 @@ public interface ServerManager extends Manager {
 	//	 */
 	//	int store50NextProcessesAsCube();
 
-	List<Cube> findAll(Query query);
+	HResult execute(Query query);
 	//
 	//	/**
 	//	 * Fournit une liste de metric agreggée sur des dates et des what.
