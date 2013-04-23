@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.Cube;
@@ -74,28 +73,19 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//	/** {@inheritDoc} */
 	public synchronized List<Cube> findAll(Query query) {
 		//On prépare les bornes de temps
-		final TimePosition minTimePosition = query.getMinTimePosition();
-		final TimePosition maxTimePosition = query.getMaxTimePosition();
 		final WhatPosition whatPosition = query.getWhatPosition();
 
 		//Sécurité pour éviter une boucle infinie
 		List<Cube> cubes = new ArrayList<Cube>();
 
-		int loops = 0;
-		TimePosition currentTimePosition = minTimePosition;
-		do {
+		for (TimePosition currentTimePosition : query.getTimeSelection().getAllTimePositions()) {
 			CubePosition cubePosition = new CubePosition(currentTimePosition, whatPosition);
 			Cube cube = store.get(cubePosition);
 			//---
 			cubes.add(cube == null ? new CubeBuilder(cubePosition).build() : cube);
 			//---
 			currentTimePosition = currentTimePosition.next();
-			loops++;
-			if (loops > 1000) {
-				throw new KRuntimeException("Segment temporel trop grand : plus de 1000 positions");
-			}
-		} while (currentTimePosition.getValue().before(maxTimePosition.getValue()));
-
+		}
 		return cubes;
 	}
 

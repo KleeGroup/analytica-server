@@ -2,8 +2,6 @@ package com.kleegroup.analytica.hcube.query;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 
 /**
@@ -29,19 +27,11 @@ public final class Query {
 	}
 
 	//-----------------------When----------------------------------------------
-	public TimeDimension getTimeDimension() {
-		return timeSelection.getDimension();
-	}
-
-	public TimePosition getMinTimePosition() {
-		return timeSelection.getMinTimePosition();
-	}
-
-	public TimePosition getMaxTimePosition() {
-		return timeSelection.getMaxTimePosition();
+	public TimeSelection getTimeSelection() {
+		return timeSelection;
 	}
 
 	public String toString() {
-		return ("query : {from:" + getMinTimePosition() + " to:" + getMaxTimePosition() + " with:" + getWhatPosition() + "}");
+		return ("query : {" + timeSelection + " with:" + getWhatPosition() + "}");
 	}
 }

@@ -17,8 +17,11 @@
  */
 package com.kleegroup.analytica.hcube.query;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.dimension.TimeDimension;
@@ -31,7 +34,7 @@ import com.kleegroup.analytica.hcube.dimension.TimePosition;
  *  - toutes les années de 1914 à 1918 
  * @author npiedeloup, pchretien
  */
-final class TimeSelection {
+public final class TimeSelection {
 	private final TimePosition minTimePosition;
 	private final TimePosition maxTimePosition;
 	private final TimeDimension dimension;
@@ -47,15 +50,37 @@ final class TimeSelection {
 		this.dimension = dimension;
 	}
 
-	TimeDimension getDimension() {
+	public TimeDimension getDimension() {
 		return dimension;
 	}
 
-	TimePosition getMinTimePosition() {
+	public TimePosition getMinTimePosition() {
 		return minTimePosition;
 	}
 
-	TimePosition getMaxTimePosition() {
+	public TimePosition getMaxTimePosition() {
 		return maxTimePosition;
+	}
+
+	public List<TimePosition> getAllTimePositions() {
+		List<TimePosition> timePositions = new ArrayList<TimePosition>();
+		//On prépare les bornes de temps
+		int loops = 0;
+		TimePosition currentTimePosition = minTimePosition;
+		do {
+			timePositions.add(currentTimePosition);
+			//---------------
+			currentTimePosition = currentTimePosition.next();
+			loops++;
+			if (loops > 1000) {
+				throw new KRuntimeException("Segment temporel trop grand : plus de 1000 positions");
+			}
+		} while (currentTimePosition.getValue().before(maxTimePosition.getValue()));
+
+		return timePositions;
+	}
+
+	public String toString() {
+		return "from:" + minTimePosition + " to:" + maxTimePosition;
 	}
 }
