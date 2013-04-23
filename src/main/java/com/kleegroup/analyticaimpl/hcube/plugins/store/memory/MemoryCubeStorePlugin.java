@@ -78,7 +78,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		//Sécurité pour éviter une boucle infinie
 		List<Cube> cubes = new ArrayList<Cube>();
 
-		for (TimePosition currentTimePosition : query.getTimeSelection().getAllTimePositions()) {
+		for (TimePosition currentTimePosition : query.getAllTimePositions()) {
 			CubePosition cubePosition = new CubePosition(currentTimePosition, whatPosition);
 			Cube cube = store.get(cubePosition);
 			//---

@@ -1,7 +1,10 @@
 package com.kleegroup.analytica.hcube.query;
 
+import java.util.List;
+
 import kasper.kernel.util.Assertion;
 
+import com.kleegroup.analytica.hcube.dimension.TimePosition;
 import com.kleegroup.analytica.hcube.dimension.WhatPosition;
 
 /**
@@ -27,8 +30,8 @@ public final class Query {
 	}
 
 	//-----------------------When----------------------------------------------
-	public TimeSelection getTimeSelection() {
-		return timeSelection;
+	public List<TimePosition> getAllTimePositions() {
+		return timeSelection.getAllTimePositions();
 	}
 
 	public String toString() {

@@ -34,10 +34,11 @@ import com.kleegroup.analytica.hcube.dimension.TimePosition;
  *  - toutes les années de 1914 à 1918 
  * @author npiedeloup, pchretien
  */
-public final class TimeSelection {
+final class TimeSelection {
 	private final TimePosition minTimePosition;
 	private final TimePosition maxTimePosition;
-	private final TimeDimension dimension;
+
+	//	private final TimeDimension dimension;
 
 	TimeSelection(final TimeDimension dimension, final Date minDate, final Date maxDate) {
 		Assertion.notNull(minDate);
@@ -47,22 +48,22 @@ public final class TimeSelection {
 		//---------------------------------------------------------------------
 		this.minTimePosition = new TimePosition(minDate, dimension);
 		this.maxTimePosition = new TimePosition(maxDate, dimension);
-		this.dimension = dimension;
+		//	this.dimension = dimension;
 	}
 
-	public TimeDimension getDimension() {
-		return dimension;
-	}
+	//	public TimeDimension getDimension() {
+	//		return dimension;
+	//	}
+	//
+	//	public TimePosition getMinTimePosition() {
+	//		return minTimePosition;
+	//	}
+	//
+	//	public TimePosition getMaxTimePosition() {
+	//		return maxTimePosition;
+	//	}
 
-	public TimePosition getMinTimePosition() {
-		return minTimePosition;
-	}
-
-	public TimePosition getMaxTimePosition() {
-		return maxTimePosition;
-	}
-
-	public List<TimePosition> getAllTimePositions() {
+	List<TimePosition> getAllTimePositions() {
 		List<TimePosition> timePositions = new ArrayList<TimePosition>();
 		//On prépare les bornes de temps
 		int loops = 0;
