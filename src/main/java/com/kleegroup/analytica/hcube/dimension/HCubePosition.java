@@ -92,12 +92,12 @@ public final class HCubePosition extends HKey {
 	 * @param otherPosition
 	 * @return
 	 */
-	private static boolean contains(final HPosition position, final HPosition otherPosition) {
+	private static <P extends HPosition<P>> boolean contains(final P position, final P otherPosition) {
 		//On vérifie que l'autre position est contenue dans la première
 		//========[----position-----]====
 		//=============[other]===========
 		//pour ce faire on remonte les positions jusqu'à les faire coincider.
-		HPosition upperPosition = otherPosition;
+		P upperPosition = otherPosition;
 		while (upperPosition != null) {
 			if (position.equals(upperPosition)) {
 				return true;
