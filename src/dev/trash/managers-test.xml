@@ -1,0 +1,36 @@
+<?xml version =	'1.0' encoding = 'ISO-8859-1'?>
+<!--
+
+    Analytica - beta version - Systems Monitoring Tool
+
+    Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
+    KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+
+    This program is free software; you can redistribute it and/or modify it under the terms
+    of the GNU General Public License as published by the Free Software Foundation;
+    either version 3 of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along with this program;
+    if not, see <http://www.gnu.org/licenses>
+
+-->
+<modules>
+	<module name="analytica">
+		<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl">
+			<plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
+				<param name="dbPath" value="d:/analytica/db-test" />
+			</plugin>
+			<plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
+			</plugin>
+			<plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.h2.H2CubeStorePlugin">
+				<param name="dbUrl" value="jdbc:h2:file:d:/analytica/h2-test/cubes;CACHE_SIZE=8192" />
+				<param name="dbLogin" value="sa" />
+				<param name="dbPassword" value="sa" />
+			</plugin>
+		</manager>
+	</module>
+</modules>
