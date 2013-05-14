@@ -27,4 +27,10 @@
 		<converter-id>flotrTransposedLineChartConverter</converter-id>
 		<converter-class>com.kleegroup.analyticaimpl.ui.chart.flotr.TransposedLineChartConverter</converter-class>
 	</converter>
+	
+	<converter>		
+		<converter-id>jQuerySparkLineConverter</converter-id>
+		<converter-class>com.kleegroup.analyticaimpl.ui.chart.sparkline.SparkLineConveter</converter-class>
+	</converter>
+	
 </faces-config>
