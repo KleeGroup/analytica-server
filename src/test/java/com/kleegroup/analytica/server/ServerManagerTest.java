@@ -22,7 +22,7 @@ import com.kleegroup.analytica.hcube.cube.HCounterType;
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HMetric;
 import com.kleegroup.analytica.hcube.cube.HMetricKey;
-import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
+import com.kleegroup.analytica.hcube.dimension.HTime;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 
@@ -75,7 +75,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 		categoryLevel = 2;
 		
 		final HQuery daySqlQuery = new HQueryBuilder()//
-				.on(HTimeDimension.Day)//
+				.on(HTime.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")

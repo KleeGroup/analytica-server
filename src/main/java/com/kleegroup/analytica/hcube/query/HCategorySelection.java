@@ -17,15 +17,13 @@
  */
 package com.kleegroup.analytica.hcube.query;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.HCategoryDictionary;
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
+import com.kleegroup.analytica.hcube.HCategoryDictionary;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 
 /**
  * Selection de catégories permettant de définir un ensemble de positions sur un niveau donné. 
@@ -36,50 +34,45 @@ import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
  * @author npiedeloup, pchretien, statchum
  */
 final class HCategorySelection {
-	private final HCategoryPosition selectedCategoryPosition;
+	private final HCategory selectedCategory;
 	private final boolean children;
-	private final Set<HCategoryPosition> categoryPositions;
-//	private int categoryLevel;
+	private final Set<HCategory> categories;
 
-	
+	//	private int categoryLevel;
 
-	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategoryPosition categoryPosition, boolean children) {
+	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, boolean children) {
 		Assertion.notNull(categoryDictionary);
-		Assertion.notNull(categoryPosition);
-		
-		//		Assertion.precondition(categoryLevel >= 0, "Le level de la catégorie commence à 0.");
-//		// ---------------------------------------------------------------------
-//		categoryPositions = computeAllCategoryPositions(categories, categoryLevel, Arrays.asList(categoryPosition));
+		Assertion.notNull(category);
+		// ---------------------------------------------------------------------
 		this.children = children;
-		this.selectedCategoryPosition = categoryPosition;
-		if (children){
-			categoryPositions = categoryDictionary.getAllCategories(categoryPosition);
-		}else{
-			categoryPositions = Collections.singleton(categoryPosition);
+		this.selectedCategory = category;
+		if (children) {
+			categories = categoryDictionary.getAllCategories(category);
+		} else {
+			categories = Collections.singleton(category);
 		}
 	}
 
-	Set<HCategoryPosition> getAllCategoryPositions() {
-		return categoryPositions;
+	Set<HCategory> getAllCategories() {
+		return categories;
 	}
 
-//	public int getCategoryLevel() {
-//		return categoryLevel;
-//	}
+	//	public int getCategoryLevel() {
+	//		return categoryLevel;
+	//	}
 
-	
-//	/**
-//	 * @return Catégorie courante
-//	 */
-//	HCategoryPosition getCategory();
-//
-//	/**
-//	 * @return Liste des catégories filles
-//	 */
-//	List<HCategoryPosition> getSubCategories();
-	
+	//	/**
+	//	 * @return Catégorie courante
+	//	 */
+	//	HCategoryPosition getCategory();
+	//
+	//	/**
+	//	 * @return Liste des catégories filles
+	//	 */
+	//	List<HCategoryPosition> getSubCategories();
+
 	@Override
 	public String toString() {
-		return  "categories = " +  ( children ? "children of ":"") +  selectedCategoryPosition;
+		return "categories = " + (children ? "children of " : "") + selectedCategory;
 	}
 }

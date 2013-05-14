@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.kleegroup.analytica.hcube.dimension;
+package com.kleegroup.analytica.hcube;
 
-import java.util.List;
 import java.util.Set;
 
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 
 /**
  * Dictionnaire des catégories.
@@ -20,15 +20,15 @@ public interface HCategoryDictionary {
 	 * Ajout d'une catégorie.
 	 * @param categoryPosition
 	 */
-	void add(HCategoryPosition categoryPosition);
-	
+	void add(HCategory categoryPosition);
+
 	/**
 	 * @return Set des catégories racines
 	 */
-	Set<HCategoryPosition> getAllRootCategories();
+	Set<HCategory> getAllRootCategories();
 
 	/**
 	 * @return Liste des catégories filles
 	 */
-	Set<HCategoryPosition> getAllCategories(HCategoryPosition categoryPosition);
+	Set<HCategory> getAllCategories(HCategory categoryPosition);
 }

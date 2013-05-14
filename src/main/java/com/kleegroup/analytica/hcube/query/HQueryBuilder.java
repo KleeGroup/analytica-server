@@ -6,7 +6,7 @@ import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.HCubeManager;
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 
 /**
@@ -19,15 +19,15 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	private Date from;
 	private Date to;
 	//----
-	private HCategoryPosition categoryPosition;
+	private HCategory category;
 	private boolean children;
 
 	public HQueryBuilder(final HCubeManager cubeManager) {
 		Assertion.notNull(cubeManager);
 		//---------------------------------------------------------------------
-		this.cubeManager = cubeManager;		
+		this.cubeManager = cubeManager;
 	}
-	
+
 	public HQueryBuilder on(HTimeDimension timeDimension) {
 		Assertion.notNull(timeDimension);
 		Assertion.isNull(this.timeDimension);
@@ -51,12 +51,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		to = date;
 		return this;
 	}
-	
-//	public HQueryBuilder categoryLevel(int categoryLevel) {
-//		//---------------------------------------------------------------------
-//		this.categoryLevel = categoryLevel;
-//		return this;
-//	}
 
 	public HQueryBuilder withChildren(final String type, String... subCategories) {
 		return doWith(type, subCategories, true);
@@ -66,16 +60,16 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return doWith(type, subCategories, false);
 	}
 
-	private  HQueryBuilder doWith(final String type, String[] subCategories, boolean children) {
+	private HQueryBuilder doWith(final String type, String[] subCategories, boolean children) {
 		Assertion.notNull(type);
-		Assertion.isNull(this.categoryPosition);
+		Assertion.isNull(this.category);
 		//---------------------------------------------------------------------
-		this.categoryPosition = new HCategoryPosition(type, subCategories);
+		this.category = new HCategory(type, subCategories);
 		this.children = children;
 		return this;
 	}
-	
+
 	public HQuery build() {
-		return new HQuery(new HTimeSelection(timeDimension,from,to), new HCategorySelection(cubeManager.getCategoryDictionary(),  categoryPosition, children));
+		return new HQuery(new HTimeSelection(timeDimension, from, to), new HCategorySelection(cubeManager.getCategoryDictionary(), category, children));
 	}
 }

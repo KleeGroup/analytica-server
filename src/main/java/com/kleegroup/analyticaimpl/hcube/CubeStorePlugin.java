@@ -23,7 +23,7 @@ import java.util.Map;
 import kasper.kernel.manager.Plugin;
 
 import com.kleegroup.analytica.hcube.cube.HCube;
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.query.HQuery;
 
 /**
@@ -44,5 +44,5 @@ public interface CubeStorePlugin extends Plugin {
 	 * @param query Requête
 	 * @return Séries des cubes 
 	 */
-	Map<HCategoryPosition, List<HCube>>  findAll(HQuery query);
+	Map<HCategory, List<HCube>>  findAll(HQuery query);
 }

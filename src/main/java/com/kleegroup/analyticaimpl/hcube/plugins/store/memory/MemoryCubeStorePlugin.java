@@ -26,9 +26,9 @@ import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HCubeBuilder;
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HCubePosition;
-import com.kleegroup.analytica.hcube.dimension.HTimePosition;
+import com.kleegroup.analytica.hcube.dimension.HTime;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
 
@@ -40,7 +40,7 @@ import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
  */
 final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	private final Map<HCubePosition, HCube> store = new HashMap<HCubePosition, HCube>();
-	
+
 	/**
 	 * Constructeur.
 	 */
@@ -71,16 +71,16 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	//	/** {@inheritDoc} */
-	public synchronized Map<HCategoryPosition, List<HCube>> findAll(HQuery query) {
+	public synchronized Map<HCategory, List<HCube>> findAll(HQuery query) {
 		Assertion.notNull(query);
 		//---------------------------------------------------------------------
 		//On itère sur les séries indexées par les catégories de la sélection.
-		Map<HCategoryPosition, List<HCube>> cubeSeries = new HashMap<HCategoryPosition, List<HCube>>();
-		
-		for (HCategoryPosition categoryPosition : query.getAllCategoryPositions()){
+		Map<HCategory, List<HCube>> cubeSeries = new HashMap<HCategory, List<HCube>>();
+
+		for (HCategory categoryPosition : query.getAllCategoryPositions()) {
 			List<HCube> cubes = new ArrayList<HCube>();
 			cubeSeries.put(categoryPosition, cubes);
-			for (HTimePosition currentTimePosition : query.getAllTimePositions()) {
+			for (HTime currentTimePosition : query.getAllTimePositions()) {
 				HCubePosition cubePosition = new HCubePosition(currentTimePosition, categoryPosition);
 				HCube cube = store.get(cubePosition);
 				//---
@@ -91,7 +91,7 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		}
 		return cubeSeries;
 	}
-	
+
 	public synchronized String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (HCube cube : store.values()) {

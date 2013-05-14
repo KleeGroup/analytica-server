@@ -20,7 +20,6 @@ package com.kleegroup.analytica.hcube;
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.dimension.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;

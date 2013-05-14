@@ -5,8 +5,8 @@ import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
-import com.kleegroup.analytica.hcube.dimension.HTimePosition;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
+import com.kleegroup.analytica.hcube.dimension.HTime;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
@@ -30,13 +30,13 @@ public final class HQuery {
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 * @return
 	 */
-	public Set<HCategoryPosition> getAllCategoryPositions(){
-		return categorySelection.getAllCategoryPositions();
+	public Set<HCategory> getAllCategoryPositions(){
+		return categorySelection.getAllCategories();
 	}
 	
 	
 	//-----------------------When----------------------------------------------
-	public List<HTimePosition> getAllTimePositions() {
+	public List<HTime> getAllTimePositions() {
 		return timeSelection.getAllTimePositions();
 	}
 	

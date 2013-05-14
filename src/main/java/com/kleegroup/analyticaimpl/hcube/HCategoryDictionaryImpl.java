@@ -3,70 +3,67 @@
  */
 package com.kleegroup.analyticaimpl.hcube;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.HCategoryDictionary;
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
+import com.kleegroup.analytica.hcube.HCategoryDictionary;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 
 /**
- * @author statchum
+ * @author statchum 
  */
 final class HCategoryDictionaryImpl implements HCategoryDictionary {
-	private final Set<HCategoryPosition> rootCategoryPositions;
-	private final Map<HCategoryPosition,Set<HCategoryPosition>> categoryPositions;
-	
-	
+	private final Set<HCategory> rootCategoryPositions;
+	private final Map<HCategory, Set<HCategory>> categoryPositions;
+
 	HCategoryDictionaryImpl() {
-		rootCategoryPositions = new HashSet<HCategoryPosition>();
-		categoryPositions = new HashMap<HCategoryPosition,Set<HCategoryPosition>>();
+		rootCategoryPositions = new HashSet<HCategory>();
+		categoryPositions = new HashMap<HCategory, Set<HCategory>>();
 	}
 
 	/** {@inheritDoc} */
-	public synchronized  Set<HCategoryPosition> getAllRootCategories() {
+	public synchronized Set<HCategory> getAllRootCategories() {
 		return Collections.unmodifiableSet(rootCategoryPositions);
-		
+
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategoryPosition> getAllCategories(HCategoryPosition categoryPosition) {
+	public synchronized Set<HCategory> getAllCategories(HCategory categoryPosition) {
 		Assertion.notNull(categoryPosition);
 		//---------------------------------------------------------------------
-		Set<HCategoryPosition> set = categoryPositions.get(categoryPosition);
-		return set == null ? Collections.<HCategoryPosition>emptySet(): Collections.unmodifiableSet(set);
+		Set<HCategory> set = categoryPositions.get(categoryPosition);
+		return set == null ? Collections.<HCategory> emptySet() : Collections.unmodifiableSet(set);
 	}
 
 	/** {@inheritDoc} */
-	public synchronized void add(HCategoryPosition categoryPosition) {
+	public synchronized void add(HCategory categoryPosition) {
 		Assertion.notNull(categoryPosition);
 		//---------------------------------------------------------------------
-		HCategoryPosition currentCategoryPosition = categoryPosition;
-		HCategoryPosition parentCategoryPosition; 
-		while (currentCategoryPosition!= null){
+		HCategory currentCategoryPosition = categoryPosition;
+		HCategory parentCategoryPosition;
+		while (currentCategoryPosition != null) {
 			parentCategoryPosition = currentCategoryPosition.drillUp();
-			doPut (parentCategoryPosition, currentCategoryPosition);
+			doPut(parentCategoryPosition, currentCategoryPosition);
 			currentCategoryPosition = parentCategoryPosition;
 		}
 	}
-	
-	private void doPut(HCategoryPosition parentCategoryPosition, HCategoryPosition categoryPosition) {
+
+	private void doPut(HCategory parentCategoryPosition, HCategory categoryPosition) {
 		Assertion.notNull(categoryPosition);
 		//---------------------------------------------------------------------
-		if (parentCategoryPosition == null){
+		if (parentCategoryPosition == null) {
 			//categoryPosition est une catégorie racine
 			rootCategoryPositions.add(categoryPosition);
-		}else{
+		} else {
 			//categoryPosition n'est pas une catégorie racine
-			Set<HCategoryPosition> set =  categoryPositions.get(parentCategoryPosition);
-			if (set == null){
-				set = new HashSet<HCategoryPosition>();
+			Set<HCategory> set = categoryPositions.get(parentCategoryPosition);
+			if (set == null) {
+				set = new HashSet<HCategory>();
 				categoryPositions.put(parentCategoryPosition, set);
 			}
 			set.add(categoryPosition);

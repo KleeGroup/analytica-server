@@ -14,21 +14,22 @@ import com.kleegroup.analytica.hcube.cube.HMetric;
 import com.kleegroup.analytica.hcube.cube.HMetricBuilder;
 import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.cube.HVirtualCube;
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.query.HQuery;
 
 /**
  * Résultat d'une requête.
- * Il s'agit d'un parallélépipède continu, qui peut se voir comme un cube virtuel.
+ * Il s'agit d'une série de parallélépipèdes continus, qui peut se voir comme autant un cube virtuel.
  * 
  * @author pchretien, npiedeloup
  * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
 public final class HResult implements HVirtualCube {
 	private final HQuery query;
-	private final Map<HCategoryPosition, List<HCube>>  cubeSeries;
+	private final Map<HCategory, List<HCube>> cubeSeries;
 	private Map<HMetricKey, HMetric> metrics; //lazy
-	public HResult(final HQuery query, final Map<HCategoryPosition, List<HCube>> cubeSeries) {
+
+	public HResult(final HQuery query, final Map<HCategory, List<HCube>> cubeSeries) {
 		Assertion.notNull(query);
 		Assertion.notNull(cubeSeries);
 		//---------------------------------------------------------------------
@@ -40,8 +41,7 @@ public final class HResult implements HVirtualCube {
 		return query;
 	}
 
-
-	public List<HCube> getCubes(HCategoryPosition categoryPosition) {
+	public List<HCube> getCubes(HCategory categoryPosition) {
 		Assertion.notNull(categoryPosition);
 		Assertion.precondition(cubeSeries.containsKey(categoryPosition), "{0} not in resultSet", categoryPosition);
 		//-------------------------------------------------------------------------
@@ -52,7 +52,7 @@ public final class HResult implements HVirtualCube {
 	private Map<HMetricKey, HMetric> getLazyMetrics() {
 		if (metrics == null) {
 			Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<HMetricKey, HMetricBuilder>();
-			for (List<HCube> cubes : cubeSeries.values()){
+			for (List<HCube> cubes : cubeSeries.values()) {
 				for (HCube cube : cubes) {
 					for (HMetric metric : cube.getMetrics()) {
 						HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());

@@ -25,7 +25,7 @@ import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
-import com.kleegroup.analytica.hcube.dimension.HTimePosition;
+import com.kleegroup.analytica.hcube.dimension.HTime;
 
 /**
  * Selection temporelle permettant de définir un ensemble de positions sur un niveau temporel donné.
@@ -35,8 +35,8 @@ import com.kleegroup.analytica.hcube.dimension.HTimePosition;
  * @author npiedeloup, pchretien
  */
 final class HTimeSelection {
-	private final HTimePosition minTimePosition;
-	private final HTimePosition maxTimePosition;
+	private final HTime minTimePosition;
+	private final HTime maxTimePosition;
 
 	//	private final TimeDimension dimension;
 
@@ -46,16 +46,16 @@ final class HTimeSelection {
 		Assertion.precondition(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
 		Assertion.notNull(dimension);
 		//---------------------------------------------------------------------
-		this.minTimePosition = new HTimePosition(minDate, dimension);
-		this.maxTimePosition = new HTimePosition(maxDate, dimension);
+		this.minTimePosition = new HTime(minDate, dimension);
+		this.maxTimePosition = new HTime(maxDate, dimension);
 		//	this.dimension = dimension;
 	}
 
-	List<HTimePosition> getAllTimePositions() {
-		List<HTimePosition> timePositions = new ArrayList<HTimePosition>();
+	List<HTime> getAllTimePositions() {
+		List<HTime> timePositions = new ArrayList<HTime>();
 		//On prépare les bornes de temps
 		int loops = 0;
-		HTimePosition currentTimePosition = minTimePosition;
+		HTime currentTimePosition = minTimePosition;
 		do {
 			timePositions.add(currentTimePosition);
 			//---------------

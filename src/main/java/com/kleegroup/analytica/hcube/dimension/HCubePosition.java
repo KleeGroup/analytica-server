@@ -32,21 +32,21 @@ import com.kleegroup.analytica.hcube.HKey;
  * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
 public final class HCubePosition extends HKey {
-	private final HTimePosition timePosition;
-	private final HCategoryPosition categoryPosition;
+	private final HTime timePosition;
+	private final HCategory categoryPosition;
 
-	public HCubePosition(final HTimePosition timePosition, final HCategoryPosition categoryPosition) {
+	public HCubePosition(final HTime timePosition, final HCategory categoryPosition) {
 		super("cube:" + timePosition.id() + "; " + categoryPosition.id());
 		//---------------------------------------------------------------------
 		this.timePosition = timePosition;
 		this.categoryPosition = categoryPosition;
 	}
 
-	public HTimePosition getTimePosition() {
+	public HTime getTimePosition() {
 		return timePosition;
 	}
 
-	public HCategoryPosition getCategoryPosition() {
+	public HCategory getCategoryPosition() {
 		return categoryPosition;
 	}
 
@@ -58,9 +58,9 @@ public final class HCubePosition extends HKey {
 	public List<HCubePosition> drillUp() {
 		List<HCubePosition> upperCubePositions = new ArrayList<HCubePosition>();
 		//on remonte les axes, le premier sera le plus bas niveau
-		HTimePosition timePosition = getTimePosition();
+		HTime timePosition = getTimePosition();
 		while (timePosition != null) {
-			HCategoryPosition categoryPosition = getCategoryPosition();
+			HCategory categoryPosition = getCategoryPosition();
 			while (categoryPosition != null) {
 				upperCubePositions.add(new HCubePosition(timePosition, categoryPosition));
 				//On remonte l'arbre des categories

@@ -31,11 +31,11 @@ import com.kleegroup.analytica.hcube.HKey;
  * @author npiedeloup, pchretien
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class HCategoryPosition extends HKey implements HPosition<HCategoryPosition> {
+public final class HCategory extends HKey implements HPosition<HCategory> {
 	private final String category;
 	private final String[] subCategories;
 
-	public HCategoryPosition(final String category, final String[] subCategories) {
+	public HCategory(final String category, final String[] subCategories) {
 		super(buildKey(category, subCategories));
 		Assertion.notEmpty(category);
 		//---------------------------------------------------------------------
@@ -44,7 +44,7 @@ public final class HCategoryPosition extends HKey implements HPosition<HCategory
 	}
 
 	/** {@inheritDoc} */
-	public HCategoryPosition drillUp() {
+	public HCategory drillUp() {
 		if (subCategories.length == 0) {
 			return null;
 		}
@@ -52,7 +52,7 @@ public final class HCategoryPosition extends HKey implements HPosition<HCategory
 		for (int i = 0; i < subCategories.length - 1; i++) {
 			redux[i] = subCategories[i];
 		}
-		return new HCategoryPosition(category, redux);
+		return new HCategory(category, redux);
 	}
 
 	private static String buildKey(String type, final String[] subCategory) {
