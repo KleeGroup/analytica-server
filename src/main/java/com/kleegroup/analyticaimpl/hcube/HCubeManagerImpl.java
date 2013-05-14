@@ -26,7 +26,10 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.cube.HCube;
+import com.kleegroup.analytica.hcube.dimension.HCategoryDictionary;
+import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
 import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
@@ -36,6 +39,7 @@ import com.kleegroup.analytica.hcube.result.HResult;
 public final class HCubeManagerImpl implements HCubeManager {
 	private final ProcessEncoder processEncoder;
 	private final CubeStorePlugin cubeStorePlugin;
+	private final HCategoryDictionary categoryDictionary = new HCategoryDictionaryImpl() ;
 
 	/**
 	 * Constructeur.
@@ -52,7 +56,9 @@ public final class HCubeManagerImpl implements HCubeManager {
 	/** {@inheritDoc} */
 	public void push(final KProcess process) {
 		List<HCube> cubes = processEncoder.encode(process);
+		//---Alimentation du dictionnaire des catégories puis des cubes
 		for (HCube cube : cubes) {
+			categoryDictionary.add(cube.getPosition().getCategoryPosition());
 			cubeStorePlugin.merge(cube);
 		}
 	}
@@ -61,4 +67,22 @@ public final class HCubeManagerImpl implements HCubeManager {
 	public HResult execute(HQuery query) {
 		return new HResult(query, cubeStorePlugin.findAll(query));
 	}
+
+	/**
+	 * @return the cubeStorePlugin
+	 */
+	public CubeStorePlugin getCubeStorePlugin() {
+		return cubeStorePlugin;
+	}
+
+	/** {@inheritDoc} */
+	public HCategoryDictionary getCategoryDictionary() {
+		return categoryDictionary;
+	}
+
+	/** {@inheritDoc} */
+	public HQueryBuilder createQueryBuilder() {
+		return new HQueryBuilder(this);
+	}
+	
 }
