@@ -57,7 +57,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 		List<HCube> cubes = processEncoder.encode(process);
 		//---Alimentation du dictionnaire des catégories puis des cubes
 		for (HCube cube : cubes) {
-			categoryDictionary.add(cube.getPosition().getCategoryPosition());
+			categoryDictionary.add(cube.getKey().getCategory());
 			cubeStorePlugin.merge(cube);
 		}
 	}

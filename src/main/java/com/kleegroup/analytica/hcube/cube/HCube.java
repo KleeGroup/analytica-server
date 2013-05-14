@@ -23,7 +23,7 @@ import java.util.Map;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.HCubePosition;
+import com.kleegroup.analytica.hcube.dimension.HCubeKey;
 
 /**
  * Un cube contient :
@@ -39,14 +39,14 @@ public final class HCube implements HVirtualCube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
-	private final HCubePosition cubePosition;
+	private final HCubeKey cubeKey;
 	private final Map<HMetricKey, HMetric> metrics;
 
-	HCube(final HCubePosition cubePosition, final Collection<HMetric> metrics) {
-		Assertion.notNull(cubePosition);
+	HCube(final HCubeKey cubeKey, final Collection<HMetric> metrics) {
+		Assertion.notNull(cubeKey);
 		Assertion.notNull(metrics);
 		//---------------------------------------------------------------------
-		this.cubePosition = cubePosition;
+		this.cubeKey = cubeKey;
 		this.metrics = new LinkedHashMap<HMetricKey, HMetric>(metrics.size());
 		for (final HMetric metric : metrics) {
 			final Object old = this.metrics.put(metric.getKey(), metric);
@@ -54,8 +54,8 @@ public final class HCube implements HVirtualCube {
 		}
 	}
 
-	public HCubePosition getPosition() {
-		return cubePosition;
+	public HCubeKey getKey() {
+		return cubeKey;
 	}
 
 	/** {@inheritDoc} */
@@ -73,7 +73,7 @@ public final class HCube implements HVirtualCube {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
-				.append(cubePosition.id()).append("\n\tmetrics:{");
+				.append(cubeKey.id()).append("\n\tmetrics:{");
 		for (final HMetric metric : getMetrics()) {
 			sb.append("\n\t\t ").append(metric);
 		}

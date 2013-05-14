@@ -63,7 +63,7 @@ public interface ServerManager extends Manager {
 	//	/**
 	//	 * Fournit une liste de données sur un ensemble de Categories, en ASSEMBLANT les TimePosition récupérés (par exemple 30 jours glissant).
 	//	 * @param query  Requête précisant les selections
-	//	 * @return Liste de valeur par métric pour l'ensemble des TimePosition et par Categories(permet des courbes de metrics entre deux categories sur une période)
+	//	 * @return Liste de valeur par métric pour l'ensemble des Time et par Categories(permet des courbes de metrics entre deux categories sur une période)
 	//	 */
 	//	List<DataSet<String, ?>> getDataWhatLine(final Query query);
 

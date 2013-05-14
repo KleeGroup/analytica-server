@@ -30,14 +30,14 @@ public final class HQuery {
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 * @return
 	 */
-	public Set<HCategory> getAllCategoryPositions(){
+	public Set<HCategory> getAllCategories(){
 		return categorySelection.getAllCategories();
 	}
 	
 	
 	//-----------------------When----------------------------------------------
-	public List<HTime> getAllTimePositions() {
-		return timeSelection.getAllTimePositions();
+	public List<HTime> getAllTimes() {
+		return timeSelection.getAllTimes();
 	}
 	
 	

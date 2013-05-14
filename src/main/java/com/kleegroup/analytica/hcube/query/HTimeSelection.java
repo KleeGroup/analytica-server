@@ -24,8 +24,8 @@ import java.util.List;
 import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.dimension.HTime;
+import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 
 /**
  * Selection temporelle permettant de définir un ensemble de positions sur un niveau temporel donné.
@@ -35,8 +35,8 @@ import com.kleegroup.analytica.hcube.dimension.HTime;
  * @author npiedeloup, pchretien
  */
 final class HTimeSelection {
-	private final HTime minTimePosition;
-	private final HTime maxTimePosition;
+	private final HTime minTime;
+	private final HTime maxTime;
 
 	//	private final TimeDimension dimension;
 
@@ -46,31 +46,30 @@ final class HTimeSelection {
 		Assertion.precondition(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
 		Assertion.notNull(dimension);
 		//---------------------------------------------------------------------
-		this.minTimePosition = new HTime(minDate, dimension);
-		this.maxTimePosition = new HTime(maxDate, dimension);
-		//	this.dimension = dimension;
+		this.minTime = new HTime(minDate, dimension);
+		this.maxTime = new HTime(maxDate, dimension);
 	}
 
-	List<HTime> getAllTimePositions() {
-		List<HTime> timePositions = new ArrayList<HTime>();
+	List<HTime> getAllTimes() {
+		List<HTime> times = new ArrayList<HTime>();
 		//On prépare les bornes de temps
 		int loops = 0;
-		HTime currentTimePosition = minTimePosition;
+		HTime currentTime = minTime;
 		do {
-			timePositions.add(currentTimePosition);
+			times.add(currentTime);
 			//---------------
-			currentTimePosition = currentTimePosition.next();
+			currentTime = currentTime.next();
 			loops++;
 			if (loops > 1000) {
 				throw new KRuntimeException("Segment temporel trop grand : plus de 1000 positions");
 			}
-		} while (currentTimePosition.getValue().before(maxTimePosition.getValue()));
+		} while (currentTime.getValue().before(maxTime.getValue()));
 
-		return timePositions;
+		return times;
 	}
 
 	/** {@inheritDoc} */
 	public String toString() {
-		return "from:" + minTimePosition + " to:" + maxTimePosition;
+		return "from:" + minTime + " to:" + maxTime;
 	}
 }

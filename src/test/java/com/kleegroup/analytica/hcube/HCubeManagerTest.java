@@ -110,8 +110,8 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		Assert.assertEquals(1, rootCategories.size());
 		Assert.assertEquals(processSQLCategory, rootCategories.iterator().next());
 		//--- On vérifie les sous-catégories.
-		Set<HCategory> categoryPositions = hcubeManager.getCategoryDictionary().getAllCategories(processSQLCategory);
-		Assert.assertEquals(2, categoryPositions.size());
+		Set<HCategory> categories = hcubeManager.getCategoryDictionary().getAllCategories(processSQLCategory);
+		Assert.assertEquals(2, categories.size());
 	}
 
 	@Test
@@ -249,9 +249,9 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SERVICES")//
 				.build();
 
-		HCategory servicesCategoryPosition = new HCategory("SERVICES", new String[0]);
+		HCategory servicesCategory = new HCategory("SERVICES", new String[0]);
 
-		cubes = hcubeManager.execute(dayServiceslQuery).getCubes(servicesCategoryPosition);
+		cubes = hcubeManager.execute(dayServiceslQuery).getCubes(servicesCategory);
 		Assert.assertEquals(1, cubes.size());
 		//Vérification de la durée du process principal
 		durationMetric = cubes.get(0).getMetric(DURATION);

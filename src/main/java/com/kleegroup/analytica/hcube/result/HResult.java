@@ -41,11 +41,11 @@ public final class HResult implements HVirtualCube {
 		return query;
 	}
 
-	public List<HCube> getCubes(HCategory categoryPosition) {
-		Assertion.notNull(categoryPosition);
-		Assertion.precondition(cubeSeries.containsKey(categoryPosition), "{0} not in resultSet", categoryPosition);
+	public List<HCube> getCubes(HCategory category) {
+		Assertion.notNull(category);
+		Assertion.precondition(cubeSeries.containsKey(category), "{0} not in resultSet", category);
 		//-------------------------------------------------------------------------
-		return Collections.unmodifiableList(cubeSeries.get(categoryPosition));
+		return Collections.unmodifiableList(cubeSeries.get(category));
 	}
 
 	//-------------------------------------------------------------------------

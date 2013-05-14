@@ -25,7 +25,7 @@ import java.util.Map;
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.dimension.HCubePosition;
+import com.kleegroup.analytica.hcube.dimension.HCubeKey;
 
 /**
  * Builder permettant de contruire un cube.
@@ -34,17 +34,17 @@ import com.kleegroup.analytica.hcube.dimension.HCubePosition;
  * @version $Id: CubeBuilder.java,v 1.6 2012/11/08 17:06:41 pchretien Exp $
  */
 public final class HCubeBuilder implements Builder<HCube> {
-	private final HCubePosition cubePosition;
+	private final HCubeKey cubeKey;
 	private final Map<HMetricKey, HMetricBuilder> metrics = new HashMap<HMetricKey, HMetricBuilder>();
 
 	/**
 	 * Constructeur.
 	 * @param cubeKey Identifiant du cube
 	 */
-	public HCubeBuilder(HCubePosition cubePosition) {
-		Assertion.notNull(cubePosition);
+	public HCubeBuilder(HCubeKey cubeKey) {
+		Assertion.notNull(cubeKey);
 		//---------------------------------------------------------------------
-		this.cubePosition = cubePosition;
+		this.cubeKey = cubeKey;
 	}
 
 	/**
@@ -71,7 +71,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 	public HCubeBuilder withCube(final HCube cube) {
 		Assertion.notNull(cube);
 		//Assertion util mais 50% des perfs !!
-		Assertion.precondition(cubePosition.contains(cube.getPosition()), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubePosition, cube.getPosition());
+		Assertion.precondition(cubeKey.contains(cube.getKey()), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubeKey, cube.getKey());
 		//---------------------------------------------------------------------
 		for (final HMetric metric : cube.getMetrics()) {
 			withMetric(metric);
@@ -89,6 +89,6 @@ public final class HCubeBuilder implements Builder<HCube> {
 		for (final HMetricBuilder metricBuilder : metrics.values()) {
 			list.add(metricBuilder.build());
 		}
-		return new HCube(cubePosition, list);
+		return new HCube(cubeKey, list);
 	}
 }

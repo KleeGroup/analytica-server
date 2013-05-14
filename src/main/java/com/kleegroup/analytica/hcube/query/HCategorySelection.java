@@ -28,8 +28,8 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 /**
  * Selection de catégories permettant de définir un ensemble de positions sur un niveau donné. 
  * exemple : 
- * - toutes les catégories racine (niveau 0) : new HCategorySelection() 
- * - toutes les sous-catégories de SQL niveau 1 : HCategorySelection(1, new HCategoryPosition("SQL", "select"));
+ * - toutes les catégories racine  : new HCategorySelection() 
+ * - toutes les sous-catégories de SQL, select : HCategorySelection(new HCategoryPosition("SQL", "select"), true);
  * 
  * @author npiedeloup, pchretien, statchum
  */
@@ -37,8 +37,6 @@ final class HCategorySelection {
 	private final HCategory selectedCategory;
 	private final boolean children;
 	private final Set<HCategory> categories;
-
-	//	private int categoryLevel;
 
 	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, boolean children) {
 		Assertion.notNull(categoryDictionary);
@@ -56,20 +54,6 @@ final class HCategorySelection {
 	Set<HCategory> getAllCategories() {
 		return categories;
 	}
-
-	//	public int getCategoryLevel() {
-	//		return categoryLevel;
-	//	}
-
-	//	/**
-	//	 * @return Catégorie courante
-	//	 */
-	//	HCategoryPosition getCategory();
-	//
-	//	/**
-	//	 * @return Liste des catégories filles
-	//	 */
-	//	List<HCategoryPosition> getSubCategories();
 
 	@Override
 	public String toString() {

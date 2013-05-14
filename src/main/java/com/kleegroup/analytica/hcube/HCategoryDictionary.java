@@ -18,9 +18,8 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 public interface HCategoryDictionary {
 	/**
 	 * Ajout d'une catégorie.
-	 * @param categoryPosition
 	 */
-	void add(HCategory categoryPosition);
+	void add(HCategory category);
 
 	/**
 	 * @return Set des catégories racines
@@ -30,5 +29,5 @@ public interface HCategoryDictionary {
 	/**
 	 * @return Liste des catégories filles
 	 */
-	Set<HCategory> getAllCategories(HCategory categoryPosition);
+	Set<HCategory> getAllCategories(HCategory category);
 }

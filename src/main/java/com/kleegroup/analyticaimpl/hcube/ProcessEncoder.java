@@ -27,7 +27,7 @@ import com.kleegroup.analytica.hcube.cube.HCubeBuilder;
 import com.kleegroup.analytica.hcube.cube.HMetricBuilder;
 import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
-import com.kleegroup.analytica.hcube.dimension.HCubePosition;
+import com.kleegroup.analytica.hcube.dimension.HCubeKey;
 import com.kleegroup.analytica.hcube.dimension.HTime;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 
@@ -72,10 +72,10 @@ final class ProcessEncoder {
 	}
 
 	private static HCubeBuilder createCubeBuilder(KProcess process) {
-		final HTime timePosition = new HTime(process.getStartDate(), HTimeDimension.Minute);
-		final HCategory categoryPosition = new HCategory(process.getType(), process.getNames());
-		final HCubePosition cubePosition = new HCubePosition(timePosition, categoryPosition);
-		return new HCubeBuilder(cubePosition);
+		final HTime time = new HTime(process.getStartDate(), HTimeDimension.Minute);
+		final HCategory category = new HCategory(process.getType(), process.getNames());
+		final HCubeKey cubeKey = new HCubeKey(time, category);
+		return new HCubeBuilder(cubeKey);
 	}
 
 	/**

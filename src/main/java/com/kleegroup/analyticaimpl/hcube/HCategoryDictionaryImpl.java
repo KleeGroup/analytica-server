@@ -18,55 +18,55 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
  * @author statchum 
  */
 final class HCategoryDictionaryImpl implements HCategoryDictionary {
-	private final Set<HCategory> rootCategoryPositions;
-	private final Map<HCategory, Set<HCategory>> categoryPositions;
+	private final Set<HCategory> rootCategories;
+	private final Map<HCategory, Set<HCategory>> categories;
 
 	HCategoryDictionaryImpl() {
-		rootCategoryPositions = new HashSet<HCategory>();
-		categoryPositions = new HashMap<HCategory, Set<HCategory>>();
+		rootCategories = new HashSet<HCategory>();
+		categories = new HashMap<HCategory, Set<HCategory>>();
 	}
 
 	/** {@inheritDoc} */
 	public synchronized Set<HCategory> getAllRootCategories() {
-		return Collections.unmodifiableSet(rootCategoryPositions);
+		return Collections.unmodifiableSet(rootCategories);
 
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategory> getAllCategories(HCategory categoryPosition) {
-		Assertion.notNull(categoryPosition);
+	public synchronized Set<HCategory> getAllCategories(HCategory category) {
+		Assertion.notNull(category);
 		//---------------------------------------------------------------------
-		Set<HCategory> set = categoryPositions.get(categoryPosition);
+		Set<HCategory> set = categories.get(category);
 		return set == null ? Collections.<HCategory> emptySet() : Collections.unmodifiableSet(set);
 	}
 
 	/** {@inheritDoc} */
-	public synchronized void add(HCategory categoryPosition) {
-		Assertion.notNull(categoryPosition);
+	public synchronized void add(HCategory category) {
+		Assertion.notNull(category);
 		//---------------------------------------------------------------------
-		HCategory currentCategoryPosition = categoryPosition;
-		HCategory parentCategoryPosition;
-		while (currentCategoryPosition != null) {
-			parentCategoryPosition = currentCategoryPosition.drillUp();
-			doPut(parentCategoryPosition, currentCategoryPosition);
-			currentCategoryPosition = parentCategoryPosition;
+		HCategory currentCategory = category;
+		HCategory parentCategory;
+		while (currentCategory != null) {
+			parentCategory = currentCategory.drillUp();
+			doPut(parentCategory, currentCategory);
+			currentCategory = parentCategory;
 		}
 	}
 
-	private void doPut(HCategory parentCategoryPosition, HCategory categoryPosition) {
-		Assertion.notNull(categoryPosition);
+	private void doPut(HCategory parentCategory, HCategory category) {
+		Assertion.notNull(category);
 		//---------------------------------------------------------------------
-		if (parentCategoryPosition == null) {
-			//categoryPosition est une catégorie racine
-			rootCategoryPositions.add(categoryPosition);
+		if (parentCategory == null) {
+			//category est une catégorie racine
+			rootCategories.add(category);
 		} else {
-			//categoryPosition n'est pas une catégorie racine
-			Set<HCategory> set = categoryPositions.get(parentCategoryPosition);
+			//category n'est pas une catégorie racine
+			Set<HCategory> set = categories.get(parentCategory);
 			if (set == null) {
 				set = new HashSet<HCategory>();
-				categoryPositions.put(parentCategoryPosition, set);
+				categories.put(parentCategory, set);
 			}
-			set.add(categoryPosition);
+			set.add(category);
 		}
 	}
 
