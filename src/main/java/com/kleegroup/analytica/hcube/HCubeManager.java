@@ -20,6 +20,7 @@ package com.kleegroup.analytica.hcube;
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
+import com.kleegroup.analytica.hcube.dimension.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
 
@@ -30,6 +31,11 @@ import com.kleegroup.analytica.hcube.result.HResult;
  * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
 public interface HCubeManager extends Manager {
+	/**
+	 * @return Dictionnaire des catégories
+	 */
+	HCategoryDictionary getCategoryDictionary();
+	
 	/**
 	 * Ajout d'un process.
 	 * @param process Process à ajouter 
