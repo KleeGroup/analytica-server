@@ -22,8 +22,8 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.hcube.HKey;
 
 /**
- * Une position de type What est composée d'une hierarchie de terms.
- * exemple :
+ * Une catégorie est composée d'une hierarchie de termes.
+ *  * exemple :
  * sql; select  all products
  * Cet exemple illustre une requête de tous les produits (appellée 'all products') classée dans la catégorie sql, sous catégorie select.
  * 
@@ -32,27 +32,31 @@ import com.kleegroup.analytica.hcube.HKey;
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
 public final class HCategory extends HKey implements HPosition<HCategory> {
-	private final String category;
-	private final String[] subCategories;
+	private final String type;
+	private final String[] subTypes;
 
-	public HCategory(final String category, final String[] subCategories) {
-		super(buildKey(category, subCategories));
-		Assertion.notEmpty(category);
+	public HCategory(final String type) {
+		this(type, new String[0]);
+	}
+
+	public HCategory(final String type, final String[] subTypes) {
+		super(buildKey(type, subTypes));
+		Assertion.notEmpty(type);
 		//---------------------------------------------------------------------
-		this.subCategories = subCategories;
-		this.category = category;
+		this.subTypes = subTypes;
+		this.type = type;
 	}
 
 	/** {@inheritDoc} */
 	public HCategory drillUp() {
-		if (subCategories.length == 0) {
+		if (subTypes.length == 0) {
 			return null;
 		}
-		String[] redux = new String[subCategories.length - 1];
-		for (int i = 0; i < subCategories.length - 1; i++) {
-			redux[i] = subCategories[i];
+		String[] redux = new String[subTypes.length - 1];
+		for (int i = 0; i < subTypes.length - 1; i++) {
+			redux[i] = subTypes[i];
 		}
-		return new HCategory(category, redux);
+		return new HCategory(type, redux);
 	}
 
 	private static String buildKey(String type, final String[] subCategory) {

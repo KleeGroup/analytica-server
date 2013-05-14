@@ -60,15 +60,16 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return doWith(type, subCategories, false);
 	}
 
-	private HQueryBuilder doWith(final String type, String[] subCategories, boolean children) {
+	private HQueryBuilder doWith(final String type, String[] subTypes, boolean children) {
 		Assertion.notNull(type);
 		Assertion.isNull(this.category);
 		//---------------------------------------------------------------------
-		this.category = new HCategory(type, subCategories);
+		this.category = new HCategory(type, subTypes);
 		this.children = children;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	public HQuery build() {
 		return new HQuery(new HTimeSelection(timeDimension, from, to), new HCategorySelection(cubeManager.getCategoryDictionary(), category, children));
 	}

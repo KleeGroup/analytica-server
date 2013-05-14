@@ -45,7 +45,7 @@ final class HCategorySelection {
 		this.children = children;
 		this.selectedCategory = category;
 		if (children) {
-			categories = categoryDictionary.getAllCategories(category);
+			categories = categoryDictionary.getAllSubCategories(category);
 		} else {
 			categories = Collections.singleton(category);
 		}
@@ -55,7 +55,7 @@ final class HCategorySelection {
 		return categories;
 	}
 
-	@Override
+	/** {@inheritDoc} */
 	public String toString() {
 		return "categories = " + (children ? "children of " : "") + selectedCategory;
 	}

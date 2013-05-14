@@ -122,8 +122,8 @@ final class KProcessBinding extends TupleBinding {
 		to.writeString(PROCESS_BINDING_V2);//Marqueur de version
 		to.writeString(process.getType());
 
-		to.writeInt(process.getNames().length);
-		for (final String namePart : process.getNames()) {
+		to.writeInt(process.getSubTypes().length);
+		for (final String namePart : process.getSubTypes()) {
 			to.writeString(namePart);
 		}
 		to.writeLong(process.getStartDate().getTime());

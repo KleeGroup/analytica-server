@@ -17,7 +17,7 @@ public final class HQuery {
 	private final HTimeSelection timeSelection;
 	private final HCategorySelection categorySelection;
 
-	HQuery(HTimeSelection timeSelection, HCategorySelection  categorySelection) {
+	HQuery(HTimeSelection timeSelection, HCategorySelection categorySelection) {
 		Assertion.notNull(timeSelection);
 		Assertion.notNull(categorySelection);
 		//---------------------------------------------------------------------
@@ -30,17 +30,16 @@ public final class HQuery {
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 * @return
 	 */
-	public Set<HCategory> getAllCategories(){
+	public Set<HCategory> getAllCategories() {
 		return categorySelection.getAllCategories();
 	}
-	
-	
+
 	//-----------------------When----------------------------------------------
 	public List<HTime> getAllTimes() {
 		return timeSelection.getAllTimes();
 	}
-	
-	
+
+	/** {@inheritDoc} */
 	public String toString() {
 		return ("query : {" + timeSelection + " with:" + categorySelection + "}");
 	}

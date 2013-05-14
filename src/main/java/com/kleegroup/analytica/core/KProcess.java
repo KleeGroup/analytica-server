@@ -75,16 +75,16 @@ public final class KProcess {
 	}
 
 	/**
-	 * @return Type duprocessus
+	 * @return Type du processus
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @return Nom du processus
+	 * @return Sous-types du processus
 	 */
-	public String[] getNames() {
+	public String[] getSubTypes() {
 		return names;
 	}
 

@@ -33,7 +33,7 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategory> getAllCategories(HCategory category) {
+	public synchronized Set<HCategory> getAllSubCategories(HCategory category) {
 		Assertion.notNull(category);
 		//---------------------------------------------------------------------
 		Set<HCategory> set = categories.get(category);

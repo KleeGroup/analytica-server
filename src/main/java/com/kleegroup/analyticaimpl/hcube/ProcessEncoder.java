@@ -73,7 +73,7 @@ final class ProcessEncoder {
 
 	private static HCubeBuilder createCubeBuilder(KProcess process) {
 		final HTime time = new HTime(process.getStartDate(), HTimeDimension.Minute);
-		final HCategory category = new HCategory(process.getType(), process.getNames());
+		final HCategory category = new HCategory(process.getType(), process.getSubTypes());
 		final HCubeKey cubeKey = new HCubeKey(time, category);
 		return new HCubeBuilder(cubeKey);
 	}

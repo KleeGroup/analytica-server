@@ -29,5 +29,5 @@ public interface HCategoryDictionary {
 	/**
 	 * @return Liste des catégories filles
 	 */
-	Set<HCategory> getAllCategories(HCategory category);
+	Set<HCategory> getAllSubCategories(HCategory category);
 }
