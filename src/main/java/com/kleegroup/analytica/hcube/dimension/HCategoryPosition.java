@@ -33,24 +33,24 @@ import com.kleegroup.analytica.hcube.HKey;
  */
 public final class HCategoryPosition extends HKey implements HPosition<HCategoryPosition> {
 	private final String category;
-	private final String[] subCategory;
+	private final String[] subCategories;
 
-	public HCategoryPosition(final String category, final String[] subCategory) {
-		super(buildKey(category, subCategory));
+	public HCategoryPosition(final String category, final String[] subCategories) {
+		super(buildKey(category, subCategories));
 		Assertion.notEmpty(category);
 		//---------------------------------------------------------------------
-		this.subCategory = subCategory;
+		this.subCategories = subCategories;
 		this.category = category;
 	}
 
 	/** {@inheritDoc} */
 	public HCategoryPosition drillUp() {
-		if (subCategory.length == 0) {
+		if (subCategories.length == 0) {
 			return null;
 		}
-		String[] redux = new String[subCategory.length - 1];
-		for (int i = 0; i < subCategory.length - 1; i++) {
-			redux[i] = subCategory[i];
+		String[] redux = new String[subCategories.length - 1];
+		for (int i = 0; i < subCategories.length - 1; i++) {
+			redux[i] = subCategories[i];
 		}
 		return new HCategoryPosition(category, redux);
 	}

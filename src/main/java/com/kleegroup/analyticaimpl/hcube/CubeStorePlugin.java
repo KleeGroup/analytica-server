@@ -18,10 +18,12 @@
 package com.kleegroup.analyticaimpl.hcube;
 
 import java.util.List;
+import java.util.Map;
 
 import kasper.kernel.manager.Plugin;
 
 import com.kleegroup.analytica.hcube.cube.HCube;
+import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
 import com.kleegroup.analytica.hcube.query.HQuery;
 
 /**
@@ -38,9 +40,9 @@ public interface CubeStorePlugin extends Plugin {
 	void merge(HCube cube);
 
 	/**
-	 * Liste des cubes correspondant à une requête.
+	 * Liste des cubes, regroupés par série indexée par ma catégorie correspondant à une requête.
 	 * @param query Requête
-	 * @return Liste des cubes 
+	 * @return Séries des cubes 
 	 */
-	List<HCube> findAll(HQuery query);
+	Map<HCategoryPosition, List<HCube>>  findAll(HQuery query);
 }

@@ -51,18 +51,6 @@ final class HTimeSelection {
 		//	this.dimension = dimension;
 	}
 
-	//	public TimeDimension getDimension() {
-	//		return dimension;
-	//	}
-	//
-	//	public TimePosition getMinTimePosition() {
-	//		return minTimePosition;
-	//	}
-	//
-	//	public TimePosition getMaxTimePosition() {
-	//		return maxTimePosition;
-	//	}
-
 	List<HTimePosition> getAllTimePositions() {
 		List<HTimePosition> timePositions = new ArrayList<HTimePosition>();
 		//On prépare les bornes de temps
@@ -81,6 +69,7 @@ final class HTimeSelection {
 		return timePositions;
 	}
 
+	/** {@inheritDoc} */
 	public String toString() {
 		return "from:" + minTimePosition + " to:" + maxTimePosition;
 	}
