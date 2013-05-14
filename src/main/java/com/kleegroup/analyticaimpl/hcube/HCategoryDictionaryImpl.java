@@ -46,19 +46,23 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 		//---------------------------------------------------------------------
 		HCategory currentCategory = category;
 		HCategory parentCategory;
-		while (currentCategory != null) {
+		boolean drillUp;
+		do {
 			parentCategory = currentCategory.drillUp();
-			doPut(parentCategory, currentCategory);
+			//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
+			//On dispose donc d'une info pour savoir si il faut remonter 
+			drillUp = doPut(parentCategory, currentCategory);
 			currentCategory = parentCategory;
-		}
+		} while (drillUp);
 	}
 
-	private void doPut(HCategory parentCategory, HCategory category) {
+	private boolean doPut(HCategory parentCategory, HCategory category) {
 		Assertion.notNull(category);
 		//---------------------------------------------------------------------
 		if (parentCategory == null) {
 			//category est une catégorie racine
 			rootCategories.add(category);
+			return false;
 		} else {
 			//category n'est pas une catégorie racine
 			Set<HCategory> set = categories.get(parentCategory);
@@ -66,8 +70,7 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 				set = new HashSet<HCategory>();
 				categories.put(parentCategory, set);
 			}
-			set.add(category);
+			return set.add(category);
 		}
 	}
-
 }
