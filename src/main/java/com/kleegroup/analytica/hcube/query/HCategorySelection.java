@@ -18,7 +18,9 @@
 package com.kleegroup.analytica.hcube.query;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
@@ -34,29 +36,30 @@ import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
  * @author npiedeloup, pchretien, statchum
  */
 final class HCategorySelection {
-	private final List<HCategoryPosition> categoryPositions;
-	private int categoryLevel;
+	private final HCategoryPosition selectedCategoryPosition;
+	private final boolean children;
+	private final Set<HCategoryPosition> categoryPositions;
+//	private int categoryLevel;
 
 	
 
-	HCategorySelection(final HCategoryDictionary categories, int categoryLevel, final HCategoryPosition... categoryPosition) {
-		Assertion.precondition(categoryLevel >= 0, "Le level de la catégorie commence à 0.");
-		// ---------------------------------------------------------------------
-		categoryPositions = computeAllCategoryPositions(categories, categoryLevel, Arrays.asList(categoryPosition));
+	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategoryPosition categoryPosition, boolean children) {
+		Assertion.notNull(categoryDictionary);
+		Assertion.notNull(categoryPosition);
 		
+		//		Assertion.precondition(categoryLevel >= 0, "Le level de la catégorie commence à 0.");
+//		// ---------------------------------------------------------------------
+//		categoryPositions = computeAllCategoryPositions(categories, categoryLevel, Arrays.asList(categoryPosition));
+		this.children = children;
+		this.selectedCategoryPosition = categoryPosition;
+		if (children){
+			categoryPositions = categoryDictionary.getAllCategories(categoryPosition);
+		}else{
+			categoryPositions = Collections.singleton(categoryPosition);
+		}
 	}
 
-	/**
-	 * @param categories
-	 * @param categoryLevel
-	 * @param asList
-	 * @return liste des cateogries positions
-	 */
-	private List<HCategoryPosition> computeAllCategoryPositions(HCategoryDictionary categories, int categoryLevel,List<HCategoryPosition> categoryPositions) {
-		return null;
-	}
-
-	List<HCategoryPosition> getAllCategoryPositions() {
+	Set<HCategoryPosition> getAllCategoryPositions() {
 		return categoryPositions;
 	}
 
@@ -77,7 +80,6 @@ final class HCategorySelection {
 	
 	@Override
 	public String toString() {
-		return "categoryLevel:" + categoryLevel + " positions:"
-				+ categoryPositions;
+		return  "categories = " +  ( children ? "children of ":"") +  selectedCategoryPosition;
 	}
 }

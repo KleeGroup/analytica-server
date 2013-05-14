@@ -1,6 +1,7 @@
 package com.kleegroup.analytica.hcube.query;
 
 import java.util.List;
+import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
@@ -25,7 +26,11 @@ public final class HQuery {
 	}
 
 	//-----------------------What----------------------------------------------
-	public List<HCategoryPosition> getAllCategoryPositions(){
+	/**
+	 * Liste triée par ordre alphabétique des catégories matchant la sélection
+	 * @return
+	 */
+	public Set<HCategoryPosition> getAllCategoryPositions(){
 		return categorySelection.getAllCategoryPositions();
 	}
 	

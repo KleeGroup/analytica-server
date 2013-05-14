@@ -4,6 +4,7 @@
 package com.kleegroup.analytica.hcube.dimension;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -22,12 +23,12 @@ public interface HCategoryDictionary {
 	void add(HCategoryPosition categoryPosition);
 	
 	/**
-	 * @return Liste des catégories racines
+	 * @return Set des catégories racines
 	 */
-	List<HCategoryPosition> getAllRootCategories();
+	Set<HCategoryPosition> getAllRootCategories();
 
 	/**
 	 * @return Liste des catégories filles
 	 */
-	List<HCategoryPosition> getAllCategories(HCategoryPosition categoryPosition);
+	Set<HCategoryPosition> getAllCategories(HCategoryPosition categoryPosition);
 }

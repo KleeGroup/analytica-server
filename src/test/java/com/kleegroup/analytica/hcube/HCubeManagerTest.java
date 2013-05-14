@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -37,13 +38,13 @@ import org.junit.Test;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
-import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HCounterType;
+import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HMetric;
 import com.kleegroup.analytica.hcube.cube.HMetricKey;
+import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
@@ -87,20 +88,49 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 	//-------------------------------------------------------------------------
 	@Test
+	public void testDictionnary() {
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select * from article")//
+				.incMeasure(MONTANT.id(), price)//
+				.build();
+		hcubeManager.push(selectProcess1);
+
+		//On crée un processs identique (même catégorie)
+		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "select * from article")//
+		.incMeasure(MONTANT.id(), price)//
+		.build();
+		hcubeManager.push(selectProcess2);
+
+		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select * from user")//
+		.build();
+		hcubeManager.push(selectProcess3);
+
+		Set<HCategoryPosition> rootCategoryPositions = hcubeManager.getCategoryDictionary().getAllRootCategories();
+		HCategoryPosition processSQLCategoryPosition = new HCategoryPosition(PROCESS_SQL, new String[0]);
+		//--- On vérifie la catégorie racine.
+		Assert.assertEquals(1, rootCategoryPositions.size());
+		Assert.assertEquals(processSQLCategoryPosition, rootCategoryPositions.iterator().next());
+		//--- On vérifie les sous-catégories.
+		Set<HCategoryPosition> categoryPositions =  hcubeManager.getCategoryDictionary().getAllCategories(processSQLCategoryPosition);
+		Assert.assertEquals(2, categoryPositions.size());
+	}
+
+	@Test
 	public void testSimpleProcess() {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final HQuery daySqlQuery = new HQueryBuilder()//
+		
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		HCategoryPosition sqlCategoryPosition = new HCategoryPosition("SQL", new String[0]);
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -114,40 +144,42 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final HQuery daySqlQuery = new HQueryBuilder()//
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		HCategoryPosition sqlCategoryPosition = new HCategoryPosition("SQL", new String[0]);
+
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 
-		final HQuery monthSqlQuery = new HQueryBuilder()//
+		final HQuery monthSqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Month)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
 
-		cubes = hcubeManager.execute(monthSqlQuery).getCubes();
+		cubes = hcubeManager.execute(monthSqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 
-		final HQuery yearSqlQuery = new HQueryBuilder()//
+		final HQuery yearSqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Month)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
 
-		cubes = hcubeManager.execute(yearSqlQuery).getCubes();
+		cubes = hcubeManager.execute(yearSqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -183,14 +215,14 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 		hcubeManager.push(process);
 		//---------------------------------------------------------------------
-		HQuery daySqlQuery = new HQueryBuilder()//
+		HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
-
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		HCategoryPosition sqlCategoryPosition = new HCategoryPosition("SQL", new String[0]);
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -199,26 +231,28 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		HMetric durationMetric = cubes.get(0).getMetric(DURATION);
 		assertMetricEquals(durationMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 		//---------------------------------------------------------------------
-		final HQuery hourQuery = new HQueryBuilder()//
+		final HQuery hourQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from(date)//
 				.to(new DateBuilder(date).addDays(1).build())//
 				.with("SQL")//
 				.build();
-		cubes = hcubeManager.execute(hourQuery).getCubes();
+		cubes = hcubeManager.execute(hourQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(14, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		montantMetric = cubes.get(5).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 		//---------------------------------------------------------------------
-		HQuery dayServiceslQuery = new HQueryBuilder()//
+		HQuery dayServiceslQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SERVICES")//
 				.build();
 
-		cubes = hcubeManager.execute(dayServiceslQuery).getCubes();
+		HCategoryPosition servicesCategoryPosition = new HCategoryPosition("SERVICES", new String[0]);
+
+		cubes = hcubeManager.execute(dayServiceslQuery).getCubes(servicesCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//Vérification de la durée du process principal
 		durationMetric = cubes.get(0).getMetric(DURATION);
@@ -238,14 +272,15 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final HQuery daySqlQuery = new HQueryBuilder()//
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		HCategoryPosition sqlCategoryPosition = new HCategoryPosition("SQL", new String[0]);
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategoryPosition );
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -269,27 +304,30 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess3);
 
-		final HQuery daySqlQuery = new HQueryBuilder()//
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		HCategoryPosition sqlCategoryPosition = new HCategoryPosition("SQL", new String[0]);
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 2, price * 4, 2 * price, price, 3 * price);
 		//Check SQL/select article#1
-		final HQuery daySelectQuery = new HQueryBuilder()//
+		final HQuery daySelectQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL", "select article#3")//
 				.build();
 
-		cubes = hcubeManager.execute(daySelectQuery).getCubes();
+		HCategoryPosition selectArticle3CategoryPosition = new HCategoryPosition("SQL", new String[]{"select article#3"});
+
+		cubes = hcubeManager.execute(daySelectQuery).getCubes(selectArticle3CategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -315,14 +353,15 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		workersPool.awaitTermination(30, TimeUnit.SECONDS); //On laisse 30 secondes pour vider la pile   
 		Assert.assertTrue("Les threads ne sont pas tous stoppés", workersPool.isTerminated());
 
-		final HQuery daySqlQuery = new HQueryBuilder()//
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
+		HCategoryPosition sqlCategoryPosition = new HCategoryPosition("SQL", new String[0]);
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -347,7 +386,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess3);
 
-		final HQuery daySqlQuery = new HQueryBuilder()//
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -387,14 +426,15 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		hcubeManager.push(createSqlProcess(486)); //<=500
 		hcubeManager.push(createSqlProcess(15623)); //<=20000
 
-		final HQuery daySqlQuery = new HQueryBuilder()//
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
+		HCategoryPosition sqlCategoryPosition = new HCategoryPosition("SQL", new String[0]);
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes();
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategoryPosition);
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);

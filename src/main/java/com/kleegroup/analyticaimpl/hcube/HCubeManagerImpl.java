@@ -27,7 +27,6 @@ import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.dimension.HCategoryDictionary;
-import com.kleegroup.analytica.hcube.dimension.HCategoryPosition;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
