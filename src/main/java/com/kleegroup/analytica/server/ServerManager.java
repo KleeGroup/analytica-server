@@ -37,34 +37,5 @@ public interface ServerManager extends Manager {
 	 */
 	void push(KProcess process);
 
-	//
-	//	/**
-	//	 * Permet de diffuser les process dans les cubes.
-	//	 * @return nombre de process traités
-	//	 */
-	//	int store50NextProcessesAsCube();
-
 	HResult execute(HQuery query);
-	//
-	//	/**
-	//	 * Fournit une liste de metric agreggée sur des dates et des categories.
-	//	 * @param query  Requête précisant les selections a aggréger avant resultat
-	//	 * @return Liste de métric pour l'ensemble des WhatPosition sur l'interval de date
-	//	 */
-	//	List<Data> getData(final Query query);
-	//
-	//	/**
-	//	 * Fournit une liste de données sur un interval de date, en ASSEMBLANT les WhatPosition récupérés (par exemple un essemble cohérent de What).
-	//	 * @param query  Requête précisant les selections
-	//	 * @return Liste de valeur par métric pour l'ensemble des WhatPosition et par date (permet des courbes de metrics entre deux dates pour un ensemble de Categories)
-	//	 */
-	//	List<DataSet<Date, ?>> getDataTimeLine(final Query query);
-	//
-	//	/**
-	//	 * Fournit une liste de données sur un ensemble de Categories, en ASSEMBLANT les TimePosition récupérés (par exemple 30 jours glissant).
-	//	 * @param query  Requête précisant les selections
-	//	 * @return Liste de valeur par métric pour l'ensemble des Time et par Categories(permet des courbes de metrics entre deux categories sur une période)
-	//	 */
-	//	List<DataSet<String, ?>> getDataWhatLine(final Query query);
-
 }

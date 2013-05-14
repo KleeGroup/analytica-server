@@ -56,6 +56,7 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 		hcubeManager.push(process);
 	}
 
+	/** {@inheritDoc} */
 	public HResult execute(HQuery query) {
 		return hcubeManager.execute(query);
 	}
