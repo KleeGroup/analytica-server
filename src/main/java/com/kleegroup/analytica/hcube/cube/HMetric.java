@@ -72,7 +72,7 @@ public final class HMetric {
 		if (count > 1) {
 			// formule non exacte puisque qu'on ne connaît pas toutes les valeurs, mais estimation suffisante
 			// rq : écart type (ou sigma) se dit standard deviation en anglais
-			return Math.round(100 * Math.sqrt((sqrSum - sum * sum / count) / ((double) count - 1))) / 100d;
+			return Math.sqrt((sqrSum - sum * sum / count) / (count - 1d));
 		}
 		return Double.NaN;
 	}
