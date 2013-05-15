@@ -33,17 +33,17 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
  * 
  * @author npiedeloup, pchretien, statchum
  */
-public final class HCategorySelection {
+final class HCategorySelection {
 	private final HCategory selectedCategory;
 	private final boolean children;
 	private final Set<HCategory> categories;
 
-	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, boolean children) {
+	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, final boolean children) {
 		Assertion.notNull(categoryDictionary);
 		Assertion.notNull(category);
 		// ---------------------------------------------------------------------
 		this.children = children;
-		this.selectedCategory = category;
+		selectedCategory = category;
 		if (children) {
 			categories = categoryDictionary.getAllSubCategories(category);
 		} else {
@@ -56,6 +56,7 @@ public final class HCategorySelection {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String toString() {
 		return "categories = " + (children ? "children of " : "") + selectedCategory;
 	}
