@@ -20,7 +20,6 @@ package com.kleegroup.analytica.server;
 import kasper.kernel.manager.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
@@ -50,6 +49,4 @@ public interface ServerManager extends Manager {
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
 	HResult execute(HQuery query);
-	
-
 }

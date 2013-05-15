@@ -38,12 +38,12 @@ final class HCategorySelection {
 	private final boolean children;
 	private final Set<HCategory> categories;
 
-	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, boolean children) {
+	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, final boolean children) {
 		Assertion.notNull(categoryDictionary);
 		Assertion.notNull(category);
 		// ---------------------------------------------------------------------
 		this.children = children;
-		this.selectedCategory = category;
+		selectedCategory = category;
 		if (children) {
 			categories = categoryDictionary.getAllSubCategories(category);
 		} else {
@@ -56,6 +56,7 @@ final class HCategorySelection {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String toString() {
 		return "categories = " + (children ? "children of " : "") + selectedCategory;
 	}

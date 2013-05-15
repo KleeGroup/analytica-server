@@ -46,12 +46,12 @@ final class HTimeSelection {
 		Assertion.precondition(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
 		Assertion.notNull(dimension);
 		//---------------------------------------------------------------------
-		this.minTime = new HTime(minDate, dimension);
-		this.maxTime = new HTime(maxDate, dimension);
+		minTime = new HTime(minDate, dimension);
+		maxTime = new HTime(maxDate, dimension);
 	}
 
 	List<HTime> getAllTimes() {
-		List<HTime> times = new ArrayList<HTime>();
+		final List<HTime> times = new ArrayList<HTime>();
 		//On prépare les bornes de temps
 		int loops = 0;
 		HTime currentTime = minTime;
@@ -69,6 +69,7 @@ final class HTimeSelection {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String toString() {
 		return "from:" + minTime + " to:" + maxTime;
 	}

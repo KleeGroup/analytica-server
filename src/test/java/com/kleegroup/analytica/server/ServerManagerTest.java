@@ -71,37 +71,20 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		serverManager.push(selectProcess1);
-<<<<<<< HEAD
-		
-		
-		/*final HQuery daySqlQuery = new HQueryBuilder()//
-				.on(HTime.Day)//
-=======
-
-		categoryLevel = 2;
 
 		final HQuery daySqlQuery = cubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
->>>>>>> 8c36943df68996f6a0e0ab62af843c92387fe6fe
 				.from(date)//
 				.to(date)//
 				.with("SQL").build();
 		Assert.assertEquals(1, daySqlQuery.getAllCategories().size());
 
-<<<<<<< HEAD
-		List<HCube> cubes = serverManager.execute(daySqlQuery).getCubes();*/
-	//	Assert.assertEquals(1, cubes.size());
-		//
-//		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
-	//	assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
-=======
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 		final List<HCube> cubes = serverManager.execute(daySqlQuery).getSerie(processSQLCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
->>>>>>> 8c36943df68996f6a0e0ab62af843c92387fe6fe
 	}
 
 }

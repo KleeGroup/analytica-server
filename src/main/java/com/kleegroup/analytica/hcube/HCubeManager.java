@@ -53,5 +53,4 @@ public interface HCubeManager extends Manager {
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
 	HResult execute(HQuery query);
-	
 }
