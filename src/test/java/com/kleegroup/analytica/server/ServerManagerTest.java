@@ -81,7 +81,8 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL").build();
 		Assert.assertEquals(1, daySqlQuery.getAllCategories().size());
 
-		final List<HCube> cubes = serverManager.execute(daySqlQuery).getCubes(new HCategory("SQL"));
+		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
+		final List<HCube> cubes = serverManager.execute(daySqlQuery).getSerie(processSQLCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
