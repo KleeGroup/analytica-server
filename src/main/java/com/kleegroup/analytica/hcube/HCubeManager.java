@@ -35,7 +35,7 @@ public interface HCubeManager extends Manager {
 	 * @return Dictionnaire des catégories
 	 */
 	HCategoryDictionary getCategoryDictionary();
-	
+
 	/**
 	 * Ajout d'un process.
 	 * @param process Process à ajouter 
@@ -43,12 +43,14 @@ public interface HCubeManager extends Manager {
 	void push(KProcess process);
 
 	/**
-	 * Création du constructeur de query.
+	 * @return constructeur de query
 	 */
 	HQueryBuilder createQueryBuilder();
-	
+
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
+	 * @param query Paramètres de la requete
+	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
 	HResult execute(HQuery query);
 }
