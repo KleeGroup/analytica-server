@@ -17,7 +17,6 @@
  */
 package com.kleegroup.analyticaimpl.hcube;
 
-import java.util.List;
 import java.util.Map;
 
 import kasper.kernel.manager.Plugin;
@@ -25,6 +24,7 @@ import kasper.kernel.manager.Plugin;
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.result.HSerie;
 
 /**
  * Plugin gérant le stockage des cubes.
@@ -44,5 +44,5 @@ public interface CubeStorePlugin extends Plugin {
 	 * @param query Requête
 	 * @return Séries des cubes 
 	 */
-	Map<HCategory, List<HCube>>  findAll(HQuery query);
+	Map<HCategory, HSerie> findAll(HQuery query);
 }
