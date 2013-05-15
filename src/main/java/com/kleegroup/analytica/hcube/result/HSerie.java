@@ -2,7 +2,9 @@ package com.kleegroup.analytica.hcube.result;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -89,5 +91,39 @@ public final class HSerie implements HVirtualCube {
 	/** {@inheritDoc} */
 	public Collection<HMetric> getMetrics() {
 		return getLazyMetrics().values();
+	}
+
+	public Iterator<HPoint> iterator(final HMetricKey metricKey) {
+
+		return new Iterator<HPoint>() {
+			private int index = -1;
+
+			/** {@inheritDoc} */
+			public boolean hasNext() {
+				return (index + 1) < cubes.size();
+			}
+
+			/** {@inheritDoc} */
+			public HPoint next() {
+				index++;
+				return new HPoint() {
+
+					/** {@inheritDoc} */
+					public HMetric getMetric() {
+						return cubes.get(index).getMetric(metricKey);
+					}
+
+					/** {@inheritDoc} */
+					public Date getDate() {
+						return cubes.get(index).getKey().getTime().getValue();
+					}
+				};
+			}
+
+			/** {@inheritDoc} */
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		};
 	}
 }
