@@ -23,12 +23,12 @@
 		<dependency>
 			<groupId>com.kleegroup.kasper</groupId>
 			<artifactId>kasper-kernel</artifactId>
-			<version>6.1.17-SNAPSHOT</version>
+			<version>6.1.17</version>
 		</dependency>
 		<dependency>
 			<groupId>com.kleegroup.kasper</groupId>
 			<artifactId>kasper-kernel</artifactId>
-			<version>6.1.17-SNAPSHOT</version>
+			<version>6.1.17</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
