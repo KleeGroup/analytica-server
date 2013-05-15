@@ -33,7 +33,7 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
  * 
  * @author npiedeloup, pchretien, statchum
  */
-public final class HCategorySelection {
+final class HCategorySelection {
 	private final HCategory selectedCategory;
 	private final boolean children;
 	private final Set<HCategory> categories;
