@@ -34,7 +34,7 @@ import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
  *  - toutes les années de 1914 à 1918 
  * @author npiedeloup, pchretien
  */
-final class HTimeSelection {
+public final class HTimeSelection {
 	private final HTime minTime;
 	private final HTime maxTime;
 
