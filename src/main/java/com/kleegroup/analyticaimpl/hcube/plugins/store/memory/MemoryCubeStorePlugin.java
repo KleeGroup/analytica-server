@@ -30,6 +30,7 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HCubeKey;
 import com.kleegroup.analytica.hcube.dimension.HTime;
 import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.result.HSerie;
 import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
 
 /**
@@ -52,8 +53,8 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	public synchronized void merge(final HCube lowLevelCube) {
 		Assertion.notNull(lowLevelCube);
 		//---------------------------------------------------------------------
-		for (HCubeKey upCubeKeys : lowLevelCube.getKey().drillUp()) {
-			HCube cube = merge(lowLevelCube, upCubeKeys);
+		for (final HCubeKey upCubeKeys : lowLevelCube.getKey().drillUp()) {
+			final HCube cube = merge(lowLevelCube, upCubeKeys);
 			store.put(cube.getKey(), cube);
 		}
 	}
@@ -70,31 +71,33 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		return cubeBuilder.build();
 	}
 
-	//	/** {@inheritDoc} */
-	public synchronized Map<HCategory, List<HCube>> findAll(HQuery query) {
+	/** {@inheritDoc} */
+	public synchronized Map<HCategory, HSerie> findAll(final HQuery query) {
 		Assertion.notNull(query);
 		//---------------------------------------------------------------------
 		//On itère sur les séries indexées par les catégories de la sélection.
-		Map<HCategory, List<HCube>> cubeSeries = new HashMap<HCategory, List<HCube>>();
+		final Map<HCategory, HSerie> cubeSeries = new HashMap<HCategory, HSerie>();
 
-		for (HCategory category : query.getAllCategories()) {
-			List<HCube> cubes = new ArrayList<HCube>();
-			cubeSeries.put(category, cubes);
+		for (final HCategory category : query.getAllCategories()) {
+			final List<HCube> cubes = new ArrayList<HCube>();
 			for (HTime currentTime : query.getAllTimes()) {
-				HCubeKey cubeKey = new HCubeKey(currentTime, category);
-				HCube cube = store.get(cubeKey);
+				final HCubeKey cubeKey = new HCubeKey(currentTime, category);
+				final HCube cube = store.get(cubeKey);
 				//---
 				cubes.add(cube == null ? new HCubeBuilder(cubeKey).build() : cube);
 				//---
 				currentTime = currentTime.next();
 			}
+			cubeSeries.put(category, new HSerie(category, cubes));
 		}
 		return cubeSeries;
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public synchronized String toString() {
-		StringBuilder sb = new StringBuilder();
-		for (HCube cube : store.values()) {
+		final StringBuilder sb = new StringBuilder();
+		for (final HCube cube : store.values()) {
 			sb.append(cube);
 			sb.append("\r\n");
 		}

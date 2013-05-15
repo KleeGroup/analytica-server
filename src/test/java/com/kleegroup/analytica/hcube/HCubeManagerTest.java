@@ -75,7 +75,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 	//-------------------------------------------------------------------------
 
-	private static void assertMetricEquals(HMetric metric, double count, double sum, double mean, double min, double max) {
+	private static void assertMetricEquals(final HMetric metric, final double count, final double sum, final double mean, final double min, final double max) {
 		Assert.assertEquals(count, metric.get(HCounterType.count), 0);
 		Assert.assertEquals(count, metric.getCount(), 0); //test accesseur rapide
 		Assert.assertEquals(sum, metric.get(HCounterType.sum), 0);//test accesseur rapide 0);
@@ -104,13 +104,13 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess3);
 
-		Set<HCategory> rootCategories = hcubeManager.getCategoryDictionary().getAllRootCategories();
-		HCategory processSQLCategory = new HCategory(PROCESS_SQL);
+		final Set<HCategory> rootCategories = hcubeManager.getCategoryDictionary().getAllRootCategories();
+		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 		//--- On vérifie la catégorie racine.
 		Assert.assertEquals(1, rootCategories.size());
 		Assert.assertEquals(processSQLCategory, rootCategories.iterator().next());
 		//--- On vérifie les sous-catégories.
-		Set<HCategory> categories = hcubeManager.getCategoryDictionary().getAllSubCategories(processSQLCategory);
+		final Set<HCategory> categories = hcubeManager.getCategoryDictionary().getAllSubCategories(processSQLCategory);
 		Assert.assertEquals(2, categories.size());
 	}
 
@@ -128,11 +128,11 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		HCategory sqlCategory = new HCategory("SQL");
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategory);
+		final HCategory sqlCategory = new HCategory("SQL");
+		final List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
-		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
+		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 	}
 
@@ -150,9 +150,9 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		HCategory sqlCategory = new HCategory("SQL");
+		final HCategory sqlCategory = new HCategory("SQL");
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategory);
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -165,7 +165,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		cubes = hcubeManager.execute(monthSqlQuery).getCubes(sqlCategory);
+		cubes = hcubeManager.execute(monthSqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -178,7 +178,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		cubes = hcubeManager.execute(yearSqlQuery).getCubes(sqlCategory);
+		cubes = hcubeManager.execute(yearSqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -214,14 +214,14 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 		hcubeManager.push(process);
 		//---------------------------------------------------------------------
-		HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL")//
 				.build();
-		HCategory sqlCategory = new HCategory("SQL");
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategory);
+		final HCategory sqlCategory = new HCategory("SQL");
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -236,28 +236,28 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.to(new DateBuilder(date).addDays(1).build())//
 				.with("SQL")//
 				.build();
-		cubes = hcubeManager.execute(hourQuery).getCubes(sqlCategory);
+		cubes = hcubeManager.execute(hourQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(14, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		montantMetric = cubes.get(5).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 		//---------------------------------------------------------------------
-		HQuery dayServiceslQuery = hcubeManager.createQueryBuilder()//
+		final HQuery dayServiceslQuery = hcubeManager.createQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SERVICES")//
 				.build();
 
-		HCategory servicesCategory = new HCategory("SERVICES", new String[0]);
+		final HCategory servicesCategory = new HCategory("SERVICES", new String[0]);
 
-		cubes = hcubeManager.execute(dayServiceslQuery).getCubes(servicesCategory);
+		cubes = hcubeManager.execute(dayServiceslQuery).getSerie(servicesCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//Vérification de la durée du process principal
 		durationMetric = cubes.get(0).getMetric(DURATION);
 		assertMetricEquals(durationMetric, 1, 2000, 2000, 2000, 2000);
 		//Vérification de la durée des sous-process 
-		HMetric sqlMetric = cubes.get(0).getMetric(new HMetricKey(PROCESS_SQL, true));
+		final HMetric sqlMetric = cubes.get(0).getMetric(new HMetricKey(PROCESS_SQL, true));
 		assertMetricEquals(sqlMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 	}
 
@@ -278,11 +278,11 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		HCategory sqlCategory = new HCategory("SQL");
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategory);
+		final HCategory sqlCategory = new HCategory("SQL");
+		final List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
-		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
+		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 4, 4 * price, 4 * price, 4 * price);
 	}
 
@@ -310,8 +310,8 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		HCategory sqlCategory = new HCategory("SQL");
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategory);
+		final HCategory sqlCategory = new HCategory("SQL");
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -324,9 +324,9 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL", "select article#3")//
 				.build();
 
-		HCategory selectArticle3Category = new HCategory("SQL", new String[] { "select article#3" });
+		final HCategory selectArticle3Category = new HCategory("SQL", new String[] { "select article#3" });
 
-		cubes = hcubeManager.execute(daySelectQuery).getCubes(selectArticle3Category);
+		cubes = hcubeManager.execute(daySelectQuery).getSerie(selectArticle3Category).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT);
@@ -358,12 +358,12 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.to(date)//
 				.with("SQL")//
 				.build();
-		HCategory sqlCategory = new HCategory("SQL");
+		final HCategory sqlCategory = new HCategory("SQL");
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategory);
+		final List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
-		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
+		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 50, price * 50, price, price, price);
 	}
 
@@ -392,13 +392,14 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL")//
 				.build();
 
-		HResult hresult = hcubeManager.execute(daySqlQuery);
+		final HResult hresult = hcubeManager.execute(daySqlQuery);
 
-		assertMetricEquals(hresult.getMetric(POIDS), 2, 120, 60, 50, 70);
-		assertMetricEquals(hresult.getMetric(MONTANT), 2, price * 4, price * 2, price, price * 3);
+		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
+		assertMetricEquals(hresult.getSerie(processSQLCategory).getMetric(POIDS), 2, 120, 60, 50, 70);
+		assertMetricEquals(hresult.getSerie(processSQLCategory).getMetric(MONTANT), 2, price * 4, price * 2, price, price * 3);
 	}
 
-	private KProcess createSqlProcess(int duration) {
+	private KProcess createSqlProcess(final int duration) {
 		return new KProcessBuilder(date, duration, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
@@ -431,15 +432,15 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.to(date)//
 				.with("SQL")//
 				.build();
-		HCategory sqlCategory = new HCategory("SQL");
+		final HCategory sqlCategory = new HCategory("SQL");
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getCubes(sqlCategory);
+		final List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
-		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
+		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 18, price * 18, price, price, price);
 
-		HMetric durationMetric = cubes.get(0).getMetric(DURATION);
+		final HMetric durationMetric = cubes.get(0).getMetric(DURATION);
 		Assert.assertEquals(1, durationMetric.getClusteredValues().get(0d), 0);
 		Assert.assertEquals(1, durationMetric.getClusteredValues().get(1d), 1);
 		Assert.assertEquals(1, durationMetric.getClusteredValues().get(2d), 1);

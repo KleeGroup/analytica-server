@@ -58,7 +58,7 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(HQuery query) {
+	public HResult execute(final HQuery query) {
 		return hcubeManager.execute(query);
 	}
 
@@ -66,9 +66,9 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 		public HQueryBuilder createQueryBuilder() {
 			return hcubeManager.createQueryBuilder();
 	}
-	
-	
 }
+	
+
 //	/** {@inheritDoc} */
 //	public int store50NextProcessesAsCube() {
 //		final String lastProcessIdStored = cubeStorePlugin.loadLastProcessIdStored();

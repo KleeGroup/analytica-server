@@ -39,8 +39,17 @@ public interface ServerManager extends Manager {
 	 */
 	void push(KProcess process);
 
+	/**
+	 * @return constructeur de query
+	 */
+	HQueryBuilder createQueryBuilder();
+
+	/**
+	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
+	 * @param query Paramètres de la requete
+	 * @return cube virtuel, constitué d'une liste de cubes
+	 */
 	HResult execute(HQuery query);
 	
-	HQueryBuilder createQueryBuilder();
 
 }
