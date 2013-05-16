@@ -21,15 +21,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataSet;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
+import com.kleegroup.analytica.hcube.dimension.HTime;
 
 /**
  * @author npiedeloup
@@ -43,9 +43,13 @@ public final class AnalyticaContext implements Serializable {
 	private boolean initialize = false;
 	private boolean aggregateTime = true;
 	private boolean aggregateWhat = true;
-	private final List<TimeSelection> timeSelectionQueue = new LinkedList<TimeSelection>();
-	private final List<WhatSelection> whatSelectionQueue = new LinkedList<WhatSelection>();
-	private SelectItemsAdapter<DataKey> dataKeysAdapter;
+	//private final List<HTimeSelection> timeSelectionQueue = new LinkedList<HTimeSelection>();
+	private final List<HTime> timeSelectionQueue = new LinkedList<HTime>();
+	//	private final List<WhatSelection> whatSelectionQueue = new LinkedList<WhatSelection>();
+	private final List<HCategory> whatSelectionQueue = new LinkedList<HCategory>();
+
+	// ?==DataKey
+	private SelectItemsAdapter<?> dataKeysAdapter;
 	//	private List<DataKey> dataKeys;
 	//	private List<DataKey> selectedDataKeys;
 	//
@@ -53,11 +57,12 @@ public final class AnalyticaContext implements Serializable {
 	//	private List<String> selectedMetrics;
 	//	private List<String> metadatas;
 	//	private List<String> selectedMetadatas;
-	private List<Data> datas;
+	//private List<Data> datas;
+	private List<?> datas;
 
-	private List<DataSet<String, ?>> whatLineDatas;
+	private List<Map<String, ?>> whatLineDatas;
 
-	private List<DataSet<Date, ?>> timeLineDatas;
+	private List<Map<Date, ?>> timeLineDatas;
 
 	public final boolean isInitialize() {
 		return initialize;
@@ -83,18 +88,18 @@ public final class AnalyticaContext implements Serializable {
 		this.aggregateWhat = aggregateWhat;
 	}
 
-	public TimeSelection getSuperTimeSelection() {
+	public HTime getSuperTimeSelection() {
 		if (timeSelectionQueue.size() > 1) {
 			return timeSelectionQueue.get(1);
 		}
 		return null;
 	}
 
-	public final TimeSelection getTimeSelection() {
+	public final HTime getTimeSelection() {
 		return timeSelectionQueue.get(0);
 	}
 
-	public final void setTimeSelection(final TimeSelection timeSelection) {
+	public final void setTimeSelection(final HTime timeSelection) {
 		Assertion.notNull(timeSelection);
 		//---------------------------------------------------------------------
 		final int indexOf = timeSelectionQueue.indexOf(timeSelection);
@@ -107,18 +112,18 @@ public final class AnalyticaContext implements Serializable {
 		}
 	}
 
-	public WhatSelection getSuperWhatSelection() {
+	public HCategory getSuperWhatSelection() {
 		if (whatSelectionQueue.size() > 1) {
 			return whatSelectionQueue.get(1);
 		}
 		return null;
 	}
 
-	public final WhatSelection getWhatSelection() {
+	public final HCategory getWhatSelection() {
 		return whatSelectionQueue.get(0);
 	}
 
-	public final void setWhatSelection(final WhatSelection whatSelection) {
+	public final void setWhatSelection(final HCategory whatSelection) {
 		Assertion.notNull(whatSelection);
 		//---------------------------------------------------------------------
 		final int indexOf = whatSelectionQueue.indexOf(whatSelection);
@@ -131,11 +136,11 @@ public final class AnalyticaContext implements Serializable {
 		}
 	}
 
-	public SelectItemsAdapter<DataKey> getDataKeysAdapter() {
+	public SelectItemsAdapter<?> getDataKeysAdapter() {
 		return dataKeysAdapter;
 	}
-
-	public final void setDataKeysAdapter(final SelectItemsAdapter<DataKey> dataKeysAdapter) {
+	// ?==DataKey
+	public final void setDataKeysAdapter(final SelectItemsAdapter<?> dataKeysAdapter) {
 		Assertion.notNull(dataKeysAdapter);
 		//---------------------------------------------------------------------
 		this.dataKeysAdapter = dataKeysAdapter;
@@ -181,11 +186,11 @@ public final class AnalyticaContext implements Serializable {
 	//		this.selectedMetrics = selectedMetrics;
 	//	}
 
-	public final List<Data> getDatas() {
+	public final List<?> getDatas() {
 		return datas;
 	}
 
-	public final void setDatas(final List<Data> datas) {
+	public final void setDatas(final List<?> datas) {
 		Assertion.notNull(datas);
 		//---------------------------------------------------------------------
 		this.datas = datas;
@@ -197,19 +202,19 @@ public final class AnalyticaContext implements Serializable {
 		timeLineDatas = null;
 	}
 
-	public final List<DataSet<String, ?>> getWhatLineDatas() {
+	public final List<Map<String, ?>> getWhatLineDatas() {
 		return whatLineDatas;
 	}
 
-	public final List<DataSet<Date, ?>> getTimeLineDatas() {
+	public final List<Map<Date, ?>> getTimeLineDatas() {
 		return timeLineDatas;
 	}
 
-	public void setWhatLineDatas(final List<DataSet<String, ?>> whatLineDatas) {
+	public void setWhatLineDatas(final List<Map<String, ?>> whatLineDatas) {
 		this.whatLineDatas = whatLineDatas;
 	}
 
-	public void setTimeLineDatas(final List<DataSet<Date, ?>> timeLineDatas) {
+	public void setTimeLineDatas(final List<Map<Date, ?>> timeLineDatas) {
 		this.timeLineDatas = timeLineDatas;
 	}
 

@@ -19,7 +19,6 @@ package com.kleegroup.analyticaimpl.ui.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,9 +33,10 @@ import kasper.jsf.util.JSFUtil;
 
 import org.primefaces.model.chart.ChartModel;
 
-import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataSet;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
+import com.kleegroup.analytica.server.ServerManager;
+
+
 
 /**
  * @author npiedeloup
@@ -48,6 +48,9 @@ public final class AnalyticaDashboardController {
 
 	@Inject
 	private ConfigManager configManager;
+	@Inject
+	private ServerManager ServerManager;
+
 
 	@ManagedProperty(value = "#{analyticaDashboardContext}")
 	private AnalyticaDashboardContext analyticaDashboardContext;
@@ -69,6 +72,7 @@ public final class AnalyticaDashboardController {
 	private Function<AnalyticaPanelConf, List<ColumnModel>> loadColumnModelFunction;
 	private Map<AnalyticaPanelConf, List<ColumnModel>> columnsEvalMap;
 
+
 	@PostConstruct
 	public void init() {
 		if (!analyticaDashboardContext.isInitialize()) {
@@ -81,7 +85,7 @@ public final class AnalyticaDashboardController {
 				analyticaDashboardContext.registerDashboard(dashboard, dashboardConf);
 
 				for (final String panelName : dashboardConf.getPanels()) {
-					final AnalyticaPanelConfBuilder panelConfBuilder = new AnalyticaPanelConfBuilder("analytica." + dashboard, panelName, configManager);
+					final AnalyticaPanelConfBuilder panelConfBuilder = new AnalyticaPanelConfBuilder("analytica." + dashboard, panelName, configManager,ServerManager);
 					//final AnalyticaPanelConf panelConf = configManager.resolve(dashboardContext + "." + panelName, AnalyticaPanelConf.class);
 					analyticaDashboardContext.registerPanel(panelName, panelConfBuilder.build());
 				}
@@ -110,40 +114,40 @@ public final class AnalyticaDashboardController {
 		};
 		dataEvalMap = new EvalMap<AnalyticaPanelConf, List<?>>(loadDataFunction, AnalyticaPanelConf.class);
 
-		loadDataWrappedFunction = new Function<AnalyticaPanelConf, List<Map<String, ?>>>() {
-			/** {@inheritDoc} */
-			public List<Map<String, ?>> apply(final AnalyticaPanelConf analyticaPanelConf) {
-				final List<DataSet> list = (List<DataSet>) getAnalyticaDashboardService().loadData(analyticaPanelConf);
-				final List<Map<String, ?>> result = new ArrayList<Map<String, ?>>();
-				final Map<String, Map<String, Object>> resultIndex = new HashMap<String, Map<String, Object>>();
-				for (final DataSet<String, ?> dataSet : list) {
-					for (int i = 0; i < dataSet.getLabels().size(); i++) {
-						final String label = dataSet.getLabels().get(i);
-						Map<String, Object> map = resultIndex.get(label);
-						if (map == null) {
-							map = new HashMap<String, Object>();
-							map.put("LABEL", dataSet.getLabels().get(i));
-							resultIndex.put(label, map);
-							result.add(map);
-						}
-						final Double value = (Double) dataSet.getValues().get(i);
-						if (value != null) {
-							map.put(dataSet.getKey().toString(), String.valueOf(Math.round(value)));
-						}
-					}
-				}
-				return result;
-			}
-		};
-		dataWrappedEvalMap = new EvalMap<AnalyticaPanelConf, List<Map<String, ?>>>(loadDataWrappedFunction, AnalyticaPanelConf.class);
+		//		loadDataWrappedFunction = new Function<AnalyticaPanelConf, List<Map<String, ?>>>() {
+		//			/** {@inheritDoc} */
+		//			public List<Map<String, ?>> apply(final AnalyticaPanelConf analyticaPanelConf) {
+		//				final List<DataSet> list = (List<DataSet>) getAnalyticaDashboardService().loadData(analyticaPanelConf);
+		//				final List<Map<String, ?>> result = new ArrayList<Map<String, ?>>();
+		//				final Map<String, Map<String, Object>> resultIndex = new HashMap<String, Map<String, Object>>();
+		//				for (final DataSet<String, ?> dataSet : list) {
+		//					for (int i = 0; i < dataSet.getLabels().size(); i++) {
+		//						final String label = dataSet.getLabels().get(i);
+		//						Map<String, Object> map = resultIndex.get(label);
+		//						if (map == null) {
+		//							map = new HashMap<String, Object>();
+		//							map.put("LABEL", dataSet.getLabels().get(i));
+		//							resultIndex.put(label, map);
+		//							result.add(map);
+		//						}
+		//						final Double value = (Double) dataSet.getValues().get(i);
+		//						if (value != null) {
+		//							map.put(dataSet.getKey().toString(), String.valueOf(Math.round(value)));
+		//						}
+		//					}
+		//				}
+		//				return result;
+		//			}
+		//		};
+		//		dataWrappedEvalMap = new EvalMap<AnalyticaPanelConf, List<Map<String, ?>>>(loadDataWrappedFunction, AnalyticaPanelConf.class);
 
-		loadChartModelFunction = new Function<AnalyticaPanelConf, ChartModel>() {
-			/** {@inheritDoc} */
-			public ChartModel apply(final AnalyticaPanelConf analyticaPanelConf) {
-				return getAnalyticaDashboardService().loadDataAsChartModel(analyticaPanelConf);
-			}
-		};
-		primefaceChartEvalMap = new EvalMap<AnalyticaPanelConf, ChartModel>(loadChartModelFunction, AnalyticaPanelConf.class);
+		//		loadChartModelFunction = new Function<AnalyticaPanelConf, ChartModel>() {
+		//			/** {@inheritDoc} */
+		//			public ChartModel apply(final AnalyticaPanelConf analyticaPanelConf) {
+		//				return getAnalyticaDashboardService().loadDataAsChartModel(analyticaPanelConf);
+		//			}
+		//		};
+		//		primefaceChartEvalMap = new EvalMap<AnalyticaPanelConf, ChartModel>(loadChartModelFunction, AnalyticaPanelConf.class);
 
 		loadColumnModelFunction = new Function<AnalyticaPanelConf, List<ColumnModel>>() {
 			/** {@inheritDoc} */
@@ -151,9 +155,10 @@ public final class AnalyticaDashboardController {
 				final List<ColumnModel> result = new ArrayList<ColumnModel>();
 				ColumnModel columnModel = new ColumnModel("Label", "LABEL");
 				result.add(columnModel);
-				for (int i = 0; i < analyticaPanelConf.getQuery().getKeys().size(); i++) {
-					final DataKey datakey = analyticaPanelConf.getQuery().getKeys().get(i);
-					columnModel = new ColumnModel(analyticaPanelConf.getLabels().get(i), datakey.toString());
+				final List<HCategory> categories = new ArrayList<HCategory>(analyticaPanelConf.getQuery().getAllCategories());
+				for (int i = 0; i < categories.size(); i++) {
+					final HCategory category = categories.get(i);
+					columnModel = new ColumnModel(analyticaPanelConf.getLabels().get(i), category.toString());
 					result.add(columnModel);
 				}
 				return result;
@@ -171,42 +176,42 @@ public final class AnalyticaDashboardController {
 		return dataEvalMap;
 	}
 
-	public List<Map<String, ?>> getDataMap(final AnalyticaPanelConf analyticaPanelConf) {
-		final List<?> list = getAnalyticaDashboardService().loadData(analyticaPanelConf);
-		final List<Map<String, ?>> result = new ArrayList<Map<String, ?>>();
-		for (int i = 0; i < list.size(); i++) {
-			final Object data = list.get(i);
-			if (data instanceof Data) {
-				final Map<String, Object> dataMap = new HashMap<String, Object>();
-				putDataMap(dataMap, (Data) data, analyticaPanelConf.getLabels().get(i));
-				result.add(dataMap);
-			} else if (data instanceof DataSet) {
-				final DataSet dataSet = (DataSet) data;
-				for (int j = 0; j < dataSet.getValues().size(); j++) {
-					final Map<String, Object> dataMap = new HashMap<String, Object>();
-					dataMap.put("key", dataSet.getKey());
-					final Object value = dataSet.getValues().get(j);
-					if (value instanceof Double) {
-						dataMap.put("value", round((Double) value, 2));
-					} else {
-						dataMap.put("value", value);
-					}
-					dataMap.put("stringValues", String.valueOf(value));
-					dataMap.put("label", analyticaPanelConf.getLabels().get(i) + " " + dataSet.getLabels().get(j));
-					result.add(dataMap);
-				}
-			}
+	//	public List<Map<String, ?>> getDataMap(final AnalyticaPanelConf analyticaPanelConf) {
+	//		final List<?> list = getAnalyticaDashboardService().loadData(analyticaPanelConf);
+	//		final List<Map<String, ?>> result = new ArrayList<Map<String, ?>>();
+	//		for (int i = 0; i < list.size(); i++) {
+	//			final Object data = list.get(i);
+	//			if (data instanceof Data) {
+	//				final Map<String, Object> dataMap = new HashMap<String, Object>();
+	//				putDataMap(dataMap, (Data) data, analyticaPanelConf.getLabels().get(i));
+	//				result.add(dataMap);
+	//			} else if (data instanceof DataSet) {
+	//				final DataSet dataSet = (DataSet) data;
+	//				for (int j = 0; j < dataSet.getValues().size(); j++) {
+	//					final Map<String, Object> dataMap = new HashMap<String, Object>();
+	//					dataMap.put("key", dataSet.getKey());
+	//					final Object value = dataSet.getValues().get(j);
+	//					if (value instanceof Double) {
+	//						dataMap.put("value", round((Double) value, 2));
+	//					} else {
+	//						dataMap.put("value", value);
+	//					}
+	//					dataMap.put("stringValues", String.valueOf(value));
+	//					dataMap.put("label", analyticaPanelConf.getLabels().get(i) + " " + dataSet.getLabels().get(j));
+	//					result.add(dataMap);
+	//				}
+	//			}
+	//
+	//		}
+	//		return result;
+	//	}
 
-		}
-		return result;
-	}
-
-	private void putDataMap(final Map<String, Object> dataMap, final Data data, final String label) {
-		dataMap.put("key", data.getKey());
-		dataMap.put("value", round(data.getValue(), 2));
-		dataMap.put("stringValues", data.getStringValues());
-		dataMap.put("label", label);
-	}
+	//	private void putDataMap(final Map<String, Object> dataMap, final Data data, final String label) {
+	//		dataMap.put("key", data.getKey());
+	//		dataMap.put("value", round(data.getValue(), 2));
+	//		dataMap.put("stringValues", data.getStringValues());
+	//		dataMap.put("label", label);
+	//	}
 
 	public Map<AnalyticaPanelConf, List<Map<String, ?>>> getDataWrapped() {
 		return dataWrappedEvalMap;
@@ -250,7 +255,7 @@ public final class AnalyticaDashboardController {
 
 	//=========================================================================
 	//=================Getters et setters pour JSF=============================
-	//=========================================================================	
+	//=========================================================================
 
 	public final AnalyticaDashboardContext getAnalyticaDashboardContext() {
 		return analyticaDashboardContext;

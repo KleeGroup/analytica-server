@@ -29,12 +29,10 @@ import javax.inject.Inject;
 import kasper.jsf.util.JSFConstants;
 import kasper.jsf.util.JSFUtil;
 
-import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.WhatDimension;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
+import com.kleegroup.analytica.hcube.dimension.HTime;
+import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.server.ServerManager;
-import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataSet;
 
 /**
  * @author npiedeloup
@@ -56,20 +54,20 @@ public final class AnalyticaController {
 	public void init() {
 		if (!analyticaContext.isInitialize()) {
 			// ---------------------------------------------------------------------
-			final TimeSelection firstTimeSelection = new TimeSelection(new Date(System.currentTimeMillis() - 366 * DAY_TIME_MILLIS), new Date(System.currentTimeMillis() + 366 * DAY_TIME_MILLIS), TimeDimension.Year);
-			final WhatSelection firstWhatSelection = new WhatSelection(WhatDimension.Global, WhatDimension.SEPARATOR);
+			final HTime firstTimeSelection = new HTime(new Date(System.currentTimeMillis() - 366 * DAY_TIME_MILLIS), HTimeDimension.Year);
+			final HCategory firstWhatSelection = new HCategory(""); //??
 
 			analyticaContext.setTimeSelection(firstTimeSelection);
 			analyticaContext.setWhatSelection(firstWhatSelection);
-			final List<DataKey> subDataKeys = serverManager.getSubDataKeys(firstTimeSelection, firstWhatSelection);
-			final SelectItemsAdapter<DataKey> dataKeysAdapter = new SelectItemsAdapter<DataKey>(subDataKeys);
+			final List<?> subDataKeys = serverManager.getSubDataKeys(firstTimeSelection, firstWhatSelection);
+			final SelectItemsAdapter<?> dataKeysAdapter = new SelectItemsAdapter<?>(subDataKeys);
 			dataKeysAdapter.setSelectedObjects(subDataKeys);
 			analyticaContext.setDataKeysAdapter(dataKeysAdapter);
 			analyticaContext.initialized();
 		}
 	}
 
-	public List<TimeSelection> getSubTimeSelections() {
+	public List<HTime> getSubTimeSelections() {
 		return serverManager.getSubTimeSelections(analyticaContext.getTimeSelection());
 	}
 
@@ -88,9 +86,9 @@ public final class AnalyticaController {
 	}
 
 	public String zoomInTime() {
-		// @param newTimeMax date max	 
+		// @param newTimeMax date max
 		final String newTimeMax = JSFUtil.getRequestParameter("timeMax");
-		// @param newTimeMin date min	 
+		// @param newTimeMin date min
 		final String newTimeMin = JSFUtil.getRequestParameter("timeMin");
 		// @param newDimension dimension
 		final String newDimension = JSFUtil.getRequestParameter("dimension");
@@ -117,8 +115,8 @@ public final class AnalyticaController {
 
 		final WhatSelection newWhatSelection = new WhatSelection(WhatDimension.valueOf(newDimension), newWhatValue);
 		analyticaContext.setWhatSelection(newWhatSelection);
-		final List<DataKey> subDataKeys = serverManager.getSubDataKeys(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
-		final SelectItemsAdapter<DataKey> dataKeysAdapter = new SelectItemsAdapter<DataKey>(subDataKeys);
+		final List<?> subDataKeys = serverManager.getSubDataKeys(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
+		final SelectItemsAdapter<?> dataKeysAdapter = new SelectItemsAdapter<?>(subDataKeys);
 		dataKeysAdapter.setSelectedObjects(subDataKeys);
 		analyticaContext.setDataKeysAdapter(dataKeysAdapter);
 
@@ -147,7 +145,7 @@ public final class AnalyticaController {
 
 	//=========================================================================
 	//=================Getters et setters pour JSF=============================
-	//=========================================================================	
+	//=========================================================================
 
 	public final ServerManager getServerManager() {
 		return serverManager;

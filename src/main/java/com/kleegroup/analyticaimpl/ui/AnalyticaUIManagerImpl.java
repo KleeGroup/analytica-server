@@ -86,7 +86,12 @@ public class AnalyticaUIManagerImpl implements AnalyticaUIManager {
 		out.print(" [");
 		out.print(process.getType());
 		out.print("] ");
-		out.print(process.getName());
+		//out.print(process.getName());
+		final String[] subTypes = process.getSubTypes();
+		for(int i = 0; i< subTypes.length;i++){
+			out.print(subTypes[i]);
+			out.print(";");
+		}
 		out.print(" ");
 		out.print(process.getMeasures().get(KProcess.DURATION));
 		out.print("ms  {");

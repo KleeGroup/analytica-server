@@ -18,6 +18,7 @@
 package com.kleegroup.analyticaimpl.ui.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,15 +26,13 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
 
-import org.primefaces.model.chart.CartesianChartModel;
-import org.primefaces.model.chart.ChartModel;
-import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.LineChartSeries;
-
 import com.google.gson.Gson;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
+import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
+import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.result.HResult;
+import com.kleegroup.analytica.hcube.result.HSerie;
 import com.kleegroup.analytica.server.ServerManager;
-import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analytica.server.data.DataSet;
 
 /**
  * @author npiedeloup
@@ -46,79 +45,89 @@ public final class AnalyticaDashboardService implements Serializable {
 	@Inject
 	private ServerManager serverManager;
 
-	public final String loadDataAsJson(final AnalyticaPanelConf analyticaPanelConf) {
-		final Object objectResult;
-		if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
-			final List<Data> datas = serverManager.getData(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			objectResult = datas;
-		} else if (analyticaPanelConf.isAggregateTime()) {
-			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			objectResult = datas;
-		} else {
-			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			objectResult = datas;
+
+	public String loadTestDataAsJson() {
+		final List<HSerie> objectResult;
+		//if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
+		final HQuery query = serverManager.createQueryBuilder() //
+				.on(HTimeDimension.Minute)//
+				.from(new Date(System.currentTimeMillis()-60*60*1000))//
+				.to(new Date()) //
+				.with("REQUEST")
+				.build();
+		final HResult result = serverManager.execute(query);
+
+		objectResult = new ArrayList<HSerie>();
+		for(final HCategory category : result.getQuery().getAllCategories()){
+			objectResult.add(result.getSerie(category));
 		}
 		final Gson gson = new Gson();
 		return gson.toJson(objectResult);
 	}
 
-	public final ChartModel loadDataAsChartModel(final AnalyticaPanelConf analyticaPanelConf) {
-		final CartesianChartModel result = new CartesianChartModel();
-		if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
-			final List<Data> datas = serverManager.getData(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			final ChartSeries serie = new ChartSeries();
-			serie.setLabel(analyticaPanelConf.getPanelTitle());
-			for (final Data data : datas) {
-				serie.set(data.getKey().getName() + "(" + data.getKey().getType().name() + ")", data.getValue());
-			}
-			result.addSeries(serie);
-		} else if (analyticaPanelConf.isAggregateTime()) {
-			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			for (final DataSet<String, ?> dataSet : datas) {
-				final LineChartSeries serie = new LineChartSeries();
-				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
-				final List<String> labels = dataSet.getLabels();
-				final List<?> values = dataSet.getValues();
-				for (int i = 0; i < labels.size(); i++) {
-					serie.set(labels.get(i).substring(1), (Double) values.get(i));
-				}
-				result.addSeries(serie);
-			}
-
-		} else {
-			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			for (final DataSet<Date, ?> dataSet : datas) {
-				final LineChartSeries serie = new LineChartSeries();
-				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
-				final List<Date> labels = dataSet.getLabels();
-				final List<?> values = dataSet.getValues();
-				for (int i = 0; i < labels.size(); i++) {
-					serie.set(labels.get(i).getTime(), (Double) values.get(i));
-				}
-				result.addSeries(serie);
-			}
-		}
-		return result;
+	public final String loadDataAsJson(final AnalyticaPanelConf analyticaPanelConf) {
+		final List<HSerie> datas = loadData(analyticaPanelConf);
+		final Gson gson = new Gson();
+		return gson.toJson(datas);
 	}
 
-	public List<?> loadData(final AnalyticaPanelConf analyticaPanelConf) {
-		final List<?> result;
-		if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
-			final List<Data> datas = serverManager.getData(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			result = datas;
-		} else if (analyticaPanelConf.isAggregateTime()) {
-			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			result = datas;
-		} else {
-			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
-			result = datas;
+	//	public final ChartModel loadDataAsChartModel(final AnalyticaPanelConf analyticaPanelConf) {
+	//		final CartesianChartModel result = new CartesianChartModel();
+	//		if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
+	//
+	//			final List<HSerie> datas = serverManager.getData(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+	//
+	//			final ChartSeries serie = new ChartSeries();
+	//			serie.setLabel(analyticaPanelConf.getPanelTitle());
+	//			for (final HCube data : datas) {
+	//				serie.set(data.);
+	//				//serie.set(data.getKey().getName() + "(" + data.getKey().getType().name() + ")", data.getValue());
+	//			}
+	//			result.addSeries(serie);
+	//		} else if (analyticaPanelConf.isAggregateTime()) {
+	//			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+	//			for (final DataSet<String, ?> dataSet : datas) {
+	//				final LineChartSeries serie = new LineChartSeries();
+	//				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
+	//				final List<String> labels = dataSet.getLabels();
+	//				final List<?> values = dataSet.getValues();
+	//				for (int i = 0; i < labels.size(); i++) {
+	//					serie.set(labels.get(i).substring(1), (Double) values.get(i));
+	//				}
+	//				result.addSeries(serie);
+	//			}
+	//
+	//		} else {
+	//			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaPanelConf.getTimeSelection(), analyticaPanelConf.getWhatSelection(), analyticaPanelConf.getDataKeys());
+	//			for (final DataSet<Date, ?> dataSet : datas) {
+	//				final LineChartSeries serie = new LineChartSeries();
+	//				serie.setLabel(dataSet.getKey().getName() + "(" + dataSet.getKey().getType().name() + ")");
+	//				final List<Date> labels = dataSet.getLabels();
+	//				final List<?> values = dataSet.getValues();
+	//				for (int i = 0; i < labels.size(); i++) {
+	//					serie.set(labels.get(i).getTime(), (Double) values.get(i));
+	//				}
+	//				result.addSeries(serie);
+	//			}
+	//		}
+	//		return result;
+	//	}
+
+	public List<HSerie> loadData(final AnalyticaPanelConf analyticaPanelConf) {
+		final List<HSerie> objectResult;
+		//if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
+		final HResult result = serverManager.execute(analyticaPanelConf.getQuery());
+
+		objectResult = new ArrayList<HSerie>();
+		for(final HCategory category : result.getQuery().getAllCategories()){
+			objectResult.add(result.getSerie(category));
 		}
-		return result;
+		return objectResult;
 	}
 
 	//=========================================================================
 	//=================Getters et setters pour JSF=============================
-	//=========================================================================	
+	//=========================================================================
 
 	public final ServerManager getServerManager() {
 		return serverManager;
