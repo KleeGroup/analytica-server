@@ -21,7 +21,7 @@ import java.util.List;
 
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.query.Query;
+import com.kleegroup.analytica.hcube.query.HQuery;
 
 /**
  * @author npiedeloup
@@ -30,7 +30,7 @@ import com.kleegroup.analytica.hcube.query.Query;
 public final class AnalyticaPanelConf {
 	private final boolean aggregateTime;
 	private final boolean aggregateWhat;
-	private final Query panelQuery;
+	private final HQuery panelQuery;
 	private final List<String> labels;
 	private final String colors;
 	private final String panelName;
@@ -48,7 +48,7 @@ public final class AnalyticaPanelConf {
 	 * @param aggregateTime Si aggregation temporelle
 	 * @param aggregateWhat Si aggregation fonctionnelle
 	 */
-	public AnalyticaPanelConf(final String panelName, final Query panelQuery, final List<String> labels, final boolean aggregateTime, final boolean aggregateWhat, final String panelTitle, final String panelIcon, final String panelRenderer, final String colors, final int panelWidth, final int panelHeight) {
+	public AnalyticaPanelConf(final String panelName, final HQuery panelQuery, final List<String> labels, final boolean aggregateTime, final boolean aggregateWhat, final String panelTitle, final String panelIcon, final String panelRenderer, final String colors, final int panelWidth, final int panelHeight) {
 		Assertion.notEmpty(panelName);
 		Assertion.notNull(panelQuery);
 		Assertion.notNull(labels);
@@ -56,7 +56,7 @@ public final class AnalyticaPanelConf {
 		Assertion.notEmpty(panelTitle);
 		Assertion.notEmpty(panelIcon);
 		Assertion.notEmpty(colors);
-		Assertion.precondition(panelQuery.getKeys().size() == labels.size(), "Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).", panelQuery.getKeys().size(), labels.size());
+		Assertion.precondition(panelQuery.getAllCategories().size() == labels.size(), "Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).", panelQuery.getAllCategories().size(), labels.size());
 		//---------------------------------------------------------------------
 		this.panelName = panelName;
 		this.aggregateTime = aggregateTime;
@@ -121,7 +121,7 @@ public final class AnalyticaPanelConf {
 		return colors;
 	}
 
-	public Query getQuery() {
+	public HQuery getQuery() {
 		return panelQuery;
 	}
 }
