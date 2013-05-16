@@ -17,8 +17,13 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.inject.Inject;
 
+import kasper.kernel.lang.Activeable;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
@@ -33,10 +38,10 @@ import com.kleegroup.analytica.server.ServerManager;
  * @author npiedeloup
  * @version $Id: ServerManagerImpl.java,v 1.22 2013/01/14 16:35:19 npiedeloup Exp $
  */
-public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
+public final class ServerManagerImpl implements ServerManager, Activeable{
 	private final HCubeManager hcubeManager;
-
-	//	private Timer asyncCubeStoreTimer = null;
+	private final ProcessStorePlugin processStorePlugin;
+	private Timer asyncCubeStoreTimer = null;
 
 	/**
 	 * Constructeur.
@@ -48,8 +53,10 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin) {
 		super();
 		Assertion.notNull(hcubeManager);
+		Assertion.notNull(processStorePlugin);
 		//-----------------------------------------------------------------
 		this.hcubeManager = hcubeManager;
+		this.processStorePlugin =processStorePlugin;
 	}
 
 	/** {@inheritDoc} */
@@ -63,23 +70,44 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 	}
 
 	/** {@inheritDoc} */
-		public HQueryBuilder createQueryBuilder() {
-			return hcubeManager.createQueryBuilder();
+	public HQueryBuilder createQueryBuilder() {
+		return hcubeManager.createQueryBuilder();
+	}
+
+	/** {@inheritDoc} */
+	public void start() {
+		asyncCubeStoreTimer = new Timer(true);
+		final TimerTask storeCubeTask = new StoreCubeTask();
+		asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //50processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
+	}
+
+	/** {@inheritDoc} */
+	public void stop() {
+		asyncCubeStoreTimer.cancel();
+		asyncCubeStoreTimer = null;
+	}
+
+	private class StoreCubeTask extends TimerTask {
+		/** {@inheritDoc} */
+		@Override
+		public void run() {
+			store50NextProcessesAsCube();
+		}
+	}
+
+	/** {@inheritDoc} */
+	private int store50NextProcessesAsCube() {
+		final String lastProcessIdStored = null;
+		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 200);
+		for (final Identified<KProcess> process : nextProcesses) {
+			hcubeManager.push(process.getData());
+		}
+		return nextProcesses.size();
 	}
 }
-	
 
-//	/** {@inheritDoc} */
-//	public int store50NextProcessesAsCube() {
-//		final String lastProcessIdStored = cubeStorePlugin.loadLastProcessIdStored();
-//		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 200);
-//		for (final Identified<KProcess> process : nextProcesses) {
-//			//System.out.println("READ " + process.getKey());
-//			storeAsCube(process.getData());
-//			cubeStorePlugin.saveLastProcessIdStored(process.getKey());
-//		}
-//		return nextProcesses.size();
-//	}
+
+
 //
 //	private void storeAsCube(final KProcess process) {
 //		//Encode le process et ses sous process
@@ -151,7 +179,7 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 //		}
 //		//2- On parcour les cubes et on remplit les données
 //		for (final Cube cube : aggregatedCubes) {
-//			//Si la liste des cubes est limité on peut éviter ce if, 
+//			//Si la liste des cubes est limité on peut éviter ce if,
 //			//mais il reste intéréssant de remplir les labels au même endroit que les valeurs
 //			if (dateAsLabels) {
 //				labels.add((X) cube.getPosition().getTime().getValue());
@@ -195,26 +223,7 @@ public final class ServerManagerImpl implements ServerManager/*, Activeable*/{
 //		return metric.get(dataKey.getType());
 //	}
 //
-//	/** {@inheritDoc} */
-//	public void start() {
-//		asyncCubeStoreTimer = new Timer(true);
-//		final TimerTask storeCubeTask = new StoreCubeTask();
-//		asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //50processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
-//	}
-//
-//	/** {@inheritDoc} */
-//	public void stop() {
-//		asyncCubeStoreTimer.cancel();
-//		asyncCubeStoreTimer = null;
-//	}
 
-//	private class StoreCubeTask extends TimerTask {
-//		/** {@inheritDoc} */
-//		@Override
-//		public void run() {
-//			store50NextProcessesAsCube();
-//		}
-//	}
-//
+
 //	/** {@inheritDoc} */
 
