@@ -19,7 +19,7 @@ package com.kleegroup.analyticaimpl.ui.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,13 +28,11 @@ import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.cube.DataKey;
-import com.kleegroup.analytica.hcube.cube.DataType;
-import com.kleegroup.analytica.hcube.cube.MetricKey;
-import com.kleegroup.analytica.hcube.dimension.TimeDimension;
-import com.kleegroup.analytica.hcube.dimension.WhatDimension;
-import com.kleegroup.analytica.hcube.query.Query;
-import com.kleegroup.analytica.hcube.query.QueryBuilder;
+import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
+import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.query.HQueryBuilder;
+import com.kleegroup.analytica.server.ServerManager;
+
 
 /**
  * @author npiedeloup
@@ -42,6 +40,7 @@ import com.kleegroup.analytica.hcube.query.QueryBuilder;
  */
 public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelConf> {
 	private final ConfigManager configManager;
+	private final ServerManager serverManager;
 	private final String dashboardContext;
 
 	private final String panelName;
@@ -52,24 +51,26 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 	 * @param panelName Nom du panel
 	 * @param configManager Manager de config
 	 */
-	public AnalyticaPanelConfBuilder(final String dashboardContext, final String panelName, final ConfigManager configManager) {
+	public AnalyticaPanelConfBuilder(final String dashboardContext, final String panelName, final ConfigManager configManager, final ServerManager serverManager) {
 		Assertion.notEmpty(dashboardContext);
 		Assertion.notEmpty(panelName);
+		Assertion.notNull(configManager);
 		Assertion.notNull(configManager);
 		//---------------------------------------------------------------------
 		this.dashboardContext = dashboardContext;
 		this.panelName = panelName;
 		this.configManager = configManager;
+		this.serverManager = serverManager;
 	}
 
 	/** {@inheritDoc} */
 	public AnalyticaPanelConf build() {
 		final String panelContext = dashboardContext + "." + panelName;
-		final QueryBuilder queryBuilder = new QueryBuilder(readDataKeyList(panelContext));
+		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder();
 		readTimeSelection(panelContext, queryBuilder);
 		readWhatSelection(panelContext, queryBuilder);
 
-		final Query panelQuery = queryBuilder.build();
+		final HQuery panelQuery = queryBuilder.build();
 		final List<String> panelLabels = java.util.Arrays.asList(configManager.getStringValue(panelContext, "labels").split(";"));
 
 		final boolean aggregateTime;
@@ -87,6 +88,7 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		} else {
 			throw new IllegalArgumentException("Le type de chargement de données '" + dataLoadType + "' n'est pas reconnu. Types possible : data, whatLine, timeLine.");
 		}
+		final List<String> metrics = readDataKeyList(panelContext);
 		final String panelTitle = configManager.getStringValue(panelContext, "title");
 		final String panelIcon = configManager.getStringValue(panelContext, "icon");
 		final String panelRenderer = configManager.getStringValue(panelContext, "renderer");
@@ -98,45 +100,45 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 
 	}
 
-	private List<DataKey> readDataKeyList(final String panelContext) {
-		final List<DataKey> dataKeys = new ArrayList<DataKey>(); //attention l'ordre est important
+	private List<String> readDataKeyList(final String panelContext) {
 		final String dataList = configManager.getStringValue(panelContext, "dataList");
-		for (final String dataKeyStr : dataList.split(";")) {
-			final int typeIndexOf = dataKeyStr.indexOf(':');
-			Assertion.precondition(typeIndexOf > 0, "Le nom de la dataKey {0} est incorrect. Doit être : <MEASURE_NAME>:<DataType> avec <DataType>: MetaData, Count, Mean, Max, Min, StandardDeviation");
-			final String dataKeyName = dataKeyStr.substring(0, typeIndexOf);
-			final DataType dataKeyType = DataType.valueOf(dataKeyStr.substring(typeIndexOf + 1));
-			final DataKey dataKey = new DataKey(new MetricKey(dataKeyName), dataKeyType);
-			dataKeys.add(dataKey);
-		}
+		final List<String> dataKeys = Arrays.asList(dataList.split(";"));
 		return dataKeys;
 	}
 
-	private void readWhatSelection(final String confContext, final QueryBuilder queryBuilder) {
+	private void readWhatSelection(final String confContext, final HQueryBuilder queryBuilder) {
 		final String whatDim = configManager.getStringValue(confContext, "whatDim");
 		final String whatList = configManager.getStringValue(confContext, "whatList");
+		final String timeDim = configManager.getStringValue(confContext, "timeDim");
+		final HTimeDimension timeDimension =HTimeDimension.valueOf(timeDim);
 
-		final WhatDimension whatDimension = WhatDimension.valueOf(whatDim);
-		queryBuilder//
-				.on(whatDimension)//
-				.with(whatList.split(";"));
+		final String[] categoryList = whatList.split(";");
+		if (categoryList.length>1){
+			queryBuilder
+			.on(timeDimension)
+			.withChildren(categoryList[0], categoryList);
+		}else if (categoryList.length==1){
+			queryBuilder//
+			.on(timeDimension)//
+			.with(categoryList[0],categoryList);
+		}
 	}
 
-	private void readTimeSelection(final String confContext, final QueryBuilder queryBuilder) {
+	private void readTimeSelection(final String confContext, final HQueryBuilder queryBuilder) {
 		final String timeDim = configManager.getStringValue(confContext, "timeDim");
 		final String timeFrom = configManager.getStringValue(confContext, "timeFrom");
 		final String timeTo = configManager.getStringValue(confContext, "timeTo");
 
-		final TimeDimension timeDimension = TimeDimension.valueOf(timeDim);
+		final HTimeDimension timeDimension = HTimeDimension.valueOf(timeDim);
 		final Date minValue = readDate(timeFrom, timeDimension);
 		final Date maxValue = readDate(timeTo, timeDimension);
 		queryBuilder//
-				.on(timeDimension)//
-				.from(minValue)//
-				.to(maxValue);
+		.on(timeDimension)//
+		.from(minValue)//
+		.to(maxValue);
 	}
 
-	private Date readDate(final String timeStr, final TimeDimension dimension) {
+	private Date readDate(final String timeStr, final HTimeDimension dimension) {
 		if (timeStr.equals("NOW")) {
 			return new Date();
 		} else if (timeStr.startsWith("NOW-")) {
@@ -148,19 +150,19 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		}
 		final String datePattern;
 		switch (dimension) {
-			case Year:
-				datePattern = "yyyy";
-				break;
-			case Month:
-				datePattern = "MM/yyyy";
-				break;
-			case Day:
-				datePattern = "dd/MM/yyyy";
-				break;
-			case Hour:
-			case Minute:
-			default:
-				datePattern = "HH:mm dd/MM/yyyy";
+		case Year:
+			datePattern = "yyyy";
+			break;
+		case Month:
+			datePattern = "MM/yyyy";
+			break;
+		case Day:
+			datePattern = "dd/MM/yyyy";
+			break;
+		case Hour:
+		case Minute:
+		default:
+			datePattern = "HH:mm dd/MM/yyyy";
 		}
 		final SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
 		try {
@@ -181,14 +183,14 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 			delta = Long.valueOf(deltaAsString.substring(0, deltaAsString.length() - 1));
 		}
 		switch (unit) {
-			case 'd':
-				return delta * 24 * 60 * 60 * 1000L;
-			case 'h':
-				return delta * 60 * 60 * 1000L;
-			case 'm':
-				return delta * 60 * 1000L;
-			default:
-				throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
+		case 'd':
+			return delta * 24 * 60 * 60 * 1000L;
+		case 'h':
+			return delta * 60 * 60 * 1000L;
+		case 'm':
+			return delta * 60 * 1000L;
+		default:
+			throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
 		}
 	}
 
