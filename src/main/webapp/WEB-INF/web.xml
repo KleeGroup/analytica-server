@@ -19,7 +19,7 @@
 	
     <context-param>
         <param-name>applicationConfiguration</param-name>
-        <param-value>/META-INF/managers.xml</param-value>
+        <param-value>/META-INF/managers-test.xml</param-value>
     </context-param>
     <context-param>
         <param-name>componentConfiguration</param-name>

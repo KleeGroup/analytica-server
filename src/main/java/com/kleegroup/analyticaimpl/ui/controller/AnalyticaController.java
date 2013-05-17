@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.ui.controller;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -26,12 +26,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 
-import kasper.jsf.util.JSFConstants;
-import kasper.jsf.util.JSFUtil;
-
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTime;
-import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
+import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.server.ServerManager;
 
 /**
@@ -54,90 +51,100 @@ public final class AnalyticaController {
 	public void init() {
 		if (!analyticaContext.isInitialize()) {
 			// ---------------------------------------------------------------------
-			final HTime firstTimeSelection = new HTime(new Date(System.currentTimeMillis() - 366 * DAY_TIME_MILLIS), HTimeDimension.Year);
-			final HCategory firstWhatSelection = new HCategory(""); //??
+			//			final HTime firstTimeSelection = new HTime(new Date(System.currentTimeMillis() - 366 * DAY_TIME_MILLIS), HTimeDimension.Year);
+			//			final HCategory firstWhatSelection = new HCategory(""); //??
+			//
+			//			analyticaContext.setTimeSelection(firstTimeSelection);
+			//			analyticaContext.setWhatSelection(firstWhatSelection);
+			//			final List<?> subDataKeys = serverManager.getSubDataKeys(firstTimeSelection, firstWhatSelection);
+			//			final SelectItemsAdapter<?> dataKeysAdapter = new SelectItemsAdapter<?>(subDataKeys);
+			//			dataKeysAdapter.setSelectedObjects(subDataKeys);
+			//			analyticaContext.setDataKeysAdapter(dataKeysAdapter);
+			//			analyticaContext.initialized();
 
-			analyticaContext.setTimeSelection(firstTimeSelection);
-			analyticaContext.setWhatSelection(firstWhatSelection);
-			final List<?> subDataKeys = serverManager.getSubDataKeys(firstTimeSelection, firstWhatSelection);
-			final SelectItemsAdapter<?> dataKeysAdapter = new SelectItemsAdapter<?>(subDataKeys);
-			dataKeysAdapter.setSelectedObjects(subDataKeys);
-			analyticaContext.setDataKeysAdapter(dataKeysAdapter);
 			analyticaContext.initialized();
 		}
 	}
 
 	public List<HTime> getSubTimeSelections() {
-		return serverManager.getSubTimeSelections(analyticaContext.getTimeSelection());
+		//return serverManager.getSubTimeSelections(analyticaContext.getTimeSelection());
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
-	public List<WhatSelection> getSubWhatSelections() {
-		return serverManager.getSubWhatSelections(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
+	public List<HCategory> getSubWhatSelections() {
+		//return serverManager.getSubWhatSelections(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
+		//	throw new UnsupportedOperationException("Not yet implemented");
+		final HQuery query = serverManager.createQueryBuilder()
+				.build();
+		final List<HCategory> categories = new ArrayList<HCategory>();
+		for (final HCategory category : query.getAllCategories()) {
+			categories.add(category);
+		}
+		return categories;
 	}
 
 	/*public List<DataKey> getSubDataKeys() {
 		return serverManager.getSubDataKeys(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
 	}*/
 
-	public String zoomOutTime() {
-		analyticaContext.setTimeSelection(analyticaContext.getSuperTimeSelection());
-
-		return refresh();
-	}
-
-	public String zoomInTime() {
-		// @param newTimeMax date max
-		final String newTimeMax = JSFUtil.getRequestParameter("timeMax");
-		// @param newTimeMin date min
-		final String newTimeMin = JSFUtil.getRequestParameter("timeMin");
-		// @param newDimension dimension
-		final String newDimension = JSFUtil.getRequestParameter("dimension");
-
-		final TimeSelection newTimeSelection = new TimeSelection(new Date(Long.parseLong(newTimeMin)), new Date(Long.parseLong(newTimeMax)), TimeDimension.valueOf(newDimension));
-		analyticaContext.setTimeSelection(newTimeSelection);
-		final List<DataKey> subDataKeys = serverManager.getSubDataKeys(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
-		final SelectItemsAdapter<DataKey> dataKeysAdapter = new SelectItemsAdapter<DataKey>(subDataKeys);
-		dataKeysAdapter.setSelectedObjects(subDataKeys);
-
-		return refresh();
-	}
-
-	public String zoomOutWhat() {
-		analyticaContext.setWhatSelection(analyticaContext.getSuperWhatSelection());
-
-		return refresh();
-	}
-
-	public String zoomInWhat() {
-		final String newWhatValue = JSFUtil.getRequestParameter("whatSelection");
-		// @param newDimension dimension
-		final String newDimension = JSFUtil.getRequestParameter("dimension");
-
-		final WhatSelection newWhatSelection = new WhatSelection(WhatDimension.valueOf(newDimension), newWhatValue);
-		analyticaContext.setWhatSelection(newWhatSelection);
-		final List<?> subDataKeys = serverManager.getSubDataKeys(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
-		final SelectItemsAdapter<?> dataKeysAdapter = new SelectItemsAdapter<?>(subDataKeys);
-		dataKeysAdapter.setSelectedObjects(subDataKeys);
-		analyticaContext.setDataKeysAdapter(dataKeysAdapter);
-
-		return refresh();
-	}
-
-	public String refresh() {
-		analyticaContext.resetDatas();
-		if (!analyticaContext.isAggregateTime() && !analyticaContext.isAggregateWhat()) {
-			final List<Data> datas = serverManager.getData(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection(), analyticaContext.getDataKeysAdapter().getSelectedObject());
-			analyticaContext.setDatas(datas);
-		} else if (analyticaContext.isAggregateTime()) {
-			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection(), analyticaContext.getDataKeysAdapter().getSelectedObject());
-			analyticaContext.setWhatLineDatas(datas);
-		} else {
-			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection(), analyticaContext.getDataKeysAdapter().getSelectedObject());
-			analyticaContext.setTimeLineDatas(datas);
-		}
-
-		return JSFConstants.SUCCESS;
-	}
+	//	public String zoomOutTime() {
+	//		analyticaContext.setTimeSelection(analyticaContext.getSuperTimeSelection());
+	//		return refresh();
+	//	}
+	//
+	//	public String zoomInTime() {
+	//		// @param newTimeMax date max
+	//		final String newTimeMax = JSFUtil.getRequestParameter("timeMax");
+	//		// @param newTimeMin date min
+	//		final String newTimeMin = JSFUtil.getRequestParameter("timeMin");
+	//		// @param newDimension dimension
+	//		final String newDimension = JSFUtil.getRequestParameter("dimension");
+	//
+	//		final TimeSelection newTimeSelection = new TimeSelection(new Date(Long.parseLong(newTimeMin)), new Date(Long.parseLong(newTimeMax)), TimeDimension.valueOf(newDimension));
+	//		analyticaContext.setTimeSelection(newTimeSelection);
+	//		final List<DataKey> subDataKeys = serverManager.getSubDataKeys(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
+	//		final SelectItemsAdapter<DataKey> dataKeysAdapter = new SelectItemsAdapter<DataKey>(subDataKeys);
+	//		dataKeysAdapter.setSelectedObjects(subDataKeys);
+	//
+	//		return refresh();
+	//	}
+	//
+	//	public String zoomOutWhat() {
+	//		analyticaContext.setWhatSelection(analyticaContext.getSuperWhatSelection());
+	//
+	//		return refresh();
+	//	}
+	//
+	//	public String zoomInWhat() {
+	//		final String newWhatValue = JSFUtil.getRequestParameter("whatSelection");
+	//		// @param newDimension dimension
+	//		final String newDimension = JSFUtil.getRequestParameter("dimension");
+	//
+	//		final WhatSelection newWhatSelection = new WhatSelection(WhatDimension.valueOf(newDimension), newWhatValue);
+	//		analyticaContext.setWhatSelection(newWhatSelection);
+	//		final List<?> subDataKeys = serverManager.getSubDataKeys(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection());
+	//		final SelectItemsAdapter<?> dataKeysAdapter = new SelectItemsAdapter<?>(subDataKeys);
+	//		dataKeysAdapter.setSelectedObjects(subDataKeys);
+	//		analyticaContext.setDataKeysAdapter(dataKeysAdapter);
+	//
+	//		return refresh();
+	//	}
+	//
+	//	public String refresh() {
+	//		analyticaContext.resetDatas();
+	//		if (!analyticaContext.isAggregateTime() && !analyticaContext.isAggregateWhat()) {
+	//			final List<Data> datas = serverManager.getData(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection(), analyticaContext.getDataKeysAdapter().getSelectedObject());
+	//			analyticaContext.setDatas(datas);
+	//		} else if (analyticaContext.isAggregateTime()) {
+	//			final List<DataSet<String, ?>> datas = serverManager.getDataWhatLine(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection(), analyticaContext.getDataKeysAdapter().getSelectedObject());
+	//			analyticaContext.setWhatLineDatas(datas);
+	//		} else {
+	//			final List<DataSet<Date, ?>> datas = serverManager.getDataTimeLine(analyticaContext.getTimeSelection(), analyticaContext.getWhatSelection(), analyticaContext.getDataKeysAdapter().getSelectedObject());
+	//			analyticaContext.setTimeLineDatas(datas);
+	//		}
+	//
+	//		return JSFConstants.SUCCESS;
+	//	}
 
 	public final AnalyticaContext getCtx() {
 		return analyticaContext;
