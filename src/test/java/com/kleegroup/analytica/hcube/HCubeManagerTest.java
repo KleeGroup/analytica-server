@@ -335,7 +335,6 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 	@Test
 	public void testMultiThread() throws InterruptedException {
-		final long start = System.currentTimeMillis();
 		final ExecutorService workersPool = Executors.newFixedThreadPool(20);
 		for (int i = 0; i < 50; i++) {
 			workersPool.execute(new Runnable() {

@@ -34,10 +34,6 @@ import com.kleegroup.analytica.hcube.query.HQuery;
  */
 public class ServerManagerTest extends AbstractTestCaseJU4 {
 	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
-	private static final HMetricKey POIDS = new HMetricKey("POIDS", false);
-	private static final HMetricKey DURATION = new HMetricKey(KProcess.DURATION, true);
-
-	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
 
 	@Inject
@@ -47,7 +43,6 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 
 	private Date date;
 	private final int price = 8;
-	private int categoryLevel;
 
 	@Before
 	public void init() throws ParseException {
@@ -68,8 +63,8 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 	@Test
 	public void testSimpleProcess() {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
-				.incMeasure(MONTANT.id(), price)//
-				.build();
+		.incMeasure(MONTANT.id(), price)//
+		.build();
 		serverManager.push(selectProcess1);
 
 		final HQuery daySqlQuery = cubeManager.createQueryBuilder()//
