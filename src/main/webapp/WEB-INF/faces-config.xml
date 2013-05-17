@@ -33,4 +33,8 @@
 		<converter-class>com.kleegroup.analyticaimpl.ui.chart.sparkline.SparkLineConveter</converter-class>
 	</converter>
 	
+	<converter>
+		<converter-id>simpleConverter</converter-id>
+		<converter-class>com.kleegroup.analyticaimpl.ui.test.SimpleConverter</converter-class>
+	</converter>
 </faces-config>

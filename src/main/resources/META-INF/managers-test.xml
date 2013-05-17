@@ -1,0 +1,15 @@
+<?xml version =	'1.0' encoding = 'ISO-8859-1'?>
+<modules>
+	<module name="analytica">
+		<manager name="ConfigManager" class="kasperimpl.config.ConfigManagerImpl"/>
+
+		<manager name="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
+		        <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin"/>
+		</manager>
+		<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
+	        <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
+	        	<param name="dbPath" value="d:/analytica/db" />
+	        </plugin>
+	     </manager>
+     </module>
+</modules>

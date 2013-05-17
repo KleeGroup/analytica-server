@@ -169,5 +169,4 @@ public final class AnalyticaController {
 	public final void setAnalyticaContext(final AnalyticaContext analyticaContext) {
 		this.analyticaContext = analyticaContext;
 	}
-
 }

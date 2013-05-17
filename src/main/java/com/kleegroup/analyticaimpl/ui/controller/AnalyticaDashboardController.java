@@ -48,6 +48,7 @@ public final class AnalyticaDashboardController {
 
 	@Inject
 	private ConfigManager configManager;
+
 	@Inject
 	private ServerManager ServerManager;
 

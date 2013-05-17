@@ -46,7 +46,7 @@ public final class AnalyticaDashboardService implements Serializable {
 	private ServerManager serverManager;
 
 
-	public String loadTestDataAsJson() {
+	public String getloadTestDataAsJson() {
 		//if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
 		final HQuery query = serverManager.createQueryBuilder() //
 				.on(HTimeDimension.Minute)//

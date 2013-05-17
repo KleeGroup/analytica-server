@@ -21,6 +21,8 @@ import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -35,9 +37,9 @@ import com.kleegroup.analytica.ui.AnalyticaUIManager;
  * @author npiedeloup
  */
 public class AnalyticaUIManagerImpl implements AnalyticaUIManager {
-	//	private final ServerManager serverManager;
+	private final ServerManager serverManager;
 
-	//	private final Timer timer;
+	private final Timer timer;
 
 	/**
 	 * Constructeur.
@@ -47,29 +49,26 @@ public class AnalyticaUIManagerImpl implements AnalyticaUIManager {
 	public AnalyticaUIManagerImpl(final ServerManager serverManager) {
 		Assertion.notNull(serverManager);
 		//-----------------------------------------------------------------
-		//this.serverManager = serverManager;
-		//		timer = new Timer("AnalyticaUIManagerRenderer", true);
+		this.serverManager = serverManager;
+		timer = new Timer("AnalyticaUIManagerRenderer", true);
 	}
 
-	//	/** {@inheritDoc} */
-	//	@Override
-	//	public void start() {
-	//		//		final TimerTask task = new TimerTask() {
-	//		//			/** {@inheritDoc} */
-	//		//			@Override
-	//		//			public void run() {
-	//		//				System.out.println(AnalyticaUIManagerImpl.this.toString(serverManager.getProcesses()));
-	//		//			}
-	//		//
-	//		//		};
-	//		//timer.scheduleAtFixedRate(task, 20 * 1000L, 30 * 1000L);
-	//	}
-	//
-	//	/** {@inheritDoc} */
-	//	@Override
-	//	public void stop() {
-	//		//	timer.cancel();
-	//	}
+	/** {@inheritDoc} */
+	public void start() {
+		final TimerTask task = new TimerTask() {
+			/** {@inheritDoc} */
+			@Override
+			public void run() {
+				System.out.println(AnalyticaUIManagerImpl.this.serverManager.toString());
+			}
+		};
+		timer.scheduleAtFixedRate(task, 20 * 1000L, 30 * 1000L);
+	}
+
+	/** {@inheritDoc} */
+	public void stop() {
+		timer.cancel();
+	}
 
 	/** {@inheritDoc} */
 	public String toString(final List<KProcess> processes) {

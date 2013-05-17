@@ -1,29 +1,32 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+
+  <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:analytica="http://java.sun.com/jsf/composite/components/analytica"
-	xmlns:k="http://java.sun.com/jsf/composite/components/kasper"
-	template="template.xhtml">
+	xmlns:k="http://java.sun.com/jsf/composite/components/kasper">
+		<f:view contentType="text/html">
+		<h:head>
+				<title>Analytica - Test</title>
+		</h:head>
+		<h:body>
+			<div></div>
+			datas = <h:outputText escape="false" value="#{analyticaDashboardService.loadTestDataAsJson}">
+  			<f:converter converterId="simpleConverter"/>
+  			<f:attribute name="datas" value="#{analyticaDashboardController.data[cc.attrs.panel]}"/>
+  			</h:outputText>
+  			
+			<h:form >
+			
+			<!-- datas = <h:outputText value="#{analyticaDashboardService.loadTestDataAsJson}">
+        	</h:outputText> -->
+        	
+						
+			</h:form>
+		</h:body>
+		</f:view>
+	</html>
 	
-	<ui:define name="head">
-		<title>Analytica - Test</title>
-	</ui:define>		
-	<ui:define name="header">
-	</ui:define>
-	<ui:define name="content">
-		<h:form >
-			#{analyticaDashboardService.loadTestDataAsJson}		
-		</h:form>
-  	</ui:define>
-
-  	<ui:define name="footer">
-  		<h:panelGroup styleClass="#{resultpage?'version':'fullpageversion'}">
-  			v1.0 du 05/03/2012
-	  	</h:panelGroup>
-	  	<h:panelGroup styleClass="contact">
-  			Pour toutes remarques ou suggestions, merci de nous envoyer un email à <a href="mailto:npiedeloup@kleegroup.com">npiedeloup@kleegroup.com</a>
-	  	</h:panelGroup>
-	</ui:define>
-  </ui:composition>
+	
+	
