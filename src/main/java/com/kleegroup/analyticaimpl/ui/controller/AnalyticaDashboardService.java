@@ -47,28 +47,27 @@ public final class AnalyticaDashboardService implements Serializable {
 
 
 	public String loadTestDataAsJson() {
-		final List<HSerie> objectResult;
 		//if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
 		final HQuery query = serverManager.createQueryBuilder() //
 				.on(HTimeDimension.Minute)//
-				.from(new Date(System.currentTimeMillis()-60*60*1000))//
+				.from(new Date(System.currentTimeMillis()-60*60*1000))//1h
 				.to(new Date()) //
 				.with("REQUEST")
 				.build();
 		final HResult result = serverManager.execute(query);
 
-		objectResult = new ArrayList<HSerie>();
+		final List<HSerie> series = new ArrayList<HSerie>();
 		for(final HCategory category : result.getQuery().getAllCategories()){
-			objectResult.add(result.getSerie(category));
+			series.add(result.getSerie(category));
 		}
 		final Gson gson = new Gson();
-		return gson.toJson(objectResult);
+		return gson.toJson(series);
 	}
 
 	public final String loadDataAsJson(final AnalyticaPanelConf analyticaPanelConf) {
-		final List<HSerie> datas = loadData(analyticaPanelConf);
+		final List<HSerie> series = loadData(analyticaPanelConf);
 		final Gson gson = new Gson();
-		return gson.toJson(datas);
+		return gson.toJson(series);
 	}
 
 	//	public final ChartModel loadDataAsChartModel(final AnalyticaPanelConf analyticaPanelConf) {
@@ -114,15 +113,15 @@ public final class AnalyticaDashboardService implements Serializable {
 	//	}
 
 	public List<HSerie> loadData(final AnalyticaPanelConf analyticaPanelConf) {
-		final List<HSerie> objectResult;
+		final List<HSerie> series;
 		//if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
 		final HResult result = serverManager.execute(analyticaPanelConf.getQuery());
 
-		objectResult = new ArrayList<HSerie>();
+		series = new ArrayList<HSerie>();
 		for(final HCategory category : result.getQuery().getAllCategories()){
-			objectResult.add(result.getSerie(category));
+			series.add(result.getSerie(category));
 		}
-		return objectResult;
+		return series;
 	}
 
 	//=========================================================================
