@@ -34,6 +34,7 @@ import kasper.jsf.util.JSFUtil;
 import org.primefaces.model.chart.ChartModel;
 
 import com.kleegroup.analytica.hcube.dimension.HCategory;
+import com.kleegroup.analytica.hcube.result.HSerie;
 import com.kleegroup.analytica.server.ServerManager;
 
 
@@ -61,11 +62,11 @@ public final class AnalyticaDashboardController {
 	private Function<AnalyticaPanelConf, String> loadJsonFunction;
 	private Map<AnalyticaPanelConf, String> jsonDataEvalMap;
 
-	private Function<AnalyticaPanelConf, List<?>> loadDataFunction;
-	private Map<AnalyticaPanelConf, List<?>> dataEvalMap;
+	private Function<AnalyticaPanelConf, List<HSerie>> loadDataFunction;
+	private Map<AnalyticaPanelConf,List<HSerie>> dataEvalMap;
 
-	private Function<AnalyticaPanelConf, List<Map<String, ?>>> loadDataWrappedFunction;
-	private Map<AnalyticaPanelConf, List<Map<String, ?>>> dataWrappedEvalMap;
+	private Function<AnalyticaPanelConf, List<Map<String, HSerie>>> loadDataWrappedFunction;
+	private Map<AnalyticaPanelConf, List<Map<String, HSerie>>> dataWrappedEvalMap;
 
 	private Function<AnalyticaPanelConf, ChartModel> loadChartModelFunction;
 	private Map<AnalyticaPanelConf, ChartModel> primefaceChartEvalMap;
@@ -107,13 +108,13 @@ public final class AnalyticaDashboardController {
 		};
 		jsonDataEvalMap = new EvalMap<AnalyticaPanelConf, String>(loadJsonFunction, AnalyticaPanelConf.class);
 
-		loadDataFunction = new Function<AnalyticaPanelConf, List<?>>() {
+		loadDataFunction = new Function<AnalyticaPanelConf, List<HSerie>>() {
 			/** {@inheritDoc} */
-			public List<?> apply(final AnalyticaPanelConf analyticaPanelConf) {
+			public List<HSerie> apply(final AnalyticaPanelConf analyticaPanelConf) {
 				return getAnalyticaDashboardService().loadData(analyticaPanelConf);
 			}
 		};
-		dataEvalMap = new EvalMap<AnalyticaPanelConf, List<?>>(loadDataFunction, AnalyticaPanelConf.class);
+		dataEvalMap = new EvalMap<AnalyticaPanelConf, List<HSerie>>(loadDataFunction, AnalyticaPanelConf.class);
 
 		//		loadDataWrappedFunction = new Function<AnalyticaPanelConf, List<Map<String, ?>>>() {
 		//			/** {@inheritDoc} */
@@ -173,7 +174,7 @@ public final class AnalyticaDashboardController {
 		return jsonDataEvalMap;
 	}
 
-	public Map<AnalyticaPanelConf, List<?>> getData() {
+	public Map<AnalyticaPanelConf, List<HSerie>> getData() {
 		return dataEvalMap;
 	}
 

@@ -119,7 +119,7 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 			.withChildren(categoryList[0], categoryList);
 		}else if (categoryList.length==1){
 			queryBuilder//
-			.on(timeDimension)//
+			//.on(timeDimension)//
 			.with(categoryList[0],categoryList);
 		}
 	}

@@ -1,8 +1,21 @@
 <?xml version =	'1.0' encoding = 'ISO-8859-1'?>
 <modules>
-	<module name="analytica">
-		<manager name="ConfigManager" class="kasperimpl.config.ConfigManagerImpl"/>
+	<module name="kasper-kernel">
+	    
+		<manager name="ResourceManager" class="kasperimpl.resource.ResourceManagerImpl" >
+			<plugin id="javaRR"  	name="ResourceResolver" class="kasperimpl.resource.plugins.java.ClassPathResourceResolverPlugin"/>
+			<plugin id="servlerRR" 	name="ResourceResolver" class="kasperimpl.ui.plugins.servlet.ServletResourceResolverPlugin"/>
+		</manager>
+		
+	    <manager name="ConfigManager" class="kasperimpl.config.ConfigManagerImpl">
+	    	<plugin name="ConfigPlugin" class="kasperimpl.config.plugins.xml.XmlConfigPlugin">
+	            <param name="url" value="WEB-INF/dashboards-config.xml" />            
+	        </plugin>
+	    </manager>
+	</module>
 
+
+	<module name="analytica">
 		<manager name="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
 		        <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin"/>
 		</manager>
