@@ -38,7 +38,7 @@ import com.kleegroup.analytica.server.ServerManager;
  * @author npiedeloup
  * @version $Id: ServerManagerImpl.java,v 1.22 2013/01/14 16:35:19 npiedeloup Exp $
  */
-public final class ServerManagerImpl implements ServerManager, Activeable{
+public final class ServerManagerImpl implements ServerManager, Activeable {
 	private final HCubeManager hcubeManager;
 	private final ProcessStorePlugin processStorePlugin;
 	private Timer asyncCubeStoreTimer = null;
@@ -56,7 +56,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable{
 		Assertion.notNull(processStorePlugin);
 		//-----------------------------------------------------------------
 		this.hcubeManager = hcubeManager;
-		this.processStorePlugin =processStorePlugin;
+		this.processStorePlugin = processStorePlugin;
 	}
 
 	/** {@inheritDoc} */
@@ -76,7 +76,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable{
 
 	/** {@inheritDoc} */
 	public void start() {
-		asyncCubeStoreTimer = new Timer("pushProcessToHCube",true);
+		asyncCubeStoreTimer = new Timer("pushProcessToHCube", true);
 		final TimerTask storeCubeTask = new StoreCubeTask();
 		asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //50processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
 	}
@@ -95,18 +95,18 @@ public final class ServerManagerImpl implements ServerManager, Activeable{
 		}
 	}
 
+	private String lastProcessIdStored = null;
+
 	/** {@inheritDoc} */
 	private int store50NextProcessesAsCube() {
-		final String lastProcessIdStored = null;
 		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 200);
 		for (final Identified<KProcess> process : nextProcesses) {
 			hcubeManager.push(process.getData());
+			lastProcessIdStored = process.getKey();
 		}
 		return nextProcesses.size();
 	}
 }
-
-
 
 //
 //	private void storeAsCube(final KProcess process) {
@@ -223,7 +223,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable{
 //		return metric.get(dataKey.getType());
 //	}
 //
-
 
 //	/** {@inheritDoc} */
 
