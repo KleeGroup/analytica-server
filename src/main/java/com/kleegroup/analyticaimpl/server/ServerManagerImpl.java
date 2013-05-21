@@ -78,7 +78,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	public void start() {
 		asyncCubeStoreTimer = new Timer("pushProcessToHCube", true);
 		final TimerTask storeCubeTask = new StoreCubeTask();
-		asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //50processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
+		asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //X processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
 	}
 
 	/** {@inheritDoc} */
@@ -91,15 +91,15 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
-			store50NextProcessesAsCube();
+			storeNextProcessesAsCube();
 		}
 	}
 
 	private String lastProcessIdStored = null;
 
 	/** {@inheritDoc} */
-	private int store50NextProcessesAsCube() {
-		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 200);
+	private int storeNextProcessesAsCube() {
+		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 500);
 		for (final Identified<KProcess> process : nextProcesses) {
 			hcubeManager.push(process.getData());
 			lastProcessIdStored = process.getKey();
