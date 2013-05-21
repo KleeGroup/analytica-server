@@ -1,10 +1,10 @@
 package com.kleegroup.analytica.hcube.result;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -93,37 +93,21 @@ public final class HSerie implements HVirtualCube {
 		return getLazyMetrics().values();
 	}
 
-	public Iterator<HPoint> iterator(final HMetricKey metricKey) {
+	public List<HPoint> getPoints(final HMetricKey metricKey) {
+		final List<HPoint> points = new ArrayList<HPoint>();
+		for (final HCube cube : cubes){
+			points.add(new HPoint() {
+				/** {@inheritDoc} */
+				public HMetric getMetric() {
+					return cube.getMetric(metricKey);
+				}
 
-		return new Iterator<HPoint>() {
-			private int index = -1;
-
-			/** {@inheritDoc} */
-			public boolean hasNext() {
-				return (index + 1) < cubes.size();
-			}
-
-			/** {@inheritDoc} */
-			public HPoint next() {
-				index++;
-				return new HPoint() {
-
-					/** {@inheritDoc} */
-					public HMetric getMetric() {
-						return cubes.get(index).getMetric(metricKey);
-					}
-
-					/** {@inheritDoc} */
-					public Date getDate() {
-						return cubes.get(index).getKey().getTime().getValue();
-					}
-				};
-			}
-
-			/** {@inheritDoc} */
-			public void remove() {
-				throw new UnsupportedOperationException();
-			}
-		};
+				/** {@inheritDoc} */
+				public Date getDate() {
+					return cube.getKey().getTime().getValue();
+				}
+			});
+		}
+		return Collections.unmodifiableList(points);
 	}
 }
