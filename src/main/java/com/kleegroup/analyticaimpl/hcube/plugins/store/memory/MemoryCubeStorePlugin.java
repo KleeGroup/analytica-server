@@ -85,17 +85,17 @@ final class MemoryCubeStorePlugin implements CubeStorePlugin {
 				final HCube cube = store.get(cubeKey);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
-				//cubes.add(cube == null ? new HCubeBuilder(cubeKey).build() : cube);
-				if (cube != null) {
+				cubes.add(cube == null ? new HCubeBuilder(cubeKey).build() : cube);
+				/*if (cube != null) {
 					cubes.add(new HCubeBuilder(cubeKey).build());
-				}
+				}*/
 				//---
 				currentTime = currentTime.next();
 			}
 			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données 
-			if (!cubes.isEmpty()) {
-				cubeSeries.put(category, new HSerie(category, cubes));
-			}
+			//if (!cubes.isEmpty()) {
+			cubeSeries.put(category, new HSerie(category, cubes));
+			//}
 		}
 		return cubeSeries;
 	}
