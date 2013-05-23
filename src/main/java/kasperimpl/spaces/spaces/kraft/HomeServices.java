@@ -73,8 +73,10 @@ public class HomeServices {
 	@Produces(MediaType.TEXT_HTML)
 	public String getHtmlPage() {
 		final List<DataPoint>  points  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("duration", true));
+		final List<DataPoint>  points2  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("MONTANT", true));
 		final Map<String, Object> context = new HashMap<String, Object>();
 		context.put("jsonPoints", gson.toJson(points));
+		context.put("jsonPoints1", gson.toJson(points2));
 		context.put("points", points);
 		return process("analytica", context);
 	}
@@ -83,7 +85,7 @@ public class HomeServices {
 		final List<DataPoint> jsonPoints  = new ArrayList<DataPoint>();
 		for (final HCube cube :result.getSerie(category).getCubes()) {
 			final HMetric metric = cube.getMetric(metricKey);
-			jsonPoints.add(new DataPoint(cube.getKey().getTime().getValue(),metric!=null? metric.getMean(): Double.NaN ));
+			jsonPoints.add(new DataPoint(cube.getKey().getTime().getValue(),metric!=null? metric.getMean(): Double.NaN));//Double.NaN
 		}
 		return Collections.unmodifiableList(jsonPoints);
 	}
@@ -125,9 +127,9 @@ public class HomeServices {
 		final KProcess selectProcess2 = new KProcessBuilder(startDate, processDuration, "SQL", "select * from article")//
 		.incMeasure(MONTANT.id(), price)//
 		.build();
+
 		serverManager.push(selectProcess2);
 	}
-
 	@GET
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
