@@ -57,6 +57,7 @@ public class HomeServices {
 			loaded = true;
 		}
 	}
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String hello() {
@@ -79,6 +80,19 @@ public class HomeServices {
 		context.put("jsonPoints1", gson.toJson(points2));
 		context.put("points", points);
 		return process("analytica", context);
+	}
+
+	@Path("/analytica1")
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String getHtmlChartsPage() {
+		final List<DataPoint>  points  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("duration", true));
+		final List<DataPoint>  points2  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("MONTANT", true));
+		final Map<String, Object> context = new HashMap<String, Object>();
+		context.put("jsonPoints", gson.toJson(points));
+		context.put("jsonPoints1", gson.toJson(points2));
+		context.put("points", points);
+		return process("analyticacharts", context);
 	}
 
 	private List<DataPoint> convertToJsonPoint(final HResult result, final HCategory category,final HMetricKey metricKey ) {
@@ -106,10 +120,15 @@ public class HomeServices {
 			throw new KRuntimeException(e);
 		}
 	}
+
 	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
 	private  void load (){
 		//jeu de données
 		//final Date startDate = new date();
+		for(int i=0;i<120;i++){
+			addProcess(i, Double.valueOf(Math.ceil(Math.random()*100)).intValue(), 15);
+
+		}
 		addProcess(1,70, 15);
 		addProcess(2,130, 15);
 		addProcess(3,200, 15);
@@ -130,6 +149,7 @@ public class HomeServices {
 
 		serverManager.push(selectProcess2);
 	}
+
 	@GET
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -145,7 +165,6 @@ public class HomeServices {
 		return gson.toJson(result.getSerie(new HCategory("SQL")));
 	}
 
-
 	@GET
 	@Path("/datas2")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -154,7 +173,6 @@ public class HomeServices {
 		final HResult result = getResult();
 		return gson.toJson(result.getSerie(new HCategory(category)));
 	}
-
 
 	@GET
 	@Path("/datas3/{category}")
@@ -171,7 +189,7 @@ public class HomeServices {
 	private HResult getResult() {
 		final HQuery query = serverManager.createQueryBuilder() //
 				.on(HTimeDimension.Minute)//
-				.from(new Date(System.currentTimeMillis()-60*10*1000))//10 min ==> 10 cubes
+				.from(new Date(System.currentTimeMillis()-60*60*1000))//10 min ==> 10 cubes
 				.to(new Date()) //
 				.with("SQL")
 				.build();

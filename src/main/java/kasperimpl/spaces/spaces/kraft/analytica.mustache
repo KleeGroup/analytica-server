@@ -3,9 +3,12 @@
 <script src="http://code.shutterstock.com/rickshaw/vendor/d3.min.js"></script>
 <script src="http://code.shutterstock.com/rickshaw/vendor/d3.layout.min.js"></script>
 <script src="http://code.shutterstock.com/rickshaw/rickshaw.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js"></script>
 <script src="https://raw.github.com/HumbleSoftware/Flotr2/master/flotr2.min.js"></script>
 <link type="text/css" rel="stylesheet" href="https://raw.github.com/HumbleSoftware/Flotr2/master/examples/examples.css">
-
+<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+<link type="text/css" rel="stylesheet" href="http://code.shutterstock.com/rickshaw/src/css/graph.css">
 <style>
 #chart_container {
         position: relative;
@@ -17,12 +20,9 @@
 }
 
 .rickshaw_graph .y_ticks {
-        left: 0;
 }
 #y_axis {
         position: absolute;
-        top: 0;
-        bottom: 0;
         width: 40px;
 }
 
@@ -36,7 +36,13 @@ span{
     height: 220px;
     width: 350px;
 }
+
+th, td { padding: 15px; }
+table { border-collapse:separate; border-spacing: 5px; 
+border-width: 1;
+}
 </style>
+
 
 <!--
 <ul>
@@ -48,34 +54,49 @@ span{
 </ul>
 -->
 
-
-
-
 <table>
    <tr>
-   	
-       <td id = "tab1">
-	       <div id="y_axis"></div>
-	        <span id = "ltab1" ></span>
+       <td>
+			<div>
+				<div id = "ltab1" ></div>
+				<div id = "tab1"></div>
+				</br>
+		        <div id = "stab1"></div>
+			</div>
        </td>
-       <td id = "tab2">
-	       <div id="y_axis"></div>
-	        <span id = "ltab2"></span>
+       <td>
+			<div>
+				<div id = "ltab2" ></div>
+				<div id = "tab2"></div>
+				</br>
+		        <div id = "stab2"></div>
+			</div>
        </td>
-       <td id = "tab3">
-	       <div id="y_axis"></div>
-	        <div id = "ltab3"></div>
+       <td>
+			<div>
+				<div id = "ltab3" ></div>
+				<div id = "tab3"></div>
+				</br>
+		        <div id = "stab3"></div>
+			</div>
        </td>
-       <td id = "tab4">
-	       <div id="y_axis"></div>
-	        <div id = "ltab4"></div>
-       </td>
-       <td id = "tab5">
-	       <div id="y_axis"></div>
-	        <div id = "ltab5"></div>
+       <td>
+			<div>
+				<div id = "ltab4" ></div>
+				<div id = "tab4"></div>
+				</br>
+		        <div id = "stab4"></div>
+			</div>
        </td>
    </tr>
-   <tr>
+   <tr><td>
+			<div>
+				<div id = "ltab5" ></div>
+				<div id = "tab5"></div>
+				</br>
+		        <div id = "stab5"></div>
+			</div>
+       </td>
        <td class="flot" id = "tab6">
 	       
        </td>
@@ -93,48 +114,32 @@ span{
    </tr>
 </table>
 
-
 <script>
-var myData = {{{jsonPoints}}},
-	datas2 = parseData(myData);
-	myData2 = {{{jsonPoints1}}},
-	datas3 = parseData(myData2);
-     container = document.getElementById('chart'),
-     line = 'line',
-     area = 'area',
-     stack = 'stack',
-     bar = 'bar',
-     scatterplot = 'scatterplot';
-     
-    var serial = buildRickShawSerie(myData,myData2),
-    serie1= buildRickShawSerie(myData),
-    serie2 = buildRickShawSerie(myData2),
-    flotserie = buildFlotrSeries(myData);
-    flotserie2 = buildFlotrSeries(myData,myData2);
-	
-	/*var myGraph = new drawRickshawGraph(datas2,container,type);*/
-	new drawRickshawGraph(serie2,"tab1",bar);
-	new drawRickshawGraph(serial,"tab2",line);
-	new drawRickshawGraph(serie1,"tab3",bar);
-	new drawRickshawGraph(serial,"tab4",scatterplot);
-	new drawRickshawGraph(serial,"tab5",bar);
-	 /*new drawWithFlotr(serie1,"tab6")*/
-	new drawFlotrChart(flotserie,'tab6','bars');
-	new drawFlotrChart(flotserie2,'tab7','line');
-	 
-	
-	
-function drawRickshawGraph(serie,cont,type){
-	 var palette = new Rickshaw.Color.Palette();
-	 var v = "#"+cont;
-	 var graph = new Rickshaw.Graph( {
-        element: document.querySelector(v),
-        width: 300,
-        height: 170,
-        renderer: type,
-        series: serie
-} );
+(function($) {
 
+	$.fn.drawRickshawChart = function(parameters) {
+		var defaults = {
+			'type': "line",
+			'dataSerie': []
+		},
+			types = parameters.type,
+			options = $.extend(defaults, parameters);
+			types = options.type;
+		return this.each(function() {
+			var datas = options.dataSeries;
+			var container = $(this),
+				serie = buildRickShawSerie(datas);
+			var cont = "#" + container[0].id;
+			var graph = new Rickshaw.Graph({
+				element: document.querySelector(cont),
+				width: container.innerWidth(),
+				height: container.innerHeight(),
+				renderer: types,
+				series: serie
+			});
+			var x_axis = new Rickshaw.Graph.Axis.Time({
+				graph: graph
+			});
 var x_axis = new Rickshaw.Graph.Axis.Time( { graph: graph } );
 
 var y_axis = new Rickshaw.Graph.Axis.Y( {
@@ -143,105 +148,70 @@ var y_axis = new Rickshaw.Graph.Axis.Y( {
         tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
         element: document.getElementById('y_axis'),
 } );
+			var baliseDiv = document.createElement("div");
+			baliseDiv.setAttribute("id", "l" + container[0].id);
+			container[0].appendChild(baliseDiv);
+			var legend = new Rickshaw.Graph.Legend({
+				graph: graph,
+				element: baliseDiv
+			});
+			/*
+			var baliseSlider = document.createElement("div");
+			baliseSlider.setAttribute("id", "s" + container[0].id);
+			container[0].appendChild(baliseSlider);
+			var slider = new Rickshaw.Graph.RangeSlider({
+				graph: graph,
+				element: baliseSlider
+			});*/
+			graph.render();
 
-graph.render();
-	var legend = new Rickshaw.Graph.Legend({
-	graph: graph,
-	element: document.getElementById('l'+cont)
-});
-	 
-}
+		});
+};
 
-
-/*Flotr2*/
-function drawFlotrChart(data,id,type) {
-    var
-        container = document.getElementById(id);        
-    Flotr.draw(
-        container,
-        [data],
-        {
-    lines: { show: type=='line' 
-    
-    },
-    bars: { show: type=='bars'  
-    
-    },
-    candles: { show: type=='candles' 
-    
-    },
-    pies: { show: type=='pies' 
-    
-    },
-    bubbles: { show: type=='bubbles' 
-    
-    },
-    radar: { show: type=='radar' 
-    
-    },
-    stacked: { show: type=='stacked' 
-    
-    },
-    
-    fontColor: '#96a5b0',
-    xaxis: {
-        showLabels: true,
-        color : '#95a5b'
-        
-    },
-    yaxis : {
-        tickDecimals: 0,
-        color: '#96a5b0'
-    },
-    grid: {
-        color: '#e9edef',
-        verticalLines: false,
-        outlineWidth: 0
-    }
-}
-    );
-}
-
-/*PARSING*/
-function buildFlotrSeries(){
-	var series=[];
-	for (var i= 0; i < arguments.length; i++){
-		arguments[i] = parseData(arguments[i]);
-		for (var j=0; j< arguments[i].length;j++){
-		series.push ([arguments[i][j].x, arguments[i][j].y]);
+	function buildRickShawSerie(arg) {
+		var s = [];
+		for (var i = 0; i < arg.length; i++) {
+			arg[i] = parseData(arg[i]);
+			s.push({
+				name: "SQL",
+				data: arg[i],
+				color: '#' + Math.floor(Math.random() * 16777215).toString(16)
+			});
 		}
-	}
-	return series;
-}
-
-function buildRickShawSerie(){
-	var series=[];
-	for (var i= 0; i < arguments.length; i++){
-		arguments[i] = parseData(arguments[i]);
-		series.push({name: "SQL",
-					 data: arguments[i],
-					 color: '#'+Math.floor(Math.random()*16777215).toString(16)});
-	}
-        
-    return series;
-}
+		return s;
+	};
 
 
-function parseData( data){
-   /* Corriger les valeurs undefined dans le tableau de donnee
- 	for(var value in data){
-	    if (typeof value.y == 'undefined'){
-	    	value.y = null;
-	    }
- 	}*/
- 	for(var i= 0;i< data.length;i++){
- 		var value = data[i];
- 		if (typeof value.y=='undefined'){
- 			value.y = null;
- 			data[i]=value;
- 		}
- 	}
- 	return data;   
-}
+	function parseData(d) {
+		/* Corriger les valeurs undefined dans le tableau de donnee*/
+		for (var i = 0; i < d.length; i++) {
+			var value = d[i];
+			if (typeof value.y == 'undefined') {
+				value.y = null;
+				d[i] = value;
+			}
+		}
+		return d;
+	};
 
+})(jQuery);
+
+</script>
+
+<script type="text/javascript">
+	var type = "line";
+	var myData = {{{jsonPoints}}},
+	myData2 = {{{jsonPoints1}}};
+	var	data=[];
+	data.push(myData);	
+	data.push(myData2);
+	
+	var param = {
+		dataSeries: data,
+		type: "line"
+	};
+
+	$(document).ready(function() {
+		$('#tab1').drawRickshawChart(param);
+	});
 </script>
