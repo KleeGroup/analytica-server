@@ -37,10 +37,6 @@ span{
     width: 350px;
 }
 
-#tab1 {
-        width : 600px;
-        height: 340px;
-    }
 th, td { padding: 15px; }
 table { border-collapse:separate; border-spacing: 5px; 
 border-width: 1;
@@ -120,80 +116,71 @@ border-width: 1;
 
 <script>
 (function($) {
-	$.fn.drawFlotrChart = function(parameters) {
+
+	$.fn.drawRickshawChart = function(parameters) {
 		var defaults = {
 			'type': "line",
 			'dataSerie': []
 		},
-			options = $.extend(defaults, parameters),
-			type = options.type;
+			types = parameters.type,
+			options = $.extend(defaults, parameters);
+			types = options.type;
 		return this.each(function() {
-			var datas = options.dataSeries,
-			container = $(this),
-			cont = document.getElementById(container[0].id);
-			serie = buildFlotrSeries(datas);
-			Flotr.draw(
-				cont, [serie], {
-				lines: {
-					show: type == 'line'
-
-				},
-				bars: {
-					show: type == 'bars'
-
-				},
-				candles: {
-					show: type == 'candles'
-
-				},
-				pies: {
-					show: type == 'pies'
-
-				},
-				bubbles: {
-					show: type == 'bubbles'
-
-				},
-				radar: {
-					show: type == 'radar'
-
-				},
-				stacked: {
-					show: type == 'stacked'
-
-				},
-
-				fontColor: '#96a5b0',
-				xaxis: {
-					showLabels: true,
-					color: '#95a5b'
-
-				},
-				yaxis: {
-					tickDecimals: 0,
-					color: '#96a5b0'
-				},
-				grid: {
-					color: '#e9edef',
-					verticalLines: false,
-					outlineWidth: 0
-				}
+			var datas = options.dataSeries;
+			var container = $(this),
+				serie = buildRickShawSerie(datas);
+			var cont = "#" + container[0].id;
+			var graph = new Rickshaw.Graph({
+				element: document.querySelector(cont),
+				width: container.innerWidth(),
+				height: container.innerHeight(),
+				renderer: types,
+				series: serie
 			});
+			var x_axis = new Rickshaw.Graph.Axis.Time({
+				graph: graph
+			});
+var x_axis = new Rickshaw.Graph.Axis.Time( { graph: graph } );
+
+var y_axis = new Rickshaw.Graph.Axis.Y( {
+        graph: graph,
+        orientation: 'left',
+        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+        element: document.getElementById('y_axis'),
+} );
+			var baliseDiv = document.createElement("div");
+			baliseDiv.setAttribute("id", "l" + container[0].id);
+			container[0].appendChild(baliseDiv);
+			var legend = new Rickshaw.Graph.Legend({
+				graph: graph,
+				element: baliseDiv
+			});
+			/*
+			var baliseSlider = document.createElement("div");
+			baliseSlider.setAttribute("id", "s" + container[0].id);
+			container[0].appendChild(baliseSlider);
+			var slider = new Rickshaw.Graph.RangeSlider({
+				graph: graph,
+				element: baliseSlider
+			});*/
+			graph.render();
 
 		});
+};
 
-	};
-
-	function buildFlotrSeries(arg) {
+	function buildRickShawSerie(arg) {
 		var s = [];
 		for (var i = 0; i < arg.length; i++) {
 			arg[i] = parseData(arg[i]);
-			for (var j = 0; j < arg[i].length; j++) {
-				s.push([arg[i][j].x, arg[i][j].y]);
-			}
+			s.push({
+				name: "SQL",
+				data: arg[i],
+				color: '#' + Math.floor(Math.random() * 16777215).toString(16)
+			});
 		}
 		return s;
 	};
+
 
 	function parseData(d) {
 		/* Corriger les valeurs undefined dans le tableau de donnee*/
@@ -225,6 +212,6 @@ border-width: 1;
 	};
 
 	$(document).ready(function() {
-		$('#tab1').drawFlotrChart(param);
+		$('#tab1').drawRickshawChart(param);
 	});
 </script>
