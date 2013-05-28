@@ -55,7 +55,7 @@ public final class AnalyticaDashboardService implements Serializable {
 	@Inject
 	private ServerManager serverManager;
 
-	public String getloadTestDataAsJson() {
+	public String loadTestDataAsJson(final AnalyticaPanelConf analyticaPanelConf) {
 		//if (analyticaPanelConf.isAggregateTime() && analyticaPanelConf.isAggregateWhat()) {
 		load();
 		final HQuery query = serverManager.createQueryBuilder() //
@@ -69,7 +69,17 @@ public final class AnalyticaDashboardService implements Serializable {
 		for(final HCategory category : result.getQuery().getAllCategories()){
 			series.add(result.getSerie(category));
 		}
-		final List<DataPoint>  points  = convertToJsonPoint(result,new HCategory("SQL"),new HMetricKey("duration", true));
+		final List<String> metricKey = analyticaPanelConf.getMetricKeys();
+		//final List<DataPoint>  points  = convertToJsonPoint(result,new HCategory("SQL"),new HMetricKey("duration", true));
+
+		final List<DataPoint> points = new ArrayList<DataPoint>();
+		for (final String metrick : metricKey){
+			final HCategory category = new HCategory("SQL");
+			for (final HCube cube :result.getSerie(category).getCubes()) {
+				final HMetric metric = cube.getMetric(new HMetricKey(metrick, true));
+				points.add(new DataPoint(cube.getKey().getTime().getValue(),metric!=null? metric.getMean(): Double.NaN));//Double.NaN
+			}
+		}
 
 		final Gson gson = new Gson();
 		return gson.toJson(points);
@@ -86,23 +96,25 @@ public final class AnalyticaDashboardService implements Serializable {
 		return Collections.unmodifiableList(jsonPoints);
 	}
 
-	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
+	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", true);
+	private static final HMetricKey POIDS = new HMetricKey("POIDS", true);
+
 	private  void load (){
 		//jeu de données
 		//final Date startDate = new date();
 		for(int i=0;i<120;i++){
 			addProcess(i, Double.valueOf(Math.ceil(Math.random()*100)).intValue(), 15);
-
 		}
 		addProcess(1,70, 15);
 		addProcess(2,130, 15);
 		addProcess(3,200, 15);
 		addProcess(4,150, 15);
 		addProcess(5,100, 15);
-		addProcess(6,130, 15);
+		addProcess(6,214, 15);
 		addProcess(7,300, 15);
 		addProcess(8,250, 15);
-		addProcess(9,90, 15);
+		addProcess(9,90, 1);
+		addProcess(10,600,55);
 		System.out.println("datas loaded");
 	}
 
@@ -111,11 +123,17 @@ public final class AnalyticaDashboardService implements Serializable {
 		final KProcess selectProcess2 = new KProcessBuilder(startDate, processDuration, "SQL", "select * from article")//
 		.incMeasure(MONTANT.id(), price)//
 		.build();
-
+		final KProcess healthProcess = new KProcessBuilder(startDate, 0, "HEALTH",
+				"/technical/cache").incMeasure(MONTANT.id(), price).incMeasure(POIDS.id(), price).build();
+		final KProcess pageProcess = new KProcessBuilder(startDate, processDuration,
+				"PAGE", "/user/searchUser.jsf").incMeasure(MONTANT.id(), price).build();
+		final KProcess serviceProcess = new KProcessBuilder(startDate,processDuration,
+				"FACADE", "/UserService/loadUserByCriteria()").incMeasure(POIDS.id(), price).build();
 		serverManager.push(selectProcess2);
+		serverManager.push(healthProcess);
+		serverManager.push(pageProcess);
+		serverManager.push(serviceProcess);
 	}
-
-
 
 
 	public final String loadDataAsJson(final AnalyticaPanelConf analyticaPanelConf) {
@@ -209,12 +227,12 @@ public final class AnalyticaDashboardService implements Serializable {
 		}
 		return mapPoints;
 	}
-
+	// A rectifier, utilisé pour parcourir la map dans la jsf
 	public List<String> getKeyAsList(final AnalyticaPanelConf analyticaPanelConf) {
 		final Map<String, String> map = getDataPoints(analyticaPanelConf);
 		return new ArrayList<String>(map.keySet());
 	}
-
+	// A rectifier, utilisé pour parcourir la map dans la jsf
 	public List<String> getKeyAsList2(final AnalyticaPanelConf analyticaPanelConf) {
 		final Map<String, Map<String, String>> map = getAllDataPoints(analyticaPanelConf);
 		return new ArrayList<String>(map.keySet());
@@ -242,7 +260,6 @@ public final class AnalyticaDashboardService implements Serializable {
 		}
 		return allDataPoints;
 	}
-
 
 
 	//	public Map <String,List<DataPoint>> getDataPoints(final AnalyticaPanelConf analyticaPanelConf){

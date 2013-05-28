@@ -49,13 +49,30 @@
 			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'speedometer'}">
 			  			<analytica:speedometer var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
 			   		</ui:fragment>
-			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'testrenderer'}">
-			  			<analytica:testrenderer var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'testline'}">
+			  			<analytica:testline var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
 			   		</ui:fragment>
                     
                     <ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'flotrrenderer'}">
                         <analytica:flotrrenderer var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
                     </ui:fragment>
+                    <ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'testbars'}">
+                        <analytica:testbars var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'testscateredplot'}">
+                        <analytica:testscateredplot var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+                    </ui:fragment>
+                     <ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'teststack'}">
+                        <analytica:teststack var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'testarea'}">
+                        <analytica:testarea var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+                    </ui:fragment>
+                    
+                    
+                    
+                    
+                    
 			   		</div>
 		   	</div>
 		</ui:repeat>

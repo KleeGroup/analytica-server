@@ -23,12 +23,12 @@
 
 <script type="text/javascript">
     
-datas = <h:outputText escape="false" value="#{analyticaDashboardService.loadTestDataAsJson}">
+datas = <h:outputText escape="false" value="#{analyticaDashboardService.loadTestDataAsJson(cc.attrs.panel)}">
 </h:outputText>
 
     var param = {
         dataSeries: datas,
-        type: "line"
+        type: "area"
     },
     conteneur = document.getElementById("#{cc.attrs.var}_container");
 

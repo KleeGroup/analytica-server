@@ -10,7 +10,6 @@
       xmlns:graph="http://java.sun.com/jsf/composite/components/flotr">
 <head>
 <title>Test renderer</title>
-
 </head>
 <body>
 
@@ -20,20 +19,21 @@
 </cc:interface>
 
 <cc:implementation >
-<div id="#{cc.attrs.var}_container" class="chart_container" ></div>
+<div id="#{cc.attrs.var}_container" class="chart_container"></div>
 
 <script type="text/javascript">
+    
 datas = <h:outputText escape="false" value="#{analyticaDashboardService.loadTestDataAsJson(cc.attrs.panel)}">
 </h:outputText>
 
     var param = {
         dataSeries: datas,
-        type: "line"
+        type: "stack"
     },
-    conteneur = document.getElementById('#{cc.attrs.var}_container');
+    conteneur = document.getElementById("#{cc.attrs.var}_container");
 
     
-        $(conteneur).drawFlotrChart(param);
+        $(conteneur).drawRickshawChart(param);
     
     
 </script>

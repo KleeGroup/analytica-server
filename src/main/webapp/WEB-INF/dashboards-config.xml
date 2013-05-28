@@ -14,7 +14,6 @@
   		 <property name="dashboards" value="dashboard4"/> 
   	</config>
 	
-	
 	<config name="analytica.dashboardFicen">
   		<property name="dashboardTitle" value="Application Ficen"/>
   		<property name="dashboardIcon" value="none"/>
@@ -97,8 +96,6 @@
   		<property name="labels" value="Hits;Exception (%);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
   	</config>
   	
-  	
-	
   	<config name="analytica.dashboard1">
   		<property name="dashboardTitle" value="Chart Gallery"/>
   		<property name="dashboardIcon" value="none"/>
@@ -303,25 +300,26 @@
   	<config name="analytica.dashboard4.panel4-2">
   		<property name="title" value="Top Used Space"/>
   		<property name="icon" value="signal"/>
-  		<property name="renderer" value="flotrrenderer"/>
+  		<property name="renderer" value="teststack"/>
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="Module"/>
-  		<property name="categories" value="/PAGE"/>
-  		<property name="datas" value="duration:max;duration:mean;duration:min"/>
-  		<property name="labels" value="Max;Temps moyen;Min"/>
+  		<property name="categories" value="/SQL"/>
+  		<!--<property name="datas" value="duration:max;duration:mean;duration:min"/>-->
+  		<property name="datas" value="duration;MONTANT"/>
+  		<property name="labels" value="Temps moyen;Montant"/>
   	</config>
   	
   	<config name="analytica.dashboard4.panel4-3">
   		<property name="title" value="Performances"/>
   		<property name="icon" value="time"/>
-  		<property name="renderer" value="testrenderer"/>
+  		<property name="renderer" value="testline"/>
   		<property name="size" value="2x1"/>
   		<!--<property name="loadType" value="timeLine"/>
   		<property name="whatDim" value="Module"/>-->
   		<property name="categories" value="SQL"/>
-  		<property name="datas" value="duration:mean"/>
   		<!--<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>-->
+  		<property name="datas" value="duration"/>
   		<property name="labels" value="Temps moyen"/>
 
   		<property name="colors" value="RED2GREEN"/>
@@ -330,12 +328,12 @@
   		<property name="title" value="Memory Utilization"/>
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="flotrrenderer"/>
-  		<property name="size" value="2x2"/>
+  		<property name="size" value="2x1"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/"/>
-  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
-  		<property name="labels" value="Min;Temps Moyen;Max"/>
+  		<property name="datas" value="duration"/>
+  		<property name="labels" value="Temps moyen"/>
   	</config>
   	
   	<!-- <config name="analytica.dashboard4.panel4-4">
@@ -355,14 +353,14 @@
   	<config name="analytica.dashboard4.panel4-5">
   		<property name="title" value="CPU Utilization"/>
   		<property name="icon" value="lock"/>
-  		<property name="renderer" value="testrenderer"/>
+  		<property name="renderer" value="testscateredplot"/>
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="timeLine"/>
   		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/"/>
-  		<property name="datas" value="duration_C50:count;duration:mean;duration:max"/>
-  		<property name="labels" value="Min;Temps Moyen;Max"/>
-  		<property name="colors" value="RED2GREEN"/>
+  		<property name="datas" value="duration"/>
+  		<property name="labels" value="Temps moyen"/>
+<property name="colors" value="RED2GREEN"/>
   		
   	</config>
   
@@ -384,7 +382,7 @@
   	<config name="analytica.dashboard4.panel4-6">
   		<property name="title" value="CPU Utilization"/>
   		<property name="icon" value="lock"/>
-  		<property name="renderer" value="testrenderer"/>
+  		<property name="renderer" value="testarea"/>
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="timeLine"/>
   		<property name="timeDim" value="Minute"/>
@@ -392,9 +390,9 @@
   		<property name="timeTo" value="NOW"/>
   		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/SQL/"/>
-  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
-  		<property name="labels" value="Min;Temps Moyen;Max"/>
-  	</config>
+  		<property name="datas" value="duration"/>
+  		<property name="labels" value="Temps moyen"/>
+ 	</config>
   	
   	<config name="analytica.dashboard4.panel4-7">
   		<property name="title" value="Requetes"/>
@@ -404,8 +402,9 @@
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="SimpleName"/>
   		<property name="categories" value="/REQUEST"/>
-  		<property name="datas" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
-  		<property name="labels" value="Hits;Taille page (o);CPU (ms);Erreurs User (%);Autres erreurs (%);Temps page (ms);Temps services (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
+ 		<property name="datas" value="duration"/>
+  		<property name="labels" value="Temps moyen"/>
+
   		<!--<property name="labels" value="Hits"/>-->
   	</config>
   	
@@ -420,18 +419,18 @@
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min"/>
   	</config>
-  	
+  
   	<config name="analytica.dashboard4.panel4-9">
   		<property name="title" value="Monitored Servers"/>
   		<property name="icon" value="list-alt"/>
-  		<property name="renderer" value="testrenderer"/>
-  		<property name="size" value="2x2"/>
+  		<property name="renderer" value="testbars"/>
+  		<property name="size" value="2x1"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE"/>
-  		<property name="datas" value="duration:count;PAGE_SIZE:mean"/>
   		<!--<property name="labels" value="Etat;Santé"/>-->
-  		<property name="labels" value="Etat;Santé"/>
-  	</config>  	  
+ 		<property name="datas" value="duration"/>
+  		<property name="labels" value="Temps moyen"/>
+ 	</config>  	  
   	
 </application-config>
