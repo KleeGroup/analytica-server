@@ -17,23 +17,10 @@
  */
 package com.kleegroup.analyticaimpl.ui.chart.flotr;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-
-import com.kleegroup.analytica.server.data.DataSet;
-import com.kleegroup.analyticaimpl.ui.controller.AnalyticaPanelConf;
 
 /**
  * Convertisseur pour les graphiques.
@@ -50,88 +37,90 @@ public final class TransposedLineChartConverter implements Converter {
 
 	/** {@inheritDoc} */
 	public String getAsString(final FacesContext context, final UIComponent component, final Object objValue) {
-		final AnalyticaPanelConf panelConf = (AnalyticaPanelConf) objValue;
-		final List<DataSet<String, Double>> datas = (List<DataSet<String, Double>>) component.getAttributes().get("datas");
-		//---------------------------------------------------------------------
-		final Map<String, SortedMap<String, Double>> values = new LinkedHashMap<String, SortedMap<String, Double>>();
-		final SortedSet<String> labels = new TreeSet<String>();
-		for (final DataSet<String, Double> serie : datas) {
-			values.put(serie.getKey().toString(), indexSerie(serie));
-			labels.addAll(serie.getLabels());
-		}
-		final StringBuilder result = new StringBuilder();
-		result.append("{ datas:[");
-		String sep = "";
-		for (final String label : labels) {
-			result.append(sep);
+		//		final AnalyticaPanelConf panelConf = (AnalyticaPanelConf) objValue;
+		//		final List<DataSet<String, Double>> datas = (List<DataSet<String, Double>>) component.getAttributes().get("datas");
+		//		//---------------------------------------------------------------------
+		//		final Map<String, SortedMap<String, Double>> values = new LinkedHashMap<String, SortedMap<String, Double>>();
+		//		final SortedSet<String> labels = new TreeSet<String>();
+		//		for (final DataSet<String, Double> serie : datas) {
+		//			values.put(serie.getKey().toString(), indexSerie(serie));
+		//			labels.addAll(serie.getLabels());
+		//		}
+		//		final StringBuilder result = new StringBuilder();
+		//		result.append("{ datas:[");
+		//		String sep = "";
+		//		for (final String label : labels) {
+		//			result.append(sep);
+		//
+		//			result.append("{ label:'").append(label).append("', data:[");
+		//			String sep2 = "";
+		//			int i = 0;
+		//			for (final SortedMap<String, Double> value : values.values()) {
+		//				result.append(sep2);
+		//				result.append("[");
+		//				result.append(i);
+		//				result.append(",");
+		//				result.append(String.valueOf(value.get(label)));
+		//				result.append("]");
+		//				i++;
+		//				sep2 = ",";
+		//			}
+		//			result.append("]}");
+		//			sep = ",\n ";
+		//		}
+		//		result.append("], labels:[");
+		//		sep = "";
+		//		final Set<String> keys = values.keySet();
+		//		int i = 0;
+		//		for (final String key : keys) {
+		//			result.append(sep);
+		//			result.append("[").append(i).append(",");
+		//			result.append("'").append(key).append("']");
+		//			i++;
+		//			sep = ",";
+		//		}
+		//		result.append("]}");
+		//		return result.toString();
+		return "";
 
-			result.append("{ label:'").append(label).append("', data:[");
-			String sep2 = "";
-			int i = 0;
-			for (final SortedMap<String, Double> value : values.values()) {
-				result.append(sep2);
-				result.append("[");
-				result.append(i);
-				result.append(",");
-				result.append(String.valueOf(value.get(label)));
-				result.append("]");
-				i++;
-				sep2 = ",";
-			}
-			result.append("]}");
-			sep = ",\n ";
-		}
-		result.append("], labels:[");
-		sep = "";
-		final Set<String> keys = values.keySet();
-		int i = 0;
-		for (final String key : keys) {
-			result.append(sep);
-			result.append("[").append(i).append(",");
-			result.append("'").append(key).append("']");
-			i++;
-			sep = ",";
-		}
-		result.append("]}");
-		return result.toString();
 	}
 
-	private SortedMap<String, Double> indexSerie(final DataSet<String, Double> serie) {
-		final SortedMap<String, Double> result = new TreeMap<String, Double>();
-		for (int i = 0; i < serie.getLabels().size(); i++) {
-			result.put(serie.getLabels().get(i), serie.getValues().get(i));
-		}
-		return result;
-	}
-
-	private void printSerie(final DataSet<?, ?> serie, final StringBuilder result, final List<String> labels) {
-		result.append("{ label:'").append(serie.getKey().toString()).append("', data:[");
-		String sep = "";
-		for (int i = 0; i < serie.getLabels().size(); i++) {
-			result.append(sep);
-			result.append("[");
-			final Object label = serie.getLabels().get(i);
-			if (label instanceof Date) {
-				result.append(((Date) label).getTime());
-			} else {
-				result.append(obtainLabelIndex(label, labels));
-			}
-			result.append(",");
-			result.append(String.valueOf(serie.getValues().get(i)));
-			result.append("]");
-			sep = ",";
-		}
-		result.append("]}");
-	}
-
-	private int obtainLabelIndex(final Object label, final List<String> labels) {
-		final String strLabel = String.valueOf(label);
-		final int index = labels.indexOf(strLabel);
-		if (index >= 0) {
-			return index;
-		} else {
-			labels.add(strLabel);
-			return labels.size() - 1;
-		}
-	}
+	//	private SortedMap<String, Double> indexSerie(final DataSet<String, Double> serie) {
+	//		final SortedMap<String, Double> result = new TreeMap<String, Double>();
+	//		for (int i = 0; i < serie.getLabels().size(); i++) {
+	//			result.put(serie.getLabels().get(i), serie.getValues().get(i));
+	//		}
+	//		return result;
+	//	}
+	//
+	//	private void printSerie(final DataSet<?, ?> serie, final StringBuilder result, final List<String> labels) {
+	//		result.append("{ label:'").append(serie.getKey().toString()).append("', data:[");
+	//		String sep = "";
+	//		for (int i = 0; i < serie.getLabels().size(); i++) {
+	//			result.append(sep);
+	//			result.append("[");
+	//			final Object label = serie.getLabels().get(i);
+	//			if (label instanceof Date) {
+	//				result.append(((Date) label).getTime());
+	//			} else {
+	//				result.append(obtainLabelIndex(label, labels));
+	//			}
+	//			result.append(",");
+	//			result.append(String.valueOf(serie.getValues().get(i)));
+	//			result.append("]");
+	//			sep = ",";
+	//		}
+	//		result.append("]}");
+	//	}
+	//
+	//	private int obtainLabelIndex(final Object label, final List<String> labels) {
+	//		final String strLabel = String.valueOf(label);
+	//		final int index = labels.indexOf(strLabel);
+	//		if (index >= 0) {
+	//			return index;
+	//		} else {
+	//			labels.add(strLabel);
+	//			return labels.size() - 1;
+	//		}
+	//	}
 }

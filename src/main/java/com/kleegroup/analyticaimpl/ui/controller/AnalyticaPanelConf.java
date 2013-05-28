@@ -28,8 +28,8 @@ import com.kleegroup.analytica.hcube.query.HQuery;
  * @version $Id: AnalyticaPanelConf.java,v 1.7 2013/01/25 10:53:37 npiedeloup Exp $
  */
 public final class AnalyticaPanelConf {
-	private final boolean aggregateTime;
-	private final boolean aggregateWhat;
+	//	private final boolean aggregateTime;
+	//	private final boolean aggregateWhat;
 	private final HQuery panelQuery;
 	private final List<String> labels;
 	private final String colors;
@@ -39,6 +39,7 @@ public final class AnalyticaPanelConf {
 	private final String panelRenderer;
 	private final int panelWidth;
 	private final int panelHeight;
+	private final List<String> metricKeys;
 
 	/**
 	 * Constructeur.
@@ -48,7 +49,7 @@ public final class AnalyticaPanelConf {
 	 * @param aggregateTime Si aggregation temporelle
 	 * @param aggregateWhat Si aggregation fonctionnelle
 	 */
-	public AnalyticaPanelConf(final String panelName, final HQuery panelQuery, final List<String> labels, final boolean aggregateTime, final boolean aggregateWhat, final String panelTitle, final String panelIcon, final String panelRenderer, final String colors, final int panelWidth, final int panelHeight) {
+	public AnalyticaPanelConf(final String panelName, final HQuery panelQuery, final List<String> labels,  final String panelTitle, final String panelIcon, final String panelRenderer, final String colors, final int panelWidth, final int panelHeight,final List<String> metricKeys) {
 		Assertion.notEmpty(panelName);
 		Assertion.notNull(panelQuery);
 		Assertion.notNull(labels);
@@ -56,11 +57,13 @@ public final class AnalyticaPanelConf {
 		Assertion.notEmpty(panelTitle);
 		Assertion.notEmpty(panelIcon);
 		Assertion.notEmpty(colors);
-		Assertion.precondition(panelQuery.getAllCategories().size() == labels.size(), "Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).", panelQuery.getAllCategories().size(), labels.size());
+		Assertion.notNull(metricKeys);
+		//Assertion.precondition(panelQuery.getAllCategories().size() == labels.size(), "Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).", panelQuery.getAllCategories().size(), labels.size());
+		Assertion.precondition(metricKeys.size() == labels.size(),"Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).",metricKeys.size(), labels.size());
 		//---------------------------------------------------------------------
 		this.panelName = panelName;
-		this.aggregateTime = aggregateTime;
-		this.aggregateWhat = aggregateWhat;
+		//		this.aggregateTime = true;//jamais utilisé
+		//		this.aggregateWhat = true;//jamais utilisé
 		this.panelQuery = panelQuery;
 		this.labels = labels;
 		this.panelTitle = panelTitle;
@@ -69,17 +72,18 @@ public final class AnalyticaPanelConf {
 		this.colors = colors;
 		this.panelWidth = panelWidth;
 		this.panelHeight = panelHeight;
+		this.metricKeys = metricKeys;
 	}
 
-	/** {@inheritDoc} */
-	public final boolean isAggregateTime() {
-		return aggregateTime;
-	}
-
-	/** {@inheritDoc} */
-	public final boolean isAggregateWhat() {
-		return aggregateWhat;
-	}
+	//	/** {@inheritDoc} */
+	//	public final boolean isAggregateTime() {
+	//		return aggregateTime;
+	//	}
+	//
+	//	/** {@inheritDoc} */
+	//	public final boolean isAggregateWhat() {
+	//		return aggregateWhat;
+	//	}
 
 	/** {@inheritDoc} */
 	public List<String> getLabels() {
@@ -123,5 +127,9 @@ public final class AnalyticaPanelConf {
 
 	public HQuery getQuery() {
 		return panelQuery;
+	}
+
+	public List<String> getMetricKeys(){
+		return metricKeys;
 	}
 }

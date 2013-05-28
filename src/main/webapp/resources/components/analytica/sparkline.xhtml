@@ -19,6 +19,11 @@
 	
 <cc:implementation >
 	<graph:sparkline var="#{cc.attrs.var}" panel="#{cc.attrs.panel}"/>
+	
+	<!--<ui:repeat var="data" value="#{analyticaDashboardController.getDataMap(cc.attrs.panel)}">
+		<div><h:outputText class="bigValue" value="#{data.value}"/> <h:outputText class="bigValuelabel" value="#{data.label}"/></div>
+	</ui:repeat>-->
+	
 </cc:implementation>
 
 </body>

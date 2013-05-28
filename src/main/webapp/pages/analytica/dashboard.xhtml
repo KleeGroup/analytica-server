@@ -42,32 +42,26 @@
 			   		</ui:fragment>
 			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'bigValue'}">
 			  			<analytica:bigValue var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
-			   		</ui:fragment>
-			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'progressbar'}">
-			  			<analytica:progressbar var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
-			   		</ui:fragment>
-			   				
+			   		</ui:fragment>			   				
 			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'sparkline'}">
 			  			<analytica:sparkline var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
 			   		</ui:fragment>
 			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'speedometer'}">
 			  			<analytica:speedometer var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
 			   		</ui:fragment>
-			   		
-			   		
-			   		
+			   		<ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'testrenderer'}">
+			  			<analytica:testrenderer var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+			   		</ui:fragment>
+                    
+                    <ui:fragment rendered="#{analyticaDashboardController.ctx.panel[panelName].panelRenderer == 'flotrrenderer'}">
+                        <analytica:flotrrenderer var="panel_dashboard1_#{panelName}" panel="#{analyticaDashboardController.ctx.panel[panelName]}"/>
+                    </ui:fragment>
 			   		</div>
-			   		
 		   	</div>
 		</ui:repeat>
 		</div>
 		</h:form>
-		
 
   	</ui:define>
   	
   </ui:composition>
-
- 
-  
-  

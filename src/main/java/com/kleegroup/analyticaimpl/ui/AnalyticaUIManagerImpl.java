@@ -105,7 +105,6 @@ public class AnalyticaUIManagerImpl implements AnalyticaUIManager {
 		}
 		out.print(prefix);
 		out.print("}");
-
 	}
 
 	private static void display(final String measureType, final Double value, final String prefix, final PrintStream out) {
@@ -114,7 +113,6 @@ public class AnalyticaUIManagerImpl implements AnalyticaUIManager {
 		out.print(" value:");
 		out.print(value);
 	}
-
 	private static void display(final String metaDataName, final String value, final String prefix, final PrintStream out) {
 		out.print(prefix);
 		out.print(metaDataName);

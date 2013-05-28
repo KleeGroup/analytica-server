@@ -48,7 +48,7 @@ public final class AnalyticaUIServletContextListener implements ServletContextLi
 	public final void contextInitialized(final ServletContextEvent servletContextEvent) {
 		final long start = System.currentTimeMillis();
 		try {
-			//Cette propriété est necessaire pour autocomplete. Sinon JSF fixe seul les Long a 0. 
+			//Cette propriété est necessaire pour autocomplete. Sinon JSF fixe seul les Long a 0.
 			System.setProperty("org.apache.el.parser.COERCE_TO_ZERO", "false");
 
 			// Initialisation du web context de l'application (porteur des singletons applicatifs)
@@ -134,5 +134,4 @@ public final class AnalyticaUIServletContextListener implements ServletContextLi
 			e.printStackTrace();
 		}
 	}
-
 }

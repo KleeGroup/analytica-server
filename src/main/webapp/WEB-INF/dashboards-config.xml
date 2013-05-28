@@ -31,8 +31,8 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>
   	<config name="analytica.dashboardFicen.panelFicen-2">
@@ -42,8 +42,8 @@
   		<property name="size" value="2x1"/>
   		<property name="loadType" value="timeLine"/>
   		<property name="whatDim" value="Type"/>
-  		<property name="whatList" value="/REQUEST"/>
-  		<property name="dataList" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
+  		<property name="categories" value="/REQUEST"/>
+  		<property name="datas" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
   		<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>
   		<property name="colors" value="RED2GREEN"/>
   	</config>
@@ -55,8 +55,8 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="timeLine"/>
   		<property name="whatDim" value="Type"/>
-  		<property name="whatList" value="/REQUEST"/>
-  		<property name="dataList" value="WORK_duration:mean;FACADE_duration:mean;duration:mean"/>
+  		<property name="categories" value="/REQUEST"/>
+  		<property name="datas" value="WORK_duration:mean;FACADE_duration:mean;duration:mean"/>
   		<property name="labels" value="Work;Services;Request"/>
   		<property name="colors" value="RED2GREEN"/>
   	</config>
@@ -68,8 +68,8 @@
   		<property name="size" value="4x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="SimpleName"/>
-  		<property name="whatList" value="/REQUEST"/>
-  		<property name="dataList" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="categories" value="/REQUEST"/>
+  		<property name="datas" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Taille page (o);CPU (ms);Erreurs User (%);Autres erreurs (%);Temps page (ms);Temps services (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
   	</config>
   	
@@ -80,8 +80,8 @@
   		<property name="size" value="4x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="SimpleName"/>
-  		<property name="whatList" value="/FACADE"/>
-  		<property name="dataList" value="duration:count;ERROR_PCT:mean;duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="categories" value="/FACADE"/>
+  		<property name="datas" value="duration:count;ERROR_PCT:mean;duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Exception (%);Temps service (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
   	</config>
   	
@@ -92,8 +92,8 @@
   		<property name="size" value="4x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="SimpleName"/>
-  		<property name="whatList" value="/WORK"/>
-  		<property name="dataList" value="duration:count;ERROR_PCT:mean;duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="categories" value="/WORK"/>
+  		<property name="datas" value="duration:count;ERROR_PCT:mean;duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Exception (%);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
   	</config>
   	
@@ -115,8 +115,8 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>
   	
@@ -127,8 +127,8 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>
   	
@@ -139,8 +139,8 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="Module"/>
-  		<property name="whatList" value="/PAGE;/SQL;/FACADE"/>
-  		<property name="dataList" value="duration:max;duration:mean;duration:min"/>
+  		<property name="categories" value="/PAGE;/SQL;/FACADE"/>
+  		<property name="datas" value="duration:max;duration:mean;duration:min"/>
   		<property name="labels" value="Max;Temps moyen;Min"/>
   	</config>
   	
@@ -151,8 +151,8 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="timeLine"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE"/>
-  		<property name="dataList" value="duration:max;duration:mean;duration:min"/>
+  		<property name="categories" value="/PAGE"/>
+  		<property name="datas" value="duration:max;duration:mean;duration:min"/>
   		<property name="labels" value="Max;Temps moyen;Min"/>
   	</config>
   
@@ -163,8 +163,8 @@
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="Module"/>
-  		<property name="whatList" value="/PAGE;/SQL;/FACADE"/>
-  		<property name="dataList" value="duration:mean"/>
+  		<property name="categories" value="/PAGE;/SQL;/FACADE"/>
+  		<property name="datas" value="duration:mean"/>
   		<property name="labels" value="Temps moyen"/>
   	</config>
   	
@@ -175,8 +175,8 @@
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="timeLine"/>
   		<property name="whatDim" value="Module"/>
-  		<property name="whatList" value="/PAGE"/>
-  		<property name="dataList" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
+  		<property name="categories" value="/PAGE"/>
+  		<property name="datas" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
   		<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>
   		<property name="colors" value="RED2GREEN"/>
   	</config>
@@ -188,8 +188,8 @@
   		<property name="size" value="4x1"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE"/>
-  		<property name="dataList" value="duration:count;PAGE_SIZE:mean;EXCEPTION:mean;duration:mean;FACADE_duration:mean;SQL_duration:mean;FACADE_REF_CACHE_HIT:mean"/>
+  		<property name="categories" value="/PAGE"/>
+  		<property name="datas" value="duration:count;PAGE_SIZE:mean;EXCEPTION:mean;duration:mean;FACADE_duration:mean;SQL_duration:mean;FACADE_REF_CACHE_HIT:mean"/>
   		<property name="labels" value="Hits;Taille page (o);Exception (%);Temps page (ms);Temps services (ms);Temps SQL (ms);Cache hit (%)"/>  		
   	</config>
   	
@@ -208,12 +208,11 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>  	  	
   	  	  	
-  	
   	<config name="analytica.dashboard3">
   		<property name="dashboardTitle" value="Application DashboardSTK"/>
   		<property name="dashboardIcon" value="none"/>
@@ -230,9 +229,9 @@
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<!--  <property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>  -->
-		<property name="whatList" value="/FACADE"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<!--  <property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>  -->
+		<property name="categories" value="/FACADE"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>  	  	
   	
@@ -243,8 +242,8 @@
   		<property name="size" value="4x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="SimpleName"/>
-  		<property name="whatList" value="/REQUEST"/>
-  		<property name="dataList" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="categories" value="/REQUEST"/>
+  		<property name="datas" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Taille page (o);CPU (ms);Erreurs User (%);Autres erreurs (%);Temps page (ms);Temps services (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
 
   	</config>
@@ -256,8 +255,8 @@
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>  	  	
   	
@@ -268,8 +267,8 @@
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>  	  	
   	<config name="analytica.dashboard3.panel3-5">
@@ -279,8 +278,8 @@
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>  	  	
   	
@@ -291,7 +290,10 @@
   	<config name="analytica.dashboard4">
   		<property name="dashboardTitle" value="Servers Dashboard"/>
   		<property name="dashboardIcon" value="none"/>
-  		<property name="panels" value="panel4-6;panel4-7;panel4-3;panel4-4;panel4-5;panel4-9"/>
+  		<!--<property name="panels" value="panel4-6;panel4-7;panel4-3;panel4-4;panel4-5;panel4-9"/>-->
+  		<property name="panels" value="panel4-6;panel4-3;panel4-5;panel4-7;panel4-4;panel4-9"/>
+  		<!--<property name="panels" value="panel4-3"/>-->
+
   		<property name="timeDim" value="Hour"/>
   		<property name="timeFrom" value="NOW-3"/>
   		<property name="timeTo" value="NOW"/>
@@ -301,37 +303,39 @@
   	<config name="analytica.dashboard4.panel4-2">
   		<property name="title" value="Top Used Space"/>
   		<property name="icon" value="signal"/>
-  		<property name="renderer" value="barchart"/>
+  		<property name="renderer" value="flotrrenderer"/>
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="Module"/>
-  		<property name="whatList" value="/PAGE"/>
-  		<property name="dataList" value="duration:max;duration:mean;duration:min"/>
+  		<property name="categories" value="/PAGE"/>
+  		<property name="datas" value="duration:max;duration:mean;duration:min"/>
   		<property name="labels" value="Max;Temps moyen;Min"/>
   	</config>
   	
   	<config name="analytica.dashboard4.panel4-3">
   		<property name="title" value="Performances"/>
   		<property name="icon" value="time"/>
-  		<property name="renderer" value="timeline_stacked"/>
+  		<property name="renderer" value="testrenderer"/>
   		<property name="size" value="2x1"/>
-  		<property name="loadType" value="timeLine"/>
-  		<property name="whatDim" value="Module"/>
-  		<property name="whatList" value="/PAGE"/>
-  		<property name="dataList" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
-  		<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>
+  		<!--<property name="loadType" value="timeLine"/>
+  		<property name="whatDim" value="Module"/>-->
+  		<property name="categories" value="SQL"/>
+  		<property name="datas" value="duration:mean"/>
+  		<!--<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>-->
+  		<property name="labels" value="Temps moyen"/>
+
   		<property name="colors" value="RED2GREEN"/>
   	</config>
   	<config name="analytica.dashboard4.panel4-4">
   		<property name="title" value="Memory Utilization"/>
   		<property name="icon" value="lock"/>
-  		<property name="renderer" value="speedometer"/>
+  		<property name="renderer" value="flotrrenderer"/>
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
-  		<property name="labels" value="Min;Temps moyen;Max"/>
+  		<property name="categories" value="/PAGE/"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
+  		<property name="labels" value="Min;Temps Moyen;Max"/>
   	</config>
   	
   	<!-- <config name="analytica.dashboard4.panel4-4">
@@ -341,8 +345,8 @@
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
   	</config>
   	 -->
@@ -351,18 +355,18 @@
   	<config name="analytica.dashboard4.panel4-5">
   		<property name="title" value="CPU Utilization"/>
   		<property name="icon" value="lock"/>
-  		<property name="renderer" value="timeline"/>
+  		<property name="renderer" value="testrenderer"/>
   		<property name="size" value="1x1"/>
   		<property name="loadType" value="timeLine"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/"/>
-  		<property name="dataList" value="duration_C50:count;duration:mean;duration:max"/>
-  		<property name="labels" value="Min;Temps moyen;Max"/>
+  		<property name="categories" value="/PAGE/"/>
+  		<property name="datas" value="duration_C50:count;duration:mean;duration:max"/>
+  		<property name="labels" value="Min;Temps Moyen;Max"/>
   		<property name="colors" value="RED2GREEN"/>
   		
   	</config>
   
-  	<config name="analytica.dashboard4.panel4-6">
+  	<!--<config name="analytica.dashboard4.panel4-6">
   		<property name="title" value="CPU Utilization"/>
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="sparkline"/>
@@ -372,11 +376,25 @@
   		<property name="timeFrom" value="NOW-1h"/>
   		<property name="timeTo" value="NOW"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
+  		<property name="categories" value="/PAGE/"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
-  	</config>
+  	</config>-->
   	
+  	<config name="analytica.dashboard4.panel4-6">
+  		<property name="title" value="CPU Utilization"/>
+  		<property name="icon" value="lock"/>
+  		<property name="renderer" value="testrenderer"/>
+  		<property name="size" value="1x1"/>
+  		<property name="loadType" value="timeLine"/>
+  		<property name="timeDim" value="Minute"/>
+  		<property name="timeFrom" value="NOW-1h"/>
+  		<property name="timeTo" value="NOW"/>
+  		<property name="whatDim" value="FullName"/>
+  		<property name="categories" value="/SQL/"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
+  		<property name="labels" value="Min;Temps Moyen;Max"/>
+  	</config>
   	
   	<config name="analytica.dashboard4.panel4-7">
   		<property name="title" value="Requetes"/>
@@ -385,10 +403,10 @@
   		<property name="size" value="4x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="SimpleName"/>
-  		<property name="whatList" value="/REQUEST"/>
-  		<property name="dataList" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
+  		<property name="categories" value="/REQUEST"/>
+  		<property name="datas" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Taille page (o);CPU (ms);Erreurs User (%);Autres erreurs (%);Temps page (ms);Temps services (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
-
+  		<!--<property name="labels" value="Hits"/>-->
   	</config>
   	
   	<config name="analytica.dashboard4.panel4-8">
@@ -398,20 +416,21 @@
   		<property name="size" value="2x2"/>
   		<property name="loadType" value="data"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
-  		<property name="dataList" value="duration:min;duration:mean;duration:max"/>
-  		<property name="labels" value="Min;Temps moyen;Max"/>
+  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<property name="datas" value="duration:min;duration:mean;duration:max"/>
+  		<property name="labels" value="Min"/>
   	</config>
   	
   	<config name="analytica.dashboard4.panel4-9">
   		<property name="title" value="Monitored Servers"/>
   		<property name="icon" value="list-alt"/>
-  		<property name="renderer" value="sparkline"/>
-  		<property name="size" value="1x1"/>
+  		<property name="renderer" value="testrenderer"/>
+  		<property name="size" value="2x2"/>
   		<property name="loadType" value="whatLine"/>
   		<property name="whatDim" value="FullName"/>
-  		<property name="whatList" value="/PAGE"/>
-  		<property name="dataList" value="duration:count;PAGE_SIZE:mean"/>
+  		<property name="categories" value="/PAGE"/>
+  		<property name="datas" value="duration:count;PAGE_SIZE:mean"/>
+  		<!--<property name="labels" value="Etat;Santé"/>-->
   		<property name="labels" value="Etat;Santé"/>
   	</config>  	  
   	

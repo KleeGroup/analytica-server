@@ -178,35 +178,50 @@ public final class AnalyticaDashboardController {
 		return dataEvalMap;
 	}
 
-	//	public List<Map<String, ?>> getDataMap(final AnalyticaPanelConf analyticaPanelConf) {
-	//		final List<?> list = getAnalyticaDashboardService().loadData(analyticaPanelConf);
-	//		final List<Map<String, ?>> result = new ArrayList<Map<String, ?>>();
-	//		for (int i = 0; i < list.size(); i++) {
-	//			final Object data = list.get(i);
-	//			if (data instanceof Data) {
-	//				final Map<String, Object> dataMap = new HashMap<String, Object>();
-	//				putDataMap(dataMap, (Data) data, analyticaPanelConf.getLabels().get(i));
-	//				result.add(dataMap);
-	//			} else if (data instanceof DataSet) {
-	//				final DataSet dataSet = (DataSet) data;
-	//				for (int j = 0; j < dataSet.getValues().size(); j++) {
-	//					final Map<String, Object> dataMap = new HashMap<String, Object>();
-	//					dataMap.put("key", dataSet.getKey());
-	//					final Object value = dataSet.getValues().get(j);
-	//					if (value instanceof Double) {
-	//						dataMap.put("value", round((Double) value, 2));
-	//					} else {
-	//						dataMap.put("value", value);
-	//					}
-	//					dataMap.put("stringValues", String.valueOf(value));
-	//					dataMap.put("label", analyticaPanelConf.getLabels().get(i) + " " + dataSet.getLabels().get(j));
-	//					result.add(dataMap);
-	//				}
+	//	public List<DataPoint> getDataPoints(final AnalyticaPanelConf analyticaPanelConf){
+	//		final List dataPointList = new ArrayList<DataPoint>();
+	//		final List<HSerie> hseries = getAnalyticaDashboardService().loadData(analyticaPanelConf);
+	//		for (final HSerie hserie : hseries){
+	//			for (final HCube hcube : hserie.getCubes()){
+	//				dataPointList.add(new DataPoint(hcube.));
+	//
 	//			}
 	//
 	//		}
-	//		return result;
+	//		return null;
 	//	}
+
+	public List<Map<String, HSerie>> getDataMap(final AnalyticaPanelConf analyticaPanelConf) {
+		//final List<HSerie> list = getAnalyticaDashboardService().loadData(analyticaPanelConf);
+		//		final List<Map<String, ?>> result = new ArrayList<Map<String, ?>>();
+		//		for (int i = 0; i < list.size(); i++) {
+		//			final Object data = list.get(i);
+		//			if (data instanceof Data) {
+		//				final Map<String, Object> dataMap = new HashMap<String, Object>();
+		//				putDataMap(dataMap, (Data) data, analyticaPanelConf.getLabels().get(i));
+		//				result.add(dataMap);
+		//			} else if (data instanceof DataSet) {
+		//				final DataSet dataSet = (DataSet) data;
+		//				for (int j = 0; j < dataSet.getValues().size(); j++) {
+		//					final Map<String, Object> dataMap = new HashMap<String, Object>();
+		//					dataMap.put("key", dataSet.getKey());
+		//					final Object value = dataSet.getValues().get(j);
+		//					if (value instanceof Double) {
+		//						dataMap.put("value", round((Double) value, 2));
+		//					} else {
+		//						dataMap.put("value", value);
+		//					}
+		//					dataMap.put("stringValues", String.valueOf(value));
+		//					dataMap.put("label", analyticaPanelConf.getLabels().get(i) + " " + dataSet.getLabels().get(j));
+		//					result.add(dataMap);
+		//				}
+		//	}
+
+		//}
+		//return result;
+		return new ArrayList<>();
+
+	}
 
 	//	private void putDataMap(final Map<String, Object> dataMap, final Data data, final String label) {
 	//		dataMap.put("key", data.getKey());
@@ -215,7 +230,7 @@ public final class AnalyticaDashboardController {
 	//		dataMap.put("label", label);
 	//	}
 
-	public Map<AnalyticaPanelConf, List<Map<String, ?>>> getDataWrapped() {
+	public Map<AnalyticaPanelConf, List<Map<String, HSerie>>> getDataWrapped() {
 		return dataWrappedEvalMap;
 	}
 

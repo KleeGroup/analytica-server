@@ -17,17 +17,10 @@
  */
 package com.kleegroup.analyticaimpl.ui.chart.thermometer;
 
-import java.util.List;
-
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
-
-import kasper.kernel.util.Assertion;
-
-import com.kleegroup.analytica.server.data.Data;
-import com.kleegroup.analyticaimpl.ui.controller.AnalyticaPanelConf;
 
 /**
  * Convertisseur pour les graphiques.
@@ -44,24 +37,26 @@ public final class ThermometerConverter implements Converter {
 
 	/** {@inheritDoc} */
 	public String getAsString(final FacesContext context, final UIComponent component, final Object objValue) {
-		final AnalyticaPanelConf panelConf = (AnalyticaPanelConf) objValue;
-		final List<Data> datas = (List<Data>) component.getAttributes().get("datas");
-		Assertion.precondition(datas.size() == 3, "Le composant thermometer nécessite 3 données ordonnées : min, max, value");
+		//		final AnalyticaPanelConf panelConf = (AnalyticaPanelConf) objValue;
+		//		final List<Data> datas = (List<Data>) component.getAttributes().get("datas");
+		//		Assertion.precondition(datas.size() == 3, "Le composant thermometer nécessite 3 données ordonnées : min, max, value");
+		//
+		//		//---------------------------------------------------------------------
+		//		final StringBuilder result = new StringBuilder();
+		//		final Data min = datas.get(0);
+		//		final Data value = datas.get(1);
+		//		final Data max = datas.get(2);
+		//		result.append("{ \"min\" :").append(round(min.getValue(), 2));
+		//		result.append(", \"max\" :").append(round(max.getValue(), 2));
+		//		result.append(", \"value\" :").append(round(value.getValue(), 2));
+		//		result.append(" }");
+		//		return result.toString();
+		return "";
 
-		//---------------------------------------------------------------------
-		final StringBuilder result = new StringBuilder();
-		final Data min = datas.get(0);
-		final Data value = datas.get(1);
-		final Data max = datas.get(2);
-		result.append("{ \"min\" :").append(round(min.getValue(), 2));
-		result.append(", \"max\" :").append(round(max.getValue(), 2));
-		result.append(", \"value\" :").append(round(value.getValue(), 2));
-		result.append(" }");
-		return result.toString();
 	}
 
-	private double round(final double value, final int nbDecimal) {
-		final double mult = Math.pow(10, nbDecimal);
-		return Math.round(value * mult) / mult;
-	}
+	//	private double round(final double value, final int nbDecimal) {
+	//		final double mult = Math.pow(10, nbDecimal);
+	//		return Math.round(value * mult) / mult;
+	//	}
 }

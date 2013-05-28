@@ -19,6 +19,7 @@ package com.kleegroup.analyticaimpl.ui.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,7 @@ import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
+import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
@@ -68,26 +70,27 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		final String panelContext = dashboardContext + "." + panelName;
 		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder();
 		readTimeSelection(panelContext, queryBuilder);
-		readWhatSelection(panelContext, queryBuilder);
+		readCategoriesSelection(panelContext, queryBuilder);
 
 		final HQuery panelQuery = queryBuilder.build();
 		final List<String> panelLabels = java.util.Arrays.asList(configManager.getStringValue(panelContext, "labels").split(";"));
 
-		final boolean aggregateTime;
-		final boolean aggregateWhat;
-		final String dataLoadType = configManager.getStringValue(panelContext, "loadType");
-		if (dataLoadType.equals("data")) {
-			aggregateTime = true;
-			aggregateWhat = true;
-		} else if (dataLoadType.equals("whatLine")) {
-			aggregateTime = true;
-			aggregateWhat = false;
-		} else if (dataLoadType.equals("timeLine")) {
-			aggregateTime = false;
-			aggregateWhat = true;
-		} else {
-			throw new IllegalArgumentException("Le type de chargement de données '" + dataLoadType + "' n'est pas reconnu. Types possible : data, whatLine, timeLine.");
-		}
+		//		final boolean aggregateTime;
+		//		final boolean aggregateWhat;
+		//		final String dataLoadType = configManager.getStringValue(panelContext, "loadType");
+		//		if (dataLoadType.equals("data")) {
+		//			aggregateTime = true;
+		//			aggregateWhat = true;
+		//		} else if (dataLoadType.equals("whatLine")) {
+		//			aggregateTime = true;
+		//			aggregateWhat = false;
+		//		} else if (dataLoadType.equals("timeLine")) {
+		//			aggregateTime = false;
+		//			aggregateWhat = true;
+		//		} else {
+		//			throw new IllegalArgumentException("Le type de chargement de données '" + dataLoadType + "' n'est pas reconnu. Types possible : data, whatLine, timeLine.");
+		//		}
+		//final List<String> metrics = readDataKeyList(panelContext);
 		final List<String> metrics = readDataKeyList(panelContext);
 		final String panelTitle = configManager.getStringValue(panelContext, "title");
 		final String panelIcon = configManager.getStringValue(panelContext, "icon");
@@ -96,23 +99,28 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		final String colors = configManager.getStringValue(panelContext, "colors");
 		final int panelWidth = Integer.parseInt(panelSize.split("x")[0]);
 		final int panelHeight = Integer.parseInt(panelSize.split("x")[1]);
-		return new AnalyticaPanelConf(panelName, panelQuery, panelLabels, aggregateTime, aggregateWhat, panelTitle, panelIcon, panelRenderer, colors, panelWidth, panelHeight);
+		return new AnalyticaPanelConf(panelName, panelQuery, panelLabels, panelTitle, panelIcon, panelRenderer, colors, panelWidth, panelHeight,metrics);
 
 	}
 
 	private List<String> readDataKeyList(final String panelContext) {
-		final String dataList = configManager.getStringValue(panelContext, "dataList");
-		final List<String> dataKeys = Arrays.asList(dataList.split(";"));
+		final String datas = configManager.getStringValue(panelContext, "datas");
+		final List<String> dataKeys = Arrays.asList(datas.split(";"));
+		final List<HMetricKey> metricKeys = new ArrayList<HMetricKey>();
+		for (final String s : dataKeys){
+			metricKeys.add(new HMetricKey(s, true));
+		}
 		return dataKeys;
+		//return metricKeys;
 	}
 
-	private void readWhatSelection(final String confContext, final HQueryBuilder queryBuilder) {
-		final String whatDim = configManager.getStringValue(confContext, "whatDim");
-		final String whatList = configManager.getStringValue(confContext, "whatList");
+	private void readCategoriesSelection(final String confContext, final HQueryBuilder queryBuilder) {
+		//final String whatDim = configManager.getStringValue(confContext, "whatDim");
+		final String categories = configManager.getStringValue(confContext, "categories");
 		final String timeDim = configManager.getStringValue(confContext, "timeDim");
 		final HTimeDimension timeDimension =HTimeDimension.valueOf(timeDim);
 
-		final String[] categoryList = whatList.split(";");
+		final String[] categoryList = categories.split(";");
 		if (categoryList.length>1){
 			queryBuilder
 			.on(timeDimension)
