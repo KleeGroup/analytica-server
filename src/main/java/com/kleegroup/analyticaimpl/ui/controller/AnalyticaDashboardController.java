@@ -37,8 +37,6 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.result.HSerie;
 import com.kleegroup.analytica.server.ServerManager;
 
-
-
 /**
  * @author npiedeloup
  * @version $Id: AnalyticaDashboardController.java,v 1.9 2013/01/25 10:53:37 npiedeloup Exp $
@@ -53,7 +51,6 @@ public final class AnalyticaDashboardController {
 	@Inject
 	private ServerManager ServerManager;
 
-
 	@ManagedProperty(value = "#{analyticaDashboardContext}")
 	private AnalyticaDashboardContext analyticaDashboardContext;
 	@ManagedProperty(value = "#{analyticaDashboardService}")
@@ -63,7 +60,7 @@ public final class AnalyticaDashboardController {
 	private Map<AnalyticaPanelConf, String> jsonDataEvalMap;
 
 	private Function<AnalyticaPanelConf, List<HSerie>> loadDataFunction;
-	private Map<AnalyticaPanelConf,List<HSerie>> dataEvalMap;
+	private Map<AnalyticaPanelConf, List<HSerie>> dataEvalMap;
 
 	private Function<AnalyticaPanelConf, List<Map<String, HSerie>>> loadDataWrappedFunction;
 	private Map<AnalyticaPanelConf, List<Map<String, HSerie>>> dataWrappedEvalMap;
@@ -73,7 +70,6 @@ public final class AnalyticaDashboardController {
 
 	private Function<AnalyticaPanelConf, List<ColumnModel>> loadColumnModelFunction;
 	private Map<AnalyticaPanelConf, List<ColumnModel>> columnsEvalMap;
-
 
 	@PostConstruct
 	public void init() {
@@ -87,7 +83,7 @@ public final class AnalyticaDashboardController {
 				analyticaDashboardContext.registerDashboard(dashboard, dashboardConf);
 
 				for (final String panelName : dashboardConf.getPanels()) {
-					final AnalyticaPanelConfBuilder panelConfBuilder = new AnalyticaPanelConfBuilder("analytica." + dashboard, panelName, configManager,ServerManager);
+					final AnalyticaPanelConfBuilder panelConfBuilder = new AnalyticaPanelConfBuilder("analytica." + dashboard, panelName, configManager, ServerManager);
 					//final AnalyticaPanelConf panelConf = configManager.resolve(dashboardContext + "." + panelName, AnalyticaPanelConf.class);
 					analyticaDashboardContext.registerPanel(panelName, panelConfBuilder.build());
 				}

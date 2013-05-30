@@ -28,8 +28,8 @@
 			var cont = "#" + container[0].id;
 			var graph = new Rickshaw.Graph({
 				element : document.querySelector("#" + container[0].id),
-				width : 300,
-				height : 170,
+				width : container[0].style.width,
+				height : container[0].style.height,
 				renderer : types,
 				series : serie
 			});

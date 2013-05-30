@@ -28,8 +28,6 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="bigValue"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
@@ -39,8 +37,6 @@
   		<property name="icon" value="time"/>
   		<property name="renderer" value="timeline_stacked"/>
   		<property name="size" value="2x1"/>
-  		<property name="loadType" value="timeLine"/>
-  		<property name="whatDim" value="Type"/>
   		<property name="categories" value="/REQUEST"/>
   		<property name="datas" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
   		<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>
@@ -52,8 +48,6 @@
   		<property name="icon" value="time"/>
   		<property name="renderer" value="timeline_stacked"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="timeLine"/>
-  		<property name="whatDim" value="Type"/>
   		<property name="categories" value="/REQUEST"/>
   		<property name="datas" value="WORK_duration:mean;FACADE_duration:mean;duration:mean"/>
   		<property name="labels" value="Work;Services;Request"/>
@@ -65,8 +59,6 @@
   		<property name="icon" value="list-alt"/>
   		<property name="renderer" value="table"/>
   		<property name="size" value="4x2"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="SimpleName"/>
   		<property name="categories" value="/REQUEST"/>
   		<property name="datas" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Taille page (o);CPU (ms);Erreurs User (%);Autres erreurs (%);Temps page (ms);Temps services (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
@@ -77,8 +69,6 @@
   		<property name="icon" value="list-alt"/>
   		<property name="renderer" value="table"/>
   		<property name="size" value="4x2"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="SimpleName"/>
   		<property name="categories" value="/FACADE"/>
   		<property name="datas" value="duration:count;ERROR_PCT:mean;duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Exception (%);Temps service (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
@@ -89,8 +79,6 @@
   		<property name="icon" value="list-alt"/>
   		<property name="renderer" value="table"/>
   		<property name="size" value="4x2"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="SimpleName"/>
   		<property name="categories" value="/WORK"/>
   		<property name="datas" value="duration:count;ERROR_PCT:mean;duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Exception (%);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
@@ -110,8 +98,6 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="bigValue"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
@@ -122,8 +108,6 @@
   		<property name="icon" value="off"/>
   		<property name="renderer" value="thermometer"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
@@ -134,8 +118,6 @@
   		<property name="icon" value="signal"/>
   		<property name="renderer" value="barchart"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="Module"/>
   		<property name="categories" value="/PAGE;/SQL;/FACADE"/>
   		<property name="datas" value="duration:max;duration:mean;duration:min"/>
   		<property name="labels" value="Max;Temps moyen;Min"/>
@@ -146,8 +128,6 @@
   		<property name="icon" value="time"/>
   		<property name="renderer" value="timeline"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="timeLine"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE"/>
   		<property name="datas" value="duration:max;duration:mean;duration:min"/>
   		<property name="labels" value="Max;Temps moyen;Min"/>
@@ -158,8 +138,6 @@
   		<property name="icon" value="time"/>
   		<property name="renderer" value="piechart"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="Module"/>
   		<property name="categories" value="/PAGE;/SQL;/FACADE"/>
   		<property name="datas" value="duration:mean"/>
   		<property name="labels" value="Temps moyen"/>
@@ -170,8 +148,6 @@
   		<property name="icon" value="time"/>
   		<property name="renderer" value="timeline_stacked"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="timeLine"/>
-  		<property name="whatDim" value="Module"/>
   		<property name="categories" value="/PAGE"/>
   		<property name="datas" value="duration_C50:count;duration_C100:count;duration_C200:count;duration_C500:count;duration_C1000:count;duration_C2000:count;duration_C5000:count"/>
   		<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>
@@ -183,8 +159,6 @@
   		<property name="icon" value="list-alt"/>
   		<property name="renderer" value="table"/>
   		<property name="size" value="4x1"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE"/>
   		<property name="datas" value="duration:count;PAGE_SIZE:mean;EXCEPTION:mean;duration:mean;FACADE_duration:mean;SQL_duration:mean;FACADE_REF_CACHE_HIT:mean"/>
   		<property name="labels" value="Hits;Taille page (o);Exception (%);Temps page (ms);Temps services (ms);Temps SQL (ms);Cache hit (%)"/>  		
@@ -203,8 +177,6 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="bigValue"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
@@ -224,8 +196,6 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="piechart"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<!--  <property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>  -->
 		<property name="categories" value="/FACADE"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
@@ -237,8 +207,6 @@
   		<property name="icon" value="list-alt"/>
   		<property name="renderer" value="table"/>
   		<property name="size" value="4x2"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="SimpleName"/>
   		<property name="categories" value="/REQUEST"/>
   		<property name="datas" value="duration:count;RESPONSE_LENGTH:mean;CPU_TIME:mean;USER_ERROR_PCT:mean;OTHER_ERROR_PCT:mean;duration:mean;FACADE_duration:mean;WORK_duration:mean;DB_TIME:mean;DB_COMMAND_COUNT:mean;DB_QUERY_COUNT:mean"/>
   		<property name="labels" value="Hits;Taille page (o);CPU (ms);Erreurs User (%);Autres erreurs (%);Temps page (ms);Temps services (ms);Temps Work (ms);Temps SQL (ms);Nb SQL Cmd;Nb SQL Query"/>  		
@@ -250,8 +218,6 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="bigValue"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
@@ -262,8 +228,6 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="bigValue"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
@@ -273,8 +237,6 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="bigValue"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
   		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min;Temps moyen;Max"/>
@@ -302,9 +264,7 @@
   		<property name="icon" value="signal"/>
   		<property name="renderer" value="teststack"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="Module"/>
-  		<property name="categories" value="/SQL"/>
+  		<property name="categories" value="SQL"/>
   		<!--<property name="datas" value="duration:max;duration:mean;duration:min"/>-->
   		<property name="datas" value="duration;MONTANT"/>
   		<property name="labels" value="Temps moyen;Montant"/>
@@ -315,8 +275,6 @@
   		<property name="icon" value="time"/>
   		<property name="renderer" value="testline"/>
   		<property name="size" value="2x1"/>
-  		<!--<property name="loadType" value="timeLine"/>
-  		<property name="whatDim" value="Module"/>-->
   		<property name="categories" value="SQL"/>
   		<!--<property name="labels" value="&lt;50ms;&lt;100ms;&lt;200ms;&lt;500ms;&lt;1s;&lt;2s;&lt;5s"/>-->
   		<property name="datas" value="duration"/>
@@ -329,9 +287,7 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="flotrrenderer"/>
   		<property name="size" value="2x1"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
-  		<property name="categories" value="/PAGE/"/>
+  		<property name="categories" value="PAGE/"/>
   		<property name="datas" value="duration"/>
   		<property name="labels" value="Temps moyen"/>
   	</config>
@@ -349,18 +305,15 @@
   	</config>
   	 -->
   	
-  	
   	<config name="analytica.dashboard4.panel4-5">
   		<property name="title" value="CPU Utilization"/>
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="testscateredplot"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="timeLine"/>
-  		<property name="whatDim" value="FullName"/>
-  		<property name="categories" value="/PAGE/"/>
-  		<property name="datas" value="duration"/>
+  		<property name="categories" value="PAGE/"/>
+  		<property name="datas" value="duration:mean"/>
   		<property name="labels" value="Temps moyen"/>
-<property name="colors" value="RED2GREEN"/>
+		<property name="colors" value="RED2GREEN"/>
   		
   	</config>
   
@@ -384,12 +337,10 @@
   		<property name="icon" value="lock"/>
   		<property name="renderer" value="testarea"/>
   		<property name="size" value="1x1"/>
-  		<property name="loadType" value="timeLine"/>
   		<property name="timeDim" value="Minute"/>
-  		<property name="timeFrom" value="NOW-1h"/>
+  		<property name="timeFrom" value="NOW-2h"/>
   		<property name="timeTo" value="NOW"/>
-  		<property name="whatDim" value="FullName"/>
-  		<property name="categories" value="/SQL/"/>
+  		<property name="categories" value="PAGE"/>
   		<property name="datas" value="duration"/>
   		<property name="labels" value="Temps moyen"/>
  	</config>
@@ -399,9 +350,7 @@
   		<property name="icon" value="list-alt"/>
   		<property name="renderer" value="table"/>
   		<property name="size" value="4x2"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="SimpleName"/>
-  		<property name="categories" value="/REQUEST"/>
+  		<property name="categories" value="PAGE"/>
  		<property name="datas" value="duration"/>
   		<property name="labels" value="Temps moyen"/>
 
@@ -413,21 +362,19 @@
   		<property name="icon" value="off"/>
   		<property name="renderer" value="thermometer"/>
   		<property name="size" value="2x2"/>
-  		<property name="loadType" value="data"/>
-  		<property name="whatDim" value="FullName"/>
-  		<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>
+  		<!--<property name="categories" value="/PAGE/login/login.jsf;/FACADE/LoginService/checkCredentials();/SQL/SV_LOAD_USER_BY_LOGIN_PASSWORD;/SQL/SV_LOAD_USER_INFORMATIONS;/FACADE/AccueilService/loadHomeDatas();/SQL/SV_LOAD_HOME_DATA_1;/SQL/SV_LOAD_HOME_DATA_2"/>-->
+  		 <property name="categories" value="PAGE"/>
+
   		<property name="datas" value="duration:min;duration:mean;duration:max"/>
   		<property name="labels" value="Min"/>
   	</config>
   
   	<config name="analytica.dashboard4.panel4-9">
-  		<property name="title" value="Monitored Servers"/>
+  		<property name ="title" value="Monitored Servers"/>
   		<property name="icon" value="list-alt"/>
   		<property name="renderer" value="testbars"/>
   		<property name="size" value="2x1"/>
-  		<property name="loadType" value="whatLine"/>
-  		<property name="whatDim" value="FullName"/>
-  		<property name="categories" value="/PAGE"/>
+  		<property name="categories" value="PAGE"/>
   		<!--<property name="labels" value="Etat;Santé"/>-->
  		<property name="datas" value="duration"/>
   		<property name="labels" value="Temps moyen"/>

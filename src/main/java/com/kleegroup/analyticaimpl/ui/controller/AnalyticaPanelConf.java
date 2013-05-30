@@ -40,6 +40,7 @@ public final class AnalyticaPanelConf {
 	private final int panelWidth;
 	private final int panelHeight;
 	private final List<String> metricKeys;
+	private final List<String> categories;
 
 	/**
 	 * Constructeur.
@@ -49,7 +50,7 @@ public final class AnalyticaPanelConf {
 	 * @param aggregateTime Si aggregation temporelle
 	 * @param aggregateWhat Si aggregation fonctionnelle
 	 */
-	public AnalyticaPanelConf(final String panelName, final HQuery panelQuery, final List<String> labels,  final String panelTitle, final String panelIcon, final String panelRenderer, final String colors, final int panelWidth, final int panelHeight,final List<String> metricKeys) {
+	public AnalyticaPanelConf(final String panelName, final HQuery panelQuery, final List<String> labels, final String panelTitle, final String panelIcon, final String panelRenderer, final String colors, final int panelWidth, final int panelHeight, final List<String> metricKeys, final List<String> categories) {
 		Assertion.notEmpty(panelName);
 		Assertion.notNull(panelQuery);
 		Assertion.notNull(labels);
@@ -58,12 +59,11 @@ public final class AnalyticaPanelConf {
 		Assertion.notEmpty(panelIcon);
 		Assertion.notEmpty(colors);
 		Assertion.notNull(metricKeys);
+		Assertion.notNull(categories);
 		//Assertion.precondition(panelQuery.getAllCategories().size() == labels.size(), "Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).", panelQuery.getAllCategories().size(), labels.size());
-		Assertion.precondition(metricKeys.size() == labels.size(),"Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).",metricKeys.size(), labels.size());
+		Assertion.precondition(metricKeys.size() == labels.size(), "Le nombre de labels ({1}) ne correspond pas aux indicateurs sélectionnées ({0}).", metricKeys.size(), labels.size());
 		//---------------------------------------------------------------------
 		this.panelName = panelName;
-		//		this.aggregateTime = true;//jamais utilisé
-		//		this.aggregateWhat = true;//jamais utilisé
 		this.panelQuery = panelQuery;
 		this.labels = labels;
 		this.panelTitle = panelTitle;
@@ -73,17 +73,8 @@ public final class AnalyticaPanelConf {
 		this.panelWidth = panelWidth;
 		this.panelHeight = panelHeight;
 		this.metricKeys = metricKeys;
+		this.categories = categories;
 	}
-
-	//	/** {@inheritDoc} */
-	//	public final boolean isAggregateTime() {
-	//		return aggregateTime;
-	//	}
-	//
-	//	/** {@inheritDoc} */
-	//	public final boolean isAggregateWhat() {
-	//		return aggregateWhat;
-	//	}
 
 	/** {@inheritDoc} */
 	public List<String> getLabels() {
@@ -129,7 +120,15 @@ public final class AnalyticaPanelConf {
 		return panelQuery;
 	}
 
-	public List<String> getMetricKeys(){
+	public List<String> getMetricKeys() {
 		return metricKeys;
 	}
+
+	/**
+	 * @return categories
+	 */
+	public List<String> getCategories() {
+		return categories;
+	}
+
 }

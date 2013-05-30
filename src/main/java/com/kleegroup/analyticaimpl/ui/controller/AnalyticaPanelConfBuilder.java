@@ -35,7 +35,6 @@ import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.server.ServerManager;
 
-
 /**
  * @author npiedeloup
  * @version $Id: AnalyticaPanelConfBuilder.java,v 1.9 2013/01/25 10:53:37 npiedeloup Exp $
@@ -71,26 +70,10 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder();
 		readTimeSelection(panelContext, queryBuilder);
 		readCategoriesSelection(panelContext, queryBuilder);
-
 		final HQuery panelQuery = queryBuilder.build();
-		final List<String> panelLabels = java.util.Arrays.asList(configManager.getStringValue(panelContext, "labels").split(";"));
+		//Set<> panelQuery.getAllCategories();
 
-		//		final boolean aggregateTime;
-		//		final boolean aggregateWhat;
-		//		final String dataLoadType = configManager.getStringValue(panelContext, "loadType");
-		//		if (dataLoadType.equals("data")) {
-		//			aggregateTime = true;
-		//			aggregateWhat = true;
-		//		} else if (dataLoadType.equals("whatLine")) {
-		//			aggregateTime = true;
-		//			aggregateWhat = false;
-		//		} else if (dataLoadType.equals("timeLine")) {
-		//			aggregateTime = false;
-		//			aggregateWhat = true;
-		//		} else {
-		//			throw new IllegalArgumentException("Le type de chargement de données '" + dataLoadType + "' n'est pas reconnu. Types possible : data, whatLine, timeLine.");
-		//		}
-		//final List<String> metrics = readDataKeyList(panelContext);
+		final List<String> panelLabels = java.util.Arrays.asList(configManager.getStringValue(panelContext, "labels").split(";"));
 		final List<String> metrics = readDataKeyList(panelContext);
 		final String panelTitle = configManager.getStringValue(panelContext, "title");
 		final String panelIcon = configManager.getStringValue(panelContext, "icon");
@@ -99,36 +82,43 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		final String colors = configManager.getStringValue(panelContext, "colors");
 		final int panelWidth = Integer.parseInt(panelSize.split("x")[0]);
 		final int panelHeight = Integer.parseInt(panelSize.split("x")[1]);
-		return new AnalyticaPanelConf(panelName, panelQuery, panelLabels, panelTitle, panelIcon, panelRenderer, colors, panelWidth, panelHeight,metrics);
+		final List<String> categories = java.util.Arrays.asList(configManager.getStringValue(panelContext, "categories").split(";"));
+
+		return new AnalyticaPanelConf(panelName, panelQuery, panelLabels, panelTitle, panelIcon, panelRenderer, colors, panelWidth, panelHeight, metrics, categories);
 
 	}
 
 	private List<String> readDataKeyList(final String panelContext) {
 		final String datas = configManager.getStringValue(panelContext, "datas");
+		final List<String> cles = new ArrayList<String>();
+
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
 		final List<HMetricKey> metricKeys = new ArrayList<HMetricKey>();
-		for (final String s : dataKeys){
-			metricKeys.add(new HMetricKey(s, true));
+		for (final String s : dataKeys) {
+			final String[] list = s.split(":");
+			if (list.length > 1) {
+				metricKeys.add(new HMetricKey(list[0], true));
+			} else if (list.length == 1) {
+				metricKeys.add(new HMetricKey(s, true));
+			}
+			cles.add(list[0]);
 		}
-		return dataKeys;
+		return cles;
 		//return metricKeys;
 	}
 
 	private void readCategoriesSelection(final String confContext, final HQueryBuilder queryBuilder) {
-		//final String whatDim = configManager.getStringValue(confContext, "whatDim");
 		final String categories = configManager.getStringValue(confContext, "categories");
 		final String timeDim = configManager.getStringValue(confContext, "timeDim");
-		final HTimeDimension timeDimension =HTimeDimension.valueOf(timeDim);
+		final HTimeDimension timeDimension = HTimeDimension.valueOf(timeDim);
 
 		final String[] categoryList = categories.split(";");
-		if (categoryList.length>1){
-			queryBuilder
-			.on(timeDimension)
-			.withChildren(categoryList[0], categoryList);
-		}else if (categoryList.length==1){
+		if (categoryList.length > 1) {
+			queryBuilder.on(timeDimension).withChildren(categoryList[0], categoryList);
+		} else if (categoryList.length == 1) {
 			queryBuilder//
-			//.on(timeDimension)//
-			.with(categoryList[0],categoryList);
+					//.on(timeDimension)// Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com
+					.with(categoryList[0], categoryList);
 		}
 	}
 
@@ -141,9 +131,9 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		final Date minValue = readDate(timeFrom, timeDimension);
 		final Date maxValue = readDate(timeTo, timeDimension);
 		queryBuilder//
-		.on(timeDimension)//
-		.from(minValue)//
-		.to(maxValue);
+				.on(timeDimension)//
+				.from(minValue)//
+				.to(maxValue);
 	}
 
 	private Date readDate(final String timeStr, final HTimeDimension dimension) {
@@ -158,19 +148,19 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		}
 		final String datePattern;
 		switch (dimension) {
-		case Year:
-			datePattern = "yyyy";
-			break;
-		case Month:
-			datePattern = "MM/yyyy";
-			break;
-		case Day:
-			datePattern = "dd/MM/yyyy";
-			break;
-		case Hour:
-		case Minute:
-		default:
-			datePattern = "HH:mm dd/MM/yyyy";
+			case Year:
+				datePattern = "yyyy";
+				break;
+			case Month:
+				datePattern = "MM/yyyy";
+				break;
+			case Day:
+				datePattern = "dd/MM/yyyy";
+				break;
+			case Hour:
+			case Minute:
+			default:
+				datePattern = "HH:mm dd/MM/yyyy";
 		}
 		final SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
 		try {
@@ -191,14 +181,14 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 			delta = Long.valueOf(deltaAsString.substring(0, deltaAsString.length() - 1));
 		}
 		switch (unit) {
-		case 'd':
-			return delta * 24 * 60 * 60 * 1000L;
-		case 'h':
-			return delta * 60 * 60 * 1000L;
-		case 'm':
-			return delta * 60 * 1000L;
-		default:
-			throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
+			case 'd':
+				return delta * 24 * 60 * 60 * 1000L;
+			case 'h':
+				return delta * 60 * 60 * 1000L;
+			case 'm':
+				return delta * 60 * 1000L;
+			default:
+				throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
 		}
 	}
 
