@@ -17,6 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.ui.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kasper.kernel.util.Assertion;
@@ -41,6 +42,8 @@ public final class AnalyticaPanelConf {
 	private final int panelHeight;
 	private final List<String> metricKeys;
 	private final List<String> categories;
+	private final List<String> subcategories;
+	private final String category;
 
 	/**
 	 * Constructeur.
@@ -74,6 +77,8 @@ public final class AnalyticaPanelConf {
 		this.panelHeight = panelHeight;
 		this.metricKeys = metricKeys;
 		this.categories = categories;
+		this.subcategories = new ArrayList<>();
+		this.category = categories.get(0);
 	}
 
 	/** {@inheritDoc} */
@@ -116,19 +121,32 @@ public final class AnalyticaPanelConf {
 		return colors;
 	}
 
+	/** {@inheritDoc} */
+
 	public HQuery getQuery() {
 		return panelQuery;
 	}
+
+	/** {@inheritDoc} */
 
 	public List<String> getMetricKeys() {
 		return metricKeys;
 	}
 
-	/**
-	 * @return categories
-	 */
-	public List<String> getCategories() {
-		return categories;
+	/** {@inheritDoc} */
+
+	public List<String> getSubcategories() {
+
+		for (int i = 1; i < categories.size(); i++) {
+			subcategories.add(categories.get(i));
+		}
+		return subcategories;
+	}
+
+	/** {@inheritDoc} */
+
+	public String getCategory() {
+		return category;
 	}
 
 }

@@ -31,7 +31,11 @@
           graph, 
           i, x, o;
 
-  	    options = {
+  	    <!-- options =  <h:outputText escape="false" value="#{cc.attrs.panel}">
+            <f:converter converterId="flotrOptionsConverter"/>
+            </h:outputText>,--> 
+            
+            {
         	    xaxis : {
         	    	ticks : datas.labels
         	    },

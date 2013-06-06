@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import kasper.config.ConfigManager;
 import kasper.kernel.exception.KRuntimeException;
@@ -30,6 +31,7 @@ import kasper.kernel.lang.Builder;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.HMetricKey;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
@@ -70,7 +72,18 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder();
 		readTimeSelection(panelContext, queryBuilder);
 		readCategoriesSelection(panelContext, queryBuilder);
+
 		final HQuery panelQuery = queryBuilder.build();
+
+		System.out.println("-----------------------------------------------------PANEL CONFIG----------------------------------------------------------------------------------------------------");
+		final Set<HCategory> sqlCategories = panelQuery.getAllCategories();
+		System.out.println("Toutes les catégories" + sqlCategories);
+		System.out.println("Nombre de categories enregistres " + panelQuery.getAllCategories().size());
+		for (final HCategory category : panelQuery.getAllCategories()) {
+			System.out.println("Category In result:" + category.toString() + "---------------------------------------------------------------------------------------------");
+		}
+		System.out.println("-----------------------------------------------------/PANEL CONFIG----------------------------------------------------------------------------------------------------");
+
 		//Set<> panelQuery.getAllCategories();
 
 		final List<String> panelLabels = java.util.Arrays.asList(configManager.getStringValue(panelContext, "labels").split(";"));
@@ -109,16 +122,16 @@ public final class AnalyticaPanelConfBuilder implements Builder<AnalyticaPanelCo
 
 	private void readCategoriesSelection(final String confContext, final HQueryBuilder queryBuilder) {
 		final String categories = configManager.getStringValue(confContext, "categories");
-		final String timeDim = configManager.getStringValue(confContext, "timeDim");
-		final HTimeDimension timeDimension = HTimeDimension.valueOf(timeDim);
 
-		final String[] categoryList = categories.split(";");
+		final String[] categoryList = categories.split("/");
 		if (categoryList.length > 1) {
-			queryBuilder.on(timeDimension).withChildren(categoryList[0], categoryList);
+			final String[] subCategoryList = new String[categoryList.length - 1];
+			for (int i = 0; i < subCategoryList.length; i++) {
+				subCategoryList[i] = categoryList[i + 1];
+			}
+			queryBuilder.withChildren(categoryList[0]);
 		} else if (categoryList.length == 1) {
-			queryBuilder//
-					//.on(timeDimension)// Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com Diageo-careers.com
-					.with(categoryList[0], categoryList);
+			queryBuilder.with(categoryList[0]);
 		}
 	}
 

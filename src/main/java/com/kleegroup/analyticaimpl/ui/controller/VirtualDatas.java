@@ -3,7 +3,9 @@
  */
 package com.kleegroup.analyticaimpl.ui.controller;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import kasper.kernel.util.Assertion;
@@ -23,10 +25,6 @@ public class VirtualDatas {
 	private static final String SQL_PROCESS = "SQL";
 	private static final String SEARCH_PROCESS = "SEARCH";
 
-	private static final int FIRST_WEEK = 0;
-
-	private static final int NB_WEEK = 1;
-
 	private static final double NB_VISIT_DAILY_MAX = 10;
 
 	public VirtualDatas(final ServerManager serverManager) {
@@ -35,24 +33,57 @@ public class VirtualDatas {
 
 	public void load() {
 		//Toutes les visites sur 3h, 100visites par heures
-		loadVisitors(new Date(System.currentTimeMillis()), 50);
+
+		//Start date = 8h
+		//Date startDate = new Date();
+		final Calendar startDate = GregorianCalendar.getInstance();
+		startDate.set(Calendar.HOUR_OF_DAY, 0);
+		startDate.set(Calendar.MINUTE, 0);
+		startDate.set(Calendar.SECOND, 0);
+		startDate.set(Calendar.MILLISECOND, 0);
+		System.out.println("StartDate : " + startDate);
+		loadVisitors(startDate.getTime(), 50);
 	}
 
 	//	public void loadVisitors(final Date startDate, final double hours, final double visitorByHour) {
 	// visitByHour represente finalement le nombre max de visites
 	public void loadVisitors(final Date startDate, final double visitorByHour) {
 
-		for (int j = 0; j < 5; j++) {
-			final Date dateJour = new Date(startDate.getTime() + j * 24 * 60 * 60 * 1000L);
-			for (int h = 0; h < 12; h++) {
-				final double coef = 1.5 + 0.25 * Math.sin(j * Math.PI / 2 / (6 * 30));
-				final long nbVisit = random(NB_VISIT_DAILY_MAX * Math.cos((h - 3) / 2d / 3.14d), coef); // 50 visites en moyenne par heure en pic
-				for (int visit = 0; visit < nbVisit; visit++) {
-					final Date dateVisite = new Date(dateJour.getTime() + h * 60 * 60 * 1000L + random(visit * (50 * 60 * 1000L / nbVisit) + 5 * 60 * 1000L, 1));
-					addVisitorScenario(dateVisite, coef);
-				}
+		//Pics à 10 h et à 15h
+		//final String d = startDate.toLocaleString();
+
+		//		for (int j = 0; j < 5; j++) {
+		//			final Date dateJour = new Date(startDate.getTime() + j * 24 * 60 * 60 * 1000L);
+		//			for (int h = 0; h < 12; h++) {
+		//				final double coef = 1.5 + 0.25 * Math.sin(j * Math.PI / 2 / (6 * 30));
+		//				final long nbVisit = random(NB_VISIT_DAILY_MAX * Math.cos((h - 3) / 2d / 3.14d), coef); // 50 visites en moyenne par heure en pic
+		//				for (int visit = 0; visit < nbVisit; visit++) {
+		//					final Date dateVisite = new Date(dateJour.getTime() + h * 60 * 60 * 1000L + random(visit * (50 * 60 * 1000L / nbVisit) + 5 * 60 * 1000L, 1));
+		//					addVisitorScenario(dateVisite, coef);
+		//				}
+		//			}
+		//		}
+		long nbVisit;
+		final Date date = startDate;
+		for (int h = 7; h < 19; h++) {
+
+			//final double coef = 1.5 + 0.25 * Math.sin((h - 8) * Math.PI / 2 / (6 * 30));
+			final double coef = 0.25 + 0.25 * Math.sin((h - 7 + 4.5) * Math.PI / 3); //varie de 0 à 0.5
+			//if (h == 10 || h == 15) {
+			//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.6d);
+			//} else {
+			//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.2d);
+			nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% à 60% en fonction de l'heure
+			//}
+			//System.out.println(h + "\t" + coef + "\t" + nbVisit);
+			for (int visit = 0; visit < nbVisit; visit++) {
+				final Date dateVisite = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
+				//System.out.println(dateVisite + "\t" + h + "\t" + coef + "\t" + nbVisit);
+				addVisitorScenario(dateVisite, coef);
 			}
+
 		}
+
 	}
 
 	//final long nbVisit = (long) (Math.random() * hours * visitorByHour);
@@ -92,13 +123,24 @@ public class VirtualDatas {
 	private void addVisitorScenario(final Date startVisite, final double coef) {
 		final long waitTime = 30 * 1000;
 
-		addHomePage(startVisite, coef);
+		addHomePage(startVisite, random(150, coef));
 
-		addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
+		addSearchPage(new Date(startVisite.getTime() + waitTime), random(750, coef));
 
 		for (int i = 0; i < 3; i++) {
-			addViewPage(new Date(startVisite.getTime() + waitTime + waitTime * i), coef);
+			addViewPage(new Date(startVisite.getTime() + waitTime + waitTime * i), random(200, coef));
 		}
+	}
+
+	private void addContriutorScenario(final Date startVisite, final double coef) {
+		final long waitTime = 30 * 1000;
+		addHomePage(startVisite, coef);
+		addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
+		for (int i = 0; i < 10; i++) {
+			addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
+			addUpdatePage(new Date(startVisite.getTime() + waitTime + waitTime * i), coef);
+		}
+
 	}
 
 	private void addHomePage(final Date dateVisite, final double processDuration) {
@@ -106,7 +148,7 @@ public class VirtualDatas {
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
 		final KProcess sqlProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select*from news").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/home").addSubProcess(sqlProcess).build();
+		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "home", "homePage").addSubProcess(sqlProcess).build();
 		serverManager.push(pageProcess);
 	}
 
@@ -115,9 +157,9 @@ public class VirtualDatas {
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
 		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SEARCH_PROCESS, "find oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/search").addSubProcess(searchProcess).build();
+		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "search").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
-		System.out.println("Recherche " + dateVisite);
+		//System.out.println("Recherche " + dateVisite);
 
 	}
 
@@ -126,9 +168,9 @@ public class VirtualDatas {
 		//final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
 		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select 1 from oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/oeuvre").addSubProcess(searchProcess).build();
+		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "oeuvre").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
-		System.out.println("Consultation " + dateVisite);
+		//System.out.println("Consultation " + dateVisite);
 
 	}
 
@@ -138,13 +180,12 @@ public class VirtualDatas {
 		final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "update 1 from oeuvres").build();
 		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/oeuvre").addSubProcess(updateProcess).build();
 		serverManager.push(pageProcess);
-		System.out.println("Modification " + dateVisite);
+		//System.out.println("Modification " + dateVisite);
 
 	}
 
 	/**
-	 * Calcul la prochaine valeur aléatoire gaussienne entre X +/- 20% + X *
-	 * (coef-1).
+	 * Calcul la prochaine valeur aléatoire gaussienne entre X +/- 20% + X*(coef-1).
 	 * 
 	 * @param value
 	 *            valeur moyenne
@@ -153,7 +194,9 @@ public class VirtualDatas {
 	 * @return prochaine valeur aléatoire suivant une gaussienne
 	 */
 	private long random(final double value, final double coef) {
-		return Math.round(nextGaussian(value, Math.round(value * 1.20)) + (coef - 1) * value);
+		final long result = Math.round(nextGaussian(value, Math.round(value * 1.20)) + coef * value);
+		System.out.println("random(" + value + ", " + coef + ") = " + result);
+		return result;
 	}
 
 	private static final Random RANDOM = new Random();
@@ -161,10 +204,12 @@ public class VirtualDatas {
 	private static long nextGaussian(final double moyenne, final double maxValue) {
 		Assertion.precondition(moyenne >= 1, "La moyenne doit être supérieure ou égale à 1");
 		Assertion.precondition(maxValue > moyenne, "La valeur max doit être supérieure à la moyenne");
-		long result = Math.round(RANDOM.nextGaussian() * maxValue / 3d + moyenne);
+		long result = Math.round(RANDOM.nextGaussian() * maxValue / 5d + moyenne);
 		if (result < 0 || result > maxValue) {
 			result = nextGaussian(moyenne, maxValue);
 		}
+		System.out.println("nextGaussian(" + moyenne + ", " + maxValue + ") = " + result);
+
 		return result;
 	}
 

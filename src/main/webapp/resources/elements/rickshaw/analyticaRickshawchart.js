@@ -16,20 +16,23 @@
  * 
  */
 (function($) {
-
 	$.fn.drawRickshawChart = function(parameters) {
 		var defaults = {
 			'type' : "line",
 			'dataSerie' : []
-		}, options = $.extend(defaults, parameters), types = options.type;
+		}, options = $.extend(defaults, parameters), types = options.type
+		labels = parameters.labels;
 		return this.each(function() {
+
 			var datas = options.dataSeries;
-			var container = $(this), serie = buildRickShawSerie(datas);
+			var container = $(this), serie = buildRickShawSerie(datas, labels);
 			var cont = "#" + container[0].id;
+			var balisegraph = document.createElement("div");
+			balisegraph.setAttribute("id", "g" + container[0].id);
+			container[0].appendChild(balisegraph);
+
 			var graph = new Rickshaw.Graph({
-				element : document.querySelector("#" + container[0].id),
-				width : container[0].style.width,
-				height : container[0].style.height,
+				element : document.querySelector("#g" + container[0].id),
 				renderer : types,
 				series : serie
 			});
@@ -52,20 +55,23 @@
 			container[0].appendChild(baliseLedgend);
 			var legend = new Rickshaw.Graph.Legend({
 				graph : graph,
-				element : baliseLedgend
+				element : baliseLedgend,
+
 			});
 
 			// Construire un div pour le slider
 			/*
 			 * Revoir pourquoi problème d'attribut style (Debug chrome) ???
 			 */
-			/*
-			 * var baliseSlider = document.createElement("div");
-			 * baliseSlider.setAttribute("id", "s" + container[0].id);
-			 * container[0].appendChild(baliseSlider); var slider = new
-			 * Rickshaw.Graph.RangeSlider({ graph : graph, element :
-			 * baliseSlider });
-			 */
+
+			var baliseSlider = document.createElement("div");
+			baliseSlider.setAttribute("id", "s" + container[0].id);
+			container[0].appendChild(baliseSlider);
+			var slider = new Rickshaw.Graph.RangeSlider({
+				graph : graph,
+				element : $('#s' + container[0].id)
+			});
+
 			graph.render();
 
 		});
@@ -73,29 +79,35 @@
 
 	function buildRickShawSerie() {
 		var s = [];
-		for ( var i = 0; i < arguments.length; i++) {
-			arguments[i] = parseData(arguments[i]);
-			s.push({
-				name : "SQL",
-				data : arguments[i],
-				color : '#' + Math.floor(Math.random() * 16777215).toString(16)
-			});
+		var labels = [];
+		labels = arguments[arguments.length - 1];
+		if (labels.length === (arguments.length - 1)) {
+			for ( var i = 0; i < arguments.length - 1; i++) {
+				arguments[i] = parseData(arguments[i]);
+				s.push({
+					name : labels[i],
+					data : arguments[i],
+					color : '#'
+							+ Math.floor(Math.random() * 16777215).toString(16)
+				});
+			}
+		} else {
+			// throw new Exception("The number of Labels should same as the
+			// numer of series to plot ");
 		}
 		return s;
 	}
-	;
 
 	function parseData(d) {
 		/* Corriger les valeurs undefined dans le tableau de donnee */
 		for ( var i = 0; i < d.length; i++) {
 			var value = d[i];
-			if (typeof value.y == 'undefined') {
+			if (typeof value.y === 'undefined') {
 				value.y = null;
 				d[i] = value;
 			}
 		}
 		return d;
 	}
-	;
 
 })(jQuery);

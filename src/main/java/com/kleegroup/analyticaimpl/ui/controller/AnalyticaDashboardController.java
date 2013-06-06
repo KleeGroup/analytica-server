@@ -73,6 +73,7 @@ public final class AnalyticaDashboardController {
 
 	@PostConstruct
 	public void init() {
+		new VirtualDatas(ServerManager).load();
 		if (!analyticaDashboardContext.isInitialize()) {
 			// ---------------------------------------------------------------------
 			final String dashboards = configManager.getStringValue("analytica.dashboards", "dashboards");

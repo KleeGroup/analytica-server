@@ -23,21 +23,22 @@
 
 <script type="text/javascript">
     
-datas = <h:outputText escape="false" value="#{analyticaDashboardService.loadTestDataAsJson(cc.attrs.panel)}">
-</h:outputText>
-
-    var param = {
-        dataSeries: datas,
-        type: "area"
-    },
-    conteneur = document.getElementById("#{cc.attrs.var}_container");
-
-    
-        $(conteneur).drawRickshawChart(param);
-    
-    
+    var datas = <h:outputText escape="false" value="#{analyticaDashboardService.getDataPoints(cc.attrs.panel)}">
+                    <f:converter converterId="Ndv3LineChartConverter"/>
+                </h:outputText>;
+                
+                
+                $(document).ready(function() {
+                       /*container = document.getElementById("#{cc.attrs.var}_container");
+                       baliseSvg = document.createElement("svg");
+                       container.appendChild(baliseSvg);*/
+                  
+                    $('#'+"#{cc.attrs.var}_container").drawStackedAreaChartWithNvd3(datas);
+                    
+                });
+      
+   
 </script>
-
 	
 						  
 </cc:implementation>

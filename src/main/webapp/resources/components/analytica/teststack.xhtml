@@ -25,10 +25,12 @@
     
 datas = <h:outputText escape="false" value="#{analyticaDashboardService.loadTestDataAsJson(cc.attrs.panel)}">
 </h:outputText>
-
+options = <h:outputText escape="false" value="#{analyticaDashboardService.getRickShawOPtions(cc.attrs.panel)}">
+</h:outputText>
     var param = {
         dataSeries: datas,
-        type: "stack"
+        type: "stack",
+        labels: options
     },
     conteneur = document.getElementById("#{cc.attrs.var}_container");
 

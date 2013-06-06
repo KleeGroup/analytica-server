@@ -20,7 +20,6 @@ package com.kleegroup.analyticaimpl.ui.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,6 @@ import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HMetric;
 import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
-import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.hcube.result.HSerie;
@@ -54,34 +52,35 @@ public final class AnalyticaDashboardService implements Serializable {
 	private ServerManager serverManager;
 
 	public String loadTestDataAsJson(final AnalyticaPanelConf analyticaPanelConf) {
-		new VirtualDatas(serverManager).load();
+		final Gson gson = new Gson();
+		return gson.toJson(loadTestData(analyticaPanelConf));
+	}
 
-		final HQuery query = serverManager.createQueryBuilder() //
-				.on(HTimeDimension.Minute)//
-				.from(new Date())//18 min ==> 10 cubes
-				.to(new Date(System.currentTimeMillis() + 2 * 60 * 60 * 1000)) //
-				.with("PAGE").build();
-		final HQuery parameteredQuery = analyticaPanelConf.getQuery();
+	public List<DataPoint> loadTestData(final AnalyticaPanelConf analyticaPanelConf) {
+		System.out.println("-----------------------------------------------------------------------------------------------------------------");
+		final HQuery query = analyticaPanelConf.getQuery();
 		final HResult result = serverManager.execute(query);
 		final List<HSerie> series = new ArrayList<HSerie>();
-		for (final HCategory category : result.getQuery().getAllCategories()) {
+		System.out.println("Toutes les catégories" + query.getAllCategories());
+		System.out.println("Nombre de categories enregistres " + query.getAllCategories().size());
+		for (final HCategory category : query.getAllCategories()) {
 			series.add(result.getSerie(category));
+			System.out.println("Category In result:" + category.toString() + "---------------------------------------------------------------------------------------------");
 		}
 		final List<String> metricKey = analyticaPanelConf.getMetricKeys();
-		//final List<DataPoint>  points  = convertToJsonPoint(result,new HCategory("SQL"),new HMetricKey("duration", true));
-		final List<String> cat = analyticaPanelConf.getCategories();
 		final List<DataPoint> points = new ArrayList<DataPoint>();
 		for (final String metrick : metricKey) {
-			final String c = cat.get(0);
-			final HCategory category = new HCategory("PAGE");
-			for (final HCube cube : result.getSerie(category).getCubes()) {
-				final HMetric metric = cube.getMetric(new HMetricKey(metrick, true));
-				points.add(new DataPoint(cube.getKey().getTime().getValue(), metric != null ? metric.getMean() : Double.NaN));//Double.NaN
+			//			final String[] subcategories = analyticaPanelConf.getSubcategories().toArray(new String[analyticaPanelConf.getSubcategories().size()]);
+			//			final HCategory category = new HCategory(analyticaPanelConf.getCategory(), subcategories);//Revoir ça!
+			//			System.out.println("Category for the request in the panel:" + category.toString() + "---------------------------------------------------------------------------------------------");
+			for (final HCategory category : query.getAllCategories()) {
+				for (final HCube cube : result.getSerie(category).getCubes()) {
+					final HMetric metric = cube.getMetric(new HMetricKey(metrick, true));
+					points.add(new DataPoint(cube.getKey().getTime().getValue(), metric != null ? metric.getCount() : Double.NaN));//Double.NaN
+				}
 			}
 		}
-
-		final Gson gson = new Gson();
-		return gson.toJson(points);
+		return points;
 	}
 
 	// Pr l'instant retourne la liste des labels
@@ -106,7 +105,7 @@ public final class AnalyticaDashboardService implements Serializable {
 	}
 
 	public List<HSerie> loadData(final AnalyticaPanelConf analyticaPanelConf) {
-		new BuildDatas(serverManager).load();
+		//	new BuildDatas(serverManager).load();
 		final List<HSerie> series;
 		final HResult result = serverManager.execute(analyticaPanelConf.getQuery());
 		series = new ArrayList<HSerie>();
@@ -116,23 +115,31 @@ public final class AnalyticaDashboardService implements Serializable {
 		return series;
 	}
 
-	// NOT SURE ABOUT THIS
-	public Map<String, String> getDataPoints(final AnalyticaPanelConf analyticaPanelConf) {
-
-		new BuildDatas(serverManager).load();
-		final Gson gson = new Gson();
-		final Map<String, String> mapPoints = new HashMap<String, String>();
+	// Pour Tests : retourne les listes de points par métriques:
+	public Map<String, List<DataPoint>> getDataPoints(final AnalyticaPanelConf analyticaPanelConf) {
+		//	new BuildDatas(serverManager).load();
+		final Map<String, List<DataPoint>> mapPoints = new HashMap<String, List<DataPoint>>();
 		List<DataPoint> list;
 		final List<HSerie> series = loadData(analyticaPanelConf);
 		for (final String metricKey : analyticaPanelConf.getMetricKeys()) {
 			list = new ArrayList<DataPoint>();
 			for (final HSerie hSerie : series) {
 				for (final HCube hCube : hSerie.getCubes()) {
-					final HMetric hMetric = hCube.getMetric(new HMetricKey(metricKey, true));
-					list.add(new DataPoint(hCube.getKey().getTime().getValue(), hMetric != null ? hMetric.getMean() : Double.NaN));
+					final HMetric hMetric = hCube.getMetric(new HMetricKey("duration", true));//Trouver comment introduire la métrickey ici
+					double val = 0;
+					switch (metricKey) {
+						case "duration":
+							val = hMetric != null ? hMetric.getMean() : Double.NaN;
+							break;
+						case "count":
+							val = hMetric != null ? hMetric.getCount() : Double.NaN;
+						default:
+							break;
+					}
+					list.add(new DataPoint(hCube.getKey().getTime().getValue(), val));
 				}
 			}
-			mapPoints.put(metricKey, gson.toJson(list));
+			mapPoints.put(metricKey, list);
 		}
 		return mapPoints;
 	}
@@ -163,12 +170,6 @@ public final class AnalyticaDashboardService implements Serializable {
 	//=========================================================================
 	//=================Getters et setters pour JSF=============================
 	//=========================================================================
-
-	// A rectifier, utilisé pour parcourir la map dans la jsf
-	public List<String> getKeyAsList(final AnalyticaPanelConf analyticaPanelConf) {
-		final Map<String, String> map = getDataPoints(analyticaPanelConf);
-		return new ArrayList<String>(map.keySet());
-	}
 
 	// A rectifier, utilisé pour parcourir la map dans la jsf
 	public List<String> getKeyAsList2(final AnalyticaPanelConf analyticaPanelConf) {

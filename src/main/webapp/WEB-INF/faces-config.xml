@@ -37,4 +37,13 @@
 		<converter-id>simpleConverter</converter-id>
 		<converter-class>com.kleegroup.analyticaimpl.ui.test.SimpleConverter</converter-class>
 	</converter>
+	<converter>
+		<converter-id>Ndv3LineChartConverter</converter-id>
+		<converter-class>com.kleegroup.analyticaimpl.ui.chart.ndv3.Ndv3LineChartConverter</converter-class>
+	</converter>
+	
+	
+	
+	
+	
 </faces-config>
