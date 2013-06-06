@@ -37,6 +37,7 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
+import com.kleegroup.analytica.hcube.result.HSerie;
 import com.kleegroup.analytica.server.ServerManager;
 
 @Path("/home")
@@ -49,11 +50,12 @@ public class HomeServices {
 	@Inject
 	private HCubeManager cubeManager;
 
-	public HomeServices(){
+	public HomeServices() {
 		final Injector injector = new Injector();
 		injector.injectMembers(this, Home.getContainer().getRootContainer());
-		if (!loaded){
-			load();
+		if (!loaded) {
+			//load();
+			new VirtualDatas(serverManager).load();
 			loaded = true;
 		}
 	}
@@ -66,15 +68,27 @@ public class HomeServices {
 		sb.append("<a href=\"\\/datas\">datas</a>");
 		sb.append("<a href=\"\\/categories\">categories</a>");
 		sb.append("</body></html>");
-		return  sb.toString();
+		return sb.toString();
+	}
+
+	@Path("/bootstrap")
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String getBootStrapPage() {
+		final List<DataPoint> points = loadDataPoints(getResult());
+		final Map<String, Object> context = new HashMap<String, Object>();
+		context.put("jsonPoints", gson.toJson(firstConvertTojson(points)));
+		context.put("points", points);
+		context.put("jsonPoints3", firstConvertTojson(points));
+		return process("analyticaBootstrap", context);
 	}
 
 	@Path("/analytica")
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String getHtmlPage() {
-		final List<DataPoint>  points  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("duration", true));
-		final List<DataPoint>  points2  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("MONTANT", true));
+		final List<DataPoint> points = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("duration", true));
+		final List<DataPoint> points2 = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("MONTANT", true));
 		final Map<String, Object> context = new HashMap<String, Object>();
 		context.put("jsonPoints", gson.toJson(points));
 		context.put("jsonPoints1", gson.toJson(points2));
@@ -86,8 +100,8 @@ public class HomeServices {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String getHtmlChartsPage() {
-		final List<DataPoint>  points  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("duration", true));
-		final List<DataPoint>  points2  = convertToJsonPoint(getResult(),new HCategory("SQL"),new HMetricKey("MONTANT", true));
+		final List<DataPoint> points = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("duration", true));
+		final List<DataPoint> points2 = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("MONTANT", true));
 		final Map<String, Object> context = new HashMap<String, Object>();
 		context.put("jsonPoints", gson.toJson(points));
 		context.put("jsonPoints1", gson.toJson(points2));
@@ -95,16 +109,52 @@ public class HomeServices {
 		return process("analyticacharts", context);
 	}
 
-	private List<DataPoint> convertToJsonPoint(final HResult result, final HCategory category,final HMetricKey metricKey ) {
-		final List<DataPoint> jsonPoints  = new ArrayList<DataPoint>();
-		for (final HCube cube :result.getSerie(category).getCubes()) {
+	private List<DataPoint> convertToJsonPoint(final HResult result, final HCategory category, final HMetricKey metricKey) {
+		final List<DataPoint> jsonPoints = new ArrayList<DataPoint>();
+		for (final HCube cube : result.getSerie(category).getCubes()) {
 			final HMetric metric = cube.getMetric(metricKey);
-			jsonPoints.add(new DataPoint(cube.getKey().getTime().getValue(),metric!=null? metric.getMean(): Double.NaN));//Double.NaN
+			jsonPoints.add(new DataPoint(cube.getKey().getTime().getValue(), metric != null ? metric.getMean() : Double.NaN));//Double.NaN
 		}
 		return Collections.unmodifiableList(jsonPoints);
 	}
 
-	private  final String process(final String name, final Map<String, ?> context) {
+	private List<DataPoint> loadDataPoints(final HResult result) {
+		final HQuery query = result.getQuery();
+		final List<HSerie> series = new ArrayList<HSerie>();
+		for (final HCategory category : query.getAllCategories()) {
+			series.add(result.getSerie(category));
+		}
+		final List<DataPoint> points = new ArrayList<DataPoint>();
+		for (final HCategory category : query.getAllCategories()) {
+			for (final HCube cube : result.getSerie(category).getCubes()) {
+				final HMetric metric = cube.getMetric(new HMetricKey("duration", true));
+				points.add(new DataPoint(cube.getKey().getTime().getValue(), metric != null ? metric.getMean() : Double.NaN));//Double.NaN
+			}
+		}
+
+		return points;
+	}
+
+	private String firstConvertTojson(final List<DataPoint> datas) {
+		final StringBuilder result = new StringBuilder();
+		result.append("[{ values : [");
+		int i = 0;
+		for (final DataPoint point : datas) {
+			i++;
+			result.append("[");
+			final String str = point.getDate().getTime() + " , " + point.getValue();
+			result.append(str);
+			result.append("]");
+			if (i < datas.size()) {
+				result.append(",");
+			}
+		}
+		result.append("]}]");
+		System.out.println(result.toString());
+		return result.toString();
+	}
+
+	private final String process(final String name, final Map<String, ?> context) {
 		try {
 			final StringWriter writer = new StringWriter();
 			final MustacheFactory mustacheFactory = new DefaultMustacheFactory();
@@ -122,30 +172,31 @@ public class HomeServices {
 	}
 
 	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
-	private  void load (){
+
+	private void load() {
 		//jeu de données
 		//final Date startDate = new date();
-		for(int i=0;i<120;i++){
-			addProcess(i, Double.valueOf(Math.ceil(Math.random()*100)).intValue(), 15);
+		for (int i = 0; i < 120; i++) {
+			addProcess(i, Double.valueOf(Math.ceil(Math.random() * 100)).intValue(), 15);
 
 		}
-		addProcess(1,70, 15);
-		addProcess(2,130, 15);
-		addProcess(3,200, 15);
-		addProcess(4,150, 15);
-		addProcess(5,100, 15);
-		addProcess(6,130, 15);
-		addProcess(7,300, 15);
-		addProcess(8,250, 15);
-		addProcess(9,90, 15);
+		addProcess(1, 70, 15);
+		addProcess(2, 130, 15);
+		addProcess(3, 200, 15);
+		addProcess(4, 150, 15);
+		addProcess(5, 100, 15);
+		addProcess(6, 130, 15);
+		addProcess(7, 300, 15);
+		addProcess(8, 250, 15);
+		addProcess(9, 90, 15);
 		System.out.println("datas loaded");
 	}
 
 	private void addProcess(final int offSetInMinutes, final int processDuration, final double price) {
-		final Date startDate = new Date(System.currentTimeMillis()-60*offSetInMinutes*1000);
+		final Date startDate = new Date(System.currentTimeMillis() - 60 * offSetInMinutes * 1000);
 		final KProcess selectProcess2 = new KProcessBuilder(startDate, processDuration, "SQL", "select * from article")//
-		.incMeasure(MONTANT.id(), price)//
-		.build();
+				.incMeasure(MONTANT.id(), price)//
+				.build();
 
 		serverManager.push(selectProcess2);
 	}
@@ -169,7 +220,7 @@ public class HomeServices {
 	@Path("/datas2")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getloadTestDataAsJson(@QueryParam("category") final String category) {
-		System.out.println("QueryParam :category>>"+category);
+		System.out.println("QueryParam :category>>" + category);
 		final HResult result = getResult();
 		return gson.toJson(result.getSerie(new HCategory(category)));
 	}
@@ -178,7 +229,7 @@ public class HomeServices {
 	@Path("/datas3/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getloadTestDataAs3Json(@PathParam("category") final String category) {
-		System.out.println("PathParam :category>>"+category);
+		System.out.println("PathParam :category>>" + category);
 		final HResult result = getResult();
 		return gson.toJson(result.getSerie(new HCategory(category)));
 	}
@@ -188,11 +239,10 @@ public class HomeServices {
 	 */
 	private HResult getResult() {
 		final HQuery query = serverManager.createQueryBuilder() //
-				.on(HTimeDimension.Minute)//
-				.from(new Date(System.currentTimeMillis()-60*60*1000))//10 min ==> 10 cubes
-				.to(new Date()) //
-				.with("SQL")
-				.build();
+				.on(HTimeDimension.Hour)//
+				.from(new Date(System.currentTimeMillis() - 8 * 60 * 60 * 1000))//10 min ==> 10 cubes
+				.to(new Date(System.currentTimeMillis() + 4 * 60 * 60 * 1000)) //
+				.with("PAGE").build();
 		final HResult result = serverManager.execute(query);
 		return result;
 	}
