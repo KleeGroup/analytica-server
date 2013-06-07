@@ -46,22 +46,30 @@ final class SpacesServer implements Activeable {
 	}
 
 	private static HttpServer createServer(final int port) throws IOException {
+		//Configuration de la servlet jersey.
+		// Attention tous les chemins /home/ sont bindés sur jersey.
 		final ResourceConfig rc = new ClassNamesResourceConfig(HomeServices.class);
 		final URI baseURI = UriBuilder.fromUri("http://localhost/").port(port).build();
 		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nenter to stop it...", baseURI, baseURI));
 		final HttpServer httpServer = GrizzlyServerFactory.createHttpServer(baseURI, rc);
-		//		final StaticHttpHandler css = new StaticHttpHandler();
-		//		css.addDocRoot(new File("d:/KraftManager.class.getResource("webapp/css").getFile()));
-		//		httpServer.getServerConfiguration().addHttpHandler(css, "/css");
-		//
-		final StaticHttpHandler js = new StaticHttpHandler();
-		//System.out.println("Hello>>>");
-		//System.out.println("URL>>>" + new File(SpacesServer.class.getResource("/web/js").getFile()).isDirectory());
 
-		js.addDocRoot(new File(SpacesServer.class.getResource("/web/js").getFile()));
-		js.start();
+		//Handler afin de servir les fichiers statics(html js).
+		// Attention, il faut qui les fichiers soient dans les sources et qu'on les retroube dans le bin.
+		final String STATIC_ROUTE = "/web";
+		final StaticHttpHandler staticDocs = new StaticHttpHandler(SpacesServer.class.getResource(STATIC_ROUTE).getFile());
+		httpServer.getServerConfiguration().addHttpHandler(staticDocs, STATIC_ROUTE);
+		System.out.println("URL>>>" + new File(SpacesServer.class.getResource(STATIC_ROUTE).getFile()));
+
+		//final String fileName = SpacesServer.class.getResource("/web/js").getFile();
+
+		//final StaticHttpHandler js = new StaticHttpHandler();
+		//System.out.println("Hello>>>");
+		//System.out.println("URL>>>" + new File(SpacesServer.class.getResource("/web/js").getFile()));
+
+		//js.addDocRoot(new File(SpacesServer.class.getResource("/web/js").getFile()));
+		//js.start();
 		//		js.addDocRoot("/web/js/analyticandv3liecharts.js");
-		httpServer.getServerConfiguration().addHttpHandler(js, "/static/js");
+		//httpServer.getServerConfiguration().addHttpHandler(js, "");
 		//
 		//		final StaticHttpHandler img = new StaticHttpHandler();
 		//		img.addDocRoot(new File(KraftManager.class.getResource("webapp/img").getFile()));

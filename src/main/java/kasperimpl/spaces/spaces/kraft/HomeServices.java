@@ -83,10 +83,24 @@ public class HomeServices {
 		return process("analyticaBootstrap", context);
 	}
 
+	@Path("/mydatas")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getMyCorrectDatas() {
+		final List<DataPoint> points = loadDataPoints(getResult());
+		//final Map<String, Object> context = new HashMap<String, Object>();
+		//context.put("jsonPoints", gson.toJson(firstConvertTojson(points)));
+		//context.put("points", points);
+		//context.put("value", gson.toJson(points));
+		return gson.toJson(points);
+	}
+
 	@Path("/analytica")
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String getHtmlPage() {
+		load();
+
 		final List<DataPoint> points = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("duration", true));
 		final List<DataPoint> points2 = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("MONTANT", true));
 		final Map<String, Object> context = new HashMap<String, Object>();
@@ -100,6 +114,7 @@ public class HomeServices {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String getHtmlChartsPage() {
+		load();
 		final List<DataPoint> points = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("duration", true));
 		final List<DataPoint> points2 = convertToJsonPoint(getResult(), new HCategory("SQL"), new HMetricKey("MONTANT", true));
 		final Map<String, Object> context = new HashMap<String, Object>();
@@ -137,7 +152,7 @@ public class HomeServices {
 
 	private String firstConvertTojson(final List<DataPoint> datas) {
 		final StringBuilder result = new StringBuilder();
-		result.append("[{ values : [");
+		result.append("[{ \'values\' : [");
 		int i = 0;
 		for (final DataPoint point : datas) {
 			i++;
@@ -165,6 +180,17 @@ public class HomeServices {
 			} finally {
 				reader.close();
 			}
+			return writer.toString();
+		} catch (final Exception e) {
+			throw new KRuntimeException(e);
+		}
+	}
+
+	private final String processHtml(final String name) {
+		try {
+			final StringWriter writer = new StringWriter();
+			final Reader reader = new InputStreamReader(this.getClass().getResourceAsStream(name + ".html"));
+			reader.close();
 			return writer.toString();
 		} catch (final Exception e) {
 			throw new KRuntimeException(e);
@@ -209,11 +235,18 @@ public class HomeServices {
 	}
 
 	@GET
+	@Path("/html")
+	@Produces(MediaType.TEXT_HTML)
+	public String getHTML() {
+		return processHtml("index");
+	}
+
+	@GET
 	@Path("/datas")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getloadTestDataAs2Json() {
 		final HResult result = getResult();
-		return gson.toJson(result.getSerie(new HCategory("SQL")));
+		return gson.toJson(result.getSerie(new HCategory("PAGE")));
 	}
 
 	@GET

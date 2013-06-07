@@ -11,6 +11,9 @@
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
   </head>
   <body>
+
+
+
    {{! Barre de navigation.}}
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -65,6 +68,7 @@
       </div>
     </div>
      <hr>
+    <a href="../web/index.html">INDEX</a>
 
     {{! cdn jquery}}
     <script src="http://code.jquery.com/jquery.js"></script>
@@ -73,7 +77,8 @@
     {{! cdn nvd3 js}}
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.1.6/d3.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/0.9/nv.d3.min.js"></script>
-    <script src="web/js/analyticandv3linechart.js"></script>
+     {{!plugin jquery}}
+    <script src="../web/app/scripts/analyticandv3linechart.js"></script>
 
     {{! mettre l'appel du plugin jquery ici.}}
     
@@ -88,128 +93,7 @@
         });
     </script>
 
-    {{!plugin jquery}}
-        
-    <script type = "text/javascript">
-      (function($) {
-        $.fn.drawlineChartWithNvd3 = function(datas) {
-          var defaults = {}, options = $.extend(defaults, datas);
-          var container = $(this);
-
-          return this.each(function() {
-            nv.addGraph(function() {
-              var chart = nv.models.lineChart().x(function(d) { // CumulativeLineChart++discreteBarChart++stackedAreaChart++multiBarChart
-                return d[0]
-              }).y(function(d) {
-                return d[1]
-              }) // adjusting, 100% is 1.00, not 100 as it is in the data
-              .color(d3.scale.category10().range());
-
-              chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-                return d3.time.format("%H")(new Date(d))
-              });
-
-              // chart.yAxis.tickFormat(d3.format(',f'));
-
-              d3.select('#' + container[0].id + ' svg').datum(datas)
-                .transition().duration(500).call(chart);
-
-              nv.utils.windowResize(chart.update);
-
-              return chart;
-            });
-
-          });
-        };
-
-        $.fn.drawStackedAreaChartWithNvd3 = function(datas) {
-          var defaults = {}, options = $.extend(defaults, datas);
-          var container = $(this);
-
-          return this.each(function() {
-            nv.addGraph(function() {
-              var chart = nv.models.stackedAreaChart().x(function(d) { // CumulativeLineChart++discreteBarChart++stackedAreaChart++multiBarChart
-                return d[0]
-              }).y(function(d) {
-                return d[1]
-              }) // adjusting, 100% is 1.00, not 100 as it is in the data
-              .color(d3.scale.category10().range());
-
-              chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-                return d3.time.format("%x")(new Date(d))
-              });
-
-              // chart.yAxis.tickFormat(d3.format(',f'));
-
-              d3.select('#' + container[0].id + ' svg').datum(datas)
-                .transition().duration(500).call(chart);
-
-              nv.utils.windowResize(chart.update);
-
-              return chart;
-            });
-
-          });
-        };
-        $.fn.drawMultiBarChartWithNvd3 = function(datas) {
-          var defaults = {}, options = $.extend(defaults, datas);
-          var container = $(this);
-          return this.each(function() {
-            nv.addGraph(function() {
-              var chart = nv.models.multiBarChart().x(function(d) { // CumulativeLineChart++discreteBarChart++stackedAreaChart++multiBarChart
-                return d[0]
-              }).y(function(d) {
-                return d[1]
-              }) // adjusting, 100% is 1.00, not 100 as it is in the data
-              .color(d3.scale.category10().range());
-
-              chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-                return d3.time.format("%H:%M")(new Date(d))
-              });
-
-              // chart.yAxis.tickFormat(d3.format(',f'));
-
-              d3.select('#' + container[0].id + ' svg').datum(datas)
-                .transition().duration(500).call(chart);
-
-              nv.utils.windowResize(chart.update);
-
-              return chart;
-            });
-
-          });
-        };
-
-        $.fn.drawbarChartWithNvd3 = function(datas) {
-          var defaults = {}, options = $.extend(defaults, datas);
-          var container = $(this);
-
-          return this.each(function() {
-            nv.addGraph(function() {
-              var chart = nv.models.discreteBarChart().x(function(d) { // CumulativeLineChart++discreteBarChart++stackedAreaChart++multiBarChart
-                return d[0]
-              }).y(function(d) {
-                return d[1]
-              }) // adjusting, 100% is 1.00, not 100 as it is in the data
-              .color(d3.scale.category10().range());
-
-              chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-                return d3.time.format("%H")(new Date(d))
-              });
-
-              // chart.yAxis.tickFormat(d3.format(',f'));
-
-              d3.select('#' + container[0].id + ' svg').datum(datas)
-                .transition().duration(500).call(chart);
-
-              nv.utils.windowResize(chart.update);
-
-              return chart;
-            });
-
-          });
-        };
-      })(jQuery);
-    </script>
+   
+    
   </body>
 </html>
