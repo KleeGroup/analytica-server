@@ -3,6 +3,8 @@ package kasperimpl.spaces.spaces.kraft;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -83,16 +85,32 @@ public class HomeServices {
 		return process("analyticaBootstrap", context);
 	}
 
-	@Path("/mydatas")
 	@GET
+	@Path("/mydatas")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getMyCorrectDatas() {
-		final List<DataPoint> points = loadDataPoints(getResult());
+	public String getMyCorrectDatas(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @QueryParam("categories") final String categories, @QueryParam("datas") final String datas, @QueryParam("labels") final String labels, @QueryParam("lang") final String lang) {
+		final HResult result = resolveQuery(timeFrom, timeTo, timeDim, categories);
+		final List<DataPoint> points = loadDataPoints(result);
 		//final Map<String, Object> context = new HashMap<String, Object>();
 		//context.put("jsonPoints", gson.toJson(firstConvertTojson(points)));
 		//context.put("points", points);
 		//context.put("value", gson.toJson(points));
 		return gson.toJson(points);
+	}
+
+	/**
+	 * @param timeFrom
+	 * @param timeTo
+	 * @param timeDim
+	 * @param categories
+	 * @return
+	 */
+	private HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories) {
+		final HTimeDimension timeDim = HTimeDimension.valueOf(timeDimension);
+		final Date minValue = readDate(timeFrom, timeDim);
+		final Date maxValue = readDate(timeTo, timeDim);
+		final HQuery query = serverManager.createQueryBuilder().on(timeDim).from(minValue).to(maxValue).with(categories).build();
+		return serverManager.execute(query);
 	}
 
 	@Path("/analytica")
@@ -279,4 +297,61 @@ public class HomeServices {
 		final HResult result = serverManager.execute(query);
 		return result;
 	}
+
+	private Date readDate(final String timeStr, final HTimeDimension dimension) {
+		if (timeStr.equals("NOW")) {
+			return new Date();
+		} else if (timeStr.startsWith("NOW-")) {
+			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW-".length()));
+			return new Date(System.currentTimeMillis() - deltaMs);
+		} else if (timeStr.startsWith("NOW+")) {
+			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW+".length()));
+			return new Date(System.currentTimeMillis() + deltaMs);
+		}
+		final String datePattern;
+		switch (dimension) {
+			case Year:
+				datePattern = "yyyy";
+				break;
+			case Month:
+				datePattern = "MM/yyyy";
+				break;
+			case Day:
+				datePattern = "dd/MM/yyyy";
+				break;
+			case Hour:
+			case Minute:
+			default:
+				datePattern = "HH:mm dd/MM/yyyy";
+		}
+		final SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
+		try {
+			return sdf.parse(timeStr);
+		} catch (final ParseException e) {
+			// TODO Auto-generated catch block
+			throw new KRuntimeException("Erreur de format de date (" + timeStr + "). Format attendu :" + sdf.toPattern());
+		}
+	}
+
+	private long readDeltaAsMs(final String deltaAsString) {
+		final Long delta;
+		char unit = deltaAsString.charAt(deltaAsString.length() - 1);
+		if (unit >= '0' && unit <= '9') {
+			unit = 'd';
+			delta = Long.valueOf(deltaAsString);
+		} else {
+			delta = Long.valueOf(deltaAsString.substring(0, deltaAsString.length() - 1));
+		}
+		switch (unit) {
+			case 'd':
+				return delta * 24 * 60 * 60 * 1000L;
+			case 'h':
+				return delta * 60 * 60 * 1000L;
+			case 'm':
+				return delta * 60 * 1000L;
+			default:
+				throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
+		}
+	}
+
 }

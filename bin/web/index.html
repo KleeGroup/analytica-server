@@ -15,6 +15,8 @@
     <script type="text/javascript" src="../web/vendor/scripts/d3/d3.min.js"></script>
     <script type="text/javascript" src="../web/vendor/scripts/nvd3/nv.d3.min.js"></script>
     <script type="text/javascript" src="../web/app/scripts/analyticandv3linechart.js"></script>
+    <script type="text/javascript" src="../web/app/scripts/main.js"></script>
+
   </head>
 
   <body id="index" class="">
@@ -78,44 +80,7 @@
 
     
     <script type="text/javascript">  
-            
-function loadDataToDraw(){
- $.ajax({ // ajax call starts
-          url: '/home/mydatas', // JQuery loads serverside.php
-          //data: 'button=' + $(this).val(), // Send value of the clicked button
-          dataType: 'json', // Choosing a JSON datatype
-          success: function (response, text) {
-            console.log('response', response, 'text',text);
-            // treat the json response received from the server/
-            // todo: faire cette partie côté serveur.
-            var reconstructedData = [];
-            for(var i = 0, responseLength = response.length; i < responseLength; i++){
-              var r = response[i];
-              reconstructedData.push([r.x, r.y]);
-            }
-            var data = [{values : reconstructedData}];
-            // Appel la fonction qui dessine les graphs.
-            drawGraphs(data);
-          },
-      error: function (request, status, error) {
-        console.log("request",request.responseText, "status", status, "error", error);
-      }
-      });      
-}
-    //Dessine 
-    function drawGraphs(data){
-      $('#c1').drawlineChartWithNvd3(data);
-      $('#c2').drawStackedAreaChartWithNvd3(data);
-      $('#c3').drawMultiBarChartWithNvd3(data);
-      $('#c4').drawlineChartWithNvd3(data);
-      $('#c5').drawbarChartWithNvd3(data);
-    }
-
-      //A remplacer avec un appel ajax poou récupérer le json
-      /*var dataOld = [{ values : [[1370563200000 , null],[1370566800000 , null],[1370570400000 , null],[1370574000000 , null],[1370577600000 , null],[1370581200000 , 284.26666666666665],[1370584800000 , 324.25],[1370588400000 , 405.96],[1370592000000 , 436.7142857142857],[1370595600000 , 421.3],[1370599200000 , 326.56],[1370602800000 , 272.7]]}];
-        */
-
-        //Script pour placer les composants grapiques
+      //Script pour placer les composants grapiques
         $(document).ready(function() {
           loadDataToDraw();
         });
