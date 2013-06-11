@@ -86,16 +86,28 @@ public class HomeServices {
 	}
 
 	@GET
-	@Path("/mydatas")
+	@Path("/timeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getMyCorrectDatas(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @QueryParam("categories") final String categories, @QueryParam("datas") final String datas, @QueryParam("labels") final String labels, @QueryParam("lang") final String lang) {
-		final HResult result = resolveQuery(timeFrom, timeTo, timeDim, categories);
+	public String getTimeLine(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @QueryParam("datas") final String datas) {
+		//Ajouter les valeurs par défaut sauf pour la catégorie
+		final HResult result = resolveQuery(timeFrom, timeTo, timeDim, category);
 		final List<DataPoint> points = loadDataPoints(result);
-		//final Map<String, Object> context = new HashMap<String, Object>();
-		//context.put("jsonPoints", gson.toJson(firstConvertTojson(points)));
-		//context.put("points", points);
-		//context.put("value", gson.toJson(points));
 		return gson.toJson(points);
+	}
+
+	@GET
+	@Path("/agregatedDatas/{category}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getAggregated(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @QueryParam("category") final String category, @QueryParam("datas") final String datas) {
+		//Ajouter les valeurs par défaut sauf pour la catégorie
+		return null;
+	}
+
+	@GET
+	@Path("/categories")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getCategories() {
+		return gson.toJson(cubeManager.getCategoryDictionary().getAllRootCategories());
 	}
 
 	/**
@@ -103,7 +115,7 @@ public class HomeServices {
 	 * @param timeTo
 	 * @param timeDim
 	 * @param categories
-	 * @return
+	 * @return Construis une Hresult à partir des infos fournies
 	 */
 	private HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories) {
 		final HTimeDimension timeDim = HTimeDimension.valueOf(timeDimension);
@@ -246,13 +258,6 @@ public class HomeServices {
 	}
 
 	@GET
-	@Path("/categories")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getCategories() {
-		return gson.toJson(cubeManager.getCategoryDictionary().getAllRootCategories());
-	}
-
-	@GET
 	@Path("/html")
 	@Produces(MediaType.TEXT_HTML)
 	public String getHTML() {
@@ -298,6 +303,12 @@ public class HomeServices {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param timeStr : e.g: NOW+1h
+	 * @param dimension : Dimension temporelle : année/mois/jour/...
+	 * @return Date obtenue à partir des deux indications précedentes
+	 */
 	private Date readDate(final String timeStr, final HTimeDimension dimension) {
 		if (timeStr.equals("NOW")) {
 			return new Date();
@@ -333,6 +344,11 @@ public class HomeServices {
 		}
 	}
 
+	/**
+	 * 
+	 * @param deltaAsString 
+	 * @return delta en  millisecondes
+	 */
 	private long readDeltaAsMs(final String deltaAsString) {
 		final Long delta;
 		char unit = deltaAsString.charAt(deltaAsString.length() - 1);

@@ -68,7 +68,6 @@ final class SpacesServer implements Activeable {
 
 		//js.addDocRoot(new File(SpacesServer.class.getResource("/web/js").getFile()));
 		//js.start();
-		//		js.addDocRoot("/web/js/analyticandv3liecharts.js");
 		//httpServer.getServerConfiguration().addHttpHandler(js, "");
 		//
 		//		final StaticHttpHandler img = new StaticHttpHandler();

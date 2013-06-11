@@ -61,7 +61,6 @@
 	$.fn.drawMultiBarChartWithNvd3 = function(datas) {
 		var defaults = {}, options = $.extend(defaults, datas);
 		var container = $(this);
-
 		return this.each(function() {
 			nv.addGraph(function() {
 				var chart = nv.models.multiBarChart().x(function(d) { // CumulativeLineChart++discreteBarChart++stackedAreaChart++multiBarChart

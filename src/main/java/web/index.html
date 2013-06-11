@@ -16,6 +16,14 @@
     <script type="text/javascript" src="../web/vendor/scripts/nvd3/nv.d3.min.js"></script>
     <script type="text/javascript" src="../web/app/scripts/analyticandv3linechart.js"></script>
     <script type="text/javascript" src="../web/app/scripts/main.js"></script>
+    <script type="text/javascript" src="../web/app/scripts/config.js"></script>
+
+
+    <style type="text/css">
+
+
+    </style>
+
 
   </head>
 
@@ -52,28 +60,14 @@
    
     <div class="container">
       <!-- Mettre le contenu des graphes ici.-->
-      
       <div class="hero-unit">
       </div>
     <!-- Composants graphiques.-->
-    <div class="row">
-        <div class="span4">
-          <div id="c1"><svg></svg></div>
-        </div>
-        <div class="span4">
-          <div id="c2"><svg></svg></div>
-       </div>
-        <div class="span4">
-         <div id="c3"><svg></svg></div>
-        </div>
+      <div id = 'row1' class="row">
       </div>
-      <div class="row">
-        <div class="span6">
-          <div id="c4"><svg></svg></div>
-        </div>
-        <div class="span6">
-          <div id="c5"><svg></svg></div>
+      <div id = 'row2' class="row">
       </div>
+      <div id = 'row3' class="row">
       </div>
     </div>
      <hr>
@@ -82,12 +76,14 @@
     <script type="text/javascript">  
       //Script pour placer les composants grapiques
         $(document).ready(function() {
+
+          loadAllPanels();
           loadDataToDraw();
         });
     </script>
 
 <!--Pied de page-->
-    <footer>
+    <footer id='footer'>
         <p class="version">v1.1 du 16/01/2013</p>
         <p class="contact">
           Pour toutes remarques ou suggestions, merci de nous envoyer un email a <a href="mailto:npiedeloup@kleegroup.com">npiedeloup@kleegroup.com</a>
