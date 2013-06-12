@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head id= "header" class="">
+    <title>Analytica HelperDashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- stylessheets-->
+    <link rel="stylesheet" type="text/css" href="../web/vendor/styles/bootstrap/bootstrap-combined.min.css">
+    <link href="../web/vendor/styles/bootstrap/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+
+    <link href="../web/app/styles/app.css" rel="stylesheet">
+    
+    <link href="../web/vendor/styles/nvd3/nv.d3.css" rel="stylesheet">
+
+    <!-- scripts js-->
+    <script type="text/javascript" src="../web/vendor/scripts/jquery/jquery.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../web/vendor/scripts/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../web/vendor/scripts/d3/d3.min.js"></script>
+    <script type="text/javascript" src="../web/vendor/scripts/nvd3/nv.d3.min.js"></script>
+    <script type="text/javascript" src="../web/app/scripts/analyticandv3linechart.js"></script>
+
+   <script type="text/javascript" src="../web/app/scripts/analytica_client_helper.js"></script>
+      <script type="text/javascript" src="../web/app/scripts/analytica_datasource.js"></script>
+
+   
+
+
+    <style type="text/css">
+      
+
+    </style>
+
+
+  </head>
+
+  <body id="index" class="">
+   <!-- Barre de navigation.-->
+    <header>
+      <div class="hero-unit">
+      <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+              <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">Analytica</a>
+                <div class="nav-collapse collapse">
+                  <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboards <b class="caret"></b></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">DashboardFicen</a></li>
+                        <li><a href="#">Dashboard1</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div><!--/.nav-collapse -->
+              </div>
+            </div>
+      </div>      
+    </div>
+    </header>
+   
+    <div class="container">
+      <!-- Mettre le contenu des graphes ici.-->
+      <div class="grey-bg">
+   
+    <!-- Composants graphiques.-->
+      <div id = 'row1' class="row">
+        <div id="idgraphique0" class="span3"></div>
+        <div id="idgraphique1" class="span3"></div>
+        <div id="idgraphique2" class="span3"></div>
+        <div id="idgraphique3" class="span3"></div>
+      </div>
+      <hr>
+      <div id = 'row2' class="row">
+         <div id="idgraphique4" class="span6"></div>
+        <div id="idgraphique5" class="span6"></div>
+      </div>
+      
+      <hr>
+      <div id = 'row3' class="row">
+        <div id="idgraphique6" class="span12"></div>
+      </div>
+    </div>
+     <hr>
+
+  
+    <script type="text/javascript">  
+      //Script pour placer les composants grapiques
+      $(document).ready(function() {
+        initializeTestHelperAnalytica()
+      });
+    </script>
+    
+
+<!--Pied de page-->
+    <footer id='footer'>
+        <p class="version">v1.1 du 16/01/2013</p>
+        <p class="contact">
+          Pour toutes remarques ou suggestions, merci de nous envoyer un email a <a href="mailto:npiedeloup@kleegroup.com">npiedeloup@kleegroup.com</a>
+        </p>
+    </footer>
+  </body>
+</html>

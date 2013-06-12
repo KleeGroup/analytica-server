@@ -25,6 +25,7 @@ var sampleGraph = {
 	options: {} //General options for the graph
 };
 
+
 //Function to generat a graph.
 var generateGraph = function generateGraph(graph) {
 
@@ -50,6 +51,11 @@ var generateGraph = function generateGraph(graph) {
 	});
 };
 
+var generateGraphs = function generateGraphs(graphs){
+	for(var i=0,graphNumber = graphs.length; i< graphNumber;i++){
+		generateGraph(graphs[i]);
+	}
+};
 
 function getDrawFunction(dataType, uiType) {
 	//todo check if the graph type is correct with the data type.
@@ -117,7 +123,8 @@ var KLEE = {
 		initialize: function initialize() {
 			throw "You have to override Klee.analytica.initialize function in order to have your html client initialized.";
 		},
-		generateGraph: generateGraph
+		generateGraph: generateGraph,
+		generateGraphs: generateGraphs
 	}
 };
 
