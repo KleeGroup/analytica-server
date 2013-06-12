@@ -18,9 +18,12 @@
     <script type="text/javascript" src="../web/app/scripts/main.js"></script>
     <script type="text/javascript" src="../web/app/scripts/config.js"></script>
 
+   <script type="text/javascript" src="../web/app/scripts/analytica_client_helper.js"></script>
+   
+
 
     <style type="text/css">
-
+      
 
     </style>
 
@@ -65,8 +68,10 @@
     <!-- Composants graphiques.-->
       <div id = 'row1' class="row">
       </div>
+      <hr>
       <div id = 'row2' class="row">
       </div>
+      <hr>
       <div id = 'row3' class="row">
       </div>
     </div>
@@ -76,11 +81,14 @@
     <script type="text/javascript">  
       //Script pour placer les composants grapiques
         $(document).ready(function() {
+          
+    initializeTestHelperAnalytica()
 
-          loadAllPanels();
-          loadDataToDraw();
+         // loadAllPanels();
+     //     loadDataToDraw();
         });
     </script>
+    <div id="testResult"></div>
 
 <!--Pied de page-->
     <footer id='footer'>
