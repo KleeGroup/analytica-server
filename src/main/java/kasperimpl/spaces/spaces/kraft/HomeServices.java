@@ -1,11 +1,5 @@
 package kasperimpl.spaces.spaces.kraft;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,20 +14,11 @@ import javax.ws.rs.core.MediaType;
 
 import kasper.kernel.Home;
 import kasper.kernel.di.injector.Injector;
-import kasper.kernel.exception.KRuntimeException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.kleegroup.analytica.hcube.HCubeManager;
-import com.kleegroup.analytica.hcube.cube.HCube;
-import com.kleegroup.analytica.hcube.cube.HMetric;
-import com.kleegroup.analytica.hcube.cube.HMetricKey;
-import com.kleegroup.analytica.hcube.dimension.HCategory;
-import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
-import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
-import com.kleegroup.analytica.hcube.result.HSerie;
 import com.kleegroup.analytica.server.ServerManager;
 
 @Path("/home")
@@ -45,6 +30,9 @@ public class HomeServices {
 	private ServerManager serverManager;
 	@Inject
 	private HCubeManager cubeManager;
+	private Utils utils;
+
+	// instance of utility class
 
 	public HomeServices() {
 		final Injector injector = new Injector();
@@ -52,6 +40,8 @@ public class HomeServices {
 		if (!loaded) {
 			// load();
 			new VirtualDatas(serverManager).load();
+			utils = Utils.getInstance(serverManager);
+
 			loaded = true;
 		}
 	}
@@ -72,8 +62,8 @@ public class HomeServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue("NOW-6h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+6h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
-		final HResult result = resolveQuery(timeFrom, timeTo, timeDim, category);
-		final List<DataPoint> points = loadDataPointsMonoSerie(result);
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
+		final List<DataPoint> points = utils.loadDataPointsMonoSerie(result);
 		//final Map<String, List<DataPoint>> pointsMap = loadDataPoints(result, datas);
 		//return gson.toJson(pointsMap);
 		return gson.toJson(points);
@@ -84,8 +74,8 @@ public class HomeServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMultiSerieTimeLine(@QueryParam("timeFrom") @DefaultValue("NOW-6h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+6h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
-		final HResult result = resolveQuery(timeFrom, timeTo, timeDim, category);
-		final Map<String, List<DataPoint>> pointsMap = loadDataPointsMuliSerie(result, datas);
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
+		final Map<String, List<DataPoint>> pointsMap = utils.loadDataPointsMuliSerie(result, datas);
 		return gson.toJson(pointsMap);
 	}
 
@@ -93,15 +83,10 @@ public class HomeServices {
 	@Path("/agregatedDatas/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAggregated(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @QueryParam("category") final String category, @QueryParam("datas") final String datas) {
-		final HResult result = resolveQuery(timeFrom, timeTo, timeDim, category);
-		return gson.toJson(getAggregatedValues(result));
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
+		return gson.toJson(utils.getAggregatedValues(result));
 		// Ajouter les valeurs par défaut sauf pour la catégorie
 		// return null;
-	}
-
-	private JsonElement getAggregatedValues(final HResult result) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@GET
@@ -109,81 +94,6 @@ public class HomeServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCategories() {
 		return gson.toJson(cubeManager.getCategoryDictionary().getAllRootCategories());
-	}
-
-	/**
-	 * @param timeFrom
-	 * @param timeTo
-	 * @param timeDim
-	 * @param categories
-	 * @return Construis une Hresult à partir des infos fournies
-	 */
-	private HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories) {
-		final HTimeDimension timeDim = HTimeDimension.valueOf(timeDimension);
-		final Date minValue = readDate(timeFrom, timeDim);
-		final Date maxValue = readDate(timeTo, timeDim);
-		final HQuery query = serverManager.createQueryBuilder().on(timeDim).from(minValue).to(maxValue).with(categories).build();
-		return serverManager.execute(query);
-	}
-
-	/**
-	 * Charge des données pour un graphe multi série.
-	 * @param result
-	 * @param datas
-	 * @return
-	 */
-	private Map<String, List<DataPoint>> loadDataPointsMuliSerie(final HResult result, final String datas) {
-		final HQuery query = result.getQuery();
-		final List<String> metricKeys = readDataKeyList(datas);
-		List<DataPoint> points;
-		final Map<String, List<DataPoint>> pointsMap = new HashMap<String, List<DataPoint>>();
-		for (final String metricKeydata : metricKeys) {
-			points = new ArrayList<DataPoint>();
-			for (final HCategory category : query.getAllCategories()) {
-				for (final HCube cube : result.getSerie(category).getCubes()) {
-					final String[] metricKey = metricKeydata.split(":");
-					final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
-					double val = 0;
-					switch (metricKey[1]) {
-						case "mean":
-							val = hMetric != null ? hMetric.getMean() : Double.NaN;
-							break;
-						case "count":
-							val = hMetric != null ? hMetric.getCount() : Double.NaN;
-							break;
-						case "sum":
-							val = hMetric != null ? hMetric.getSum() : Double.NaN;
-							break;
-
-					}
-					points.add(new DataPoint(cube.getKey().getTime().getValue(), val));
-				}
-				pointsMap.put(metricKeydata, points);
-			}
-		}
-		return pointsMap;
-	}
-
-	/**
-	 * Charge Les données d'un graphe mono série.
-	 * @param Les données à transformer.
-	 * @return La liste de poins retravaillée.
-	 */
-	private List<DataPoint> loadDataPointsMonoSerie(final HResult result) {
-		final HQuery query = result.getQuery();
-		final List<HSerie> series = new ArrayList<HSerie>();
-		for (final HCategory category : query.getAllCategories()) {
-			series.add(result.getSerie(category));
-		}
-		final List<DataPoint> points = new ArrayList<DataPoint>();
-		for (final HCategory category : query.getAllCategories()) {
-			for (final HCube cube : result.getSerie(category).getCubes()) {
-				final HMetric metric = cube.getMetric(new HMetricKey("duration", true));
-				points.add(new DataPoint(cube.getKey().getTime().getValue(), metric != null ? metric.getMean() : Double.NaN));//Double.NaN
-			}
-		}
-
-		return points;
 	}
 
 	//	private List<String> readKeys(final String datas) {
@@ -198,92 +108,6 @@ public class HomeServices {
 	//		}
 	//		return cles;
 	//	}
-
-	private List<String> readDataKeyList(final String datas) {
-		final List<String> cles = new ArrayList<String>();
-		final List<String> dataKeys = Arrays.asList(datas.split(";"));
-		//final List<HMetricKey> metricKeys = new ArrayList<HMetricKey>();
-		for (final String s : dataKeys) {
-			final String[] list = s.split(":");
-			//			if (list.length > 1) {
-			//				metricKeys.add(new HMetricKey(list[0], true));
-			//			} else if (list.length == 1) {
-			//				metricKeys.add(new HMetricKey(s, true));
-			//			}
-			cles.add(list[0]);
-		}
-		return dataKeys;
-		// return metricKeys;
-	}
-
-	/**
-	 * 
-	 * @param timeStr
-	 *            : e.g: NOW+1h
-	 * @param dimension
-	 *            : Dimension temporelle : année/mois/jour/...
-	 * @return Date obtenue à partir des deux indications précedentes
-	 */
-	private Date readDate(final String timeStr, final HTimeDimension dimension) {
-		if (timeStr.equals("NOW")) {
-			return new Date();
-		} else if (timeStr.startsWith("NOW-")) {
-			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW-".length()));
-			return new Date(System.currentTimeMillis() - deltaMs);
-		} else if (timeStr.startsWith("NOW+")) {
-			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW+".length()));
-			return new Date(System.currentTimeMillis() + deltaMs);
-		}
-		final String datePattern;
-		switch (dimension) {
-			case Year:
-				datePattern = "yyyy";
-				break;
-			case Month:
-				datePattern = "MM/yyyy";
-				break;
-			case Day:
-				datePattern = "dd/MM/yyyy";
-				break;
-			case Hour:
-			case Minute:
-			default:
-				datePattern = "HH:mm dd/MM/yyyy";
-		}
-		final SimpleDateFormat sdf = new SimpleDateFormat(datePattern);
-		try {
-			return sdf.parse(timeStr);
-		} catch (final ParseException e) {
-			// TODO Auto-generated catch block
-			throw new KRuntimeException("Erreur de format de date (" + timeStr + "). Format attendu :" + sdf.toPattern());
-		}
-	}
-
-	/**
-	 * 
-	 * @param deltaAsString
-	 * @return delta en millisecondes
-	 */
-	private long readDeltaAsMs(final String deltaAsString) {
-		final Long delta;
-		char unit = deltaAsString.charAt(deltaAsString.length() - 1);
-		if (unit >= '0' && unit <= '9') {
-			unit = 'd';
-			delta = Long.valueOf(deltaAsString);
-		} else {
-			delta = Long.valueOf(deltaAsString.substring(0, deltaAsString.length() - 1));
-		}
-		switch (unit) {
-			case 'd':
-				return delta * 24 * 60 * 60 * 1000L;
-			case 'h':
-				return delta * 60 * 60 * 1000L;
-			case 'm':
-				return delta * 60 * 1000L;
-			default:
-				throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
-		}
-	}
 
 	// @Path("/bootstrap")
 	// @GET

@@ -23,7 +23,9 @@ function initializeTestHelperAnalytica() {
     html: {
       container: 'idgraphique0' // id of the container.
     },
-    options: {} //General options for the graph
+    options: {
+      labels: "label"
+    } //General options for the graph
   };
   var counter = 0;
   function generateDefaultGraph(i) {
@@ -51,7 +53,9 @@ function initializeTestHelperAnalytica() {
       html: {
         container: 'idgraphique'+ i // id of the container.
       },
-      options: {} //General options for the graph
+      options: {
+        labels:"label"+i
+      } //General options for the graph
     };
   }
 

@@ -21,13 +21,16 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				.color(d3.scale.category10().range());
 				//Paramétrage des labels sur l'axe des abscisses
 				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-					return d3.time.format("%x:%H:%M")(new Date(d))
+					return d3.time.format("%H:%M")(new Date(d))
 				});
 
 				// chart.yAxis.tickFormat(d3.format(',f'));
 
-				d3.select('#' + container[0].id + ' svg').datum(datas)
-						.transition().duration(500).call(chart);
+				d3.select('#' + container[0].id + ' svg')
+				.datum(datas)
+				.transition()
+				.duration(500)
+				.call(chart);
 
 				nv.utils.windowResize(chart.update);
 

@@ -3,30 +3,42 @@
   <head id= "header" class="">
     <title>Analytica HelperDashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- stylessheets-->
+    
+    <!-- stylessheets bootstrap-->
     <link rel="stylesheet" type="text/css" href="../web/vendor/styles/bootstrap/bootstrap-combined.min.css">
     <link href="../web/vendor/styles/bootstrap/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 
+    <!-- stylessheets analytica-->
     <link href="../web/app/styles/app.css" rel="stylesheet">
+    
+    <!-- stylessheets nvd3-->
     
     <link href="../web/vendor/styles/nvd3/nv.d3.css" rel="stylesheet">
 
     <!-- scripts js-->
+    <!-- script jquery-->
     <script type="text/javascript" src="../web/vendor/scripts/jquery/jquery.js"></script>
+        <!-- scripts bootstrap-->
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../web/vendor/scripts/bootstrap/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../web/vendor/scripts/d3/d3.min.js"></script>
-    <script type="text/javascript" src="../web/vendor/scripts/nvd3/nv.d3.min.js"></script>
+
+    <!-- scripts d3-->
+    <script type="text/javascript" src="../web/vendor/scripts/d3/d3.v2.js"></script>
+
+    <!-- scripts nvd3-->
+    <script type="text/javascript" src="../web/vendor/scripts/nvd3/nv.d3.js"></script>
+    <script type="text/javascript" src="../web/vendor/scripts/nvd3/utils.js"></script>
+    <script type="text/javascript" src="../web/vendor/scripts/nvd3/tooltip.js"></script>
+    <script type="text/javascript" src="../web/vendor/scripts/nvd3/legends.js"></script>
+
+    <!-- scripts analytica-->
     <script type="text/javascript" src="../web/app/scripts/analyticandv3linechart.js"></script>
-
-   <script type="text/javascript" src="../web/app/scripts/analytica_client_helper.js"></script>
-      <script type="text/javascript" src="../web/app/scripts/analytica_datasource.js"></script>
-
-   
-
+    <script type="text/javascript" src="../web/app/scripts/analytica_client_helper.js"></script>
+    <script type="text/javascript" src="../web/app/scripts/analytica_datasource.js"></script>
 
     <style type="text/css">
       
+
 
     </style>
 
@@ -66,29 +78,36 @@
    
     <div class="container">
       <!-- Mettre le contenu des graphes ici.-->
-      <div class="grey-bg">
+      <div >
    
     <!-- Composants graphiques.-->
-      <div id = 'row1' class="row">
-        <div id="idgraphique0" class="span3"></div>
-        <div id="idgraphique1" class="span3"></div>
-        <div id="idgraphique2" class="span3"></div>
-        <div id="idgraphique3" class="span3"></div>
-      </div>
-      <hr>
-      <div id = 'row2' class="row">
-         <div id="idgraphique4" class="span6"></div>
-        <div id="idgraphique5" class="span6"></div>
+    <div class="row grey-bg">
+      <div id = 'row1' >
+        <div class="span3">
+            <div id="idgraphique0" ></div>
+        </div>
+        <div class="span3">
+            <div id="idgraphique1" ></div>
+        </div>
+        <div class="span3">
+            <div id="idgraphique2" ></div>
+        </div>
+        <div class="span3">
+            <div id="idgraphique3" ></div>
+        </div>
       </div>
       
-      <hr>
+      <div id = 'row2' class="row">
+         <div id="idgraphique4" class="span6 "></div>
+        <div id="idgraphique5" class="span6 "></div>
+      </div>
+      
       <div id = 'row3' class="row">
-        <div id="idgraphique6" class="span12"></div>
+        <div id="idgraphique6" class="span12 "></div>
       </div>
     </div>
-     <hr>
 
-  
+  </div>
     <script type="text/javascript">  
       //Script pour placer les composants grapiques
       $(document).ready(function() {

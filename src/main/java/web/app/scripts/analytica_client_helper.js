@@ -22,7 +22,9 @@ var sampleGraph = {
 	html: {
 		container: undefined // id of the container.
 	},
-	options: {} //General options for the graph
+	options: {
+		labels:"label"//list of labels according to the datas defined in the filters the number of labels should be equals to the number of datas in filters
+	} //General options for the graph
 };
 
 
@@ -41,7 +43,7 @@ var generateGraph = function generateGraph(graph) {
 		dataType: 'json',
 		success: function(response, text) {
 			console.log('response', response, 'text', text);
-			var data = parse(response);
+			var data = parse(response,graph.options.labels);
 			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
 			$('#' + graph.ui.id)[drawGraphCallbackName](data);
 		},
@@ -68,25 +70,39 @@ function generateUrl(route, params) {
 	var url = '',
 		SEP = '/',
 		PARAM = '?',
-		ET = '&';
+		AND = '&';
 	for (var i = 0, routeLength = route.length; i < routeLength; i++) {
 		url += (route[i] + SEP);
 	}
 	url += PARAM;
 	for (var propt in params) {
-		url += (propt + '=' + params[propt] + ET);
+		url += (propt + '=' + params[propt] + AND);
 	}
-	return url.slice(0, -1); //Remove the last ET.
+	return url.slice(0, -1); //Remove the last AND.
 };
 
 //Parse the results.
-function parseDataResult(dataResult) {
+/*function parseDataResult(dataResult) {
 	var reconstructedData = [];
 	for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
 		var r = dataResult[i];
 		reconstructedData.push([r.x, r.y]);
 	}
 	var data = [{
+			values: reconstructedData
+		}
+	];
+	return data;
+};*/
+
+function parseDataResult(dataResult,label) {
+	var reconstructedData = [];
+	for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
+		var r = dataResult[i];
+		reconstructedData.push([r.x, r.y]);
+	}
+	var data = [{
+			key: label,
 			values: reconstructedData
 		}
 	];
@@ -101,12 +117,13 @@ function loadPanel(config, htmlContainerId) {
 		icon = config['icon'],
 		panelId = config['id'];
 	var titleDiv = document.createElement("div");
-	titleDiv.setAttribute('class', "ui-widget-header");
+	titleDiv.setAttribute('class', "ui-widget-header ");
 	var iconElt = document.createElement("i");
 	iconElt.setAttribute('class', icon);
 	var hTitle = document.createElement("h");
 	hTitle.innerHTML = title;
 	var widgetContent = document.createElement("div");
+	widgetContent.setAttribute('class',"white-bg");
 	widgetContent.setAttribute('id', panelId);
 	widgetContent.innerHTML = "<svg></svg>";
 	//var svgWidget = document.createElement("svg");
