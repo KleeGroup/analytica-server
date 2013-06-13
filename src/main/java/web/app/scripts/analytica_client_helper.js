@@ -15,15 +15,16 @@ var sampleGraph = {
 	ui: {
 		id: undefined, //Id of the graph.
 		icon: undefined, // bootstrap name of the icon.
-		title: "Default title ", // Title of the panel.
+		labels:"label",//list of labels according to the datas defined in the filters the number of labels should be equals to the number of datas in filters
 		type: "Graph type ", //Panel type
 		options: undefined //
 	},
 	html: {
+		title: "Default Titlee ",// Title of the panel.
 		container: undefined // id of the container.
 	},
 	options: {
-		labels:"label"//list of labels according to the datas defined in the filters the number of labels should be equals to the number of datas in filters
+		
 	} //General options for the graph
 };
 
@@ -32,7 +33,7 @@ var sampleGraph = {
 var generateGraph = function generateGraph(graph) {
 
 	//Insert the html in the dom in order to be able to render data.
-	loadPanel(graph.ui, graph.html.container)
+	loadPanel(graph.ui, graph.html)
 	//Load the callback to draw data.
 
 	var drawGraphCallbackName = getDrawFunction(graph.data.type, graph.ui.type); //todo:determine the graph to draw.
@@ -43,7 +44,7 @@ var generateGraph = function generateGraph(graph) {
 		dataType: 'json',
 		success: function(response, text) {
 			console.log('response', response, 'text', text);
-			var data = parse(response,graph.options.labels);
+			var data = parse(response,graph.ui.labels);
 			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
 			$('#' + graph.ui.id)[drawGraphCallbackName](data);
 		},
@@ -111,9 +112,9 @@ function parseDataResult(dataResult,label) {
 
 //Load the dom structure for a panel.
 //todo: a mettre dans le plugin jquery. Il faut que le plugin soit auto suffisant.
-function loadPanel(config, htmlContainerId) {
-	var container = document.getElementById(htmlContainerId),
-		title = config['title'],
+function loadPanel(config, htmlContainer) {
+	var container = document.getElementById(htmlContainer.container),
+		title = htmlContainer.title,
 		icon = config['icon'],
 		panelId = config['id'];
 	var titleDiv = document.createElement("div");

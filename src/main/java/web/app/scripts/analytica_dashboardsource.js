@@ -16,15 +16,15 @@ function initializeTestHelperAnalytica() {
     ui: {
       id: 'graph0', //Id of the graph.
       icon: ' icon-picture', // bootstrap name of the icon.
-      title: "Temps Moyen6", // Title of the panel.
+      labels: "label",
       type: "Graph type ", //Panel type
       options: undefined //
     },
     html: {
+      title: "Temps Moyen6", // Title of the panel.
       container: 'idgraphique0' // id of the container.
     },
     options: {
-      labels: "label"
     } //General options for the graph
   };
   var counter = 0;
@@ -46,15 +46,15 @@ function initializeTestHelperAnalytica() {
       ui: {
         id: 'graph'+i, //Id of the graph.
         icon: ' icon-picture', // bootstrap name of the icon.
-        title: "Temps Moyen "+i, // Title of the panel.
+        labels:"label"+i,
         type: "Graph type ", //Panel type
         options: undefined //
       },
       html: {
+        title: "Temps Moyen "+i, // Title of the panel.
         container: 'idgraphique'+ i // id of the container.
       },
       options: {
-        labels:"label"+i
       } //General options for the graph
     };
   }
