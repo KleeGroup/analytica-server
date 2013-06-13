@@ -205,18 +205,13 @@ var defaultParameters = {
 
     function parseMultiSeriesD3Datas(response, labels) {
 
-        
-        var reconstructedData = [];
-        for (var i = 0, responseLength = response.length; i < responseLength; i++) {
-            var r = response[i];
-            reconstructedData.push([r.x, r.y]);
-        }
-        var data = [{
-                key: labels,
-                values: reconstructedData
+        var series = [],i=0;
+        for(var cle in response ){
+            if(response.hasOwnProperty(cle)){
+                series.push(parseD3Datas(response[cle],labels[i++]));
             }
-        ];
-        return data;
+        }
+        return series;
     }
 
 
@@ -284,39 +279,64 @@ function drawGraphs(data) {
 function initializeTestHelperAnalytica() {
 
     //Parameters which defines One graph with both datas and ui.
-    var graphique = {
+    var graphiqueMono = {
         data: {
-            url: '/home/timeLine/PAGE', // home/datas
-            type: 'Mono', // Mono or multi series.   
+            url: '/home/multitimeLine/PAGE', // home/datas
+            type: 'Multi', // Mono or multi series.   
             filters: {
-                timeFrom: "NOW-4h", //
-                timeTo: "NOW%2B6h", //ProblÃ¨me ici avec le +
+                timeFrom: "NOW-6h", //
+                timeTo: "NOW%2B4h", //ProblÃ¨me ici avec le +
                 timeDim: "Hour", //
                 category: "PAGE", //
-                datas: "duration:mean" //  
+                datas: "duration:mean;duration:count" //  
             },
-            parse: undefined, //function parseData() {} // Function which transforms all the data received from the server.
+            parse: parseMultiSeriesD3Datas //function parseData() {} // Function which transforms all the data received from the server.
         },
         ui: {
             id: 'monoGraph', //Id of the graph.
             icon: ' icon-picture', // bootstrap name of the icon.
-            title: "Temps Moyen6", // Title of the panel.
+            labels: "Temps Moyen;Nombre d'acces", // Title of the panel.
             type: "Graph type ", //Panel type
             options: undefined //
         },
         html: {
+            title: "Graphique", 
             container: 'testResult' // id of the container.
         },
         options: {} //General options for the graph
     };
-    KLEE.Analytica.generateGraph(graphique);
+    var graphiqueMulti = {
+        data: {
+            url: '/home/timeLine/PAGE', // home/datas
+            type: 'Multi', // Mono or multi series.   
+            filters: {
+                timeFrom: "NOW-6h", //
+                timeTo: "NOW%2B4h", //ProblÃ¨me ici avec le +
+                timeDim: "Hour", //
+                category: "PAGE", //
+                datas: "duration:mean;duration:count" //  
+            },
+            parse: undefined///parseMultiSeriesD3Datas //function parseData() {} // Function which transforms all the data received from the server.
+        },
+        ui: {
+            id: 'monoGraph', //Id of the graph.
+            icon: ' icon-picture', // bootstrap name of the icon.
+            labels: "Temps Moyen;Nombre d'acces", // Title of the panel.
+            type: "Graph type ", //Panel type
+            options: undefined //
+        },
+        html: {
+            title: "Graphique", 
+            container: 'testResult' // id of the container.
+        },
+        options: {} //General options for the graph
+    };
+    KLEE.Analytica.generateGraph(graphiqueMulti);
 }
 
 //Découpage de l'interface principale en sous pannels : STATIC
 
 function loadAllPanels() {
-
-
 
     var row1 = document.getElementById('row1');
     var row2 = document.getElementById('row2');

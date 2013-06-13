@@ -30,7 +30,7 @@ public class HomeServices {
 	private ServerManager serverManager;
 	@Inject
 	private HCubeManager cubeManager;
-	private Utils utils;
+	private static Utils utils;
 
 	// instance of utility class
 
@@ -41,7 +41,6 @@ public class HomeServices {
 			// load();
 			new VirtualDatas(serverManager).load();
 			utils = Utils.getInstance(serverManager);
-
 			loaded = true;
 		}
 	}
@@ -49,6 +48,7 @@ public class HomeServices {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String hello() {
+		utilIsNull(utils);
 		final StringBuilder sb = new StringBuilder();
 		sb.append("<html><body>");
 		sb.append("<a href=\"\\/datas\">datas</a>");
@@ -61,6 +61,7 @@ public class HomeServices {
 	@Path("/timeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue("NOW-6h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+6h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+		utilIsNull(utils); // initialise l'utilitaire s'il est null
 		// Ajouter les valeurs par défaut sauf pour la catégorie
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		final List<DataPoint> points = utils.loadDataPointsMonoSerie(result);
@@ -73,6 +74,7 @@ public class HomeServices {
 	@Path("/multitimeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMultiSerieTimeLine(@QueryParam("timeFrom") @DefaultValue("NOW-6h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+6h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+		utilIsNull(utils);
 		// Ajouter les valeurs par défaut sauf pour la catégorie
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		final Map<String, List<DataPoint>> pointsMap = utils.loadDataPointsMuliSerie(result, datas);
@@ -83,6 +85,7 @@ public class HomeServices {
 	@Path("/agregatedDatas/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAggregated(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @QueryParam("category") final String category, @QueryParam("datas") final String datas) {
+		utilIsNull(utils);
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		return gson.toJson(utils.getAggregatedValues(result));
 		// Ajouter les valeurs par défaut sauf pour la catégorie
@@ -93,9 +96,15 @@ public class HomeServices {
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCategories() {
+		utilIsNull(utils);
 		return gson.toJson(cubeManager.getCategoryDictionary().getAllRootCategories());
 	}
 
+	private void utilIsNull(Utils utils) {
+		if (utils == null) {
+			utils = utils.getInstance(serverManager);
+		}
+	}
 	//	private List<String> readKeys(final String datas) {
 	//		final List<String> cles = new ArrayList<String>();
 	//		final List<String> dataKeys = Arrays.asList(datas.split(";"));

@@ -197,7 +197,10 @@ public class Utils {
 							break;
 
 					}
-					points.add(new DataPoint(cube.getKey().getTime().getValue(), val));
+					final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), val);
+					if (dPoint.getValue() != null) {
+						points.add(dPoint);//Double.NaN
+					}
 				}
 				pointsMap.put(metricKeydata, points);
 			}
