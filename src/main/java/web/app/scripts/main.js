@@ -196,11 +196,30 @@ var defaultParameters = {
             reconstructedData.push([r.x, r.y]);
         }
         var data = [{
+                key: labels,
                 values: reconstructedData
             }
         ];
         return data;
     }
+
+    function parseMultiSeriesD3Datas(response, labels) {
+
+        
+        var reconstructedData = [];
+        for (var i = 0, responseLength = response.length; i < responseLength; i++) {
+            var r = response[i];
+            reconstructedData.push([r.x, r.y]);
+        }
+        var data = [{
+                key: labels,
+                values: reconstructedData
+            }
+        ];
+        return data;
+    }
+
+
 
     function fillTable(panelId, datas) {
 
