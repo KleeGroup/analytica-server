@@ -2,8 +2,11 @@
 Les fonctions prennent en paramètre un objet json data de la structure suivante:(cfXXX)
 */
 (function($) {
-	$.fn.drawlineChartWithNvd3 = function(datas) {
-
+	$.fn.drawlineChartWithNvd3 = function(data) {
+		//The parseDatas function will need to clean the datas,
+		//by eliminating the undefined values
+		//var datas =parseDatas(data)||data;
+		var datas = data;
 		//définir les options par défaut ici
 		var defaults = {}, options = $.extend(defaults, datas);
 		//Récupérer le conteneur sur lequel la fonction est appelée
@@ -39,6 +42,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 
 		});
 	};
+
 
 	$.fn.drawStackedAreaChartWithNvd3 = function(datas) {
 		var defaults = {}, options = $.extend(defaults, datas);
@@ -126,6 +130,29 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				return chart;
 			});
 
+		});
+	};
+
+	$.fn.drawpieChartWithNvd3 = function(datas) {
+		var defaults = {}, options = $.extend(defaults, datas);
+		var container = $(this);
+
+		nv.addGraph(function() {
+			var chart = nv.models.pieChart()
+				.x(function(d) {
+				return d.label
+			})
+				.y(function(d) {
+				return d.value
+			})
+				.showLabels(true);
+
+			d3.select('#' + container[0].id + ' svg')
+				.datum(datas)
+				.transition().duration(1200)
+				.call(chart);
+
+			return chart;
 		});
 	};
 })(jQuery);

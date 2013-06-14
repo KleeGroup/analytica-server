@@ -30,6 +30,8 @@
    <!-- Barre de navigation.-->
     <header id="header">
     </header>
+    <div id="breadcrumb">
+    </div>
 	<!-- Container -->
     <div id="container">
     </div>
@@ -42,8 +44,10 @@
      $(document).ready(function() {
      	// We put the container grid template in the container div.
      	 $('header#header').html(Handlebars.templates.header({data: "Pierre"}));
+        $('div#breadcrumb').html(Handlebars.templates.breadcrumb());
        $('div#container').html(Handlebars.templates.container());
        $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
+
       });
   </script>
   </body>

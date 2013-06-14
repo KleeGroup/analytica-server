@@ -18,7 +18,7 @@ import com.kleegroup.analytica.server.ServerManager;
  * @author statchum
  * @version $Id: codetemplates.xml,v 1.2 2011/06/21 14:33:16 npiedeloup Exp $
  */
-public class VirtualDatas {
+public final class VirtualDatas {
 	private final ServerManager serverManager;
 
 	private static final String PAGE_PROCESS = "PAGE";
@@ -45,40 +45,14 @@ public class VirtualDatas {
 		loadVisitors(startDate.getTime(), 50);
 	}
 
-	//	public void loadVisitors(final Date startDate, final double hours, final double visitorByHour) {
-	// visitByHour represente finalement le nombre max de visites
 	public void loadVisitors(final Date startDate, final double visitorByHour) {
-
-		//Pics à 10 h et à 15h
-		//final String d = startDate.toLocaleString();
-
-		//		for (int j = 0; j < 5; j++) {
-		//			final Date dateJour = new Date(startDate.getTime() + j * 24 * 60 * 60 * 1000L);
-		//			for (int h = 0; h < 12; h++) {
-		//				final double coef = 1.5 + 0.25 * Math.sin(j * Math.PI / 2 / (6 * 30));
-		//				final long nbVisit = random(NB_VISIT_DAILY_MAX * Math.cos((h - 3) / 2d / 3.14d), coef); // 50 visites en moyenne par heure en pic
-		//				for (int visit = 0; visit < nbVisit; visit++) {
-		//					final Date dateVisite = new Date(dateJour.getTime() + h * 60 * 60 * 1000L + random(visit * (50 * 60 * 1000L / nbVisit) + 5 * 60 * 1000L, 1));
-		//					addVisitorScenario(dateVisite, coef);
-		//				}
-		//			}
-		//		}
 		long nbVisit;
 		final Date date = startDate;
 		for (int h = 7; h < 19; h++) {
-
-			//final double coef = 1.5 + 0.25 * Math.sin((h - 8) * Math.PI / 2 / (6 * 30));
 			final double coef = 0.25 + 0.25 * Math.sin((h - 7 + 4.5) * Math.PI / 3); //varie de 0 à 0.5
-			//if (h == 10 || h == 15) {
-			//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.6d);
-			//} else {
-			//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.2d);
 			nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% à 60% en fonction de l'heure
-			//}
-			//System.out.println(h + "\t" + coef + "\t" + nbVisit);
 			for (int visit = 0; visit < nbVisit; visit++) {
 				final Date dateVisite = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
-				//System.out.println(dateVisite + "\t" + h + "\t" + coef + "\t" + nbVisit);
 				addVisitorScenario(dateVisite, coef);
 			}
 

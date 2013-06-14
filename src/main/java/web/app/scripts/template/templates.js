@@ -14,7 +14,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<!-- Graphs.-->\r\n      <!-- ROW 1-->\r\n      <div id = 'row1' class=\"row\">\r\n        <div id=\"idgraphique0\" class=\"span3\"></div>\r\n        <div id=\"idgraphique1\" class=\"span3\"></div>\r\n        <div id=\"idgraphique2\" class=\"span3\"></div>\r\n        <div id=\"idgraphique3\" class=\"span3\"></div>\r\n      </div>\r\n      <hr>\r\n      <!-- ROW 2-->\r\n      <div id = 'row2' class=\"row\">\r\n         <div id=\"idgraphique4\" class=\"span12\"></div>\r\n      </div>\r\n      <hr>\r\n      <div id = 'row3' class=\"row\">\r\n        <div id=\"idgraphique5\" class=\"span12\"></div>\r\n      </div>\r\n    </div>";
+  return "<!-- Graphs.-->\r\n      <!-- ROW 1-->\r\n      <div id = 'row1' class=\"row\">\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n      </div>\r\n      <hr>\r\n      <!-- ROW 2-->\r\n      <div id = 'row2' class=\"row\">\r\n         <div class=\"span12\"></div>\r\n      </div>\r\n      <hr>\r\n      <div id = 'row3' class=\"row\">\r\n        <div class=\"span12\"></div>\r\n      </div>\r\n    </div>";
   });
 templates['header'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -53,5 +53,13 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   buffer += escapeExpression(stack1)
     + "</a>\r\n</p>\r\n\r\n";
   return buffer;
+  });
+templates['breadcrumb'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<ul class=\"breadcrumb\">\r\n  <li><a href=\"#\">Home</a> <span class=\"divider\">/</span></li>\r\n  <li><a href=\"#\">Library</a> <span class=\"divider\">/</span></li>\r\n  <li class=\"active\">Data</li>\r\n</ul>";
   });
 })();

@@ -91,7 +91,13 @@ var generateGraphs = function generateGraphs(graphs){
 function getDrawFunction(dataType, uiType) {
 	//todo check if the graph type is correct with the data type.
 	// load the functio which corresponds to the dataType.
-	return 'drawlineChartWithNvd3';
+	if (uiType==="line"){
+		return 'drawMultiBarChartWithNvd3';
+	}
+	else if (uiType==="pie"){
+		return 'drawpieChartWithNvd3';
+	}
+	
 }
 
 // Generate an url with all the parameters where route is the default route and params is the url parameters
@@ -148,6 +154,29 @@ function parseMultiSeriesD3Datas(response, labels) {
 	};
     return series;
 }
+
+function parsePieDatas(dataResult,labels) {
+	var reconstructedData = [];
+	//for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
+	for (var r in dataResult) {
+		//var r = dataResult[i];
+		reconstructedData.push(
+		{
+			label: r,
+			value: dataResult[r]
+		}
+
+		);
+	}
+	var data = [{
+			key: "label",
+			values: reconstructedData
+		}];
+	return data;
+};
+
+
+
 
 
 //Load the dom structure for a panel.
