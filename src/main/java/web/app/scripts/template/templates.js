@@ -14,7 +14,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<!-- Graphs.-->\r\n      <!-- ROW 1-->\r\n      <div id = 'row1' class=\"row\">\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n      </div>\r\n      <hr>\r\n      <!-- ROW 2-->\r\n      <div id = 'row2' class=\"row\">\r\n         <div class=\"span12\"></div>\r\n      </div>\r\n      <hr>\r\n      <div id = 'row3' class=\"row\">\r\n        <div class=\"span12\"></div>\r\n      </div>\r\n    </div>";
+  return "<!-- Graphs.-->\r\n      <!-- ROW 1-->\r\n      <div id = 'row1' class=\"row\">\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n      </div>\r\n      <hr>\r\n      <!-- ROW 2-->\r\n      <div id = 'row2' class=\"row\">\r\n         <div class=\"span12\"></div>\r\n      </div>\r\n      <div id = 'row3' class=\"row\">\r\n        <div class=\"span12\"></div>\r\n      </div>\r\n  ";
   });
 templates['header'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -61,5 +61,22 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 
   return "<ul class=\"breadcrumb\">\r\n  <li><a href=\"#\">Home</a> <span class=\"divider\">/</span></li>\r\n  <li><a href=\"#\">Library</a> <span class=\"divider\">/</span></li>\r\n  <li class=\"active\">Data</li>\r\n</ul>";
+  });
+templates['bigvalue'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<!-- Big Value Graph.-->\r\n      <div>\r\n	      <div class = \"bigValue\">";
+  if (stack1 = helpers.data) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.data; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</div>\r\n	      <div class = \"bigValuelabel\">";
+  if (stack1 = helpers.label) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.label; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</div>\r\n      </div>\r\n";
+  return buffer;
   });
 })();

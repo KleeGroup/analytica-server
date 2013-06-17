@@ -27,6 +27,7 @@
 
     <!-- scripts nvd3-->
     <script type="text/javascript" src="../web/vendor/scripts/nvd3/nv.d3.js"></script>
+
     <script type="text/javascript" src="../web/vendor/scripts/nvd3/utils.js"></script>
     <script type="text/javascript" src="../web/vendor/scripts/nvd3/tooltip.js"></script>
     <script type="text/javascript" src="../web/vendor/scripts/nvd3/legends.js"></script>
@@ -35,6 +36,7 @@
     <script type="text/javascript" src="../web/app/scripts/analyticandv3linechart.js"></script>
     <script type="text/javascript" src="../web/app/scripts/analytica_client_helper.js"></script>
     <script type="text/javascript" src="../web/app/scripts/analytica_datasource.js"></script>
+     <script type="text/javascript" src="../web/app/scripts/jquerydigitalClock.js"></script>
     <style type="text/css"> </style>
 
 
@@ -78,8 +80,17 @@
       </div>
     <!-- Composants graphiques.-->
       <div id = 'row1' class="row">
-        <div id="idgraphique0" class="span3"></div>
-        <div id="idgraphique1" class="span3"></div>
+        <div id="timer" class="span3 ">
+
+        </div>
+        <div id="bigValue" class="span3 analytica-tile grey-bg">
+          <div class ="analytica-tile-content" >
+            <span >90
+            </span>
+          </div>
+        <div class = "analytica-brand">
+          <span class = "analytica-badge">Hits</span></div>
+        </div>
         <div id="idgraphique2" class="span3"></div>
         <div id="idgraphique3" class="span3"></div>
       </div>
@@ -92,15 +103,37 @@
       <div id = 'row3' class="row">
         <div id="idgraphique5" class="span12"></div>
       </div>
+      <div id = 'row4' class="row">
+        <div id="time" ></div>
+      </div>
     </div>
      <hr>
-
-  
+     
     <script type="text/javascript">  
       //Script pour placer les composants grapiques
       $(document).ready(function() {
-        initializeTestHelperAnalytica()
-      });
+        initializeTestHelperAnalytica();
+        //Time
+        /*  function launch() {
+            timeoutID = window.setTimeout(updateHour, 2000);
+          }
+
+          function updateHour() {
+            var myDate = new Date();
+            var dateString = myDate.getHours() + ":" + myDate.getMinutes() + ":" + myDate.getSeconds() +
+              ":" + myDate.getMilliseconds();
+            $('div#time').html(dateString);
+          }
+
+          function clearAlert() {
+            window.clearTimeout(timeoutID);
+          }
+          launch();*/
+            $("#timer").MyDigitClock();
+        });
+    
+
+   
     </script>
     
 

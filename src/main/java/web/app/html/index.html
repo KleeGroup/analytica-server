@@ -7,6 +7,8 @@
     <link rel="stylesheet" type="text/css" href="../../vendor/styles/bootstrap/bootstrap-combined.min.css">
     <link href="../../vendor/styles/bootstrap/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     <link href="../../vendor/styles/nvd3/nv.d3.css" rel="stylesheet">
+    <link href="../styles/app.css" rel="stylesheet">
+
     <!-- scripts js-->
     <script type="text/javascript" src="../../vendor/scripts/jquery/jquery.js"></script>
     <!-- <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>-->
@@ -35,6 +37,9 @@
 	<!-- Container -->
     <div id="container">
     </div>
+
+    <div id="bigValue">
+    </div>
     <hr>
 	<!--FOOTER-->
     <footer id='footer'>
@@ -46,6 +51,10 @@
      	 $('header#header').html(Handlebars.templates.header({data: "Pierre"}));
         $('div#breadcrumb').html(Handlebars.templates.breadcrumb());
        $('div#container').html(Handlebars.templates.container());
+       $('div#bigValue').html(Handlebars.templates.bigvalue({
+        data: 90,
+        label: "Max"
+       }));
        $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
 
       });

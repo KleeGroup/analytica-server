@@ -155,4 +155,17 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 			return chart;
 		});
 	};
+	
+	$.fn.drawBigValue = function() {
+		var container = $(this);
+		var bigValueDiv = document.createElement("div");
+		bigValueDiv.setAttribute('class', "bigValue");
+		var bigValuelabel = document.createElement("div");
+		bigValueDiv.setAttribute('class', "bigValuelabel");
+		bigValueDiv.innerHTML = '90';
+		bigValuelabel.innerHTML = 'Max';
+		container.append(bigValueDiv);
+		container.bigValuelabel(append);
+	};
+
 })(jQuery);

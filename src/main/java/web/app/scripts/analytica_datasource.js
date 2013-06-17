@@ -17,11 +17,11 @@ function initializeTestHelperAnalytica() {
       id: 'graph0', //Id of the graph.
       icon: ' icon-picture', // bootstrap name of the icon.
       labels: "label",
-      type: "Graph type ", //Panel type
+      type: "clock", //Panel type
       options: undefined //
     },
     html: {
-      title: "Temps Moyen6", // Title of the panel.
+      title: "Current Time", // Title of the panel.
       container: 'idgraphique0' // id of the container.
     },
     options: {
@@ -62,6 +62,7 @@ function initializeTestHelperAnalytica() {
   //Other graphs
  var graphique1 = generateDefaultGraph();
   graphique1.data.filters.timeFrom = 'NOW';
+  graphique1.ui.type = "bigValue";
   graphique1.html.title = "Graphe MonoSerie1";
   var graphique2 = generateDefaultGraph();
   graphique2.html.title = "Graphe MonoSerie2";
@@ -69,7 +70,6 @@ function initializeTestHelperAnalytica() {
   graphique2.data.url = "/home/testAggregatedDatasService/PAGE";
   graphique2.data.filters.category = "PAGE;SQL;SEARCH";
   graphique2.ui.type ="pie";
-
 
  var graphique3 = generateDefaultGraph();
   graphique3.html.title = "Graphe MonoSerie3";
@@ -97,8 +97,6 @@ function initializeTestHelperAnalytica() {
   var graphique8 = generateDefaultGraph();
   var graphique9 = generateDefaultGraph();
   var graphs = [
-    graphique0,
-    graphique1,
     graphique2,
     graphique3,
     graphique4,

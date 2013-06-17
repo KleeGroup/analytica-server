@@ -10,21 +10,21 @@ var sampleGraph = {
 		filters: {
 			//Object to filter data.
 		},
-		parse: undefined// By default it is parseDataResult. function parseData() {} // Function which transforms all the data received from the server.
+		parse: undefined // By default it is parseDataResult. function parseData() {} // Function which transforms all the data received from the server.
 	},
 	ui: {
 		id: undefined, //Id of the graph.
 		icon: undefined, // bootstrap name of the icon.
-		labels:"label",//list of labels according to the datas defined in the filters the number of labels should be equals to the number of datas in filters
+		labels: "label", //list of labels according to the datas defined in the filters the number of labels should be equals to the number of datas in filters
 		type: "Graph type ", //Panel type
 		options: undefined //
 	},
 	html: {
-		title: "Default Titlee ",// Title of the panel.
+		title: "Default Titlee ", // Title of the panel.
 		container: undefined // id of the container.
 	},
 	options: {
-		
+
 	} //General options for the graph
 };
 
@@ -70,7 +70,7 @@ var generateGraph = function generateGraph(graph) {
 		success: function(response, text) {
 			console.log('response', response, 'text', text);
 			var labels = graph.ui.labels.split(";");
-			var data = parse(response,labels);
+			var data = parse(response, labels);
 			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
 			$('#' + graph.ui.id)[drawGraphCallbackName](data);
 		},
@@ -82,8 +82,8 @@ var generateGraph = function generateGraph(graph) {
 
 
 
-var generateGraphs = function generateGraphs(graphs){
-	for(var i=0,graphNumber = graphs.length; i< graphNumber;i++){
+var generateGraphs = function generateGraphs(graphs) {
+	for (var i = 0, graphNumber = graphs.length; i < graphNumber; i++) {
 		generateGraph(graphs[i]);
 	}
 };
@@ -91,16 +91,38 @@ var generateGraphs = function generateGraphs(graphs){
 function getDrawFunction(dataType, uiType) {
 	//todo check if the graph type is correct with the data type.
 	// load the functio which corresponds to the dataType.
-	if (uiType==="line"){
-		return 'drawMultiBarChartWithNvd3';
+
+	switch (uiType) {
+		case "bigValue":
+			return 'drawBigValue';
+			break;
+		case "line":
+			return 'drawMultiBarChartWithNvd3';
+
+			break;
+
+		case "table":
+			// fillTable(panelId, response);
+			// alert("table");
+			break;
+
+		case "bar":
+			return 'drawMultiBarChartWithNvd3';
+
+			break;
+
+		case "pie":
+			return 'drawpieChartWithNvd3';
+
+		case "clock":
+			return 'MyDigitClock';
+
+			break;
 	}
-	else if (uiType==="pie"){
-		return 'drawpieChartWithNvd3';
-	}
-	
 }
 
 // Generate an url with all the parameters where route is the default route and params is the url parameters
+
 function generateUrl(route, params) {
 	var url = '',
 		SEP = '/',
@@ -130,7 +152,8 @@ function generateUrl(route, params) {
 	return data;
 };*/
 //Parse data for a mono serie graph.
-function parseDataResult(dataResult,label) {
+
+function parseDataResult(dataResult, label) {
 	var reconstructedData = [];
 	for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
 		var r = dataResult[i];
@@ -139,29 +162,30 @@ function parseDataResult(dataResult,label) {
 	var data = [{
 			key: label,
 			values: reconstructedData
-		}];
+		}
+	];
 	return data;
 };
 //Parse data for a mutli serie graph
+
 function parseMultiSeriesD3Datas(response, labels) {
 	var series = [];
-	var i=0;
+	var i = 0;
 	for (var cle in response) {
-		if(response.hasOwnProperty(cle)){
-			var jsonObject = parseDataResult(response[cle],labels[i++])[0];
+		if (response.hasOwnProperty(cle)) {
+			var jsonObject = parseDataResult(response[cle], labels[i++])[0];
 			series.push(jsonObject);
-		}else{/*throw an exception here*/}
+		} else { /*throw an exception here*/ }
 	};
-    return series;
+	return series;
 }
 
-function parsePieDatas(dataResult,labels) {
+function parsePieDatas(dataResult, labels) {
 	var reconstructedData = [];
 	//for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
 	for (var r in dataResult) {
 		//var r = dataResult[i];
-		reconstructedData.push(
-		{
+		reconstructedData.push({
 			label: r,
 			value: dataResult[r]
 		}
@@ -171,21 +195,22 @@ function parsePieDatas(dataResult,labels) {
 	var data = [{
 			key: "label",
 			values: reconstructedData
-		}];
+		}
+	];
 	return data;
 };
 
 
 
-
-
 //Load the dom structure for a panel.
 //todo: a mettre dans le plugin jquery. Il faut que le plugin soit auto suffisant.
+
 function loadPanel(config, htmlContainer) {
 	var container = document.getElementById(htmlContainer.container),
 		title = htmlContainer.title,
 		icon = config['icon'],
-		panelId = config['id'];
+		panelId = config['id'],
+		type = config.type;
 	var titleDiv = document.createElement("div");
 	titleDiv.setAttribute('class', "ui-widget-header ");
 	var iconElt = document.createElement("i");
@@ -196,7 +221,8 @@ function loadPanel(config, htmlContainer) {
 	/*widgetContent.setAttribute('class',"white-bg");*/
 	//widgetContent.setAttribute('class',"white-bg");
 	widgetContent.setAttribute('id', panelId);
-	widgetContent.innerHTML = "<svg></svg>";
+	if((type !== "clock")||(type !== "clock")){
+	widgetContent.innerHTML = "<svg></svg>";}
 	//var svgWidget = document.createElement("svg");
 	//widgetContent.appendChild(svgWidget);
 	titleDiv.appendChild(iconElt);
