@@ -111,3 +111,43 @@
 
 
 }
+
+#wallClock {
+  color:black;
+  width:200px;
+  text-align:center;
+  padding:30px;
+  /*border:7px double #CC0000;*/
+  
+}
+
+#fullDate {
+  display:block;
+  font-family:Courier,monospace;
+  font-weight:bold;
+  font-size:16pt;
+}
+
+#bigTime {
+  display:block;
+  font-family:Arial,Helvetica,sans-serif;
+  font-weight:bold;
+  font-size:56pt;
+  color:black;
+  line-height:100%;
+}
+
+#dayName {
+  display:inline;
+  font-family:Courier,monospace;
+  font-weight:bold;
+  font-size:16pt;
+}
+
+#seconds {
+  display:inline;
+  font-family:Courier,monospace;
+  font-weight:bold;
+  font-size:16pt;
+  color:black;
+}
