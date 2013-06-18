@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,6 @@ public final class Utils {
 	public Map<String, Double> getAggregatedValuesByCategory(final HResult result, final String datas) {
 		Assertion.notNull(result);
 		//---------------------------------------------------------------------
-
 		final HMetricKey metricKey = new HMetricKey("duration", true);
 		final HCounterType counterType = HCounterType.mean;
 
@@ -84,6 +84,15 @@ public final class Utils {
 			}
 		}
 		return valueByCategory;
+	}
+
+	//	public Map<String,Map<HMetric,DataPoint>> getDataTable(final HResult result, final String categories) {
+	public Map<String, Collection<HMetric>> getDataTable(final HResult result, final String datas) {
+		final Map<String, Collection<HMetric>> tableMap = new HashMap<String, Collection<HMetric>>();
+		for (final HCategory category : result.getQuery().getAllCategories()) {
+			tableMap.put("xx" + category.id() + "xx", result.getSerie(category).getMetrics());
+		}
+		return tableMap;
 	}
 
 	//			final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
@@ -111,15 +120,15 @@ public final class Utils {
 
 	//		return null;
 
-	//	private static List<String> readDataKeys(final String datas) {
-	//		final List<String> key = new ArrayList<String>();
-	//		final List<String> dataKeys = Arrays.asList(datas.split(";"));
-	//		for (final String str : dataKeys) {
-	//			final String[] list = str.split(":");
-	//			key.add(list[0]);
-	//		}
-	//		return dataKeys;
-	//	}
+	private static List<String> readDataKeys(final String datas) {
+		final List<String> key = new ArrayList<String>();
+		final List<String> dataKeys = Arrays.asList(datas.split(";"));
+		for (final String str : dataKeys) {
+			final String[] list = str.split(":");
+			key.add(list[0]);
+		}
+		return dataKeys;
+	}
 
 	/**
 	 * 
@@ -181,22 +190,25 @@ public final class Utils {
 	 * @param timeTo
 	 * @param timeDim
 	 * @param categories
-	 * @return Construis une Hresult à partir des infos fournies
+	 * @return Construit une Hresult à partir des infos fournies
 	 */
-
 	public HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories) {
+		final HQuery query = createQuery(timeFrom, timeTo, timeDimension, categories);
+		return serverManager.execute(query);
+	}
+
+	private HQuery createQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories) {
 		final HTimeDimension timeDim = HTimeDimension.valueOf(timeDimension);
 		final Date minValue = readDate(timeFrom, timeDim);
 		final Date maxValue = readDate(timeTo, timeDim);
 		//@formatter:off
-		final HQuery query = serverManager.createQueryBuilder()
+		return serverManager.createQueryBuilder()
 				.on(timeDim)
 				.from(minValue)
 				.to(maxValue)
-				.with(categories)
+				.withChildren(categories)
 				.build();
 		//@formatter:on
-		return serverManager.execute(query);
 	}
 
 	/**
@@ -224,23 +236,6 @@ public final class Utils {
 					if (metricKey.length > 1) {
 						final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
 						val = hMetric != null ? hMetric.get(counterType) : Double.NaN;
-						//						switch (metricKey[1]) {
-						//							case "mean":
-						//								val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
-						//								break;
-						//							case "count":
-						//								val = hMetric != null ? hMetric.get(HCounterType.count) : Double.NaN;
-						//								break;
-						//							case "sum":
-						//								val = hMetric != null ? hMetric.get(HCounterType.sum) : Double.NaN;
-						//								break;
-						//							case "max":
-						//								val = hMetric != null ? hMetric.get(HCounterType.max) : Double.NaN;
-						//								break;
-						//							case "min":
-						//								val = hMetric != null ? hMetric.get(HCounterType.min) : Double.NaN;
-						//								break;
-						//						}
 					} else {
 						val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
 					}
@@ -293,4 +288,5 @@ public final class Utils {
 		}
 		return valueByCategory;
 	}
+
 }

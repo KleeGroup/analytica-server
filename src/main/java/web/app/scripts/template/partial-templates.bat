@@ -1,0 +1,1 @@
+handlebars _tableLine.handlebars -p -f partial-templates.js

@@ -14,12 +14,7 @@
   <tbody>
     {{#each collection}}
     {{! Line content}}
-        <tr id="{{lineId}}">
-          <td>{{value1}}</td>
-          <td>{{value2}}</td>
-          <td>{{value3}}</td>
-          <td>{{value4}}</td>
-        </tr>
+        {{> _tableLine}}
    {{/each}}
   </tbody>
 </table>

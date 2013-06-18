@@ -1,1 +1,2 @@
-handlebars container.handlebars header.handlebars footer.handlebars breadcrumb.handlebars bigvalue.handlebars table.handlebars graph.handlebars -f templates.js
+call templates.bat
+call partial-templates.bat

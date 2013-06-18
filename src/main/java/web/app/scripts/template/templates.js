@@ -68,7 +68,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   });
 templates['table'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+helpers = this.merge(helpers, Handlebars.helpers); partials = this.merge(partials, Handlebars.partials); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
@@ -86,27 +86,10 @@ function program3(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\r\n    "
-    + "\r\n        <tr id=\"";
-  if (stack1 = helpers.lineId) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.lineId; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "\">\r\n          <td>";
-  if (stack1 = helpers.value1) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.value1; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\r\n          <td>";
-  if (stack1 = helpers.value2) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.value2; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\r\n          <td>";
-  if (stack1 = helpers.value3) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.value3; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\r\n          <td>";
-  if (stack1 = helpers.value4) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
-  else { stack1 = depth0.value4; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
-  buffer += escapeExpression(stack1)
-    + "</td>\r\n        </tr>\r\n   ";
+    + "\r\n        ";
+  stack1 = self.invokePartial(partials._tableLine, '_tableLine', depth0, helpers, partials, data);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\r\n   ";
   return buffer;
   }
 
@@ -138,7 +121,8 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + escapeExpression(((stack1 = ((stack1 = depth0.html),stack1 == null || stack1 === false ? stack1 : stack1.title)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</h>\r\n	</div>\r\n	<div id=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.ui),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\r\n		<svg></svg>\r\n	</div>\r\n</div>";
+    + "\">\r\n		<svg></svg>\r\n	</div>\r\n</div>\r\n\r\n"
+    + "\r\n  ";
   return buffer;
   });
 })();

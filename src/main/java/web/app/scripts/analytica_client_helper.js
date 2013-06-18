@@ -200,6 +200,35 @@ function parsePieDatas(dataResult, labels) {
 	return data;
 };
 
+function parseDataTable(dataResult, labels){
+	var tablelabels = labels.slit(";");
+	var libeNames = [], collection = [];
+		var i=0;
+	for (var r in dataResult) {
+		i++;
+		var table = [];
+		var obj = dataResult[r];
+		for (var j=0;j< obj.length;j++ ){
+			obj[0]['metricKey'].id;
+			obj[1][]		
+		}
+		var collectionElement = {};
+		collectionElement['lineId'] = i++;//Ajouter l'element lineId à tous
+		collection.push({
+			line
+
+		});
+	}
+
+
+var table = {
+		title:"", //title of the dataTable
+		headers: tablelabels, //titles of the dataTable's headers
+		lineNames:lineNames,//the columns values of the dataTable
+		collection:[] //
+	};
+}
+
 
 
 //Load the dom structure for a panel.

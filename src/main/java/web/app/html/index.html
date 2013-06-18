@@ -22,6 +22,7 @@
     <script type="text/javascript" src="../../vendor/scripts/nvd3/tooltip.js"></script>
     <script type="text/javascript" src="../../vendor/scripts/nvd3/legends.js"></script>
     <script type="text/javascript" src="../../vendor/scripts/handlebars.js"></script>
+    <script type="text/javascript" src="../scripts/template/partial-templates.js"></script>
     <script type="text/javascript" src="../scripts/template/templates.js"></script>
     <script type="text/javascript" src="../scripts/analytica_client_helper.js"></script>
     <script type="text/javascript" src="../scripts/analytica_datasource.js"></script>
@@ -123,11 +124,12 @@
     <script type="text/javascript">
 
    var tables =  {
-      title: 'Title of the tab',
-      headers:[{value: 'Column 1'},{value: 'Column 2'}, {value: 'Column 3'}, {value: 'Column 4'}],
+      title: 'PAGES stats',
+      headers:[{value: 'Label'},{value: 'Hits'}, {value: 'Size'}, {value: 'Warnings'},{value:'Response Time'}],
+      lineNames: ['lineId', 'value1', 'value2', 'value3', 'value4','value5'],
       collection: [
-        {lineId: 1, value1:'ppppp', value2:'oooooo', value3: 'ssssssss', value4: 'sjchsjchsjch'},
-        {lineId: 2, value1:'ppppp3', value2:'oooooo4', value3: 'ssssssss5', value4: 'sjchsjchsjch6'}
+        {lineId: 1, value1:'ppppp', value2:'oooooo', value3: 'ssssssss', value4: 'sjchsjchsjch',value5:'150'},
+        {lineId: 2, value1:'ppppp3', value2:'oooooo4', value3: 'ssssssss5', value4: 'sjchsjchsjch6',value5:'200'}
       ]
   };
 
