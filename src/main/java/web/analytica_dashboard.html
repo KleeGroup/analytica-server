@@ -75,18 +75,28 @@
     <div class="container">
       <!-- Mettre le contenu des graphes ici.-->    <!-- Composants graphiques.-->
     <div class="row show-grid">
-        <div id="wallClock" class="span3">
+        <div class="span3 grey-bg">
+        <div class = "ui-widget-header "><i class="icon-picture"></i><h>HORLOGE</h> </div>
+        <div id="wallClock">
+          <!--<div class="grey-bg">-->
           <div id="fullDate"></div>
           <div id="bigTime"></div>
           <div id="dayName"></div>
-          <div id="seconds"></div>
+        <!--</div>-->
         </div>
-        <div id="bigValue" class="span3 analytica-tile grey-bg">
+        </div>
+        <div class="span3 grey-bg">
+          <div class = "ui-widget-header "><i class="icon-picture"></i><h>BIG VALUE</h> </div>
+        <div id="bigValue" class="analytica-tile">
+          
           <div class ="analytica-tile-content" >
             <span >90
             </span>
           </div>
-        </div>
+          <div class = "analytica-brand">
+          <span class = "analytica-badge">Hits</span></div>
+      </div>
+    </div>
         <div class="span3">
           <div class="grey-bg">
             <div id="idgraphique0" ></div>
@@ -124,7 +134,7 @@
       </div>
 
     </div>
- 
+
     <script type="text/javascript">  
       //Script pour placer les composants grapiques
       $(document).ready(function() {

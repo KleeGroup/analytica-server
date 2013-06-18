@@ -58,7 +58,7 @@ var sampleGraph = {
 var generateGraph = function generateGraph(graph) {
 
 	//Insert the html in the dom in order to be able to render data.
-	loadPanel(graph.ui, graph.html)
+	loadPanel(graph);
 	//Load the callback to draw data.
 
 	var drawGraphCallbackName = getDrawFunction(graph.data.type, graph.ui.type); //todo:determine the graph to draw.
@@ -205,7 +205,12 @@ function parsePieDatas(dataResult, labels) {
 //Load the dom structure for a panel.
 //todo: a mettre dans le plugin jquery. Il faut que le plugin soit auto suffisant.
 
-function loadPanel(config, htmlContainer) {
+
+//This function will just load the appropriate template for the graph to draw
+function loadPanel(graph) {
+	var graphId = 'div#' + graph.html.container;
+    $(graphId).html(Handlebars.templates.graph(graph)); 
+	/*---------------------------------------------------
 	var container = document.getElementById(htmlContainer.container),
 		title = htmlContainer.title,
 		icon = config['icon'],
@@ -218,8 +223,13 @@ function loadPanel(config, htmlContainer) {
 	var hTitle = document.createElement("h");
 	hTitle.innerHTML = title;
 	var widgetContent = document.createElement("div");
+	-------------------------------------------------------*/
+
+
 	/*widgetContent.setAttribute('class',"white-bg");*/
 	//widgetContent.setAttribute('class',"white-bg");
+	
+	/*----------------------------------------------
 	widgetContent.setAttribute('id', panelId);
 	if((type !== "clock")||(type !== "clock")){
 	widgetContent.innerHTML = "<svg></svg>";}
@@ -229,6 +239,8 @@ function loadPanel(config, htmlContainer) {
 	titleDiv.appendChild(hTitle);
 	container.appendChild(titleDiv);
 	container.appendChild(widgetContent);
+	---------------------------------------------------*/
+
 };
 
 //Container pour analytica.

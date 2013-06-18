@@ -44,7 +44,7 @@
 }
 
 .analytica-tile {
-  display: inline-block;
+  display: inline;
   float: left;
   
   /*background-color: #525252;*/	
@@ -53,10 +53,10 @@
   /*cursor: pointer;*/
   box-shadow: inset 0px 0px 1px #FFFFCC;
   text-decoration: none;
+  text-align:center;
   /*color: #ffffff;*/
   position: relative;
-  font-family: 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
-  font-weight: 300;
+font-family:Arial,Helvetica,sans-serif  font-weight: 300;
   font-size: 6em;
   letter-spacing: 0.02em;
   line-height: 14pt;
@@ -67,6 +67,7 @@
 
 .analytica-tile-content {
   margin-top: 20px;
+  padding-top: 40px;
 }
 
 .analytica-brand{
@@ -150,4 +151,8 @@
   font-weight:bold;
   font-size:16pt;
   color:black;
+}
+
+svg{
+  padding-bottom: 20px;
 }

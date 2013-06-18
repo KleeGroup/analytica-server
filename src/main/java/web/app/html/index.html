@@ -23,8 +23,12 @@
     <script type="text/javascript" src="../../vendor/scripts/nvd3/legends.js"></script>
     <script type="text/javascript" src="../../vendor/scripts/handlebars.js"></script>
     <script type="text/javascript" src="../scripts/template/templates.js"></script>
-    <!--<script type="text/javascript" src="../scripts/analyticandv3linechart.js"></script>
     <script type="text/javascript" src="../scripts/analytica_client_helper.js"></script>
+    <script type="text/javascript" src="../scripts/analytica_datasource.js"></script>
+    <script type="text/javascript" src="../scripts/analyticandv3linechart.js"></script>
+    <script type="text/javascript" src="../scripts/clock.js"></script>
+
+    <!--<script type="text/javascript" src="../scripts/analytica_client_helper.js"></script>
     <script type="text/javascript" src="../scripts/analytica_dashboardsource.js"></script>-->
   </head>
 
@@ -35,29 +39,144 @@
     <div id="breadcrumb">
     </div>
 	<!-- Container -->
-    <div id="container">
+   <div class="container">
+      <!-- Mettre le contenu des graphes ici.-->    <!-- Composants graphiques.-->
+    <div class="row show-grid">
+        <!--This should be in a template file-->
+        <div class="span3 grey-bg">
+        <div class = "ui-widget-header "><i class="icon-picture"></i><h>HORLOGE</h> </div>
+        <div id="wallClock">
+          <!--<div class="grey-bg">-->
+          <div id="fullDate"></div>
+          <div id="bigTime"></div>
+          <div id="dayName"></div>
+        <!--</div>-->
+        </div>
+        </div>
+        <!--This should be in a template file-->
+        <div class="span3 grey-bg">
+          <div class = "ui-widget-header "><i class="icon-picture"></i><h>BIG VALUE</h> </div>
+        <div id="bigValue" class="analytica-tile">
+          
+          <div class ="analytica-tile-content" >
+            <span >90
+            </span>
+          </div>
+          <div class = "analytica-brand">
+          <span class = "analytica-badge">Hits</span></div>
+      </div>
     </div>
+        <div class="span3">
+          <div class="grey-bg">
+            <div id="idgraphique0" ></div>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="grey-bg">
+            <div id="idgraphique1" ></div>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="grey-bg">
+            <div id="idgraphique2" ></div>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="grey-bg">
+            <div id="idgraphique3" ></div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div class="row show-grid">
+        <div class="span6">
+          <div class="grey-bg">
+            <div id="idgraphique4" ></div>
+          </div>
+        </div>
+        <div class="span6">
+          <div class="grey-bg">
+            <div id="idgraphique5" ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="span12 grey-bg">
+            <div class = "ui-widget-header "><i class="icon-picture"></i><h>BIG VALUE</h> </div>
+            <div id="idgraphique6" ></div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id = "tableToShow"></div>
 
     <div id="bigValue">
     </div>
     <hr>
 	<!--FOOTER-->
-    <footer id='footer'>
+    <footer id='footer' class="footer">
     </footer>
     <div id="test"></div>
     <script type="text/javascript">
+
+   var tables =  {
+      title: 'Title of the tab',
+      headers:[{value: 'Column 1'},{value: 'Column 2'}, {value: 'Column 3'}, {value: 'Column 4'}],
+      collection: [
+        {lineId: 1, value1:'ppppp', value2:'oooooo', value3: 'ssssssss', value4: 'sjchsjchsjch'},
+        {lineId: 2, value1:'ppppp3', value2:'oooooo4', value3: 'ssssssss5', value4: 'sjchsjchsjch6'}
+      ]
+  };
+
+  /*var graph = {
+    data: {
+      url: '/home/timeLine/PAGE', // home/datas
+      type: 'Mono', // Mono or multi series.   
+      filters: {
+        timeFrom: "NOW-4h", //
+        timeTo: "NOW%2B4h", //ProblÃ¨me ici avec le +
+        timeDim: "Hour", //
+        category: "PAGE", //
+        datas: "duration:mean" //  
+      },
+      parse: undefined, //function parseData() {} // Function which transforms all the data received from the server.
+    },
+    ui: {
+      id: 'graph0', //Id of the graph.
+      icon: ' icon-picture', // bootstrap name of the icon.//should be removed to the html parameters
+      labels: "label",
+      type: "line", //Panel type
+      options: undefined //
+    },
+    html: {
+      title: "Current Time", // Title of the panel.
+      container: 'idgraphique0', // id of the container.
+      gridSize: "span3"
+    },
+    options: {
+    } //General options for the graph
+  };*/
+
+/*
+
      $(document).ready(function() {
      	// We put the container grid template in the container div.
-     	 $('header#header').html(Handlebars.templates.header({data: "Pierre"}));
-        $('div#breadcrumb').html(Handlebars.templates.breadcrumb());
-       $('div#container').html(Handlebars.templates.container());
-       $('div#bigValue').html(Handlebars.templates.bigvalue({
-        data: 90,
-        label: "Max"
-       }));
-       $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
+       $('div#idgraphique0').html(Handlebars.templates.container());
+         $('div#container').html(Handlebars.templates.graph(graph)); 
+      });*/
+     $('header#header').html(Handlebars.templates.header());
+     $('div#breadcrumb').html(Handlebars.templates.breadcrumb());
+     $(document).ready(function() {
+       initializeTestHelperAnalytica()
+     });
+     $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
+     $('div#idgraphique6').html(Handlebars.templates.table(tables)); 
 
-      });
   </script>
+  <!--Remove this part and set it in a template-->
+  <script type="text/javascript">startClock()</script>
   </body>
 </html>

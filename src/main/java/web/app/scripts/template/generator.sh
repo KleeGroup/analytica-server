@@ -1,1 +1,1 @@
-handlebars graph.handlebars container.handlebars header.handlebars footer.handlebars breadcrumb.handlebars bigvalue.handlebars -f templates.js
+handlebars container.handlebars header.handlebars footer.handlebars breadcrumb.handlebars bigvalue.handlebars table.handlebars -f templates.js
