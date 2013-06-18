@@ -23,7 +23,8 @@
    {{/each}}
   </tbody>
 </table>
-{{! Sample object to inject in the template
+{{!
+  Sample object to inject in the template
     var table =  {
       title: 'titre du tableau',
       headers:[{value: 'First Name'},{value: 'LastName'}],
@@ -31,5 +32,7 @@
         {lineId: 1, value1:'ppppp', value2:'oooooo', value3: 'ssssssss', value4: 'sjchsjchsjch'},
         {lineId: 2, value1:'ppppp3', value2:'oooooo4', value3: 'ssssssss5', value4: 'sjchsjchsjch6'}
       ]
-  }
+  };
+  //How to use the template and insert it i the dom.
+  $('div#tableToShow').html(Handlebars.templates.table(table));
 }}
