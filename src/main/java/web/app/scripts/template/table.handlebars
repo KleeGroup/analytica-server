@@ -1,0 +1,35 @@
+<table class="table table-hover">
+  <caption>{{title}}</caption>
+  <thead>
+    <tr>
+      {{#each headers}}
+        <th>{{value}}</th>
+      {{/each}}
+      {{! will generate something like <th>FirstName</th>
+      <th>LastName</th>
+      <th>Address</th>
+      <th>Loyalty</th> }}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each collection}}
+    {{! Line content}}
+        <tr id="{{lineId}}">
+          <td>{{value1}}</td>
+          <td>{{value2}}</td>
+          <td>{{value3}}</td>
+          <td>{{value4}}</td>
+        </tr>
+   {{/each}}
+  </tbody>
+</table>
+{{! Sample object to inject in the template
+    var table =  {
+      title: 'titre du tableau',
+      headers:[{value: 'First Name'},{value: 'LastName'}],
+      collection: [
+        {lineId: 1, value1:'ppppp', value2:'oooooo', value3: 'ssssssss', value4: 'sjchsjchsjch'},
+        {lineId: 2, value1:'ppppp3', value2:'oooooo4', value3: 'ssssssss5', value4: 'sjchsjchsjch6'}
+      ]
+  }
+}}
