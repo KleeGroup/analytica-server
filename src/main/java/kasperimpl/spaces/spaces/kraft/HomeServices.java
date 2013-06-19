@@ -84,7 +84,7 @@ public class HomeServices {
 	@GET
 	@Path("/agregatedDatasByCategory/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAggregatedDataByCategory(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @QueryParam("datas") final String datas) {
+	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue("NOW-3h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+8h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count;duration:mean") @QueryParam("datas") final String datas) {
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		return gson.toJson(utils.getAggregatedValuesByCategory(result, datas));
 	}

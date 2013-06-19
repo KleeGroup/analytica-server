@@ -71,8 +71,15 @@ var generateGraph = function generateGraph(graph) {
 			console.log('response', response, 'text', text);
 			var labels = graph.ui.labels.split(";");
 			var data = parse(response, labels);
+
 			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
-			$('#' + graph.ui.id)[drawGraphCallbackName](data);
+			if(graph.ui.type ==="table"){
+				data.htmlIcon = graph.ui.icon;
+				data.htmlTitle=graph.html.title;
+
+				$('div#' + graph.html.container).html(Handlebars.templates.table(data));
+			}else{
+			$('#' + graph.ui.id)[drawGraphCallbackName](data);}
 		},
 		error: function(request, status, error) {
 			console.error("request", request.responseText, "status", status, "error", error);
@@ -109,6 +116,10 @@ function getDrawFunction(dataType, uiType) {
 		case "bar":
 			return 'drawMultiBarChartWithNvd3';
 
+			break;
+
+		case "linebar":
+			return 'drawlinePlusBarWithNvd3';
 			break;
 
 		case "pie":
@@ -185,11 +196,12 @@ function parsePieDatas(dataResult, labels) {
 	//for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
 	for (var r in dataResult) {
 		//var r = dataResult[i];
+		var name = r.split("::");
+
 		reconstructedData.push({
-			label: r,
+			label: name[1],
 			value: dataResult[r]
 		}
-
 		);
 	}
 	var data = [{
@@ -200,7 +212,88 @@ function parsePieDatas(dataResult, labels) {
 	return data;
 };
 
+/*
+data = {
+					title: 'PAGES stats',
+					headers: [{
+							value: 'Label'
+						}, {
+							value: 'Hits'
+						}, {
+							value: 'Size'
+						}, {
+							value: 'Warnings'
+						}, {
+							value: 'Response Time'
+						}
+					],
+					lineNames: ['lineId', 'value1', 'value2', 'value3', 'value4', 'value5'],
+					collection: [{
+							lineId: 1,
+							value1: 'ppppp',
+							value2: 'oooooo',
+							value3: 'ssssssss',
+							value4: 'sjchsjchsjch',
+							value5: '150'
+						}, {
+							lineId: 2,
+							value1: 'ppppp3',
+							value2: 'oooooo4',
+							value3: 'ssssssss5',
+							value4: 'sjchsjchsjch6',
+							value5: '200'
+						}
+					]
+				};
+
+*/
+
 function parseDataTable(dataResult, labels){
+
+	var headers = [];
+	for(var i=0;i<labels.length;i++){
+		headers.push({value:labels[i]});
+	}
+	
+	var collection = [];
+	for(var r in dataResult){
+		var obj = dataResult[r];
+		var hits,duration;
+		var sqlTime = undefined;
+		var metric = "";
+		for (var i=0;i<obj.length;i++){
+			if (obj[i].metricKey.id ==="duration"){
+				hits = obj[i].count;
+				duration =(obj[i].sum)/(hits);
+			}
+			if (obj[i].metricKey.id ==="SQL"){
+				sqlTime =(obj[i].sum)/(obj[i].count);
+			}
+			metric = metric +","+obj[i].metricKey.id;
+
+		}
+			if (sqlTime===undefined){
+				sqlTime = 0;
+			}
+		var name = r.split("::");
+		var collectionElement = {
+			value1: name[1],
+			value2: hits,
+			value3: sqlTime,
+			value4: metric,
+			value5: duration.toFixed(2)
+		};
+		collection.push(collectionElement);
+	}
+
+	 var data ={
+		title: '',
+		headers: headers,
+		collection: collection
+	};
+	return data;
+
+	/*
 	var tablelabels = labels.slit(";");
 	var libeNames = [], collection = [];
 		var i=0;
@@ -226,9 +319,8 @@ var table = {
 		headers: tablelabels, //titles of the dataTable's headers
 		lineNames:lineNames,//the columns values of the dataTable
 		collection:[] //
-	};
+	}; */
 }
-
 
 
 //Load the dom structure for a panel.
@@ -237,8 +329,12 @@ var table = {
 
 //This function will just load the appropriate template for the graph to draw
 function loadPanel(graph) {
+	if(graph.ui.type==="table"){
+
+	}else{
+
 	var graphId = 'div#' + graph.html.container;
-    $(graphId).html(Handlebars.templates.graph(graph)); 
+    $(graphId).html(Handlebars.templates.graph(graph)); }
 	/*---------------------------------------------------
 	var container = document.getElementById(htmlContainer.container),
 		title = htmlContainer.title,

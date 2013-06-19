@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
   <head id= "header" class="">
     <title>Analytica DashBoard</title>
@@ -17,10 +18,19 @@
     <script type="text/javascript" src="../../vendor/scripts/d3/d3.v2.js"></script>
 
     <!-- scripts nvd3-->
+
     <script type="text/javascript" src="../../vendor/scripts/nvd3/nv.d3.js"></script>
     <script type="text/javascript" src="../../vendor/scripts/nvd3/utils.js"></script>
     <script type="text/javascript" src="../../vendor/scripts/nvd3/tooltip.js"></script>
     <script type="text/javascript" src="../../vendor/scripts/nvd3/legends.js"></script>
+    <script src="../../vendor/scripts/nvd3/axis.js"></script>
+    <script src="../../vendor/scripts/nvd3/scatter.js"></script>
+    <script src="../../vendor/scripts/nvd3/line.js"></script>
+    <script src="../../vendor/scripts/nvd3/historicalBar.js"></script>
+    <script src="../../vendor/scripts/nvd3/linePlusBarChart.js"></script>
+
+
+
     <script type="text/javascript" src="../../vendor/scripts/handlebars.js"></script>
     <script type="text/javascript" src="../scripts/template/partial-templates.js"></script>
     <script type="text/javascript" src="../scripts/template/templates.js"></script>
@@ -33,7 +43,7 @@
     <script type="text/javascript" src="../scripts/analytica_dashboardsource.js"></script>-->
   </head>
 
-  <body id="index" class="">
+  <body id="index">
    <!-- Barre de navigation.-->
     <header id="header">
     </header>
@@ -55,7 +65,8 @@
         </div>
         </div>
         <!--This should be in a template file-->
-        <div class="span3 grey-bg">
+        <div class="span3">
+        <div  class="grey-bg">
           <div class = "ui-widget-header "><i class="icon-picture"></i><h>BIG VALUE</h> </div>
         <div id="bigValue" class="analytica-tile">
           
@@ -67,6 +78,9 @@
           <span class = "analytica-badge">Hits</span></div>
       </div>
     </div>
+    </div>
+
+
         <div class="span3">
           <div class="grey-bg">
             <div id="idgraphique0" ></div>
@@ -105,78 +119,22 @@
 
       <div class="row show-grid">
         <div class="span12 grey-bg">
-            <div class = "ui-widget-header "><i class="icon-picture"></i><h>BIG VALUE</h> </div>
             <div id="idgraphique6" ></div>
         </div>
       </div>
     </div>
-
-
-    <div id = "tableToShow"></div>
-
-    <div id="bigValue">
-    </div>
-    <hr>
-	<!--FOOTER-->
+  	<!--FOOTER-->
     <footer id='footer' class="footer">
     </footer>
-    <div id="test"></div>
+
     <script type="text/javascript">
 
-   var tables =  {
-      title: 'PAGES stats',
-      headers:[{value: 'Label'},{value: 'Hits'}, {value: 'Size'}, {value: 'Warnings'},{value:'Response Time'}],
-      lineNames: ['lineId', 'value1', 'value2', 'value3', 'value4','value5'],
-      collection: [
-        {lineId: 1, value1:'ppppp', value2:'oooooo', value3: 'ssssssss', value4: 'sjchsjchsjch',value5:'150'},
-        {lineId: 2, value1:'ppppp3', value2:'oooooo4', value3: 'ssssssss5', value4: 'sjchsjchsjch6',value5:'200'}
-      ]
-  };
-
-  /*var graph = {
-    data: {
-      url: '/home/timeLine/PAGE', // home/datas
-      type: 'Mono', // Mono or multi series.   
-      filters: {
-        timeFrom: "NOW-4h", //
-        timeTo: "NOW%2B4h", //ProblÃ¨me ici avec le +
-        timeDim: "Hour", //
-        category: "PAGE", //
-        datas: "duration:mean" //  
-      },
-      parse: undefined, //function parseData() {} // Function which transforms all the data received from the server.
-    },
-    ui: {
-      id: 'graph0', //Id of the graph.
-      icon: ' icon-picture', // bootstrap name of the icon.//should be removed to the html parameters
-      labels: "label",
-      type: "line", //Panel type
-      options: undefined //
-    },
-    html: {
-      title: "Current Time", // Title of the panel.
-      container: 'idgraphique0', // id of the container.
-      gridSize: "span3"
-    },
-    options: {
-    } //General options for the graph
-  };*/
-
-/*
-
-     $(document).ready(function() {
-     	// We put the container grid template in the container div.
-       $('div#idgraphique0').html(Handlebars.templates.container());
-         $('div#container').html(Handlebars.templates.graph(graph)); 
-      });*/
-     $('header#header').html(Handlebars.templates.header());
-     $('div#breadcrumb').html(Handlebars.templates.breadcrumb());
-     $(document).ready(function() {
-       initializeTestHelperAnalytica()
-     });
-     $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
-     $('div#idgraphique6').html(Handlebars.templates.table(tables)); 
-
+       $('header#header').html(Handlebars.templates.header());
+       $('div#breadcrumb').html(Handlebars.templates.breadcrumb());
+       $(document).ready(function() {
+         initializeTestHelperAnalytica()
+       });
+       $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
   </script>
   <!--Remove this part and set it in a template-->
   <script type="text/javascript">startClock()</script>

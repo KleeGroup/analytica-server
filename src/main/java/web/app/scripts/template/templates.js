@@ -22,7 +22,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<p class=\"version\">";
+  buffer += "<div id =\"container\">\r\n	<p class = \"muted credit\">\r\n		<p class=\"version\">";
   if (stack1 = helpers.version) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.version; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -30,7 +30,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.date) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.date; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</p>\r\n<p class=\"contact\">\r\nPour toutes remarques ou suggestions, merci de nous envoyer un email a <a href=";
+    + "</p>\r\n		<p class=\"contact\">\r\n			Pour toutes remarques ou suggestions, merci de nous envoyer un email a <a href=";
   if (stack1 = helpers.contact) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.contact; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -38,7 +38,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.contact) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.contact; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</a>\r\n</p>\r\n\r\n";
+    + "</a>\r\n		</p>\r\n	</p>\r\n</div>\r\n";
   return buffer;
   });
 templates['breadcrumb'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -93,7 +93,15 @@ function program3(depth0,data) {
   return buffer;
   }
 
-  buffer += "<table class=\"table table-hover\">\r\n  <caption>";
+  buffer += " <div>\r\n <div class=\"ui-widget-header \">\r\n    <i class=\"";
+  if (stack1 = helpers.htmlIcon) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.htmlIcon; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"></i>\r\n    <h>";
+  if (stack1 = helpers.htmlTitle) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.htmlTitle; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</h>\r\n  </div>\r\n  <div>\r\n<table class=\"table table-hover\">\r\n  <caption>";
   if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -104,7 +112,7 @@ function program3(depth0,data) {
     + "\r\n    </tr>\r\n  </thead>\r\n  <tbody>\r\n    ";
   stack1 = helpers.each.call(depth0, depth0.collection, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n  </tbody>\r\n</table>\r\n";
+  buffer += "\r\n  </tbody>\r\n</table>\r\n</div>\r\n</div>\r\n";
   return buffer;
   });
 templates['graph'] = template(function (Handlebars,depth0,helpers,partials,data) {

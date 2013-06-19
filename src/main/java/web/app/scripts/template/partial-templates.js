@@ -10,15 +10,19 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.lineId) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.lineId; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\">\r\n  <td>";
+    + "\">\r\n  <td class = \"table-labels\">\r\n\r\n	<a href=\"pages/?value=";
   if (stack1 = helpers.value1) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.value1; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "<div>";
+    + "\">";
+  if (stack1 = helpers.value1) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.value1; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</a>  	\r\n	<div>";
   if (stack1 = helpers.unit) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</div></td>\r\n  <td>";
+    + "</div>\r\n</td>\r\n  <td>";
   if (stack1 = helpers.value2) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.value2; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
