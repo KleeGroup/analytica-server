@@ -21,19 +21,7 @@
 .ui-widget-header h{
   margin-left: 10px;
 }
-.bigValue  {
-	font-size: 3em;
-	line-height:1.1em;
-	font-weight: bold;
-	color: #222;
-	/*text-shadow: #B3B3B3 1px 1px 3px;*/
-}
 
-.bigValuelabel {
-	margin-left:5px;
-	font-size: 1.0em; 
-	color: #777;
-}
 
 .tile{
     height:100px;  
@@ -144,15 +132,16 @@
 }
 
 svg{
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
 }
 
-.table th, .table td {
+/*.table th, .table td {
   text-align: right;
-}
-.table-labels{
-}
+}*/
 
+.table th {
+  text-align:center;
+}
  #footer {
           margin-left: -20px;
           margin-right: -20px;
@@ -170,3 +159,5 @@ svg{
 .credit {
         margin: 20px 0;
       }
+
+      

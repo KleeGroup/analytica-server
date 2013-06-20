@@ -1,11 +1,18 @@
-<tr id="{{lineId}}">
-  <td class = "table-labels">
+<tr > {{! 'id="{{lineId}}
+  <td>
 
-	<a href="pages/?value={{value1}}">{{value1}}</a>  	
+	<a href="#/{{value1}}">{{value1}}</a>  	
 	<div>{{unit}}</div>
 </td>
-  <td>{{value2}}</td>
-  <td>{{value3}}</td>
-  <td>{{value4}}</td>
+  <td>
+	<p class="text-right">{{value2}}</p>
+  </td>
+  <td>
+	<p class="text-right">{{value3}}</p>
+  </td>  
+  <td>
+  <p class="text-right">{{value4}}</p>
+  </td>
   <td>{{value5}}</td>
+  
 </tr>

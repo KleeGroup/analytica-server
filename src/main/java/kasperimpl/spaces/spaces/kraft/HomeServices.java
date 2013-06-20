@@ -23,6 +23,13 @@ import com.kleegroup.analytica.server.ServerManager;
 
 @Path("/home")
 public class HomeServices {
+
+	final String dTimeTo = "NOW-12h";
+	final String dTimeFrom = "NOW+2h";
+	final String dTimeDim = "Hour";
+	final String dDatas = "duration:mean";
+	final String dDatasMult = "duration:count;duration:mean";
+
 	private static boolean loaded;
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -61,7 +68,7 @@ public class HomeServices {
 	@GET
 	@Path("/timeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue("NOW-6h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+6h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		final List<DataPoint> points = utils.loadDataPointsMonoSerie(result, datas);
@@ -73,9 +80,8 @@ public class HomeServices {
 	@GET
 	@Path("/multitimeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getMultiSerieTimeLine(@QueryParam("timeFrom") @DefaultValue("NOW-8h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+4h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count;duration:mean") @QueryParam("datas") final String datas) {
+	public String getMultiSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatasMult) @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
-		new VirtualDatas(serverManager).load();
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		final Map<String, List<DataPoint>> pointsMap = utils.loadDataPointsMuliSerie(result, datas);
 		return gson.toJson(pointsMap);
@@ -84,7 +90,7 @@ public class HomeServices {
 	@GET
 	@Path("/agregatedDatasByCategory/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue("NOW-3h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+8h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count;duration:mean") @QueryParam("datas") final String datas) {
+	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		return gson.toJson(utils.getAggregatedValuesByCategory(result, datas));
 	}
@@ -106,9 +112,8 @@ public class HomeServices {
 	@GET
 	@Path("/dataTables/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getTablesDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count;duration:mean") @QueryParam("datas") final String datas) {
+	public String getTablesDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
-		new VirtualDatas(serverManager).load();
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
 		//final Map<String, Collection<HMetric>> pointsMap = utils.getDataTable(result, datas);
 		//return gson.toJson(pointsMap);

@@ -1,13 +1,5 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
-templates['container'] = template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
-
-
-  return "<!-- Graphs.-->\r\n      <!-- ROW 1-->\r\n      <div id = 'row1' class=\"row\">\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n        <div class=\"span3\"></div>\r\n      </div>\r\n      <hr>\r\n      <!-- ROW 2-->\r\n      <div id = 'row2' class=\"row\">\r\n         <div class=\"span12\"></div>\r\n      </div>\r\n      <div id = 'row3' class=\"row\">\r\n        <div class=\"span12\"></div>\r\n      </div>\r\n  ";
-  });
 templates['header'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
@@ -55,15 +47,23 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<!-- Big Value Graph.-->\r\n      <div>\r\n	      <div class = \"bigValue\">";
+  buffer += "\r\n<div class = \"ui-widget-header \"><i class=\"";
+  if (stack1 = helpers.icon) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.icon; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"></i><h>";
+  if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</h> </div>\r\n        <div id=\"bigValue\" class=\"analytica-tile\">\r\n          \r\n          <div class =\"analytica-tile-content\" >\r\n            <span >";
   if (stack1 = helpers.data) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.data; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n	      <div class = \"bigValuelabel\">";
+    + "\r\n            </span>\r\n          </div>\r\n          <div class = \"analytica-brand\">\r\n          <span class = \"analytica-badge\">";
   if (stack1 = helpers.label) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.label; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n      </div>\r\n";
+    + "</span></div>\r\n      </div>";
   return buffer;
   });
 templates['table'] = template(function (Handlebars,depth0,helpers,partials,data) {
@@ -101,11 +101,11 @@ function program3(depth0,data) {
   if (stack1 = helpers.htmlTitle) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.htmlTitle; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</h>\r\n  </div>\r\n  <div>\r\n<table class=\"table table-hover\">\r\n  <caption>";
+    + "</h>\r\n  </div>\r\n  <div>\r\n<table class=\"table table-striped table-bordered\">\r\n  <caption>";
   if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</caption>\r\n  <thead>\r\n    <tr>\r\n      ";
+    + "</caption>\r\n  <thead>\r\n    <tr >\r\n      ";
   stack1 = helpers.each.call(depth0, depth0.headers, {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\r\n      "
@@ -132,5 +132,13 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + "\">\r\n		<svg></svg>\r\n	</div>\r\n</div>\r\n\r\n"
     + "\r\n  ";
   return buffer;
+  });
+templates['dashboard'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"row show-grid\">\r\n        <!--This should be in a template file-->\r\n        <div class=\"span3 grey-bg\">\r\n        <div class = \"ui-widget-header \"><i class=\"icon-picture\"></i><h>HORLOGE</h> </div>\r\n        <div id=\"wallClock\">\r\n          <!--<div class=\"grey-bg\">-->\r\n          <div id=\"fullDate\"></div>\r\n          <div id=\"bigTime\"></div>\r\n          <div id=\"dayName\"></div>\r\n        <!--</div>-->\r\n        </div>\r\n        </div>\r\n        <!--This should be in a template file-->\r\n        <div class=\"span3\">\r\n        <div  class=\"grey-bg\">\r\n          <div id = \"idbigvalue\"></div>\r\n        </div>\r\n        </div>\r\n\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique0\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique1\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique2\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique3\" ></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n            \r\n      <div class=\"row show-grid\">\r\n        <div class=\"span6\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique4\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span6\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique5\" ></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"row show-grid\">\r\n        <div class=\"span12 grey-bg\">\r\n            <div id=\"idgraphique6\" ></div>\r\n        </div>\r\n      </div>";
   });
 })();

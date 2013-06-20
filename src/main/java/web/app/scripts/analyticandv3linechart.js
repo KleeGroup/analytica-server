@@ -23,7 +23,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				}) // adjusting, 100% is 1.00, not 100 as it is in the data
 				.color(d3.scale.category10().range());
 				//Paramétrage des labels sur l'axe des abscisses
-				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
+				chart.xAxis.rotateLabels(-45)
+				.tickFormat(function(d) {
 					return d3.time.format("%H:%M")(new Date(d))
 				});
 
@@ -145,7 +146,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				.y(function(d) {
 				return d.value
 			})
-				.showLabels(false);
+				.showLabels(false)
+				.showLegend(true);
 
 			d3.select('#' + container[0].id + ' svg')
 				.datum(datas)

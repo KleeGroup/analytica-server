@@ -73,12 +73,20 @@ var generateGraph = function generateGraph(graph) {
 			var data = parse(response, labels);
 
 			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
-			if(graph.ui.type ==="table"){
+			var graphtype = graph.ui.type;
+			if(graphtype ==="table"){
 				data.htmlIcon = graph.ui.icon;
 				data.htmlTitle=graph.html.title;
 
 				$('div#' + graph.html.container).html(Handlebars.templates.table(data));
-			}else{
+			}else if (graphtype==="bigValue"){
+				data.icon = graph.ui.icon;
+				data.title=graph.html.title;
+				//data.label = graph.ui.labels;
+				$('div#' + graph.html.container).html(Handlebars.templates.bigvalue(data));
+
+			}
+			else{
 			$('#' + graph.ui.id)[drawGraphCallbackName](data);}
 		},
 		error: function(request, status, error) {
@@ -191,19 +199,44 @@ function parseMultiSeriesD3Datas(response, labels) {
 	return series;
 }
 
+var sort_by = function(field, reverse, primer){
+
+   var key = function (x) {return primer ? primer(x[field]) : x[field]};
+
+   return function (a,b) {
+       var A = key(a), B = key(b);
+       return ((A < B) ? -1 : (A > B) ? +1 : 0) * [-1,1][+!!reverse];                  
+   }
+};
+
+
+
 function parsePieDatas(dataResult, labels) {
 	var reconstructedData = [];
-	//for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
+//build the piechart only with significant values whet there are too many informations to plot
+//Max informations to plot = 4 = 3 +1OTHERS
 	for (var r in dataResult) {
-		//var r = dataResult[i];
 		var name = r.split("::");
 
 		reconstructedData.push({
 			label: name[1],
 			value: dataResult[r]
-		}
-		);
+		});
 	}
+	var maxElements = 4;
+	reconstructedData.sort(sort_by('value', false, parseFloat));
+	if (reconstructedData.length > maxElements) {
+		var otherValues = {
+			label: "Others",
+			value: 0
+		};
+		for (var i = maxElements; i < reconstructedData.length; i++) {
+			otherValues.value += reconstructedData[i].value;
+		}
+		var numberToSuppress = reconstructedData.length - maxElements;
+		reconstructedData.splice(maxElements, numberToSuppress, otherValues)
+	}
+
 	var data = [{
 			key: "label",
 			values: reconstructedData
@@ -211,42 +244,28 @@ function parsePieDatas(dataResult, labels) {
 	];
 	return data;
 };
+//sort(function(a,b) { return parseFloat(a.price) - parseFloat(b.price) } );
 
-/*
-data = {
-					title: 'PAGES stats',
-					headers: [{
-							value: 'Label'
-						}, {
-							value: 'Hits'
-						}, {
-							value: 'Size'
-						}, {
-							value: 'Warnings'
-						}, {
-							value: 'Response Time'
-						}
-					],
-					lineNames: ['lineId', 'value1', 'value2', 'value3', 'value4', 'value5'],
-					collection: [{
-							lineId: 1,
-							value1: 'ppppp',
-							value2: 'oooooo',
-							value3: 'ssssssss',
-							value4: 'sjchsjchsjch',
-							value5: '150'
-						}, {
-							lineId: 2,
-							value1: 'ppppp3',
-							value2: 'oooooo4',
-							value3: 'ssssssss5',
-							value4: 'sjchsjchsjch6',
-							value5: '200'
-						}
-					]
-				};
 
-*/
+function parseBigValue(dataResult,labels){
+	var data = {};
+	var reconstructedData = [];
+	for (var r in dataResult) {
+		var name = r.split("::");
+
+		reconstructedData.push({
+			label: name[1],
+			value: dataResult[r]
+		});
+	}
+	reconstructedData.sort(sort_by('value', false, parseFloat));
+	data.label = labels;
+	data.data = reconstructedData[0].value;
+	return data;
+}
+
+
+
 
 function parseDataTable(dataResult, labels){
 
@@ -279,9 +298,9 @@ function parseDataTable(dataResult, labels){
 		var collectionElement = {
 			value1: name[1],
 			value2: hits,
-			value3: sqlTime,
-			value4: metric,
-			value5: duration.toFixed(2)
+			value3: duration.toFixed(2),
+			value4: sqlTime,
+			value5: metric
 		};
 		collection.push(collectionElement);
 	}
@@ -292,34 +311,6 @@ function parseDataTable(dataResult, labels){
 		collection: collection
 	};
 	return data;
-
-	/*
-	var tablelabels = labels.slit(";");
-	var libeNames = [], collection = [];
-		var i=0;
-	for (var r in dataResult) {
-		i++;
-		var table = [];
-		var obj = dataResult[r];
-		for (var j=0;j< obj.length;j++ ){
-			obj[0]['metricKey'].id;
-			obj[1][]		
-		}
-		var collectionElement = {};
-		collectionElement['lineId'] = i++;//Ajouter l'element lineId à tous
-		collection.push({
-			line
-
-		});
-	}
-
-
-var table = {
-		title:"", //title of the dataTable
-		headers: tablelabels, //titles of the dataTable's headers
-		lineNames:lineNames,//the columns values of the dataTable
-		collection:[] //
-	}; */
 }
 
 
@@ -335,37 +326,6 @@ function loadPanel(graph) {
 
 	var graphId = 'div#' + graph.html.container;
     $(graphId).html(Handlebars.templates.graph(graph)); }
-	/*---------------------------------------------------
-	var container = document.getElementById(htmlContainer.container),
-		title = htmlContainer.title,
-		icon = config['icon'],
-		panelId = config['id'],
-		type = config.type;
-	var titleDiv = document.createElement("div");
-	titleDiv.setAttribute('class', "ui-widget-header ");
-	var iconElt = document.createElement("i");
-	iconElt.setAttribute('class', icon);
-	var hTitle = document.createElement("h");
-	hTitle.innerHTML = title;
-	var widgetContent = document.createElement("div");
-	-------------------------------------------------------*/
-
-
-	/*widgetContent.setAttribute('class',"white-bg");*/
-	//widgetContent.setAttribute('class',"white-bg");
-	
-	/*----------------------------------------------
-	widgetContent.setAttribute('id', panelId);
-	if((type !== "clock")||(type !== "clock")){
-	widgetContent.innerHTML = "<svg></svg>";}
-	//var svgWidget = document.createElement("svg");
-	//widgetContent.appendChild(svgWidget);
-	titleDiv.appendChild(iconElt);
-	titleDiv.appendChild(hTitle);
-	container.appendChild(titleDiv);
-	container.appendChild(widgetContent);
-	---------------------------------------------------*/
-
 };
 
 //Container pour analytica.

@@ -24,6 +24,7 @@ public final class VirtualDatas {
 	private static final String PAGE_PROCESS = "PAGE";
 	private static final String SQL_PROCESS = "SQL";
 	private static final String SEARCH_PROCESS = "SEARCH";
+	private static final String OEUVRES_PROCESS = "OEUVRE";
 
 	private static final double NB_VISIT_DAILY_MAX = 10;
 
@@ -54,11 +55,9 @@ public final class VirtualDatas {
 			for (int visit = 0; visit < nbVisit; visit++) {
 				final Date dateVisite = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
 				addVisitorScenario(dateVisite, coef);
-				addContriutorScenario(dateVisite, coef);
+				//addContriutorScenario(dateVisite, coef);
 			}
-
 		}
-
 	}
 
 	//final long nbVisit = (long) (Math.random() * hours * visitorByHour);
@@ -95,13 +94,18 @@ public final class VirtualDatas {
 	//
 	//	}
 
+	private final String[] artists = "davinci;monet;bazille;bonnard;signac;hopper;picasso;munch;renoir;cézanne;rubens;bacon;johnes;rothko;warhol".split(";");
+
 	private void addVisitorScenario(final Date startVisite, final double coef) {
 		final long waitTime = 30 * 1000;
 
 		addHomePage(startVisite, random(150, coef));
 		addSearchPage(new Date(startVisite.getTime() + waitTime), random(750, coef));
+		int artistViewed = 0;
 		for (int i = 0; i < 3; i++) {
-			addViewPage(new Date(startVisite.getTime() + waitTime + waitTime * i), random(200, coef));
+			for (final String artist : artists) {
+				addArtistPage(artist, new Date(startVisite.getTime() + waitTime * artistViewed++), random(150, coef));
+			}
 		}
 	}
 
@@ -134,32 +138,10 @@ public final class VirtualDatas {
 
 	}
 
-	private void addViewPage(final Date dateVisite, final double processDuration) {
-
+	private void addArtistPage(final String artistName, final Date dateVisite, final double processDuration) {
 		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select 1 from oeuvres").build();
-
-		final KProcess pageDavinciProcess = new KProcessBuilder(dateVisite, processDuration / 4, PAGE_PROCESS, "davinci").addSubProcess(searchProcess).build();
-		final KProcess pageMonetProcess = new KProcessBuilder(dateVisite, processDuration / 2, PAGE_PROCESS, "monet").addSubProcess(searchProcess).build();
-		final KProcess pageBazilleProcess = new KProcessBuilder(dateVisite, 3 * processDuration, PAGE_PROCESS, "bazille").addSubProcess(searchProcess).build();
-		final KProcess pageBonnardProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "bonnard").addSubProcess(searchProcess).build();
-		final KProcess pageSignacProcess = new KProcessBuilder(dateVisite, 1.5 * processDuration, PAGE_PROCESS, "signac").addSubProcess(searchProcess).build();
-
-		// @formatter:off
-		final KProcess pageArtistProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "artist")
-		.addSubProcess(searchProcess)
-		.addSubProcess(pageDavinciProcess)
-		.addSubProcess(pageMonetProcess)
-		.addSubProcess(pageBazilleProcess)
-		.addSubProcess(pageBonnardProcess)
-		.addSubProcess(pageSignacProcess)
-		.build();
-		
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "oeuvre")
-		.addSubProcess(searchProcess)
-		.addSubProcess(pageArtistProcess).build();
-		// @formatter:on
-		serverManager.push(pageProcess);
-
+		final KProcess pageDavinciProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, artistName).addSubProcess(searchProcess).build();
+		serverManager.push(pageDavinciProcess);
 	}
 
 	private void addUpdatePage(final Date dateVisite, final double processDuration) {
@@ -182,8 +164,7 @@ public final class VirtualDatas {
 	 */
 	private long random(final double value, final double coef) {
 		final long result = Math.round(nextGaussian(value, Math.round(value * 1.20)) + coef * value);
-		System.out.println("random(" + value + ", " + coef + ") = " + result);
-
+		//System.out.println("random(" + value + ", " + coef + ") = " + result);
 		return result;
 	}
 
@@ -196,7 +177,7 @@ public final class VirtualDatas {
 		if (result < 0 || result > maxValue) {
 			result = nextGaussian(moyenne, maxValue);
 		}
-		System.out.println("nextGaussian(" + moyenne + ", " + maxValue + ") = " + result);
+		//System.out.println("nextGaussian(" + moyenne + ", " + maxValue + ") = " + result);
 
 		return result;
 	}
