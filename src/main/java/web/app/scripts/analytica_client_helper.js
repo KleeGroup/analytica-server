@@ -111,9 +111,13 @@ function getDrawFunction(dataType, uiType) {
 		case "bigValue":
 			return 'drawBigValue';
 			break;
-		case "line":
-			return 'drawMultiBarChartWithNvd3';
 
+		case "line":
+			return 'drawlineChartWithNvd3';
+			break;
+
+		case "simpleBar":
+			return 'drawbarChartWithNvd3';
 			break;
 
 		case "table":
@@ -123,7 +127,6 @@ function getDrawFunction(dataType, uiType) {
 
 		case "bar":
 			return 'drawMultiBarChartWithNvd3';
-
 			break;
 
 		case "linebar":
@@ -132,10 +135,10 @@ function getDrawFunction(dataType, uiType) {
 
 		case "pie":
 			return 'drawpieChartWithNvd3';
+			break;
 
 		case "clock":
 			return 'MyDigitClock';
-
 			break;
 	}
 }
@@ -199,6 +202,10 @@ function parseMultiSeriesD3Datas(response, labels) {
 	return series;
 }
 
+//sorting function : sorts a json array according to parameters :
+//field is the field to sort,
+//reverse is a boolean: true= reverse sorting, false=...
+//primer = type of values to be sorted it could be for example; parseFloat/parseInt/parseDouble...
 var sort_by = function(field, reverse, primer){
 
    var key = function (x) {return primer ? primer(x[field]) : x[field]};

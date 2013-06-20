@@ -99,13 +99,14 @@ function initializeTestHelperAnalytica() {
   graphique2.ui.type ="pie";
 
  var graphique3 = generateDefaultGraph();
+  graphique3.ui.type = "simpleBar";
   graphique3.html.title = "Graphe MonoSerie3";
   //graphique3.data.filters.timeDim = 'Hour';
   var graphique4 = generateDefaultGraph();
-  graphique4.data.url = "/home/multitimeLine/PAGE";
+  graphique4.data.url = "/home/timeLine/PAGE";
   graphique4.data.filters.timeFrom = 'NOW-2h';
   graphique4.data.filters.timeTo = 'NOW%2B10h';
-  graphique4.data.parse = parseMultiSeriesD3Datas;
+  graphique4.data.parse = parseDataResult;
   graphique4.data.filters.datas = "duration:mean";
   graphique4.ui.labels = "Temps Moyen";
   graphique4.html.title = "Graphe MultiSerie4";
