@@ -56,10 +56,10 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				}).y(function(d) {
 					return d[1]
 				}) // adjusting, 100% is 1.00, not 100 as it is in the data
-				.color(d3.scale.category10().range());
+				.color(d3.scale.category10().range()).showLegend(true);
 
 				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-					return d3.time.format("%x:%H:%M")(new Date(d))
+					return d3.time.format("%H:%M")(new Date(d))
 				});
 
 				// chart.yAxis.tickFormat(d3.format(',f'));
@@ -88,7 +88,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				.color(d3.scale.category10().range());
 
 				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-					return d3.time.format("%x:%H:%M")(new Date(d))
+					return d3.time.format("%H:%M")(new Date(d))
 				});
 
 				// chart.yAxis.tickFormat(d3.format(',f'));
@@ -118,7 +118,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				.color(d3.scale.category10().range());
 
 				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-					return d3.time.format("%H")(new Date(d))
+					return d3.time.format("%H:%M")(new Date(d))
 				});
 
 				// chart.yAxis.tickFormat(d3.format(',f'));
@@ -271,5 +271,23 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 
 		});
 	};
+	
+	$.fn.drawSparklineWithNvd3 = function(data){
+		var datas = [];
+		var defaults = {}, options = $.extend(defaults, datas);
+		var container = $(this);
+		nv.addGraph({
+			generate: function() {
+				var chart = nv.models.sparkline()
+					.width(100)
+					.height(15)
 
+				d3.select(container.selector)
+					.datum(data)
+					.call(chart);
+
+				return chart;
+			}			
+		});
+	};
 })(jQuery);

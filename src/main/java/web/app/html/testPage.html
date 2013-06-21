@@ -34,8 +34,6 @@
 
 
     <script type="text/javascript" src="../../vendor/scripts/handlebars.js"></script>
-        <script type="text/javascript" src="../scripts/template/HandlebarsHelper.js"></script>
-
     <script type="text/javascript" src="../scripts/template/partial-templates.js"></script>
     <script type="text/javascript" src="../scripts/template/templates.js"></script>
     <script type="text/javascript" src="../scripts/analytica_client_helper.js"></script>
@@ -54,7 +52,7 @@
     <div id="breadcrumb">
     </div>
 	<!-- Container -->
-   <div id = 'dashboard' class="container">
+   <div id = 'dashboardtest' class="container">
       <!-- Mettre le contenu des graphes ici.-->    <!-- Composants graphiques.-->
  
     </div>
@@ -70,7 +68,7 @@
     <script type="text/javascript">
         var hash = window.location.hash;  
         if(hash===""){
-          $('div#dashboard').html(Handlebars.templates.dashboard());
+          $('div#dashboardtest').html(Handlebars.templates.dashboardtest());
         }else{
 
         }
@@ -84,7 +82,6 @@
 
   </script>
   <!--Remove this part and set it in a template-->
-  <script type="text/javascript">startClock()</script>
   <script type="text/javascript">
     $(document).ready(function () {
         $("tr:even").css("background-color", "#CCC");

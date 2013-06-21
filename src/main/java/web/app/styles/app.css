@@ -160,4 +160,16 @@ svg{
         margin: 20px 0;
       }
 
-      
+.test{
+  height:300px;
+
+}
+
+.graph{
+  /*height:300px;*/
+
+}
+.sparks {
+  width: 100px;
+  height: 35px;
+}

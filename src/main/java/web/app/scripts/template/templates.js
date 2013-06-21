@@ -129,7 +129,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + escapeExpression(((stack1 = ((stack1 = depth0.html),stack1 == null || stack1 === false ? stack1 : stack1.title)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</h>\r\n	</div>\r\n	<div id=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.ui),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\r\n		<svg></svg>\r\n	</div>\r\n</div>\r\n\r\n"
+    + "\" class=\"graph\">\r\n		<svg></svg>\r\n	</div>\r\n</div>\r\n\r\n\r\n\r\n"
     + "\r\n  ";
   return buffer;
   });
@@ -140,5 +140,13 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 
   return "<div class=\"row show-grid\">\r\n        <!--This should be in a template file-->\r\n        <div class=\"span3 grey-bg\">\r\n        <div class = \"ui-widget-header \"><i class=\"icon-picture\"></i><h>HORLOGE</h> </div>\r\n        <div id=\"wallClock\">\r\n          <!--<div class=\"grey-bg\">-->\r\n          <div id=\"fullDate\"></div>\r\n          <div id=\"bigTime\"></div>\r\n          <div id=\"dayName\"></div>\r\n        <!--</div>-->\r\n        </div>\r\n        </div>\r\n        <!--This should be in a template file-->\r\n        <div class=\"span3\">\r\n        <div  class=\"grey-bg\">\r\n          <div id = \"idbigvalue\"></div>\r\n        </div>\r\n        </div>\r\n\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique0\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique1\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique2\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span3\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique3\" ></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n            \r\n      <div class=\"row show-grid\">\r\n        <div class=\"span6\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique4\" ></div>\r\n          </div>\r\n        </div>\r\n        <div class=\"span6\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique5\" ></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n\r\n      <div class=\"row show-grid\">\r\n        <div class=\"span12 grey-bg\">\r\n            <div id=\"idgraphique6\" ></div>\r\n        </div>\r\n      </div>";
+  });
+templates['dashboardtest'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "   \r\n        <!--This should be in a template file-->\r\n    \r\n        <!--This should be in a template file-->\r\n       \r\n        <div class=\"span12\">\r\n          <div class=\"grey-bg\">\r\n            <div id=\"idgraphique4\" class=\"test\" ></div>\r\n          </div>\r\n        </div>\r\n        \r\n";
   });
 })();

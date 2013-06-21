@@ -18,7 +18,7 @@ public final class DataPoint {
 		Assertion.notNull(date);
 		//---------------------------------------------------------------------
 		this.date = date;
-		this.x = date.getTime() / 1000;
+		this.x = date.getTime();
 		this.y = Double.isNaN(value) ? null : value;
 	}
 

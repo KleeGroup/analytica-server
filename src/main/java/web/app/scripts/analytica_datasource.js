@@ -103,13 +103,13 @@ function initializeTestHelperAnalytica() {
   graphique3.html.title = "Graphe MonoSerie3";
   //graphique3.data.filters.timeDim = 'Hour';
   var graphique4 = generateDefaultGraph();
-  graphique4.data.url = "/home/timeLine/PAGE";
   graphique4.data.filters.timeFrom = 'NOW-2h';
   graphique4.data.filters.timeTo = 'NOW%2B10h';
   graphique4.data.parse = parseDataResult;
+  graphique4.ui.type ="stack";
   graphique4.data.filters.datas = "duration:mean";
-  graphique4.ui.labels = "Temps Moyen";
-  graphique4.html.title = "Graphe MultiSerie4";
+  graphique4.ui.labels = "Response Time";
+  graphique4.html.title = "Pages Response Time";
   var graphique5 = generateDefaultGraph();//MultiSerie
   //graphique5.data.filters.timeTo = 'NOW%2B6h';
   graphique5.data.url = "/home/multitimeLine/PAGE";
@@ -121,11 +121,11 @@ function initializeTestHelperAnalytica() {
   graphique5.html.title = "Page hits and response time";
   graphique5.ui.type = "linebar";
   var graphique6 = generateDefaultGraph();//MultiSerie
-  graphique6.data.url = "/home/dataTables/PAGE";
+  graphique6.data.url = "/home/tableSparkline/PAGE";
   graphique6.html.title = "DataTable Graph";
   graphique6.data.parse = parseDataTable;
   graphique6.ui.type = "table";
-  graphique6.ui.labels = "Labels;Hits;Response Time(ms);SQL Time(ms);Metrics";
+  graphique6.ui.labels = "Labels;Hits;Response Time(ms);Response Time;Activity";
 
   
   var graphique7 = generateDefaultGraph();

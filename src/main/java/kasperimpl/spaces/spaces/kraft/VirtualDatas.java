@@ -19,16 +19,18 @@ import com.kleegroup.analytica.server.ServerManager;
  * @version $Id: codetemplates.xml,v 1.2 2011/06/21 14:33:16 npiedeloup Exp $
  */
 public final class VirtualDatas {
-	private final ServerManager serverManager;
-
 	private static final String PAGE_PROCESS = "PAGE";
 	private static final String SQL_PROCESS = "SQL";
 	private static final String SEARCH_PROCESS = "SEARCH";
-	private static final String OEUVRES_PROCESS = "OEUVRE";
+	//	private static final String OEUVRES_PROCESS = "OEUVRE";
 
 	private static final double NB_VISIT_DAILY_MAX = 10;
 
+	private final ServerManager serverManager;
+
 	public VirtualDatas(final ServerManager serverManager) {
+		Assertion.notNull(serverManager);
+		// ---------------------------------------------------------------------
 		this.serverManager = serverManager;
 	}
 
@@ -47,14 +49,13 @@ public final class VirtualDatas {
 	}
 
 	public void loadVisitors(final Date startDate, final double visitorByHour) {
-		long nbVisit;
 		final Date date = startDate;
 		for (int h = 7; h < 19; h++) {
 			final double coef = 0.25 + 0.25 * Math.sin((h - 7 + 4.5) * Math.PI / 3); //varie de 0 à 0.5
-			nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% à 60% en fonction de l'heure
+			final long nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% à 60% en fonction de l'heure
 			for (int visit = 0; visit < nbVisit; visit++) {
-				final Date dateVisite = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
-				addVisitorScenario(dateVisite, coef);
+				final Date dateVisit = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
+				addVisitorScenario(dateVisit, coef);
 				//addContriutorScenario(dateVisite, coef);
 			}
 		}
@@ -97,7 +98,7 @@ public final class VirtualDatas {
 	private final String[] artists = "davinci;monet;bazille;bonnard;signac;hopper;picasso;munch;renoir;cézanne;rubens;bacon;johnes;rothko;warhol".split(";");
 
 	private void addVisitorScenario(final Date startVisite, final double coef) {
-		final long waitTime = 30 * 1000;
+		final long waitTime = 30 * 1000;//30s 
 
 		addHomePage(startVisite, random(150, coef));
 		addSearchPage(new Date(startVisite.getTime() + waitTime), random(750, coef));
@@ -109,49 +110,44 @@ public final class VirtualDatas {
 		}
 	}
 
-	private void addContriutorScenario(final Date startVisite, final double coef) {
-		final long waitTime = 30 * 1000;
+	/*	private void addContriutorScenario(final Date startVisite, final double coef) {
+			final long waitTime = 30 * 1000;
 
-		addHomePage(startVisite, coef);
-		addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
-		for (int i = 0; i < 10; i++) {
+			addHomePage(startVisite, coef);
 			addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
-			addUpdatePage(new Date(startVisite.getTime() + waitTime + waitTime * i), coef);
-		}
+			for (int i = 0; i < 10; i++) {
+				addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
+				addUpdatePage(new Date(startVisite.getTime() + waitTime + waitTime * i), coef);
+			}
 
-	}
+		}*/
 
 	private void addHomePage(final Date dateVisite, final double processDuration) {
-
 		final KProcess sqlProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select*from news").build();
 		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "home", "homePage").addSubProcess(sqlProcess).build();
-
 		serverManager.push(pageProcess);
 	}
 
 	private void addSearchPage(final Date dateVisite, final double processDuration) {
-
 		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SEARCH_PROCESS, "find oeuvres").build();
 		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "search").addSubProcess(searchProcess).build();
-
 		serverManager.push(pageProcess);
-
 	}
 
 	private void addArtistPage(final String artistName, final Date dateVisite, final double processDuration) {
 		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select 1 from oeuvres").build();
-		final KProcess pageDavinciProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, artistName).addSubProcess(searchProcess).build();
-		serverManager.push(pageDavinciProcess);
+		final KProcess artistpageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, artistName).addSubProcess(searchProcess).build();
+		serverManager.push(artistpageProcess);
 	}
 
-	private void addUpdatePage(final Date dateVisite, final double processDuration) {
+	/*	private void addUpdatePage(final Date dateVisite, final double processDuration) {
 
-		final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "update 1 from oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "oeuvre").addSubProcess(updateProcess).build();
+			final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "update 1 from oeuvres").build();
+			final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "oeuvre").addSubProcess(updateProcess).build();
 
-		serverManager.push(pageProcess);
+			serverManager.push(pageProcess);
 
-	}
+		}*/
 
 	/**
 	 * Calcul la prochaine valeur aléatoire gaussienne entre X +/- 20% + X*(coef-1).
@@ -162,7 +158,7 @@ public final class VirtualDatas {
 	 *            Coefficient
 	 * @return prochaine valeur aléatoire suivant une gaussienne
 	 */
-	private long random(final double value, final double coef) {
+	private static long random(final double value, final double coef) {
 		final long result = Math.round(nextGaussian(value, Math.round(value * 1.20)) + coef * value);
 		//System.out.println("random(" + value + ", " + coef + ") = " + result);
 		return result;

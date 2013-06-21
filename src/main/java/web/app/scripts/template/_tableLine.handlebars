@@ -11,8 +11,18 @@
 	<p class="text-right">{{value3}}</p>
   </td>  
   <td>
-  <p class="text-right">{{value4}}</p>
+  <p class="text-center "><svg id="{{value4.id}}" class = "sparks"></svg></p>
   </td>
-  <td>{{value5}}</td>
-  
+  <td><p class="text-center"><svg id = "{{value5.id}}" class = "sparks">
+    </svg></p>
+</td>
 </tr>
+
+{{! Here we plot the sparklines in the graph}}
+<script type="text/javascript">
+$(document).ready(function () {
+ {{! Call Handlebar helper to drawSparklineWithNvd3 }}
+  {{drawSparklineWithNvd3 "value4"}}
+  {{drawSparklineWithNvd3 "value5"}}
+});
+</script>

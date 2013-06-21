@@ -1,9 +1,4 @@
-/**
- *
- */
 package kasperimpl.spaces.spaces.kraft;
-
-//~--- non-JDK imports --------------------------------------------------------
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,10 +20,9 @@ import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * @author statchum
@@ -39,7 +33,6 @@ public final class Utils {
 
 	Utils(final ServerManager serverManager) {
 		Assertion.notNull(serverManager);
-
 		// ---------------------------------------------------------------------
 		this.serverManager = serverManager;
 	}
@@ -51,7 +44,6 @@ public final class Utils {
 	 */
 	public List<DataPoint> loadDataPointsMonoSerie(final HResult result, final String datas) {
 		Assertion.notNull(result);
-
 		// ---------------------------------------------------------------------
 		final HMetricKey metricKey = new HMetricKey("duration", true);
 		final HCounterType counterType = HCounterType.mean;
@@ -223,22 +215,25 @@ public final class Utils {
 	 * @param categories
 	 * @return Construit une Hresult à partir des infos fournies
 	 */
-	public HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories) {
-		final HQuery query = createQuery(timeFrom, timeTo, timeDimension, categories);
+	public HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
+		final HQuery query = createQuery(timeFrom, timeTo, timeDimension, categories, children);
 
 		return serverManager.execute(query);
 	}
 
-	private HQuery createQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories) {
+	private HQuery createQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
 		final HTimeDimension timeDim = HTimeDimension.valueOf(timeDimension);
 		final Date minValue = readDate(timeFrom, timeDim);
 		final Date maxValue = readDate(timeTo, timeDim);
-
+		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder().on(timeDim).from(minValue).to(maxValue);
 		// @formatter:off
-        return serverManager.createQueryBuilder().on(timeDim).from(minValue).to(maxValue).withChildren(
-            categories).build();
-
+		if(children){
+			queryBuilder.withChildren(categories);
+		}else{
+			queryBuilder.with(categories);
+		}        
         // @formatter:on
+		return queryBuilder.build();
 	}
 
 	/**
@@ -261,7 +256,7 @@ public final class Utils {
 		for (final String dataKey : dataKeys) {
 			dataPoints = new ArrayList<DataPoint>();
 
-			for (final HCategory category : query.getAllCategories()) {
+			for (final HCategory category : query.getAllCategories()) { //Normalement une seule categorie
 				for (final HCube cube : result.getSerie(category).getCubes()) {
 					final String[] metricKey = dataKey.split(":");
 					final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
@@ -287,6 +282,163 @@ public final class Utils {
 		}
 
 		return pointsMap;
+	}
+
+	public Map<String, List<DataPoint>> loadDataPointsStackedByCategory(final HResult result, final String datas) {
+		Assertion.notNull(result);
+
+		// ---------------------------------------------------------------------
+		// result.getSerie(null).getMetric(metricKey)
+
+		final HQuery query = result.getQuery();
+		final List<String> dataKeys = Arrays.asList(datas.split(";"));
+		List<DataPoint> dataPoints;
+		final Map<String, List<DataPoint>> pointsMap = new HashMap<String, List<DataPoint>>();
+
+		final String dataKey = datas;
+		for (final HCategory category : query.getAllCategories()) {
+			//for (final String dataKey : dataKeys) { // Normalement une seule Datakey: soit mean soit max,soit count,....
+			dataPoints = new ArrayList<DataPoint>();
+			for (final HCube cube : result.getSerie(category).getCubes()) {
+				final String[] metricKey = dataKey.split(":");
+				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
+				double val = 0;
+
+				if (metricKey.length > 1) {
+					final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
+
+					val = hMetric != null ? hMetric.get(counterType) : Double.NaN;
+				} else {
+					val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
+				}
+
+				final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), val);
+
+				if (dPoint.getValue() != null) {
+					dataPoints.add(dPoint);
+				} else {
+					dataPoints.add(dPoint);
+				}
+
+			}
+			pointsMap.put(category.id(), dataPoints);
+			//}
+		}
+		return pointsMap;
+	}
+
+	/**
+	 * 
+	 * @param result
+	 * @param datas
+	 * @return Map for building a dataTable with ..............
+	 */
+	public Map<String, Collection<Object>> getComplexTableDatas(final HResult result, final String datas) {
+
+		final Map<String, Collection<Object>> tableMap = new HashMap<String, Collection<Object>>();
+		final String dataKey = datas;
+
+		for (final HCategory category : result.getQuery().getAllCategories()) {
+			final Collection<Object> tableCollection = new ArrayList<>();
+			tableCollection.add(result.getSerie(category).getMetrics());
+			//final Collection<DataPoint> dataPoints;
+			/*dataPoints = new ArrayList<DataPoint>();
+			dataPoints = getDataPoints(category, result, "duration:mean");
+			dataPoints = getDataPoints(category, result, "duration:count");*/
+			tableCollection.add(getDataPoints(category, result, "duration:mean"));
+			tableCollection.add(getDataPoints(category, result, "duration:count"));
+			tableMap.put(category.id(), tableCollection);
+		}
+		return tableMap;
+	}
+
+	/**
+	 * 
+	 * @param result
+	 * @param datas
+	 * @return building a dataTbable
+	 */
+	public Map<String, Collection<Object>> getSparklinesTableDatas(final HResult result, final String datas) {
+
+		final Map<String, Collection<Object>> tableMap = new HashMap<String, Collection<Object>>();
+		final String dataKey = datas;
+
+		for (final HCategory category : result.getQuery().getAllCategories()) {
+			final Collection<Object> tableCollection = new ArrayList<>();
+			tableCollection.add(result.getSerie(category).getMetrics());
+			//final Collection<DataPoint> dataPoints;
+			/*dataPoints = new ArrayList<DataPoint>();
+			dataPoints = getDataPoints(category, result, "duration:mean");
+			dataPoints = getDataPoints(category, result, "duration:count");*/
+			tableCollection.add(getStringList(category, result, "duration:mean"));
+			tableCollection.add(getStringList(category, result, "duration:count"));
+			tableMap.put(category.id(), tableCollection);
+		}
+		return tableMap;
+	}
+
+	/**
+	 * @param category
+	 * @param result
+	 * @param string
+	 * @return
+	 */
+	private String getStringList(final HCategory category, final HResult result, final String dataKey) {
+		final StringBuilder stringBuilder = new StringBuilder();
+		int compt = 0;
+		for (final HCube cube : result.getSerie(category).getCubes()) {
+			final String[] metricKey = dataKey.split(":");
+			final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
+			double val = 0;
+
+			if (metricKey.length > 1) {
+				final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
+
+				val = hMetric != null ? hMetric.get(counterType) : Double.NaN;
+			} else {
+				val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
+			}
+
+			//final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), val);
+			if (!Double.toString(val).equals("NaN")) {
+				val = Math.ceil(100 * val) / 100;
+				stringBuilder.append(val);
+				if (compt < result.getSerie(category).getCubes().size() - 1) {
+					stringBuilder.append(";");
+				}
+			}
+			compt++;
+		}
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	private Collection<DataPoint> getDataPoints(final HCategory category, final HResult result, final String dataKey) {
+		final Collection<DataPoint> dataPoints = new ArrayList<DataPoint>();
+		for (final HCube cube : result.getSerie(category).getCubes()) {
+			final String[] metricKey = dataKey.split(":");
+			final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
+			double val = 0;
+
+			if (metricKey.length > 1) {
+				final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
+
+				val = hMetric != null ? hMetric.get(counterType) : Double.NaN;
+			} else {
+				val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
+			}
+
+			final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), val);
+
+			if (dPoint.getValue() != null) {
+				dataPoints.add(dPoint);
+			}/* else {
+				dataPoints.add(dPoint);
+				}*/
+		}
+		return dataPoints;
 	}
 
 	public Object getAggregatedValues(final HResult result, final String datas) {
@@ -315,7 +467,7 @@ public final class Utils {
 		final Map<String, Double> valueByCategory = new HashMap<>();
 
 		for (final String category : categoriesList) {
-			final HResult result = resolveQuery(timeFrom, timeTo, timeDim, category);
+			final HResult result = resolveQuery(timeFrom, timeTo, timeDim, category, true);
 
 			System.out.println(result.getQuery().getAllCategories());
 
@@ -335,5 +487,3 @@ public final class Utils {
 		return valueByCategory;
 	}
 }
-
-//~ Formatted by Jindent --- http://www.jindent.com

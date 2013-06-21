@@ -24,8 +24,8 @@ import com.kleegroup.analytica.server.ServerManager;
 @Path("/home")
 public class HomeServices {
 
-	final String dTimeTo = "NOW-12h";
-	final String dTimeFrom = "NOW+2h";
+	final String dTimeTo = "NOW+10h";
+	final String dTimeFrom = "NOW-2h";
 	final String dTimeDim = "Hour";
 	final String dDatas = "duration:mean";
 	final String dDatasMult = "duration:count;duration:mean";
@@ -70,7 +70,7 @@ public class HomeServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
 		final List<DataPoint> points = utils.loadDataPointsMonoSerie(result, datas);
 		//final Map<String, List<DataPoint>> pointsMap = loadDataPoints(result, datas);
 		//return gson.toJson(pointsMap);
@@ -82,7 +82,7 @@ public class HomeServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMultiSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatasMult) @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
 		final Map<String, List<DataPoint>> pointsMap = utils.loadDataPointsMuliSerie(result, datas);
 		return gson.toJson(pointsMap);
 	}
@@ -91,7 +91,7 @@ public class HomeServices {
 	@Path("/agregatedDatasByCategory/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
 		return gson.toJson(utils.getAggregatedValuesByCategory(result, datas));
 	}
 
@@ -114,10 +114,43 @@ public class HomeServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getTablesDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
 		// Ajouter les valeurs par défaut sauf pour la catégorie
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category);
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
 		//final Map<String, Collection<HMetric>> pointsMap = utils.getDataTable(result, datas);
 		//return gson.toJson(pointsMap);
 		return gson.toJson(utils.getDataTable(result, datas));
+	}
+
+	@GET
+	@Path("/stackedDatas/{category}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getAllCategoriesToStack(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+		// Ajouter les valeurs par défaut sauf pour la catégorie
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
+		//final Map<String, Collection<HMetric>> pointsMap = utils.getDataTable(result, datas);
+		//return gson.toJson(pointsMap);
+		return gson.toJson(utils.loadDataPointsStackedByCategory(result, datas));
+	}
+
+	@GET
+	@Path("/complexTable/{category}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getcomplexTableDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+		// Ajouter les valeurs par défaut sauf pour la catégorie
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
+		//final Map<String, Collection<HMetric>> pointsMap = utils.getDataTable(result, datas);
+		//return gson.toJson(pointsMap);
+		return gson.toJson(utils.getComplexTableDatas(result, datas));
+	}
+
+	@GET
+	@Path("/tableSparkline/{category}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTableSparklineDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+		// Ajouter les valeurs par défaut sauf pour la catégorie
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
+		//final Map<String, Collection<HMetric>> pointsMap = utils.getDataTable(result, datas);
+		//return gson.toJson(pointsMap);
+		return gson.toJson(utils.getSparklinesTableDatas(result, datas));
 	}
 }
 

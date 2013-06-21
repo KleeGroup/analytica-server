@@ -73,12 +73,13 @@ var generateGraph = function generateGraph(graph) {
 			var data = parse(response, labels);
 
 			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
+			if(document.getElementById(graph.html.container)){
 			var graphtype = graph.ui.type;
 			if(graphtype ==="table"){
 				data.htmlIcon = graph.ui.icon;
 				data.htmlTitle=graph.html.title;
-
 				$('div#' + graph.html.container).html(Handlebars.templates.table(data));
+
 			}else if (graphtype==="bigValue"){
 				data.icon = graph.ui.icon;
 				data.title=graph.html.title;
@@ -88,7 +89,8 @@ var generateGraph = function generateGraph(graph) {
 			}
 			else{
 			$('#' + graph.ui.id)[drawGraphCallbackName](data);}
-		},
+		}
+	},
 		error: function(request, status, error) {
 			console.error("request", request.responseText, "status", status, "error", error);
 		}
@@ -140,6 +142,10 @@ function getDrawFunction(dataType, uiType) {
 		case "clock":
 			return 'MyDigitClock';
 			break;
+
+		case "stack":
+			return 'drawStackedAreaChartWithNvd3';
+			break;
 	}
 }
 
@@ -188,6 +194,38 @@ function parseDataResult(dataResult, label) {
 	];
 	return data;
 };
+
+function parseSparkLines(dataResult, label){
+var reconstructedData = [];
+	for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
+		var r = dataResult[i];
+		var obj = {};
+		obj.x = r.x,
+		obj.y = r.y
+		reconstructedData.push(obj);
+	}
+	var data = [{
+			key: label,
+			values: reconstructedData
+		}
+	];
+	return data;
+
+}
+
+function parseStringValuesToJsonSparklines(data){
+	var data = data.split(";");
+	var result = [];
+	for (var i = 0; i < data.length; i++) {
+		var obj = {};
+		obj.x = i,
+		obj.y = data[i]
+		result.push(obj);
+	}
+	return result;
+}
+
+
 //Parse data for a mutli serie graph
 
 function parseMultiSeriesD3Datas(response, labels) {
@@ -202,6 +240,21 @@ function parseMultiSeriesD3Datas(response, labels) {
 	return series;
 }
 
+function parseStackedSeriesD3Datas(response, labels) {
+	var series = [];
+	var i = 0;
+	for (var cle in response) {
+		var label = cle.split("::");
+		if (response.hasOwnProperty(cle)) {
+			var jsonObject = parseDataResult(response[cle],label[1] )[0];
+			series.push(jsonObject);
+		} else { /*throw an exception here*/ }
+	};
+	return series;
+}
+
+
+
 //sorting function : sorts a json array according to parameters :
 //field is the field to sort,
 //reverse is a boolean: true= reverse sorting, false=...
@@ -215,7 +268,6 @@ var sort_by = function(field, reverse, primer){
        return ((A < B) ? -1 : (A > B) ? +1 : 0) * [-1,1][+!!reverse];                  
    }
 };
-
 
 
 function parsePieDatas(dataResult, labels) {
@@ -273,7 +325,6 @@ function parseBigValue(dataResult,labels){
 
 
 
-
 function parseDataTable(dataResult, labels){
 
 	var headers = [];
@@ -282,8 +333,13 @@ function parseDataTable(dataResult, labels){
 	}
 	
 	var collection = [];
+	var compteur = 0;
 	for(var r in dataResult){
-		var obj = dataResult[r];
+		var obj = dataResult[r][0];
+		var responseSparks = dataResult[r][1];
+		var activitySparks = dataResult[r][2];
+
+
 		var hits,duration;
 		var sqlTime = undefined;
 		var metric = "";
@@ -292,24 +348,35 @@ function parseDataTable(dataResult, labels){
 				hits = obj[i].count;
 				duration =(obj[i].sum)/(hits);
 			}
-			if (obj[i].metricKey.id ==="SQL"){
+			/*if (obj[i].metricKey.id ==="SQL"){
 				sqlTime =(obj[i].sum)/(obj[i].count);
-			}
+			}*/
 			metric = metric +","+obj[i].metricKey.id;
 
 		}
-			if (sqlTime===undefined){
+			/*if (sqlTime===undefined){
 				sqlTime = 0;
-			}
+			}*/
+		var responseObject = {}, activityObject = {};
+		responseObject.id = "response"+compteur;
+		responseSparks = parseStringValuesToJsonSparklines(responseSparks);
+		//responseObject.values = responseSparks[0].values;
+		responseObject.values = responseSparks;
+		activityObject.id = "activity"+compteur;
+		activitySparks = parseStringValuesToJsonSparklines(activitySparks);
+		//activityObject.values = activitySparks[0].values;
+		activityObject.values = activitySparks;
+
 		var name = r.split("::");
 		var collectionElement = {
 			value1: name[1],
 			value2: hits,
 			value3: duration.toFixed(2),
-			value4: sqlTime,
-			value5: metric
+			value4: responseObject,// Here weneed a json object with an array to plot the Activity sparkline
+			value5: activityObject// Here a json object with array property to plot the response time sparkline
 		};
 		collection.push(collectionElement);
+		compteur++;
 	}
 
 	 var data ={
@@ -321,18 +388,68 @@ function parseDataTable(dataResult, labels){
 }
 
 
+//function parseDataTable(dataResult, labels){
+//
+//	var headers = [];
+//	for(var i=0;i<labels.length;i++){
+//		headers.push({value:labels[i]});
+//	}
+//	
+//	var collection = [];
+//	for(var r in dataResult){
+//		var obj = dataResult[r];
+//		var hits,duration;
+//		var sqlTime = undefined;
+//		var metric = "";
+//		for (var i=0;i<obj.length;i++){
+//			if (obj[i].metricKey.id ==="duration"){
+//				hits = obj[i].count;
+//				duration =(obj[i].sum)/(hits);
+//			}
+//			if (obj[i].metricKey.id ==="SQL"){
+//				sqlTime =(obj[i].sum)/(obj[i].count);
+//			}
+//			metric = metric +","+obj[i].metricKey.id;
+//
+//		}
+//			/*if (sqlTime===undefined){
+//				sqlTime = 0;
+//			}
+//		var name = r.split("::");
+//		var collectionElement = {
+//			value1: name[1],
+//			value2: hits,
+//			value3: duration.toFixed(2),
+//			value4: sqlTime,// Here weneed a json object with an array to plot the Activity sparkline
+//			value5: metric// Here a json object with array property to plot the respon
+//		};
+//		collection.push(collectionElement);
+//	}
+//
+//	 var data ={
+//		title: '',
+//		headers: headers,
+//		collection: collection
+//	};
+//	return data;
+//}
+
+
 //Load the dom structure for a panel.
 //todo: a mettre dans le plugin jquery. Il faut que le plugin soit auto suffisant.
 
 
 //This function will just load the appropriate template for the graph to draw
 function loadPanel(graph) {
-	if(graph.ui.type==="table"){
+	if(document.getElementById(graph.html.container)){
+		if(graph.ui.type==="table"){
 
-	}else{
-
-	var graphId = 'div#' + graph.html.container;
-    $(graphId).html(Handlebars.templates.graph(graph)); }
+		}
+		else{
+			var graphId = 'div#' + graph.html.container;
+		    $(graphId).html(Handlebars.templates.graph(graph)); 
+		}
+    }
 };
 
 //Container pour analytica.
