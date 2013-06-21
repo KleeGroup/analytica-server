@@ -17,6 +17,7 @@
  */
 package com.kleegroup.analytica.core;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -123,7 +124,8 @@ public final class KProcess {
 		return subProcesses;
 	}
 
+	@Override
 	public String toString() {
-		return "process:{name:" + names + "; startDate:" + startDate + "}";
+		return "process:{name:" + Arrays.asList(names) + "; startDate:" + startDate + "}";
 	}
 }
