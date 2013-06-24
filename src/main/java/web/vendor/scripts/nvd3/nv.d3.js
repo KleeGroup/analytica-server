@@ -9410,7 +9410,7 @@ nv.models.sparkline = function() {
     , y = d3.scale.linear()
     , getX = function(d) { return d.x }
     , getY = function(d) { return d.y }
-    , color = nv.utils.getColor(['#000'])
+    , color = nv.utils.getColor(['#33B5E5'])
     , xDomain
     , yDomain
     ;
@@ -9584,6 +9584,7 @@ nv.models.sparklinePlus = function() {
     , xTickFormat = d3.format(',r')
     , yTickFormat = d3.format(',.2f')
     , noData = "No Data Available."
+    ,color = nv.utils.getColor(['#0000'])
     ;
 
   //============================================================

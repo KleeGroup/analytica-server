@@ -12,6 +12,11 @@
 
     <!-- scripts js-->
     <script type="text/javascript" src="../../vendor/scripts/jquery/jquery.js"></script>
+    <script type="text/javascript" src="../../vendor/scripts/jquery/jquery.peity.js"></script>
+        <script type="text/javascript" src="../../vendor/scripts/jquery/jquery.sparkline.js"></script>
+
+    
+    
     <!-- <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>-->
     <script type="text/javascript" src="../../vendor/scripts/bootstrap/bootstrap.min.js"></script>
     <!-- scripts d3-->
@@ -35,6 +40,8 @@
 
     <script type="text/javascript" src="../../vendor/scripts/handlebars.js"></script>
         <script type="text/javascript" src="../scripts/template/HandlebarsHelper.js"></script>
+        <script type="text/javascript" src="../scripts/template/SparkLineHandlebarsHelper.js"></script>
+        
 
     <script type="text/javascript" src="../scripts/template/partial-templates.js"></script>
     <script type="text/javascript" src="../scripts/template/templates.js"></script>
@@ -90,6 +97,25 @@
         $("tr:even").css("background-color", "#CCC");
         $("tr:odd").css("background-color", "#FFF");
      });
+</script>
+
+<script type="text/javascript">
+
+/*document.onreadystatechange = function(e)
+{
+    if (document.readyState === 'complete')
+    {
+      $(".spark-chart").peity("bar");
+    }
+};
+*/
+$(window).load(function () { 
+   $(".spark-chart").peity("bar");
+}
+
+/*window.onload = function(){
+}*/
+  
 </script>
   </body>
 </html>

@@ -131,25 +131,23 @@ public final class Utils {
 	// Récupérer pt Min,
 	// Récupérer pt Moy.
 	// return null;
-	private static List<String> readDataKeys(final String datas) {
-		final List<String> key = new ArrayList<String>();
-		final List<String> dataKeys = Arrays.asList(datas.split(";"));
+	/*	private static List<String> readDataKeys(final String datas) {
+			final List<String> key = new ArrayList<String>();
+			final List<String> dataKeys = Arrays.asList(datas.split(";"));
 
-		for (final String str : dataKeys) {
-			final String[] list = str.split(":");
+			for (final String str : dataKeys) {
+				final String[] list = str.split(":");
 
-			key.add(list[0]);
-		}
+				key.add(list[0]);
+			}
 
-		return dataKeys;
-	}
+			return dataKeys;
+		}*/
 
 	/**
 	 *
-	 * @param timeStr
-	 *            : e.g: NOW+1h
-	 * @param dimension
-	 *            : Dimension temporelle : année/mois/jour/...
+	 * @param timeStr : e.g: NOW+1h
+	 * @param dimension : Dimension temporelle : année/mois/jour/...
 	 * @return Date obtenue à partir des deux indications précedentes
 	 */
 	private static Date readDate(final String timeStr, final HTimeDimension dimension) {
@@ -160,11 +158,9 @@ public final class Utils {
 			return new Date();
 		} else if (timeStr.startsWith("NOW-")) {
 			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW-".length()));
-
 			return new Date(System.currentTimeMillis() - deltaMs);
 		} else if (timeStr.startsWith("NOW+")) {
 			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW+".length()));
-
 			return new Date(System.currentTimeMillis() + deltaMs);
 		}
 
@@ -404,7 +400,7 @@ public final class Utils {
 				val = Math.ceil(100 * val) / 100;
 				stringBuilder.append(val);
 				if (compt < result.getSerie(category).getCubes().size() - 1) {
-					stringBuilder.append(";");
+					stringBuilder.append(",");
 				}
 			}
 			compt++;

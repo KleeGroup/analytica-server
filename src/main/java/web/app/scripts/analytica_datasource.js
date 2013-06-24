@@ -62,11 +62,11 @@ function initializeTestHelperAnalytica() {
         url: '/home/timeLine/PAGE', // home/datas
         type: 'Mono', // Mono or multi series.   
         filters: {
-          timeFrom: "NOW-12h", //
-          timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
+          timeFrom: "NOW-1h", //
+          timeTo: "NOW%2B3h", //ProblÃ¨me ici avec le +
           timeDim: "Hour", //
           category: "PAGE", //
-          datas: "duration:count" //  
+          datas: "duration:mean" //  
         },
         parse: undefined, //function parseData() {} // Function which transforms all the data received from the server.
       },

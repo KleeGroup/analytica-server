@@ -276,18 +276,29 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 		var datas = [];
 		var defaults = {}, options = $.extend(defaults, datas);
 		var container = $(this);
-		nv.addGraph({
-			generate: function() {
-				var chart = nv.models.sparkline()
-					.width(100)
-					.height(15)
+		nv.addGraph(function() {
+			var chart = nv.models.sparklinePlus()
+			.width(70)
+            .height(30)
 
-				d3.select(container.selector)
-					.datum(data)
-					.call(chart);
+			chart
+				.margin({
+				top: 5, right: 0, bottom: 10, left: 0
+			})
+				.x(function(d, i) {
+				return i
+			})
+				.xTickFormat(function(d) {
+				return d.x
+			})
 
-				return chart;
-			}			
+			d3.select(container.selector)
+				.datum(data)
+				.transition().duration(250)
+				.call(chart);
+
+
+			return chart;
 		});
 	};
 })(jQuery);

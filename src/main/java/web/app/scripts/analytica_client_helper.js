@@ -214,7 +214,7 @@ var reconstructedData = [];
 }
 
 function parseStringValuesToJsonSparklines(data){
-	var data = data.split(";");
+	var data = data.split(",");
 	var result = [];
 	for (var i = 0; i < data.length; i++) {
 		var obj = {};
@@ -359,13 +359,20 @@ function parseDataTable(dataResult, labels){
 			}*/
 		var responseObject = {}, activityObject = {};
 		responseObject.id = "response"+compteur;
+		var sparkresponse = responseSparks;
 		responseSparks = parseStringValuesToJsonSparklines(responseSparks);
 		//responseObject.values = responseSparks[0].values;
 		responseObject.values = responseSparks;
+		responseObject.lastValue = responseSparks[responseSparks.length -1].y;
+		responseObject.sparklineValues = sparkresponse;
+
 		activityObject.id = "activity"+compteur;
+		var sparkActivity = activitySparks;
 		activitySparks = parseStringValuesToJsonSparklines(activitySparks);
 		//activityObject.values = activitySparks[0].values;
 		activityObject.values = activitySparks;
+		activityObject.lastValue =activitySparks[activitySparks.length -1].y;
+		activityObject.sparklineValues = sparkActivity;
 
 		var name = r.split("::");
 		var collectionElement = {

@@ -112,7 +112,7 @@ function program3(depth0,data) {
     + "\r\n    </tr>\r\n  </thead>\r\n  <tbody>\r\n    ";
   stack1 = helpers.each.call(depth0, depth0.collection, {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\r\n  </tbody>\r\n</table>\r\n</div>\r\n</div>\r\n";
+  buffer += "\r\n  </tbody>\r\n</table>\r\n</div>\r\n</div>\r\n\r\n\r\n";
   return buffer;
   });
 templates['graph'] = template(function (Handlebars,depth0,helpers,partials,data) {
