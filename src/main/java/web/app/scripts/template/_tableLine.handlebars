@@ -10,10 +10,10 @@
   <td>
 	<p class="text-right">{{value3}}</p>
   </td>  
-  <td class="text-center">
-  <div class = "spark-text"> <svg id="{{value4.id}}"></svg><span>{{value4.lastValue}}</span></div> 
+  <td>
+  {{!<div class = "spark-text"> <svg id="{{value4.id}} {{!"></svg><span>{{value4.lastValue}}{{!</span></div>}} <div id="{{value4.id}}" class = "line-spark text-center">{{value4.sparklineValues}}</div>
   </td>
-  <td><div id="{{value5.id}}" class = "spark-chart">{{value5.sparklineValues}}</div>
+  <td><div id="{{value5.id}}" class = "bar-spark text-center">{{value5.sparklineValues}}</div>
 </td>
 </tr>
 
@@ -22,9 +22,8 @@
 
 $(document).ready(function () {
  {{! Call Handlebar helper to drawSparklineWithNvd3 }}
-  {{drawSparklineWithNvd3 "value4"}}
-  {{drawSparkline "value5"}}
+  {{!{{drawSparklineWithNvd3 "value4"}}
+  {{!{{drawSparkline "value5"}}
   {{!{{drawSparkline "value5"}}
 });
-
 </script>

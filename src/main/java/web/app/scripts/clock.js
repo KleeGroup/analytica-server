@@ -21,6 +21,8 @@ function startClock () {
 }
 
 function update_clock_display () {
+ // $('.spark-chart').sparkline('html', {type: 'bar', barColor: 'red'} );
+  
 
   // GET THE CURRENT SYSTEM DATE/TIME INFORMATION
   var dateNow = new Date ();

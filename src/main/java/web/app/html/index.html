@@ -40,7 +40,7 @@
 
     <script type="text/javascript" src="../../vendor/scripts/handlebars.js"></script>
         <script type="text/javascript" src="../scripts/template/HandlebarsHelper.js"></script>
-        <script type="text/javascript" src="../scripts/template/SparkLineHandlebarsHelper.js"></script>
+        
         
 
     <script type="text/javascript" src="../scripts/template/partial-templates.js"></script>
@@ -70,11 +70,6 @@
     </footer>
 
     <script type="text/javascript">
-        
-        
-
-    </script>
-    <script type="text/javascript">
         var hash = window.location.hash;  
         if(hash===""){
           $('div#dashboard').html(Handlebars.templates.dashboard());
@@ -88,33 +83,21 @@
          initializeTestHelperAnalytica()
        });
        $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
-
   </script>
   <!--Remove this part and set it in a template-->
   <script type="text/javascript">startClock()</script>
-  <script type="text/javascript">
-    $(document).ready(function () {
-        $("tr:even").css("background-color", "#CCC");
-        $("tr:odd").css("background-color", "#FFF");
-     });
-</script>
+  
 
 <script type="text/javascript">
-
-/*document.onreadystatechange = function(e)
-{
-    if (document.readyState === 'complete')
-    {
-      $(".spark-chart").peity("bar");
-    }
-};
-*/
-$(window).load(function () { 
-   $(".spark-chart").peity("bar");
-}
-
-/*window.onload = function(){
+/*$(window).load(function () { 
+   $(".spark-chart").sparkline("bar");
 }*/
+
+/*$(window).load(function () { 
+   $(".spark-chart").peity("bar");
+}*/
+
+
   
 </script>
   </body>
