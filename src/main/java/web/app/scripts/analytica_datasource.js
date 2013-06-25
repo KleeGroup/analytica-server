@@ -126,18 +126,20 @@ function initializeTestHelperAnalytica() {
   graphique6.data.parse = parseDataTable;
   graphique6.ui.type = "table";
   graphique6.ui.labels = "Labels;Hits;Response Time(ms);Response Time;Activity";
-
+  var graphique7 = generateDefaultGraph();//MultiSerie
+  graphique7.data.url = "/home/tablePunchcard/PAGE";
+  graphique7.html.title = "Pages Activity";
+  graphique7.data.parse = parsePunchCard;
+  graphique7.ui.type = "punchcard";
   
-  var graphique7 = generateDefaultGraph();
-  var graphique8 = generateDefaultGraph();
-  var graphique9 = generateDefaultGraph();
   var graphs = [
     bigValuegraph,
     graphique2,
     graphique3,
     graphique4,
     graphique5,
-    graphique6
+    graphique6,
+    graphique7
   ];
 
   KLEE.Analytica.generateGraphs(graphs);

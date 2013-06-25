@@ -171,12 +171,14 @@ svg{
 }
 .sparks {
   text-align: center;
+
 }
 .spark-text{
-  width:220px;
-  height: 20px;
+/*  width:220px;
+  height: 20px;*/
   text-align: right;
   color:#FF4444;
+  font-size: xx-small;
   /*#FF4444CC0000
   */
 }
