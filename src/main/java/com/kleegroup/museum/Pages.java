@@ -17,30 +17,38 @@ final class Pages {
 	private static class HomePage implements PageBuilder {
 		public KProcess createPage(final Date dateVisite) {
 			final double processDuration = StatsUtil.random(150, getCoef(dateVisite.getHours()));
-			final KProcess sqlProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select*from news").build();
-			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "home", "homePage").addSubProcess(sqlProcess).build();
+
+			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "home", "homePage")//
+					.beginSubProcess(dateVisite, 80, SQL_PROCESS, "select*from news").endSubProcess()//
+					.build();
 		}
 	}
 
 	private static class SearchPage implements PageBuilder {
 		public KProcess createPage(final Date dateVisite) {
 			final double processDuration = StatsUtil.random(750, getCoef(dateVisite.getHours()));
-			final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SEARCH_PROCESS, "find oeuvres").build();
-			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "search").addSubProcess(searchProcess).build();
+
+			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "search")//
+					.beginSubProcess(dateVisite, 80, SEARCH_PROCESS, "find oeuvres").endSubProcess()//
+					.build();
 		}
 	}
 
 	private static class ArtistPage implements PageBuilder {
-		private static final String[] artists = "davinci;monet;bazille;bonnard;signac;hopper;picasso;munch;renoir;cézanne;rubens;bacon;johnes;rothko;warhol".split(";");
+		//On joue sur plusieurs listes 
+		private static final String[] artistsA = "vinci;monet;picasso;renoir;rubens".split(";");
+		private static final String[] artistsB = "bazille;bonnard;munch;signac;hopper;cézanne;bacon;johnes;rothko;warhol".split(";");
 
 		public KProcess createPage(final Date dateVisite) {
 			final double processDuration = StatsUtil.random(150, getCoef(dateVisite.getHours()));
 			final String artist = getArtist();
-			final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select 1 from oeuvres").build();
-			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, artist).addSubProcess(searchProcess).build();
+			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, artist)//
+					.beginSubProcess(dateVisite, 80, SQL_PROCESS, "select 1 from oeuvres").endSubProcess()//
+					.build();
 		}
 
 		private static String getArtist() {
+			String[] artists = Math.random() > 0.5 ? artistsA : artistsB;
 			int r = Double.valueOf(Math.random() * artists.length).intValue();
 			return artists[r];
 		}

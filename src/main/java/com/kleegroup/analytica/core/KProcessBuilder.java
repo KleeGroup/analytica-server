@@ -49,6 +49,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	private final long start;
 	private Double durationMs = null;
 	private final List<KProcess> subProcesses;
+	private final KProcessBuilder parent;
 
 	/**
 	 * Constructeur.
@@ -58,7 +59,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param name Nom du processus
 	 */
 	public KProcessBuilder(final String type, final String... names) {
-		this(new Date(), type, names);
+		this(null, new Date(), type, names);
 	}
 
 	/**
@@ -69,12 +70,12 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param duration Durée du processus (Millisecondes)
 	 */
 	public KProcessBuilder(final Date startDate, final double durationMs, final String type, final String... names) {
-		this(startDate, type, names);
+		this(null, startDate, type, names);
 		//---------------------------------------------------------------------
 		this.durationMs = durationMs;
 	}
 
-	private KProcessBuilder(final Date startDate, final String type, final String[] names) {
+	private KProcessBuilder(final KProcessBuilder parent, final Date startDate, final String type, final String[] names) {
 		Assertion.notEmpty(type);
 		Assertion.notNull(names);
 		Assertion.notNull(startDate);
@@ -87,6 +88,20 @@ public final class KProcessBuilder implements Builder<KProcess> {
 		start = startDate.getTime();
 		this.type = type;
 		this.names = names;
+		this.parent = parent;
+	}
+
+	/**
+	 * Constructeur pour la construction des sousProcessus.
+	 * @param type Type du processus
+	 * @param names Nom du processus
+	 * @param startDate Date de début processus
+	 * @param duration Durée du processus (Millisecondes)
+	 */
+	private KProcessBuilder(final KProcessBuilder parent, final Date startDate, final double durationMs, final String type, final String... names) {
+		this(parent, startDate, type, names);
+		//---------------------------------------------------------------------
+		this.durationMs = durationMs;
 	}
 
 	/**
@@ -126,6 +141,25 @@ public final class KProcessBuilder implements Builder<KProcess> {
 		//---------------------------------------------------------------------
 		metaDatas.put(mdName, mdValue);
 		return this;
+	}
+
+	/**
+	 * Ajout d'un sous processus.
+	 * @param process Sous-Processus à ajouter
+	 */
+	public KProcessBuilder beginSubProcess(final Date startDate, final double durationMs, final String type, final String... names) {
+		return new KProcessBuilder(this, startDate, durationMs, type, names);
+	}
+
+	/**
+	 * Ajout d'un sous processus.
+	 * @param process Sous-Processus à ajouter
+	 */
+	public KProcessBuilder endSubProcess() {
+		Assertion.notNull(parent);
+		//---------------------------------------------------------------------
+		parent.addSubProcess(this.build());
+		return parent;
 	}
 
 	/**
