@@ -22,12 +22,13 @@ public final class StatsUtil {
 		return Math.round(nextGaussian(value, Math.round(value * 1.20)) + coef * value);
 	}
 
-	private static long nextGaussian(final double moyenne, final double maxValue) {
-		Assertion.precondition(moyenne >= 1, "La moyenne doit être supérieure ou égale à 1");
-		Assertion.precondition(maxValue > moyenne, "La valeur max doit être supérieure à la moyenne");
-		long result = Math.round(RANDOM.nextGaussian() * maxValue / 5d + moyenne);
+	private static long nextGaussian(final double avg, final double maxValue) {
+		Assertion.precondition(avg >= 1, "La moyenne doit être supérieure ou égale à 1");
+		Assertion.precondition(maxValue > avg, "La valeur max doit être supérieure à la moyenne");
+		//---------------------------------------------------------------------
+		long result = Math.round(RANDOM.nextGaussian() * maxValue / 5d + avg);
 		if (result < 0 || result > maxValue) {
-			result = nextGaussian(moyenne, maxValue);
+			result = nextGaussian(avg, maxValue);
 		}
 		return result;
 	}
