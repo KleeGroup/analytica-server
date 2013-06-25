@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
+import com.kleegroup.museum.VirtualDatas;
 
 @Path("/home")
 public class HomeServices {
