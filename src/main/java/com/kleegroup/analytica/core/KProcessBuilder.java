@@ -152,8 +152,9 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	}
 
 	/**
-	 * Ajout d'un sous processus.
-	 * @param process Sous-Processus à ajouter
+	 * Fin d'un sous processus.
+	 * Le sous processus est automatiquement ajouté au processus parent.
+	 * @param process Sous-Processus parent
 	 */
 	public KProcessBuilder endSubProcess() {
 		Assertion.notNull(parent);

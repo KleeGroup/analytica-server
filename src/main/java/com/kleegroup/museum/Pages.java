@@ -7,7 +7,7 @@ import com.kleegroup.analytica.core.KProcessBuilder;
 
 final class Pages {
 	public final static PageBuilder HOME = new HomePage();
-	public final static PageBuilder SEARCH = new SearchPage();
+	public final static PageBuilder ARTIST_SEARCH = new SearchPage();
 	public final static PageBuilder ARTIST = new ArtistPage();
 
 	private static final String PAGE_PROCESS = "PAGE";
@@ -18,7 +18,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final double processDuration = StatsUtil.random(150, getCoef(dateVisite.getHours()));
 
-			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "home", "homePage")//
+			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "home")//
 					.beginSubProcess(dateVisite, 80, SQL_PROCESS, "select*from news").endSubProcess()//
 					.build();
 		}
@@ -28,8 +28,8 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final double processDuration = StatsUtil.random(750, getCoef(dateVisite.getHours()));
 
-			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "search")//
-					.beginSubProcess(dateVisite, 80, SEARCH_PROCESS, "find oeuvres").endSubProcess()//
+			return new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "search", "artists")//
+					.beginSubProcess(dateVisite, 80, SEARCH_PROCESS, "find artists").endSubProcess()//
 					.build();
 		}
 	}

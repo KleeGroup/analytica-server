@@ -4,7 +4,7 @@ import java.util.Random;
 
 import kasper.kernel.util.Assertion;
 
-public final class StatsUtil {
+final class StatsUtil {
 	private static final Random RANDOM = new Random();
 
 	private StatsUtil() {
@@ -18,7 +18,7 @@ public final class StatsUtil {
 	 * @param coef Coefficient
 	 * @return prochaine valeur aléatoire suivant une gaussienne
 	 */
-	public static long random(final double value, final double coef) {
+	static long random(final double value, final double coef) {
 		return Math.round(nextGaussian(value, Math.round(value * 1.20)) + coef * value);
 	}
 

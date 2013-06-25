@@ -55,12 +55,12 @@ public final class VirtualDatas {
 		//On ne CODE pas un scenario, on le déclare.
 		addPages(startVisit, //
 				Pages.HOME,// 
-				Pages.SEARCH,// 
+				Pages.ARTIST_SEARCH,// 
 				Pages.ARTIST,// 
 				Pages.ARTIST,// 
 				Pages.ARTIST,// 
 				Pages.ARTIST,// 
-				Pages.SEARCH,// 
+				Pages.ARTIST_SEARCH,// 
 				Pages.ARTIST,// 
 				Pages.ARTIST,// 
 				Pages.ARTIST,// 
