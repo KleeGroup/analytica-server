@@ -30,7 +30,6 @@ var sampleGraph = {
 
 
 
-
 var generateGraph = function generateGraph(graph) {
 
 	//Insert the html in the dom in order to be able to render data.
@@ -59,11 +58,20 @@ var generateGraph = function generateGraph(graph) {
 					/**/
 					$('.line-spark').sparkline('html', {
 						type: 'line',
-						width: 80
+						width: 80,
+						lineColor: '#33B5E5',
+						minSpotColor: 'black',
+						maxSpotColor: false,
+						spotColor: '#FF4444'
+						//spotRadius: 3
 					});
 					$('.bar-spark').sparkline('html', {
 						type: 'bar',
-						barColor: 'red'
+						barColor: '#33B5E5',
+						//minSpotColor: false, 
+						//maxSpotColor: false, 
+						spotColor: '#FF4444',
+						spotRadius: 3
 					});
 				} else if (graphtype === "bigValue") {
 					data.icon = graph.ui.icon;
@@ -131,10 +139,17 @@ function getDrawFunction(dataType, uiType) {
 		case "stack":
 			return 'drawStackedAreaChartWithNvd3';
 			break;
+
+		case "punchcard":
+			return 'drawD3PunchCard';
+			break;
+
 	}
 }
 
+
 // Generate an url with all the parameters where route is the default route and params is the url parameters
+
 function generateUrl(route, params) {
 	var url = '',
 		SEP = '/',
@@ -151,6 +166,7 @@ function generateUrl(route, params) {
 };
 
 //Parse data for a mono serie graph.
+
 function parseDataResult(dataResult, label) {
 	var reconstructedData = [];
 	for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
@@ -164,6 +180,29 @@ function parseDataResult(dataResult, label) {
 	];
 	return data;
 };
+
+// Parse function for d3 punchCard
+
+function parsePunchCard(response, labels) {
+	var series = [],
+		text = [];
+	for (var cle in response) {
+		if (response.hasOwnProperty(cle)) {
+			var array = response[cle];
+			series.push(array);
+			text.push(cle);
+		} else { /*throw an exception here*/ }
+	};
+	var datas = {};
+	datas.data = series;
+	datas.labels = text;
+
+	return datas;
+}
+
+
+/* Parsing datas for Nvd3 sparklines the datas should be an array of json objects like {x:--, y:--}
+ */
 
 function parseSparkLines(dataResult, label) {
 	var reconstructedData = [];
@@ -182,6 +221,8 @@ function parseSparkLines(dataResult, label) {
 	return data;
 
 }
+
+// Parsing a collection of string into Nvd3 sparkline datasource . 2,3,0,1 to [{x:1,y:2},{x:2,y:3},{x:3,y:0},{x:4,y:1}]
 
 function parseStringValuesToJsonSparklines(data) {
 	var data = data.split(",");
@@ -256,16 +297,19 @@ function parsePieDatas(dataResult, labels) {
 		});
 	}
 	var maxElements = 4;
+
 	reconstructedData.sort(sort_by('value', false, parseFloat));
 	if (reconstructedData.length > maxElements) {
 		var otherValues = {
 			label: "Others",
 			value: 0
 		};
+
 		for (var i = maxElements; i < reconstructedData.length; i++) {
 			otherValues.value += reconstructedData[i].value;
 		}
 		var numberToSuppress = reconstructedData.length - maxElements;
+
 		reconstructedData.splice(maxElements, numberToSuppress, otherValues);
 	}
 
@@ -274,6 +318,7 @@ function parsePieDatas(dataResult, labels) {
 			values: reconstructedData
 		}
 	];
+
 	return data;
 };
 //sort(function(a,b) { return parseFloat(a.price) - parseFloat(b.price) } );
@@ -282,6 +327,7 @@ function parsePieDatas(dataResult, labels) {
 function parseBigValue(dataResult, labels) {
 	var data = {};
 	var reconstructedData = [];
+
 	for (var r in dataResult) {
 		var name = r.split("::");
 
@@ -313,7 +359,6 @@ function parseDataTable(dataResult, labels) {
 		var obj = dataResult[r][0];
 		var responseSparks = dataResult[r][1];
 		var activitySparks = dataResult[r][2];
-
 
 		var hits, duration;
 		var sqlTime = undefined;

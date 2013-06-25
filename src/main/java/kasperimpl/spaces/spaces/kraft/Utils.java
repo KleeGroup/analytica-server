@@ -108,42 +108,6 @@ public final class Utils {
 		return tableMap;
 	}
 
-	// final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
-	//
-	// final List<DataPoint> list = loadDataPointsMonoSerie(result, datas);
-	////            DataPoint maxPoint = list.get(0);
-	// DataPoint minPoint = list.get(0);
-	// for (final DataPoint dPoint : list) {
-	// if (dPoint.getValue() > maxPoint.getValue()) {
-	// maxPoint = dPoint;
-	// }
-	// if (dPoint.getValue() < maxPoint.getValue()) {
-	// minPoint = dPoint;
-	// }
-	// }
-	//
-	////            for (final DataPoint dPoint : list) {
-	// if (dPoint.getValue() > maxPoint.getValue()) {
-	// maxPoint = dPoint;
-	// }
-	// }
-	// Récupérer pt Max,
-	// Récupérer pt Min,
-	// Récupérer pt Moy.
-	// return null;
-	/*	private static List<String> readDataKeys(final String datas) {
-			final List<String> key = new ArrayList<String>();
-			final List<String> dataKeys = Arrays.asList(datas.split(";"));
-
-			for (final String str : dataKeys) {
-				final String[] list = str.split(":");
-
-				key.add(list[0]);
-			}
-
-			return dataKeys;
-		}*/
-
 	/**
 	 *
 	 * @param timeStr : e.g: NOW+1h
@@ -242,7 +206,6 @@ public final class Utils {
 		Assertion.notNull(result);
 
 		// ---------------------------------------------------------------------
-		// result.getSerie(null).getMetric(metricKey)
 
 		final HQuery query = result.getQuery();
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
@@ -257,7 +220,6 @@ public final class Utils {
 					final String[] metricKey = dataKey.split(":");
 					final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
 					double val = 0;
-
 					if (metricKey.length > 1) {
 						final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
 
@@ -272,11 +234,9 @@ public final class Utils {
 						dataPoints.add(dPoint);
 					}
 				}
-
 				pointsMap.put(dataKey, dataPoints);
 			}
 		}
-
 		return pointsMap;
 	}
 
@@ -284,7 +244,6 @@ public final class Utils {
 		Assertion.notNull(result);
 
 		// ---------------------------------------------------------------------
-		// result.getSerie(null).getMetric(metricKey)
 
 		final HQuery query = result.getQuery();
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
@@ -293,7 +252,6 @@ public final class Utils {
 
 		final String dataKey = datas;
 		for (final HCategory category : query.getAllCategories()) {
-			//for (final String dataKey : dataKeys) { // Normalement une seule Datakey: soit mean soit max,soit count,....
 			dataPoints = new ArrayList<DataPoint>();
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final String[] metricKey = dataKey.split(":");
@@ -315,10 +273,8 @@ public final class Utils {
 				} else {
 					dataPoints.add(dPoint);
 				}
-
 			}
 			pointsMap.put(category.id(), dataPoints);
-			//}
 		}
 		return pointsMap;
 	}
@@ -337,10 +293,6 @@ public final class Utils {
 		for (final HCategory category : result.getQuery().getAllCategories()) {
 			final Collection<Object> tableCollection = new ArrayList<>();
 			tableCollection.add(result.getSerie(category).getMetrics());
-			//final Collection<DataPoint> dataPoints;
-			/*dataPoints = new ArrayList<DataPoint>();
-			dataPoints = getDataPoints(category, result, "duration:mean");
-			dataPoints = getDataPoints(category, result, "duration:count");*/
 			tableCollection.add(getDataPoints(category, result, "duration:mean"));
 			tableCollection.add(getDataPoints(category, result, "duration:count"));
 			tableMap.put(category.id(), tableCollection);
@@ -357,15 +309,10 @@ public final class Utils {
 	public Map<String, Collection<Object>> getSparklinesTableDatas(final HResult result, final String datas) {
 
 		final Map<String, Collection<Object>> tableMap = new HashMap<String, Collection<Object>>();
-		final String dataKey = datas;
 
 		for (final HCategory category : result.getQuery().getAllCategories()) {
 			final Collection<Object> tableCollection = new ArrayList<>();
 			tableCollection.add(result.getSerie(category).getMetrics());
-			//final Collection<DataPoint> dataPoints;
-			/*dataPoints = new ArrayList<DataPoint>();
-			dataPoints = getDataPoints(category, result, "duration:mean");
-			dataPoints = getDataPoints(category, result, "duration:count");*/
 			tableCollection.add(getStringList(category, result, "duration:mean"));
 			tableCollection.add(getStringList(category, result, "duration:count"));
 			tableMap.put(category.id(), tableCollection);
@@ -395,7 +342,6 @@ public final class Utils {
 				val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
 			}
 
-			//final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), val);
 			if (!Double.toString(val).equals("NaN")) {
 				val = Math.ceil(100 * val) / 100;
 				stringBuilder.append(val);
@@ -408,9 +354,6 @@ public final class Utils {
 		return stringBuilder.toString();
 	}
 
-	/**
-	 * @return
-	 */
 	private Collection<DataPoint> getDataPoints(final HCategory category, final HResult result, final String dataKey) {
 		final Collection<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		for (final HCube cube : result.getSerie(category).getCubes()) {
@@ -435,15 +378,6 @@ public final class Utils {
 				}*/
 		}
 		return dataPoints;
-	}
-
-	public Object getAggregatedValues(final HResult result, final String datas) {
-		final Map map = loadDataPointsMuliSerie(result, datas);
-
-		// Réupérer le pt Max par entrée de la map
-		// récupérer le pt Min par entrée de la map
-		// Récupérer un pt moyen par entrée de la map
-		return null;
 	}
 
 	/**
@@ -481,5 +415,48 @@ public final class Utils {
 		}
 
 		return valueByCategory;
+	}
+
+	/**
+	 * @param result
+	 * @param datas
+	 * @return a Matrix matching metrics values by days and hours. It will be used to build a punchcard  
+	 */
+	public Map<String, Map<Long, Double>> getMetricByDayAndHour(final HResult result, final String dataKey) {
+
+		for (final HCategory category : result.getQuery().getAllCategories()) {
+			for (final HCube cube : result.getSerie(category).getCubes()) {
+				final String[] metricKey = dataKey.split(":");
+				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
+				double val = 0;
+
+				if (metricKey.length > 1) {
+					final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
+
+					val = hMetric != null ? hMetric.get(counterType) : Double.NaN;
+				} else {
+					val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public Map<String, Object> getPunchCardFakeDatas(final HResult result, final String dataKey) {
+		final Map<String, Object> matrix = new HashMap<>();
+		final String[] days = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+
+		final int length = days.length;
+		for (int i = length; i > 0; i--) {
+			final Double[] valByHours = new Double[24];
+			for (int j = 0; j < 24; j++) {
+				double val = 300 * Math.random();
+				val = Math.ceil(100 * val) / 100;
+				valByHours[j] = val;
+			}
+			matrix.put(days[i - 1], valByHours);
+		}
+		return matrix;
 	}
 }
