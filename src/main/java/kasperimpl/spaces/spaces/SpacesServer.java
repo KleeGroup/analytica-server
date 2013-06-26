@@ -10,6 +10,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.lang.Activeable;
+import kasperimpl.spaces.spaces.kraft.Dashboard;
 import kasperimpl.spaces.spaces.kraft.HomeServices;
 
 import org.glassfish.grizzly.http.server.HttpHandler;
@@ -59,7 +60,7 @@ final class SpacesServer implements Activeable {
 	private static HttpServer createServer(final int port) throws IOException {
 		//Configuration de la servlet jersey.
 		// Attention tous les chemins /home/ sont bindés sur jersey.
-		final ResourceConfig rc = new ClassNamesResourceConfig(HomeServices.class);
+		final ResourceConfig rc = new ClassNamesResourceConfig(Dashboard.class, HomeServices.class);
 		final URI baseURI = UriBuilder.fromUri("http://localhost/").port(port).build();
 		System.out.println(String.format("Jersey app started with WADL available at " + "%sapplication.wadl\nenter to stop it...", baseURI, baseURI));
 		final HttpServer httpServer = GrizzlyServerFactory.createHttpServer(baseURI, rc);
