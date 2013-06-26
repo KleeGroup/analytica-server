@@ -87,7 +87,7 @@
   font-size: 11pt;
   letter-spacing: 0.01em;
   line-height: 13pt;
-  font-smooth: always;
+  /*font-smooth: always;*/
 }
 
 
@@ -178,7 +178,11 @@ svg{
   height: 20px;*/
   text-align: right;
   color:#FF4444;
-  font-size: xx-small;
+  /*font-size: xx-small;
   /*#FF4444CC0000
   */
+}
+
+.mixed-table td{
+  height: 20px;
 }

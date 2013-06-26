@@ -110,38 +110,12 @@ public class HomeServices {
 	}
 
 	@GET
-	@Path("/testAggregatedDatasService/{category}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String testAggregatedDatasService(@QueryParam("timeFrom") final String timeFrom, @QueryParam("timeTo") final String timeTo, @QueryParam("timeDim") final String timeDim, @QueryParam("category") final String category, @QueryParam("datas") final String datas) {
-
-		return gson.toJson(utils.testgetAggregatedValuesByCategory(timeFrom, timeTo, timeDim, category, datas));
-	}
-
-	@GET
-	@Path("/dataTables/{category}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getTablesDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
-
-		return gson.toJson(utils.getDataTable(result, datas));
-	}
-
-	@GET
 	@Path("/stackedDatas/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAllCategoriesToStack(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
 
 		return gson.toJson(utils.loadDataPointsStackedByCategory(result, datas));
-	}
-
-	@GET
-	@Path("/complexTable/{category}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getcomplexTableDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
-
-		return gson.toJson(utils.getComplexTableDatas(result, datas));
 	}
 
 	@GET

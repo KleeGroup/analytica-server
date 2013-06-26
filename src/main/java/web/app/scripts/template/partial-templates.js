@@ -27,24 +27,20 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.value3) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.value3; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</p>\r\n  </td>  \r\n  <td>\r\n  "
-    + " "
-    + " <div id=\""
+    + "</p>\r\n  </td>  \r\n  <td id=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.value4),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" class=\"text-center\" > <span class = \"line-spark text-center\"> "
+    + "\" class=\"text-center\">\r\n  <span class = \"line-spark text-center\"> "
     + escapeExpression(((stack1 = ((stack1 = depth0.value4),stack1 == null || stack1 === false ? stack1 : stack1.sparklineValues)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span> <span class =\"spark-text\"> "
     + escapeExpression(((stack1 = ((stack1 = depth0.value4),stack1 == null || stack1 === false ? stack1 : stack1.lastValue)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</span></div>\r\n  </td>\r\n  <td><div id=\""
+    + "</span>\r\n  </td>\r\n  <td id=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" class = \"bar-spark text-center\">"
+    + "\" class = \"text-center\"><span class = \"bar-spark text-center\">"
     + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.sparklineValues)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</div>\r\n</td>\r\n</tr>\r\n\r\n"
-    + "\r\n<script type=\"text/javascript\">\r\n\r\n$(document).ready(function () {\r\n "
-    + "\r\n  "
-    + "\r\n  "
-    + "\r\n  "
-    + "\r\n});\r\n</script>\r\n";
+    + "</span><span class =\"spark-text\"> "
+    + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.lastValue)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span>\r\n</td>\r\n</tr>\r\n\r\n"
+    + "\r\n";
   return buffer;
   });
 })();

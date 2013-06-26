@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,22 +91,6 @@ public final class Utils {
 		}
 
 		return valueByCategory;
-	}
-
-	/**
-	 *
-	 * @param result
-	 * @param datas
-	 * @return a Collections of metrics per category
-	 */
-	public Map<String, Collection<HMetric>> getDataTable(final HResult result, final String datas) {
-		final Map<String, Collection<HMetric>> tableMap = new HashMap<String, Collection<HMetric>>();
-
-		for (final HCategory category : result.getQuery().getAllCategories()) {
-			tableMap.put(category.id(), result.getSerie(category).getMetrics());
-		}
-
-		return tableMap;
 	}
 
 	/**
@@ -283,27 +268,6 @@ public final class Utils {
 	 * 
 	 * @param result
 	 * @param datas
-	 * @return Map for building a dataTable with ..............
-	 */
-	public Map<String, Collection<Object>> getComplexTableDatas(final HResult result, final String datas) {
-
-		final Map<String, Collection<Object>> tableMap = new HashMap<String, Collection<Object>>();
-		final String dataKey = datas;
-
-		for (final HCategory category : result.getQuery().getAllCategories()) {
-			final Collection<Object> tableCollection = new ArrayList<>();
-			tableCollection.add(result.getSerie(category).getMetrics());
-			tableCollection.add(getDataPoints(category, result, "duration:mean"));
-			tableCollection.add(getDataPoints(category, result, "duration:count"));
-			tableMap.put(category.id(), tableCollection);
-		}
-		return tableMap;
-	}
-
-	/**
-	 * 
-	 * @param result
-	 * @param datas
 	 * @return building a dataTbable
 	 */
 	public Map<String, Collection<Object>> getSparklinesTableDatas(final HResult result, final String datas) {
@@ -354,69 +318,6 @@ public final class Utils {
 		return stringBuilder.toString();
 	}
 
-	private Collection<DataPoint> getDataPoints(final HCategory category, final HResult result, final String dataKey) {
-		final Collection<DataPoint> dataPoints = new ArrayList<DataPoint>();
-		for (final HCube cube : result.getSerie(category).getCubes()) {
-			final String[] metricKey = dataKey.split(":");
-			final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
-			double val = 0;
-
-			if (metricKey.length > 1) {
-				final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
-
-				val = hMetric != null ? hMetric.get(counterType) : Double.NaN;
-			} else {
-				val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
-			}
-
-			final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), val);
-
-			if (dPoint.getValue() != null) {
-				dataPoints.add(dPoint);
-			}/* else {
-				dataPoints.add(dPoint);
-				}*/
-		}
-		return dataPoints;
-	}
-
-	/**
-	 * @param timeFrom
-	 * @param timeTo
-	 * @param timeDim
-	 * @param category
-	 * @param datas
-	 * @return
-	 */
-	public Map<String, Double> testgetAggregatedValuesByCategory(final String timeFrom, final String timeTo, final String timeDim, final String categories, final String datas) {
-
-		// ---------------------------------------------------------------------
-		final List<String> categoriesList = Arrays.asList(categories.split(";"));
-		final HMetricKey metricKey = new HMetricKey("duration", true);
-		final HCounterType counterType = HCounterType.mean;
-		final Map<String, Double> valueByCategory = new HashMap<>();
-
-		for (final String category : categoriesList) {
-			final HResult result = resolveQuery(timeFrom, timeTo, timeDim, category, true);
-
-			System.out.println(result.getQuery().getAllCategories());
-
-			for (final HCategory hCategory : result.getQuery().getAllCategories()) {
-				System.out.println(hCategory.drillUp());
-
-				final HMetric metric = result.getSerie(hCategory).getMetric(metricKey);
-
-				if (metric != null) {
-					final double value = metric.get(counterType);
-
-					valueByCategory.put(category.toString(), value);
-				}
-			}
-		}
-
-		return valueByCategory;
-	}
-
 	/**
 	 * @param result
 	 * @param datas
@@ -439,12 +340,11 @@ public final class Utils {
 				}
 			}
 		}
-
 		return null;
 	}
 
 	public Map<String, Object> getPunchCardFakeDatas(final HResult result, final String dataKey) {
-		final Map<String, Object> matrix = new HashMap<>();
+		final Map<String, Object> matrix = new LinkedHashMap<>();
 		final String[] days = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
 		final int length = days.length;
@@ -456,6 +356,7 @@ public final class Utils {
 				valByHours[j] = val;
 			}
 			matrix.put(days[i - 1], valByHours);
+			System.out.println(days[i - 1]);
 		}
 		return matrix;
 	}
