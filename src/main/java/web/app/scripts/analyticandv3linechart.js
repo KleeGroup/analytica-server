@@ -147,7 +147,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 				return d.value
 			})
 				.showLabels(false)
-				.showLegend(true);
+				.showLegend(false);
 
 			d3.select('#' + container[0].id + ' svg')
 				.datum(datas)

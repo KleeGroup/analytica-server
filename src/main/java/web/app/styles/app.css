@@ -17,6 +17,12 @@
 }
 .ui-widget-header{
   background-color: #bbb;
+  font-family:Georgia,serif;
+/*  color:#4E443C;*/
+  font-variant: small-caps; 
+  text-transform: none; f
+  font-weight: 100; 
+  margin-bottom: 0;
 }
 .ui-widget-header h{
   margin-left: 10px;
@@ -184,5 +190,5 @@ svg{
 }
 
 .mixed-table td{
-  height: 20px;
+ /* height: 20px;*/
 }

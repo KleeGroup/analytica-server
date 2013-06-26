@@ -19,15 +19,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.unit) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.unit; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</div>\r\n</td>\r\n  <td>\r\n	<p class=\"text-right\">";
+    + "</div>\r\n</td>\r\n  <td align=\"right\">\r\n	";
   if (stack1 = helpers.value2) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.value2; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</p>\r\n  </td>\r\n  <td>\r\n	<p class=\"text-right\">";
+    + "\r\n  </td>\r\n  <td align=\"right\">\r\n	";
   if (stack1 = helpers.value3) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.value3; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</p>\r\n  </td>  \r\n  <td id=\""
+    + "\r\n  </td>  \r\n  <td id=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.value4),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" class=\"text-center\">\r\n  <span class = \"line-spark text-center\"> "
     + escapeExpression(((stack1 = ((stack1 = depth0.value4),stack1 == null || stack1 === false ? stack1 : stack1.sparklineValues)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
