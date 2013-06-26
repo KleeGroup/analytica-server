@@ -35,7 +35,7 @@ final class Pages {
 	}
 
 	private static class ArtistPage implements PageBuilder {
-		//On joue sur plusieurs listes 
+		//On joue sur plusieurs listes de façon à ne pas avoir une équirépartition des données.
 		private static final String[] artistsA = "vinci;monet;picasso;renoir;rubens".split(";");
 		private static final String[] artistsB = "bazille;bonnard;munch;signac;hopper;cézanne;bacon;johnes;rothko;warhol".split(";");
 
@@ -48,7 +48,7 @@ final class Pages {
 		}
 
 		private static String getArtist() {
-			String[] artists = Math.random() > 0.5 ? artistsA : artistsB;
+			String[] artists = Math.random() > 0.3 ? artistsA : artistsB;
 			int r = Double.valueOf(Math.random() * artists.length).intValue();
 			return artists[r];
 		}

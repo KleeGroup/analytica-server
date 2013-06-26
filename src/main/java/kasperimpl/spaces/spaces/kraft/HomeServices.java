@@ -17,10 +17,12 @@ import kasper.kernel.di.injector.Injector;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
-import com.kleegroup.museum.VirtualDatas;
+import com.kleegroup.museum.PageListener;
+import com.kleegroup.museum.Museum;
 
 @Path("/home")
 public class HomeServices {
@@ -44,7 +46,14 @@ public class HomeServices {
 		final Injector injector = new Injector();
 		injector.injectMembers(this, Home.getContainer().getRootContainer());
 		if (!loaded) {
-			new VirtualDatas(serverManager).load();
+			new Museum(new PageListener() {
+
+				@Override
+				public void onPage(KProcess process) {
+					serverManager.push(process);
+
+				}
+			}).load();
 			loaded = true;
 		}
 		utils = new Utils(serverManager);

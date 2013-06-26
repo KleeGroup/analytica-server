@@ -7,23 +7,19 @@ import java.util.GregorianCalendar;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analytica.server.ServerManager;
 
 /**
- * 
  * @author statchum
- * @version $Id: codetemplates.xml,v 1.2 2011/06/21 14:33:16 npiedeloup Exp $
  */
-public final class VirtualDatas {
-
+public final class Museum {
 	private static final int NB_VISIT_DAILY_MAX = 10;
 
-	private final ServerManager serverManager;
+	private final PageListener pageListener;
 
-	public VirtualDatas(final ServerManager serverManager) {
-		Assertion.notNull(serverManager);
+	public Museum(final PageListener pageListener) {
+		Assertion.notNull(pageListener);
 		// ---------------------------------------------------------------------
-		this.serverManager = serverManager;
+		this.pageListener = pageListener;
 	}
 
 	public void load() {
@@ -77,7 +73,8 @@ public final class VirtualDatas {
 
 	private Date addPage(PageBuilder pageBuilder, Date startDate) {
 		KProcess homePage = pageBuilder.createPage(startDate);
-		serverManager.push(homePage);
+		//On notifie le listener
+		pageListener.onPage(homePage);
 		return addWaitTime(startDate);
 	}
 
