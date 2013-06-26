@@ -5,10 +5,6 @@ import java.util.Scanner;
 import kasper.kernel.Home;
 
 /**
- * 
- */
-
-/**
  * @author statchum
  */
 public final class App {
@@ -22,6 +18,5 @@ public final class App {
 		} finally {
 			Home.stop();
 		}
-
 	}
 }
