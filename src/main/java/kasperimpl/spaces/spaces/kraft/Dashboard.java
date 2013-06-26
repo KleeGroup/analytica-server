@@ -28,8 +28,6 @@ public final class Dashboard {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String hello() {
-		System.out.println(">>>dashboard/index");
-
 		Map context = new HashMap<>();
 		context.put("contact", "npi");
 		return process("index", context);

@@ -70,6 +70,9 @@ final class SpacesServer implements Activeable {
 		final String STATIC_ROUTE = "/web";
 		final StaticHttpHandler staticDocs = new StaticHttpHandler(SpacesServer.class.getResource(STATIC_ROUTE).getFile());
 		httpServer.getServerConfiguration().addHttpHandler(staticDocs, STATIC_ROUTE);
+
+		httpServer.getServerConfiguration().addHttpHandler(staticDocs, "/static");
+
 		System.out.println("URL>>>" + new File(SpacesServer.class.getResource(STATIC_ROUTE).getFile()));
 
 		final NetworkListener networkListener = new NetworkListener("sample-listener", "localhost", port);
