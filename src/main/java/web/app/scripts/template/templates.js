@@ -101,7 +101,7 @@ function program3(depth0,data) {
   if (stack1 = helpers.htmlTitle) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.htmlTitle; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</h>\r\n  </div>\r\n  <div>\r\n<table class=\"table table-striped table-bordered\">\r\n  <caption>";
+    + "</h>\r\n  </div>\r\n  <div>\r\n<table class=\"table table-striped table-bordered mixed-table\">\r\n  <caption>";
   if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
