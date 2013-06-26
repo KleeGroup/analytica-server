@@ -2,9 +2,6 @@ package application;
 
 import kasper.kernel.configurator.HomeConfig;
 import kasper.kernel.configurator.HomeConfigBuilder;
-import kasper.resource.ResourceManager;
-import kasperimpl.resource.ResourceManagerImpl;
-import kasperimpl.resource.plugins.java.ClassPathResourceResolverPlugin;
 import kasperimpl.spaces.spaces.SpacesManager;
 import kasperimpl.spaces.spaces.SpacesManagerImpl;
 
@@ -17,12 +14,11 @@ import com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.Berkeley
 final class AppConfig {
 
 	static HomeConfig createHomeConfig() {
+		final String db = "d:/analytica/db";
+
 		//@formatter:off
 		return new HomeConfigBuilder()
 				.beginModule("core")
-					.beginManager(ResourceManager.class, ResourceManagerImpl.class)
-						.beginPlugin("ResourceResolver", ClassPathResourceResolverPlugin.class).endPlugin()
-					.endManager()
 					.beginManager(SpacesManager.class, SpacesManagerImpl.class).endManager()
 				.endModule()
 				
@@ -32,7 +28,7 @@ final class AppConfig {
 					.endManager()
 					.beginManager(ServerManager.class, ServerManagerImpl.class)
 						.beginPlugin("ProcessStorePlugin", BerkeleyProcessStorePlugin.class)
-							.withParam("dbPath", "d:/analytica/db")
+							.withParam("dbPath", db)
 						.endPlugin()
 					.endManager()
 				.endModule()
