@@ -19,25 +19,27 @@ import com.github.mustachejava.MustacheFactory;
 
 @Path("/dashboard")
 public final class Dashboard {
-	private static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory();
+	private static final MustacheFactory MUSTACHE_FACTORY = new DefaultMustacheFactory() {
+		public Reader getReader(String name) {
+			return new InputStreamReader(Dashboard.class.getResourceAsStream(name + ".mustache"));
+		};
+	};
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String hello() {
 		System.out.println(">>>dashboard/index");
-		return process("index", new HashMap());
+
+		Map context = new HashMap<>();
+		context.put("contact", "npi");
+		return process("index", context);
 	}
 
 	private static final String process(final String name, final Map<String, ?> context) {
 		try {
 			final StringWriter writer = new StringWriter();
-			final Reader reader = new InputStreamReader(Dashboard.class.getResourceAsStream(name + ".mustache"));
-			try {
-				final Mustache mustache = MUSTACHE_FACTORY.compile(reader, name);
-				mustache.execute(writer, context);
-			} finally {
-				reader.close();
-			}
+			final Mustache mustache = MUSTACHE_FACTORY.compile(name);
+			mustache.execute(writer, context);
 			return writer.toString();
 		} catch (final Exception e) {
 			throw new KRuntimeException(e);
