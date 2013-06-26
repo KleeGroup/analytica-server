@@ -8,6 +8,7 @@ import kasper.kernel.Home;
  * @author statchum
  */
 public final class App {
+
 	public static void main(String[] args) {
 		Home.start(AppConfig.createHomeConfig());
 		try {
