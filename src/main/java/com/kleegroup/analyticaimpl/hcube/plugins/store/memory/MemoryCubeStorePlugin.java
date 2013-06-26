@@ -39,7 +39,7 @@ import com.kleegroup.analyticaimpl.hcube.CubeStorePlugin;
  * @author npiedeloup, pchretien
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
-final class MemoryCubeStorePlugin implements CubeStorePlugin {
+public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	private final Map<HCubeKey, HCube> store = new HashMap<HCubeKey, HCube>();
 
 	/**

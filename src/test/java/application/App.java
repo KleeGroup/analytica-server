@@ -1,10 +1,8 @@
 package application;
 
-import java.io.IOException;
+import java.util.Scanner;
 
-import kasper.AbstractTestCaseJU4;
-
-import org.junit.Test;
+import kasper.kernel.Home;
 
 /**
  * 
@@ -12,13 +10,18 @@ import org.junit.Test;
 
 /**
  * @author statchum
- *
  */
-public class App extends AbstractTestCaseJU4 {
-	@Test
-	public void test() throws IOException, InterruptedException {
-		while (true) {
-			Thread.sleep(1000);
+public final class App {
+	public static void main(String[] args) {
+		Home.start(AppConfig.createHomeConfig());
+		try {
+			System.out.println("Taper sur entrée pour sortir");
+			final Scanner sc = new Scanner(System.in);
+			sc.nextLine();
+			sc.close();
+		} finally {
+			Home.stop();
 		}
+
 	}
 }
