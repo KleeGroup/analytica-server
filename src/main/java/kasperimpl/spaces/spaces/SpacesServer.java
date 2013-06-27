@@ -1,5 +1,6 @@
 package kasperimpl.spaces.spaces;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
@@ -11,7 +12,6 @@ import kasperimpl.spaces.spaces.kraft.Dashboard;
 import kasperimpl.spaces.spaces.kraft.HomeServices;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.grizzly.http.server.StaticHttpHandler;
 
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.ClassNamesResourceConfig;
@@ -57,10 +57,11 @@ final class SpacesServer implements Activeable {
 
 		//Handler afin de servir les fichiers statics(html js).
 		// Attention, il faut qui les fichiers soient dans les sources et qu'on les retroube dans le bin.
-		final StaticHttpHandler staticDocs = new StaticHttpHandler(SpacesServer.class.getResource(STATIC_ROUTE).getFile());
-		httpServer.getServerConfiguration().addHttpHandler(staticDocs, STATIC_ROUTE);
+		final File rootFile = new File(SpacesServer.class.getResource(STATIC_ROUTE).getFile());
+		final StaticHttpHandler staticHttpHandler = new StaticHttpHandler(rootFile);
+		httpServer.getServerConfiguration().addHttpHandler(staticHttpHandler, STATIC_ROUTE);
 
-		httpServer.getServerConfiguration().addHttpHandler(staticDocs, "/static");
+		httpServer.getServerConfiguration().addHttpHandler(staticHttpHandler, "/static");
 		return httpServer;
 	}
 }
