@@ -1,10 +1,7 @@
 package kasperimpl.spaces.spaces;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -13,11 +10,7 @@ import kasper.kernel.lang.Activeable;
 import kasperimpl.spaces.spaces.kraft.Dashboard;
 import kasperimpl.spaces.spaces.kraft.HomeServices;
 
-import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.grizzly.http.server.NetworkListener;
-import org.glassfish.grizzly.http.server.Request;
-import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
@@ -43,11 +36,6 @@ final class SpacesServer implements Activeable {
 		try {
 			httpServer = createServer(port);
 			httpServer.start();
-			//			for (final NetworkListener listener : httpServer.getListeners()) {
-			//				//listener.registerAddOn(addon);
-			//								//if false, local files (html, etc.) can be modified without restarting the server
-			//				listener.getFileCache().setEnabled(false);
-			//			}
 		} catch (final IOException e) {
 			throw new KRuntimeException(e);
 		}
@@ -56,6 +44,8 @@ final class SpacesServer implements Activeable {
 	public void stop() {
 		httpServer.stop();
 	}
+
+	private static final String STATIC_ROUTE = "/web";
 
 	private static HttpServer createServer(final int port) throws IOException {
 		//Configuration de la servlet jersey.
@@ -67,50 +57,10 @@ final class SpacesServer implements Activeable {
 
 		//Handler afin de servir les fichiers statics(html js).
 		// Attention, il faut qui les fichiers soient dans les sources et qu'on les retroube dans le bin.
-		final String STATIC_ROUTE = "/web";
 		final StaticHttpHandler staticDocs = new StaticHttpHandler(SpacesServer.class.getResource(STATIC_ROUTE).getFile());
 		httpServer.getServerConfiguration().addHttpHandler(staticDocs, STATIC_ROUTE);
 
 		httpServer.getServerConfiguration().addHttpHandler(staticDocs, "/static");
-
-		System.out.println("URL>>>" + new File(SpacesServer.class.getResource(STATIC_ROUTE).getFile()));
-
-		final NetworkListener networkListener = new NetworkListener("sample-listener", "localhost", port);
-		httpServer.addListener(networkListener);
-
-		httpServer.getServerConfiguration().addHttpHandler(new HttpHandler() {
-			final SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-
-			@Override
-			public void service(final Request request, final Response response) throws Exception {
-				final StaticHttpHandler staticDocs = new StaticHttpHandler(SpacesServer.class.getResource(STATIC_ROUTE).getFile());
-				final Date now = new Date();
-				final String formattedTime;
-				synchronized (formatter) {
-					formattedTime = formatter.format(now);
-				}
-
-				response.setContentType("text/plain");
-				response.getWriter().write(new File(SpacesServer.class.getResource(STATIC_ROUTE).getFile()).toString());
-
-			}
-
-		}, STATIC_ROUTE);
-
-		//final String fileName = SpacesServer.class.getResource("/web/js").getFile();
-
-		//final StaticHttpHandler js = new StaticHttpHandler();
-		//System.out.println("Hello>>>");
-		//System.out.println("URL>>>" + new File(SpacesServer.class.getResource("/web/js").getFile()));
-
-		//js.addDocRoot(new File(SpacesServer.class.getResource("/web/js").getFile()));
-		//js.start();
-		//httpServer.getServerConfiguration().addHttpHandler(js, "");
-		//
-		//		final StaticHttpHandler img = new StaticHttpHandler();
-		//		img.addDocRoot(new File(KraftManager.class.getResource("webapp/img").getFile()));
-		//		httpServer.getServerConfiguration().addHttpHandler(img, "/img");
-		//
 		return httpServer;
 	}
 }
