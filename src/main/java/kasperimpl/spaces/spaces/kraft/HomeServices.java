@@ -17,23 +17,18 @@ import kasper.kernel.di.injector.Injector;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
-import com.kleegroup.museum.PageListener;
-import com.kleegroup.museum.Museum;
 
 @Path("/home")
 public class HomeServices {
+	private final String dTimeTo = "NOW+10h";
+	private final String dTimeFrom = "NOW-2h";
+	private final String dTimeDim = "Hour";
+	private final String dDatas = "duration:mean";
+	private final String dDatasMult = "duration:count;duration:mean";
 
-	final String dTimeTo = "NOW+10h";
-	final String dTimeFrom = "NOW-2h";
-	final String dTimeDim = "Hour";
-	final String dDatas = "duration:mean";
-	final String dDatasMult = "duration:count;duration:mean";
-
-	private static boolean loaded;
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	@Inject
@@ -45,17 +40,6 @@ public class HomeServices {
 	public HomeServices() {
 		final Injector injector = new Injector();
 		injector.injectMembers(this, Home.getContainer().getRootContainer());
-		if (!loaded) {
-			new Museum(new PageListener() {
-
-				@Override
-				public void onPage(KProcess process) {
-					serverManager.push(process);
-
-				}
-			}).load();
-			loaded = true;
-		}
 		utils = new Utils(serverManager);
 	}
 
