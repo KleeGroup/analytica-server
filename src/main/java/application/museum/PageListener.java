@@ -1,4 +1,4 @@
-package com.kleegroup.museum;
+package application.museum;
 
 import com.kleegroup.analytica.core.KProcess;
 

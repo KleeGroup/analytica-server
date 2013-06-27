@@ -4,10 +4,11 @@ import java.util.Scanner;
 
 import kasper.kernel.Home;
 
+import application.museum.Museum;
+import application.museum.PageListener;
+
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.server.ServerManager;
-import com.kleegroup.museum.Museum;
-import com.kleegroup.museum.PageListener;
 
 /**
  * @author statchum

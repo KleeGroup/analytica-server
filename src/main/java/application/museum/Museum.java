@@ -1,4 +1,4 @@
-package com.kleegroup.museum;
+package application.museum;
 
 import java.util.Calendar;
 import java.util.Date;
