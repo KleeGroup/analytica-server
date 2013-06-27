@@ -29,7 +29,9 @@ public final class Dashboard {
 	@Produces(MediaType.TEXT_HTML)
 	public String hello() {
 		Map context = new HashMap<>();
-		context.put("contact", "npi");
+		context.put("date", "27/06/2013");
+		context.put("version", "v0.1 ");
+		context.put("contact", "npiedeloup@kleegroup.com");
 		return process("index", context);
 	}
 
