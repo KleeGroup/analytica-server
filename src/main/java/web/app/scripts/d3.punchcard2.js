@@ -1,4 +1,20 @@
-function drawPunchcard2(id){
+function drawPunchcard2(id, data, days){
+/* var data = [
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0, 0]
+  ];
+    var days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+*/
+	
+//However we draw from the bottom up.
+data = data.reverse();
+days = days.reverse();
+	
 var pane_left = 120
   , width =  $(id).width()
   , pane_right = width - pane_left
@@ -8,16 +24,8 @@ var pane_left = 120
   , j
   , tx
   , ty
-  , max = 0
-  , data = [
-    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
-    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
-    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
-    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
-    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0, 0]
-  ];
+  , max = 0;
+
 
 // X-Axis.
 var x = d3.scale.linear().domain([0, 23]).
@@ -52,45 +60,57 @@ punchcard
 
 
 // Hour line markers by day.
-for (i in y.ticks(7)) {
-  punchcard.
-    append("g").
-    selectAll("line").
-    data([0]).
-    enter().
-    append("line").
-	    attr("x1", margin).
-	    attr("x2", width - 3 * margin).
-	    attr("y1", height - 3 * margin - y(i)).
-	    attr("y2", height - 3 * margin - y(i)).
-	    style("stroke-width", 1).
-	    style("stroke", "#888");
+for (d in y.ticks(7)) {
+	(function (d){
+		punchcard.
+		    append("g").
+		    selectAll("line").
+		    data([0]).
+		    enter().
+		    append("line").
+			    attr("x1", margin).
+			    attr("x2", width - 3 * margin).
+			    attr("y1", height - 3 * margin - y(d)).
+			    attr("y2", height - 3 * margin - y(d)).
+			    style("stroke-width", 1).
+			    style("stroke", "#888");
+		
+		  punchcard.
+		    append("g").
+		    selectAll(".rule").
+		    data([0]).
+		    enter().
+		    append("text")
+			    .attr("x", margin)
+			    .attr("y", height - 3 * margin - y(d) - 5)
+			    .attr("text-anchor", "left")
+			    .attr("class", "day"+d)
+			    .style("fill", "#888")
+			    .text(days[d])
+			    .on("mouseover",  function() {
+			        d3.selectAll(".day"+d)
+			          	.transition()
+			          	.style("fill", "#33B5E5"); //blue
+			  		})   
+		  		.on("mouseout", function() {
+			       	d3.selectAll(".day"+d)
+			          	.transition()
+			          	.style("fill", "#888");
+				      });
 
-  punchcard.
-    append("g").
-    selectAll(".rule").
-    data([0]).
-    enter().
-    append("text")
-	    .attr("x", margin)
-	    .attr("y", height - 3 * margin - y(i) - 5)
-	    .attr("text-anchor", "left")
-	    .attr("class", "day"+i)
-	    .style("fill", "#888")
-	    .text(["Sunday", "Saturday", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday"][i]);
-
-/*  punchcard.
-    append("g").
-    selectAll("line").
-    data(x.ticks(24)).
-    enter().
-    append("line")
-	    .attr("x1", function(d) { return pane_left - 2 * margin + x(d); })
-	    .attr("x2", function(d) { return pane_left - 2 * margin + x(d); })
-	    .attr("y1", height - 4 * margin - y(i))
-	    .attr("y2", height - 3 * margin - y(i))
-	    .style("stroke-width", 1)
-	    .style("stroke", "#888");*/
+		/*  punchcard.
+		    append("g").
+		    selectAll("line").
+		    data(x.ticks(24)).
+		    enter().
+		    append("line")
+			    .attr("x1", function(d) { return pane_left - 2 * margin + x(d); })
+			    .attr("x2", function(d) { return pane_left - 2 * margin + x(d); })
+			    .attr("y1", height - 4 * margin - y(i))
+			    .attr("y2", height - 3 * margin - y(i))
+			    .style("stroke-width", 1)
+			    .style("stroke", "#888");*/
+	})(d);
 }
 
 // Hour text markers.
@@ -100,26 +120,33 @@ punchcard
   .enter()
   .append("text")
   .attr("class", "rule")
-  .attr("class", function(d) { return "hour"+d;})
-  .attr("x", function(d) { return pane_left - 2 * margin + x(d); })
+  .attr("class", function(h) { return "hour"+h;})
+  .attr("x", function(h) { return pane_left - 2 * margin + x(h); })
   .attr("y", height - 3 * margin)
   .attr("text-anchor", "middle")
   .style("fill", "#888")
-  .text(function(d) {
-    if (d === 0) {
+  .on("mouseover",  function(h) {
+	  d3.selectAll(".hour"+h)
+      	.transition()
+      	.style("fill", "#33B5E5"); //blue
+  	})
+  .on("mouseout", function(h) {
+	  d3.selectAll(".hour"+h)
+	  	.transition()
+	   	.style("fill", "#888");
+	 })
+  .text(function(h) {
+    if (h === 0) {
       return "12a";
-    } else if (d > 0 && d < 12) {
-      return d;
-    } else if (d === 12) {
+    } else if (h > 0 && h < 12) {
+      return h;
+    } else if (h === 12) {
       return "12p";
-    } else if (d > 12 && d < 25) {
-      return d - 12;
+    } else if (h > 12 && h < 25) {
+      return h - 12;
     }
   });
 
-// Data has array where indicy 0 is Monday and 6 is Sunday, however we draw
-// from the bottom up.
-data = data.reverse();
 
 // Find the max value to normalize the size of the circles.
 for (i = 0; i < data.length; i++) {
@@ -128,8 +155,10 @@ for (i = 0; i < data.length; i++) {
 
 // Show the circles on the punchcard.
 for (i = 0; i < data.length; i++) {
+	//i is a day
 	(function (i){
 		for (j = 0; j < data[i].length; j++) {
+			//j is an hour
 			(function (j){
 			 punchcard
 		      .append("g")
@@ -138,27 +167,28 @@ for (i = 0; i < data.length; i++) {
 		      .enter()
 		      .append("circle")
 			      .style("fill", "#888")
+			      .attr("class", "day"+i+" hour"+j)
 			      .on("mouseover",  function() {
 			          d3.select(".hour"+j)
 			          	.transition()
 			          	.style("fill", "#33B5E5"); //blue
 			         
-			          d3.select(".day"+i)
-			          	.transition()
+			         d3.select(".day"+i)
+			         	.transition()
 			          	.style("fill", "#33B5E5"); //blue
 			          
-			          d3.select(this)
+			         d3.select(this)
 			          	.transition()
 			          	.style("fill", "#33B5E5"); //blue
+			        	
 			        })
-			        
 			      .on("mouseout", function() {
 			          d3.select(this)
 			          	.transition()
 			          	.style("fill", "#888")
 	
 		          	d3.select(".day"+i)
-			          	.transition()
+		          		.transition()
 			          	.style("fill", "#888");
 	
 		          	d3.select(".hour"+j)
