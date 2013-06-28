@@ -127,7 +127,7 @@ function initializeTestHelperAnalytica() {
   graphique6.ui.type = "table";
   graphique6.ui.labels = "Labels;Hits;Response Time(ms);Response Time;Activity";
   var graphique7 = generateDefaultGraph();//MultiSerie
-  graphique7.data.url = "/home/tablePunchcard/PAGE";
+  graphique7.data.url = "/home/faketablePunchcard/PAGE";
   graphique7.html.title = "Pages Activity";
   graphique7.data.parse = parsePunchCard;
   graphique7.ui.type = "punchcard";

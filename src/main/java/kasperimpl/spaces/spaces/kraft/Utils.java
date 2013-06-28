@@ -367,7 +367,7 @@ public final class Utils {
 	}
 
 	public Punchcard getPunchCardDatas(final HResult result, final String dataKey) {
-		final String[] days = { "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "vendredi" };
+		final String[] days = { "dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi" };
 
 		final Punchcard punchcard = new Punchcard();
 		punchcard.days = days;

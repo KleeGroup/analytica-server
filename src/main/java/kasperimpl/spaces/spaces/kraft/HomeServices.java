@@ -118,4 +118,12 @@ public class HomeServices {
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
 		return gson.toJson(utils.getPunchCardDatas(result, datas));
 	}
+
+	@GET
+	@Path("/faketablePunchcard/{category}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getPunchCardFakeDatas(@QueryParam("timeFrom") @DefaultValue("NOW-240h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
+		return gson.toJson(utils.getPunchCardFakeDatas(result, datas));
+	}
 }
