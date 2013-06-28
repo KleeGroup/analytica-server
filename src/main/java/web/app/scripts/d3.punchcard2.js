@@ -2,7 +2,7 @@ function drawPunchcard2(id){
 var pane_left = 120
   , width =  $(id).width()
   , pane_right = width - pane_left
-  , height = 520
+  , height = 400
   , margin = 10
   , i
   , j
@@ -35,17 +35,19 @@ var punchcard = d3.
 	  attr("height", height - 2 * margin).
 	  append("g");
 
+
+var w = (pane_right- margin)/24;
 //Adding a vertical zebra
 punchcard
 //	.append("g")
 	.selectAll(".rule")
-	.data(x.ticks(12))
+	.data(x.ticks(24))
 	.enter()
 	.append("rect")
-	    .style("fill", "#ddd")
-	    .attr("width", pane_right/24)
+	    .style("fill", function(d) { return d%2==0 ? "#ddd" : "#eee"})
+	    .attr("width", w)
 	    .attr("height", height)
-	    .attr("x", function(d) { return pane_left + x(d); })
+	    .attr("x", function(d) { return pane_left  - 2 * margin+ x(d) - w/2; })
 	    .attr("y", 0);
 
 
@@ -69,13 +71,15 @@ for (i in y.ticks(7)) {
     selectAll(".rule").
     data([0]).
     enter().
-    append("text").
-	    attr("x", margin).
-	    attr("y", height - 3 * margin - y(i) - 5).
-	    attr("text-anchor", "left").
-	    text(["Sunday", "Saturday", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday"][i]);
+    append("text")
+	    .attr("x", margin)
+	    .attr("y", height - 3 * margin - y(i) - 5)
+	    .attr("text-anchor", "left")
+	    .attr("class", "day"+i)
+	    .style("fill", "#888")
+	    .text(["Sunday", "Saturday", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday"][i]);
 
-  punchcard.
+/*  punchcard.
     append("g").
     selectAll("line").
     data(x.ticks(24)).
@@ -86,21 +90,22 @@ for (i in y.ticks(7)) {
 	    .attr("y1", height - 4 * margin - y(i))
 	    .attr("y2", height - 3 * margin - y(i))
 	    .style("stroke-width", 1)
-	    .style("stroke", "#888");
+	    .style("stroke", "#888");*/
 }
 
-    
 // Hour text markers.
-punchcard.
-  selectAll(".rule").
-  data(x.ticks(24)).
-  enter().
-  append("text").
-  attr("class", "rule").
-  attr("x", function(d) { return pane_left - 2 * margin + x(d); }).
-  attr("y", height - 3 * margin).
-  attr("text-anchor", "middle").
-  text(function(d) {
+punchcard
+  .selectAll(".rule")
+  .data(x.ticks(24))
+  .enter()
+  .append("text")
+  .attr("class", "rule")
+  .attr("class", function(d) { return "hour"+d;})
+  .attr("x", function(d) { return pane_left - 2 * margin + x(d); })
+  .attr("y", height - 3 * margin)
+  .attr("text-anchor", "middle")
+  .style("fill", "#888")
+  .text(function(d) {
     if (d === 0) {
       return "12a";
     } else if (d > 0 && d < 12) {
@@ -123,30 +128,51 @@ for (i = 0; i < data.length; i++) {
 
 // Show the circles on the punchcard.
 for (i = 0; i < data.length; i++) {
-  for (j = 0; j < data[i].length; j++) {
-    punchcard
-      .append("g")
-      .selectAll("circle")
-      .data([data[i][j]])
-      .enter()
-      .append("circle")
-      .style("fill", "#888")
-      .on("mouseover", function() {
-          d3.select(this)
-          	.transition()
-          	.style("fill", "#33B5E5"); //blue
-        })
-      .on("mouseout", function() {
-          d3.select(this)
-          	.transition()
-          	.style("fill", "#888")
-       })
-      .attr("r", function(d) { return d / max * 14; })
-      .attr("transform", function() {
-          tx = pane_left - 2 * margin + x(j);
-          ty = height - 7 * margin - y(i);
-          return "translate(" + tx + ", " + ty + ")";
-        });
-  }
+	(function (i){
+		for (j = 0; j < data[i].length; j++) {
+			(function (j){
+			 punchcard
+		      .append("g")
+		      .selectAll("circle")
+		      .data([data[i][j]])
+		      .enter()
+		      .append("circle")
+			      .style("fill", "#888")
+			      .on("mouseover",  function() {
+			          d3.select(".hour"+j)
+			          	.transition()
+			          	.style("fill", "#33B5E5"); //blue
+			         
+			          d3.select(".day"+i)
+			          	.transition()
+			          	.style("fill", "#33B5E5"); //blue
+			          
+			          d3.select(this)
+			          	.transition()
+			          	.style("fill", "#33B5E5"); //blue
+			        })
+			        
+			      .on("mouseout", function() {
+			          d3.select(this)
+			          	.transition()
+			          	.style("fill", "#888")
+	
+		          	d3.select(".day"+i)
+			          	.transition()
+			          	.style("fill", "#888");
+	
+		          	d3.select(".hour"+j)
+		          		.transition()
+		          		.style("fill", "#888");
+			      })
+			      .attr("r", function(d) { return d / max * 14; })
+			      .attr("transform", function() {
+			          tx = pane_left - 2 * margin + x(j);
+			          ty = height - 3 * margin - y(i) -14 - margin;
+			          return "translate(" + tx + ", " + ty + ")";
+			        });
+			})(j);
+	  }
+	})(i);
 }
 };
