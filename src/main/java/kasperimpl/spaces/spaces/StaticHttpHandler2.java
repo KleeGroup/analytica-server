@@ -17,8 +17,8 @@ import org.glassfish.grizzly.http.server.util.MimeType;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.grizzly.utils.ArraySet;
 
-public class StaticHttpHandler extends HttpHandler {
-	private static final Logger LOGGER = Grizzly.logger(StaticHttpHandler.class);
+public class StaticHttpHandler2 extends HttpHandler {
+	private static final Logger LOGGER = Grizzly.logger(StaticHttpHandler2.class);
 	private final ArraySet<File> docRoots = new ArraySet<File>(File.class);
 	private final File[] files;
 	private long last;
@@ -32,7 +32,7 @@ public class StaticHttpHandler extends HttpHandler {
 	 * If the <tt>docRoot</tt> is <tt>null</tt> - static pages won't be served
 	 * by this <tt>HttpHandler</tt>
 	 */
-	public StaticHttpHandler(File... files) {
+	public StaticHttpHandler2(File... files) {
 		Assertion.notNull(files);
 		Assertion.notNull(docRoots);
 		//-----------------------------------------------------------------
@@ -89,7 +89,7 @@ public class StaticHttpHandler extends HttpHandler {
 
 	/**
 	 * The method will be called, if the static resource requested by the {@link Request}
-	 * wasn't found, so {@link StaticHttpHandler} implementation may try to
+	 * wasn't found, so {@link StaticHttpHandler2} implementation may try to
 	 * workaround this situation.
 	 * The default implementation - sends a 404 response page by calling {@link #customizedErrorPage(Request, Response)}.
 	 *
