@@ -1,9 +1,8 @@
 package application.museum;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
+import kasper.kernel.lang.DateBuilder;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
@@ -22,18 +21,15 @@ public final class Museum {
 		this.pageListener = pageListener;
 	}
 
-	public void load() {
+	public void load(int days) {
+		Assertion.precondition(days >= 0, "days must be >= 0");
+		//---------------------------------------------------------------------	
 		//Toutes les visites sur 3h, 100visites par heures
-
-		//Start date = 8h
-		//Date startDate = new Date();
-		final Calendar startDate = GregorianCalendar.getInstance();
-		startDate.set(Calendar.HOUR_OF_DAY, 0);
-		startDate.set(Calendar.MINUTE, 0);
-		startDate.set(Calendar.SECOND, 0);
-		startDate.set(Calendar.MILLISECOND, 0);
-		System.out.println("StartDate : " + startDate);
-		loadVisitors(startDate.getTime(), 50);
+		final Date now = new Date();
+		for (int d = 0; d < days; d++) {
+			final Date startDate = new DateBuilder(now).addDays(-d).toDateTime();
+			loadVisitors(startDate, 50);
+		}
 	}
 
 	private void loadVisitors(final Date startDate, final double visitorByHour) {
@@ -48,6 +44,7 @@ public final class Museum {
 	}
 
 	private void addVisitorScenario(final Date startVisit) {
+		//System.out.println("scenario [" + startVisit.getDay() + ", " + startVisit.getHours() + "] >>" + startVisit);
 		//On ne CODE pas un scenario, on le déclare.
 		addPages(startVisit, //
 				Pages.HOME,// 

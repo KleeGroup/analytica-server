@@ -360,4 +360,30 @@ public final class Utils {
 		}
 		return matrix;
 	}
+
+	public static class Punchcard {
+		public String[] days;
+		public double[][] data;
+	}
+
+	public Punchcard getPunchCardDatas(final HResult result, final String dataKey) {
+		final String[] days = { "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "vendredi" };
+
+		final Punchcard punchcard = new Punchcard();
+		punchcard.days = days;
+		punchcard.data = new double[7][24];
+
+		final String[] metricKey = dataKey.split(":");
+
+		for (HCategory category : result.getQuery().getAllCategories()) {
+			for (HCube cube : result.getSerie(category).getCubes()) {
+				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
+				int h = cube.getKey().getTime().getValue().getHours();
+				int d = cube.getKey().getTime().getValue().getDay();
+				punchcard.data[d][h] = hMetric == null ? 0d : hMetric.getMean();
+			}
+		}
+
+		return punchcard;
+	}
 }

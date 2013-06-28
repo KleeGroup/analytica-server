@@ -3,7 +3,6 @@ package application;
 import java.util.Scanner;
 
 import kasper.kernel.Home;
-
 import application.museum.Museum;
 import application.museum.PageListener;
 
@@ -38,6 +37,6 @@ public final class App {
 				serverManager.push(process);
 
 			}
-		}).load();
+		}).load(50);
 	}
 }
