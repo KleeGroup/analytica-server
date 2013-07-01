@@ -166,7 +166,7 @@ for (i = 0; i < data.length; i++) {
 		      .data([data[i][j]])
 		      .enter()
 		      .append("circle")
-			      .style("fill", "#888")
+			 	  .style("fill", "#888")
 			      .attr("class", "day"+i+" hour"+j)
 			      .on("mouseover",  function() {
 			          d3.select(".hour"+j)
@@ -200,7 +200,9 @@ for (i = 0; i < data.length; i++) {
 			          tx = pane_left - 2 * margin + x(j);
 			          ty = height - 3 * margin - y(i) -14 - margin;
 			          return "translate(" + tx + ", " + ty + ")";
-			        });
+			        })
+			       //svg tooltip 
+			 	  .append("title").text(function(d) { return d});
 			})(j);
 	  }
 	})(i);
