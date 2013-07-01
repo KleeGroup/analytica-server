@@ -31,8 +31,7 @@ public final class Museum {
 		System.out.println("=============");
 		long start = System.currentTimeMillis();
 		for (int d = 0; d < days; d++) {
-			final Date startDate = new DateBuilder(now).addDays(-d).build();
-			loadVisitors(startDate, 5);
+			loadVisitors(now, d, 5);
 			System.out.print(".");
 		}
 		System.out.println();
@@ -40,7 +39,8 @@ public final class Museum {
 		System.out.println("=============");
 	}
 
-	private void loadVisitors(final Date startDate, final double visitorByHour) {
+	private void loadVisitors(final Date date, final int dayBefore, final double visitorByHour) {
+		final Date startDate = new DateBuilder(date).addDays(-dayBefore).build();
 		for (int h = 7; h < 19; h++) {
 			int visit = 0;
 			while (visit++ < visitorByHour) {

@@ -37,6 +37,6 @@ public final class App {
 				serverManager.push(process);
 
 			}
-		}).load(50);
+		}).load(8);
 	}
 }
