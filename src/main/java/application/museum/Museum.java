@@ -11,8 +11,6 @@ import com.kleegroup.analytica.core.KProcess;
  * @author statchum
  */
 public final class Museum {
-	private static final int NB_VISIT_DAILY_MAX = 10;
-
 	private final PageListener pageListener;
 
 	public Museum(final PageListener pageListener) {
@@ -26,19 +24,29 @@ public final class Museum {
 		//---------------------------------------------------------------------	
 		//Toutes les visites sur 3h, 100visites par heures
 		final Date now = new Date();
+		System.out.println("=============");
+		System.out.println("=====days :" + days);
+		System.out.println("=====visitsByHour :" + 5);
+		System.out.println("=====7h-->19h");
+		System.out.println("=============");
+		long start = System.currentTimeMillis();
 		for (int d = 0; d < days; d++) {
-			final Date startDate = new DateBuilder(now).addDays(-d).toDateTime();
-			loadVisitors(startDate, 50);
+			final Date startDate = new DateBuilder(now).addDays(-d).build();
+			loadVisitors(startDate, 5);
+			System.out.print(".");
 		}
+		System.out.println();
+		System.out.println("data loaded in " + ((System.currentTimeMillis() - start) / 1000) + "seconds");
+		System.out.println("=============");
 	}
 
 	private void loadVisitors(final Date startDate, final double visitorByHour) {
-		final Date date = startDate;
 		for (int h = 7; h < 19; h++) {
-			final long nbVisit = StatsUtil.random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), Pages.getCoef(h) * 2); // de 30% à 60% en fonction de l'heure
-			for (int visit = 0; visit < nbVisit; visit++) {
-				final Date dateVisit = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
-				addVisitorScenario(dateVisit);
+			int visit = 0;
+			while (visit++ < visitorByHour) {
+				int seconds = Double.valueOf(3600 * Math.random()).intValue();
+				Date startVisit = new DateBuilder(startDate).addHours(h).addSeconds(seconds).toDateTime();
+				addVisitorScenario(startVisit);
 			}
 		}
 	}
