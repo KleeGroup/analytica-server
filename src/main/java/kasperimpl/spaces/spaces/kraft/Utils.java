@@ -380,7 +380,7 @@ public final class Utils {
 				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
 				int h = cube.getKey().getTime().getValue().getHours();
 				int d = cube.getKey().getTime().getValue().getDay();
-				punchcard.data[d][h] = hMetric == null ? 0d : hMetric.getMean();
+				punchcard.data[d][h] = hMetric == null ? 0d : hMetric.getCount();
 			}
 		}
 
