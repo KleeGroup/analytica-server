@@ -37,6 +37,6 @@ public final class App {
 				serverManager.push(process);
 
 			}
-		}).load(8);
+		}).load(8/*days*/, 50/*visitsByDay*/);
 	}
 }

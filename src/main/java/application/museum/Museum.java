@@ -19,19 +19,19 @@ public final class Museum {
 		this.pageListener = pageListener;
 	}
 
-	public void load(int days) {
+	public void load(int days, final int visitsByDay) {
 		Assertion.precondition(days >= 0, "days must be >= 0");
 		//---------------------------------------------------------------------	
 		//Toutes les visites sur 3h, 100visites par heures
 		final Date now = new Date();
 		System.out.println("=============");
 		System.out.println("=====days :" + days);
-		System.out.println("=====visitsByHour :" + 5);
+		System.out.println("=====visitsByDay :" + visitsByDay);
 		System.out.println("=====7h-->19h");
 		System.out.println("=============");
 		long start = System.currentTimeMillis();
 		for (int d = 0; d < days; d++) {
-			loadVisitors(now, d, 5);
+			loadVisitors(now, d, visitsByDay);
 			System.out.print(".");
 		}
 		System.out.println();
@@ -39,15 +39,14 @@ public final class Museum {
 		System.out.println("=============");
 	}
 
-	private void loadVisitors(final Date date, final int dayBefore, final double visitorByHour) {
+	private void loadVisitors(final Date date, final int dayBefore, final double visitsByDay) {
 		final Date startDate = new DateBuilder(date).addDays(-dayBefore).build();
-		for (int h = 7; h < 19; h++) {
-			int visit = 0;
-			while (visit++ < visitorByHour) {
-				int seconds = Double.valueOf(3600 * Math.random()).intValue();
-				Date startVisit = new DateBuilder(startDate).addHours(h).addSeconds(seconds).toDateTime();
-				addVisitorScenario(startVisit);
-			}
+		int visit = 0;
+		while (visit++ < visitsByDay) {
+			//sur 12 heures donc de 7h à 19h
+			int seconds = Double.valueOf(12 * 3600 * Math.random()).intValue();
+			Date startVisit = new DateBuilder(startDate).addHours(7/*on commence à 7h du matin*/).addSeconds(seconds).toDateTime();
+			addVisitorScenario(startVisit);
 		}
 	}
 

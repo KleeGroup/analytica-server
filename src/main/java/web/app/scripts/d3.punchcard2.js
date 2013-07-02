@@ -195,7 +195,7 @@ for (i = 0; i < data.length; i++) {
 		          		.transition()
 		          		.style("fill", "#888");
 			      })
-			      .attr("r", function(d) { return d / max * 14; })
+			      .attr("r", function(d) { return  Math.sqrt(d / max) * 14; })
 			      .attr("transform", function() {
 			          tx = pane_left - 2 * margin + x(j);
 			          ty = height - 3 * margin - y(i) -14 - margin;
