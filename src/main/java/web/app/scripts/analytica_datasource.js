@@ -98,13 +98,15 @@ function initializeTestHelperAnalytica() {
   graphique2.data.filters.category = "PAGE";
   graphique2.ui.type ="pie";
 
- var graphique3 = generateDefaultGraph();
+  var graphique3 = generateDefaultGraph();
   graphique3.ui.type = "simpleBar";
   graphique3.html.title = "Graphe MonoSerie3";
   //graphique3.data.filters.timeDim = 'Hour';
   var graphique4 = generateDefaultGraph();
-  graphique4.data.filters.timeFrom = 'NOW-2h';
-  graphique4.data.filters.timeTo = 'NOW%2B10h';
+  graphique4.data.filters.timeFrom = 'NOW-5h';
+  graphique4.data.filters.timeTo = 'NOW%2B5h';
+  graphique4.data.url = "/home/stackedDatas/PAGE";
+
   graphique4.data.parse = parseDataResult;
   graphique4.ui.type ="stack";
   graphique4.data.filters.datas = "duration:mean";
@@ -112,11 +114,11 @@ function initializeTestHelperAnalytica() {
   graphique4.html.title = "Pages Response Time";
   var graphique5 = generateDefaultGraph();//MultiSerie
   //graphique5.data.filters.timeTo = 'NOW%2B6h';
-  graphique5.data.url = "/home/multitimeLine/PAGE";
-  graphique5.data.filters.timeFrom = 'NOW';
-  graphique5.data.filters.timeTo = 'NOW%2B8h';
+  graphique5.data.url = "/home/stackedDatas/PAGE";
+  graphique5.data.filters.timeFrom = 'NOW-5h';
+  graphique5.data.filters.timeTo = 'NOW%2B5h';
   graphique5.data.parse = parseMultiSeriesD3Datas;
-  graphique5.data.filters.datas = "duration:mean;duration:count";
+  graphique5.data.filters.datas = "duration:mean";
   graphique5.ui.labels = "Response Time;Hits";
   graphique5.html.title = "Page hits and response time";
   graphique5.ui.type = "linebar";
@@ -133,13 +135,8 @@ function initializeTestHelperAnalytica() {
   graphique7.ui.type = "punchcard";
   
   var graphs = [
-    bigValuegraph,
-    graphique2,
-    graphique3,
-    graphique4,
-    graphique5,
-    graphique6,
-    graphique7
+    
+    graphique6
   ];
 
   KLEE.Analytica.generateGraphs(graphs);

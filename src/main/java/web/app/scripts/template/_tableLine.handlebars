@@ -4,17 +4,24 @@
 	<a href="#/{{value1}}">{{value1}}</a>  	
 	<div>{{unit}}</div>
 </td>
-  <td class="text-right">
-	{{value2}}
+  <td>
+  <p>
+	{{value2}}</p>
   </td>
-  <td class="text-right">
-	{{value3}}
+  <td>
+	<p>{{value3}}</p>
   </td>  
   <td id="{{value4.id}}" class="text-center">
   <span class = "line-spark text-center"> {{value4.sparklineValues}}</span> <span class ="spark-text"> {{value4.lastValue}}</span>
   </td>
-  <td id="{{value5.id}}" class = "text-center"><span class = "bar-spark text-center">{{value5.sparklineValues}}</span><span class ="spark-text"> {{value5.lastValue}}</span>
+  <td id="{{value5.id}}" class = "text-center">
 </td>
 </tr>
 
 {{! Here we plot the sparklines in the graph}}
+<script type="text/javascript">
+  $(document).ready(function () {
+   {{! Call Handlebar helper to drawSparklineWithNvd3 }}
+    {{drawSparkline "value5"}}
+  });
+</script>

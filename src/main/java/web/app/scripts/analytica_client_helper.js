@@ -28,26 +28,23 @@ var sampleGraph = {
 	} //General options for the graph
 };
 
-
-
 var generateGraph = function generateGraph(graph) {
 
 	//Insert the html in the dom in order to be able to render data.
 	loadPanel(graph);
-	//Load the callback to draw data.
 
+//Load the callback to draw data.
 	var drawGraphCallbackName = getDrawFunction(graph.data.type, graph.ui.type); //todo:determine the graph to draw.
-	var parse = graph.data.parse || parseDataResult;
+	var parse = graph.data.parse || parseDataResult; // loads the parsing function for the corresponding type of graph
 	$.ajax({
 		type: "GET",
-		url: generateUrl([graph.data.url], graph.data.filters),
+		url: generateUrl([graph.data.url], graph.data.filters), //generates the url used to call the web service
 		dataType: 'json',
 		success: function(response, text) {
 			console.log('response', response, 'text', text);
 			var labels = graph.ui.labels.split(";");
 			var data = parse(response, labels);
 
-			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
 			if (document.getElementById(graph.html.container)) {
 				var graphtype = graph.ui.type;
 				if (graphtype === "table") {
@@ -55,7 +52,7 @@ var generateGraph = function generateGraph(graph) {
 					data.htmlTitle = graph.html.title;
 					/*Loading the datatable in the DOM*/
 					$('div#' + graph.html.container).html(Handlebars.templates.table(data));
-					/**/
+					//Drawing the sparklines after the table have been loaded in the DOM
 					$('.line-spark').sparkline('html', {
 						type: 'line',
 						width: 80,
@@ -76,10 +73,12 @@ var generateGraph = function generateGraph(graph) {
 				} else if (graphtype === "bigValue") {
 					data.icon = graph.ui.icon;
 					data.title = graph.html.title;
-					//data.label = graph.ui.labels;
+					//Loading the bigValue HandleBars template in the DOM
 					$('div#' + graph.html.container).html(Handlebars.templates.bigvalue(data));
 
 				} else {
+			//Loading the other charts template in the dom
+			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
 					$('#' + graph.ui.id)[drawGraphCallbackName](data);
 				}
 			}
@@ -113,11 +112,6 @@ function getDrawFunction(dataType, uiType) {
 
 		case "simpleBar":
 			return 'drawbarChartWithNvd3';
-			break;
-
-		case "table":
-			// fillTable(panelId, response);
-			// alert("table");
 			break;
 
 		case "bar":
@@ -165,8 +159,12 @@ function generateUrl(route, params) {
 	return url.slice(0, -1); //Remove the last AND.
 };
 
-//Parse data for a mono serie graph.
 
+//Parse data for a mono serie graph.
+/*
+dataResult is an array of json objects like {x:xValue,y:yValue} and label is a String;
+the result will be a json object like below
+*/
 function parseDataResult(dataResult, label) {
 	var reconstructedData = [];
 	for (var i = 0, responseLength = dataResult.length; i < responseLength; i++) {
@@ -182,7 +180,6 @@ function parseDataResult(dataResult, label) {
 };
 
 // Parse function for d3 punchCard
-
 function parsePunchCard(response, labels) {
 	var series = [],
 		text = [];
@@ -202,6 +199,7 @@ function parsePunchCard(response, labels) {
 
 
 /* Parsing datas for Nvd3 sparklines the datas should be an array of json objects like {x:--, y:--}
+ dataResult is an array of DataPoints ({x:--,y:--, ...} ie a json with x,y and some other properties)
  */
 
 function parseSparkLines(dataResult, label) {
@@ -238,7 +236,9 @@ function parseStringValuesToJsonSparklines(data) {
 
 
 //Parse data for a mutli serie graph
-
+// response is a json object
+// the returned data is an array of json objects like  {key: label,	values: reconstructedData}
+//for more details , look parseDataResult function
 function parseMultiSeriesD3Datas(response, labels) {
 	var series = [];
 	var i = 0;
@@ -250,6 +250,7 @@ function parseMultiSeriesD3Datas(response, labels) {
 	};
 	return series;
 }
+
 
 function parseStackedSeriesD3Datas(response, labels) {
 	var series = [];
@@ -321,9 +322,8 @@ function parsePieDatas(dataResult, labels) {
 
 	return data;
 };
-//sort(function(a,b) { return parseFloat(a.price) - parseFloat(b.price) } );
 
-
+//finds the highest value in the dataResult json object
 function parseBigValue(dataResult, labels) {
 	var data = {};
 	var reconstructedData = [];
@@ -342,8 +342,6 @@ function parseBigValue(dataResult, labels) {
 	return data;
 }
 
-
-
 function parseDataTable(dataResult, labels) {
 
 	var headers = [];
@@ -359,7 +357,6 @@ function parseDataTable(dataResult, labels) {
 		var obj = dataResult[r][0];
 		var responseSparks = dataResult[r][1];
 		var activitySparks = dataResult[r][2];
-
 		var hits, duration;
 		var sqlTime = undefined;
 		var metric = "";
@@ -368,32 +365,21 @@ function parseDataTable(dataResult, labels) {
 				hits = obj[i].count;
 				duration = (obj[i].sum) / (hits);
 			}
-			/*if (obj[i].metricKey.id ==="SQL"){
-				sqlTime =(obj[i].sum)/(obj[i].count);
-			}*/
 			metric = metric + "," + obj[i].metricKey.id;
-
 		}
-		/*if (sqlTime===undefined){
-				sqlTime = 0;
-			}*/
 		var responseObject = {}, activityObject = {};
 		responseObject.id = "response" + compteur;
 		var sparkresponse = responseSparks;
 		responseSparks = parseStringValuesToJsonSparklines(responseSparks);
-		//responseObject.values = responseSparks[0].values;
 		responseObject.values = responseSparks;
 		responseObject.lastValue = responseSparks[responseSparks.length - 1].y;
 		responseObject.sparklineValues = sparkresponse;
-
 		activityObject.id = "activity" + compteur;
 		var sparkActivity = activitySparks;
 		activitySparks = parseStringValuesToJsonSparklines(activitySparks);
-		//activityObject.values = activitySparks[0].values;
 		activityObject.values = activitySparks;
 		activityObject.lastValue = activitySparks[activitySparks.length - 1].y;
 		activityObject.sparklineValues = sparkActivity;
-
 		var name = r.split("::");
 		var collectionElement = {
 			value1: name[1],
@@ -413,58 +399,6 @@ function parseDataTable(dataResult, labels) {
 	};
 	return data;
 }
-
-
-//function parseDataTable(dataResult, labels){
-//
-//	var headers = [];
-//	for(var i=0;i<labels.length;i++){
-//		headers.push({value:labels[i]});
-//	}
-//	
-//	var collection = [];
-//	for(var r in dataResult){
-//		var obj = dataResult[r];
-//		var hits,duration;
-//		var sqlTime = undefined;
-//		var metric = "";
-//		for (var i=0;i<obj.length;i++){
-//			if (obj[i].metricKey.id ==="duration"){
-//				hits = obj[i].count;
-//				duration =(obj[i].sum)/(hits);
-//			}
-//			if (obj[i].metricKey.id ==="SQL"){
-//				sqlTime =(obj[i].sum)/(obj[i].count);
-//			}
-//			metric = metric +","+obj[i].metricKey.id;
-//
-//		}
-//			/*if (sqlTime===undefined){
-//				sqlTime = 0;
-//			}
-//		var name = r.split("::");
-//		var collectionElement = {
-//			value1: name[1],
-//			value2: hits,
-//			value3: duration.toFixed(2),
-//			value4: sqlTime,// Here weneed a json object with an array to plot the Activity sparkline
-//			value5: metric// Here a json object with array property to plot the respon
-//		};
-//		collection.push(collectionElement);
-//	}
-//
-//	 var data ={
-//		title: '',
-//		headers: headers,
-//		collection: collection
-//	};
-//	return data;
-//}
-
-
-//Load the dom structure for a panel.
-//todo: a mettre dans le plugin jquery. Il faut que le plugin soit auto suffisant.
-
 
 //This function will just load the appropriate template for the graph to draw
 

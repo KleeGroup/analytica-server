@@ -273,6 +273,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 	};
 	
 	$.fn.drawSparklineWithNvd3 = function(data){
+
 		var datas = [];
 		var defaults = {}, options = $.extend(defaults, datas);
 		var container = $(this);
@@ -301,4 +302,42 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 			return chart;
 		});
 	};
+
+	$.fn.d3Sparkline = function(datas){
+
+		return this.each(function() {
+			if (typeof(datas)==="string" ){
+				var data = datas.split(",");
+			}else{
+				data = datas;
+			}
+			var container = $(this);
+			var space = 1; // space between the bars
+				var barWidth = 3;
+				var height = 15;
+				//----------------------------------------
+				var	width = (barWidth+space) * data.length;
+				var y = d3.scale.linear()
+					.domain([0, d3.max(data)])
+					.range([0, height]);
+				var id = '#'+container.selector;
+				var graph = d3.select(container.selector).append("svg")
+					.attr("width", width)
+					.attr("height", height);
+
+				var rectangle = graph.selectAll("rect")
+					.data(data)
+					.enter().append("rect")
+						.attr("width", barWidth)
+						.attr("height", y)
+						.attr("y", function(d) {return height-y(d) ;})
+						.attr("x", function(d, i) {return i * (barWidth+space);})
+						.style("fill", function(d, i) { return i==(data.length-1)? "#C00" : "#09C";})
+						.append("title").text(function(d) {return d;})
+			});
+
+	};
+
+
+
 })(jQuery);

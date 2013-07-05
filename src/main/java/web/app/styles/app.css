@@ -147,7 +147,18 @@ svg{
 
 .table th {
   text-align:center;
+
 }
+
+.table th , .table td {
+  font-weight: 100;
+  line-height:10px;
+}
+
+.table p{
+  text-align: right;
+}
+
  #footer {
           margin-left: -20px;
           margin-right: -20px;
