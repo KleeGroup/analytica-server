@@ -1,196 +1,7 @@
-/*Construction de graphes à partir de la bibliothèque Nvd3 
-Les fonctions prennent en paramètre un objet json data de la structure suivante:(cfXXX)
-*/
-(function($) {
-	$.fn.drawlineChartWithNvd3 = function(data,id) {
-		//The parseDatas function will need to clean the datas,
-		//by eliminating the undefined values
-		//var datas =parseDatas(data)||data;
-		var datas = data;
-		//définir les options par défaut ici
-		var defaults = {}, options = $.extend(defaults, datas);
-		//Récupérer le conteneur sur lequel la fonction est appelée
-		var container = $(this);
-
-		return this.each(function() {
-			//appel de la fonction graphique de nvd3
-			nv.addGraph(function() {
-				//paramétrage des axes
-				var chart = nv.models.lineChart().x(function(d) {
-					return d[0]
-				}).y(function(d) {
-					return d[1]
-				}) // adjusting, 100% is 1.00, not 100 as it is in the data
-				.color(d3.scale.category10().range());
-				//Paramétrage des labels sur l'axe des abscisses
-				chart.xAxis.rotateLabels(-45)
-				.tickFormat(function(d) {
-					return d3.time.format("%H:%M")(new Date(d))
-				});
-
-				// chart.yAxis.tickFormat(d3.format(',f'));
-
-				d3.select('#' + container[0].id + ' svg')
-					.datum(datas)
-					.transition()
-					.duration(500)
-					.call(chart);
-
-				nv.utils.windowResize(chart.update);
-
-				return chart;
-			});
-
-		});
-	};
-
-
-	$.fn.drawStackedAreaChartWithNvd3 = function(datas,id) {
-		var defaults = {}, options = $.extend(defaults, datas);
-		var container = $(this);
-
-		return this.each(function() {
-			nv.addGraph(function() {
-				var chart = nv.models.stackedAreaChart().x(function(d) {
-					return d[0]
-				}).y(function(d) {
-					return d[1]
-				}) // adjusting, 100% is 1.00, not 100 as it is in the data
-				.color(d3.scale.category10().range()).showLegend(true);
-
-				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-					return d3.time.format("%H:%M")(new Date(d))
-				});
-
-				// chart.yAxis.tickFormat(d3.format(',f'));
-
-				d3.select('#' + container[0].id + ' svg').datum(datas)
-					.transition().duration(500).call(chart);
-
-				nv.utils.windowResize(chart.update);
-
-				return chart;
-			});
-
-		});
-	};
-	$.fn.drawMultiBarChartWithNvd3 = function(datas,id) {
-		var defaults = {}, options = $.extend(defaults, datas);
-		var container = $(this);
-
-		return this.each(function() {
-			nv.addGraph(function() {
-				var chart = nv.models.multiBarChart().x(function(d) {
-					return d[0]
-				}).y(function(d) {
-					return d[1]
-				}) // adjusting, 100% is 1.00, not 100 as it is in the data
-				.color(d3.scale.category10().range());
-
-				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-					return d3.time.format("%H:%M")(new Date(d))
-				});
-
-				// chart.yAxis.tickFormat(d3.format(',f'));
-
-				d3.select('#' + container[0].id + ' svg').datum(datas)
-					.transition().duration(500).call(chart);
-
-				nv.utils.windowResize(chart.update);
-
-				return chart;
-			});
-
-		});
-	};
-
-	$.fn.drawbarChartWithNvd3 = function(datas,id) {
-		var defaults = {}, options = $.extend(defaults, datas);
-		var container = $(this);
-
-		return this.each(function() {
-			nv.addGraph(function() {
-				var chart = nv.models.discreteBarChart().x(function(d) {
-					return d[0]
-				}).y(function(d) {
-					return d[1]
-				}) // adjusting, 100% is 1.00, not 100 as it is in the data
-				.color(d3.scale.category10().range());
-
-				chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-					return d3.time.format("%H:%M")(new Date(d))
-				});
-
-				// chart.yAxis.tickFormat(d3.format(',f'));
-
-				d3.select('#' + container[0].id + ' svg').datum(datas)
-					.transition().duration(500).call(chart);
-
-				nv.utils.windowResize(chart.update);
-
-				return chart;
-			});
-
-		});
-	};
-
-	$.fn.drawpieChartWithNvd3 = function(datas,id) {
-		var defaults = {}, options = $.extend(defaults, datas);
-		var container = $(this);
-
-		nv.addGraph(function() {
-			var chart = nv.models.pieChart()
-				.x(function(d) {
-				return d.label
-			})
-				.y(function(d) {
-				return d.value
-			})
-				.showLabels(false)
-				.showLegend(false);
-
-			d3.select('#' + container[0].id + ' svg')
-				.datum(datas)
-				.transition().duration(1200)
-				.call(chart);
-
-			return chart;
-		});
-	};
-
-	$.fn.drawBigValue = function() {
-		var container = $(this);
-		var bigValueDiv = document.createElement("div");
-		bigValueDiv.setAttribute('class', "bigValue");
-		var bigValuelabel = document.createElement("div");
-		bigValueDiv.setAttribute('class', "bigValuelabel");
-		bigValueDiv.innerHTML = '90';
-		bigValuelabel.innerHTML = 'Max';
-		container.append(bigValueDiv);
-		container.bigValuelabel(append);
-	};
-
-
-	$.fn.drawlinePlusBarWithNvd3 = function(datas,id) {
-
-		var data1 = [ [ 3625200000 , 1214] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 125] , [ 3639600000 , 1850] , [ 3643200000 , 789] , [ 3646800000 , 458] , [ 3650400000 , 999] , [ 3654000000 , 775] , [ 3657600000 , 328] , [ 3661200000 , 389],[3664800000,552],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,635],[3686400000,985],[3690000000,777],[3693600000,1000],[3697200000,989],[3700800000,1245],[3704400000,522],[3708000000,300]];
-
-					var data2 = [ [ 3625200000 , 145] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 15] , [ 3639600000 , 510] , [ 3643200000 , 89] , [ 3646800000 , 58] , [ 3650400000 , 99] , [ 3654000000 , 75] , [ 3657600000 , 28] , [ 3661200000 , 39],[3664800000,52],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,35],[3686400000,85],[3690000000,77],[3693600000,100],[3697200000,89],[3700800000,125],[3704400000,22],[3708000000,30]];
-
-
-					var datas = [{
-						key:"response Time",
-						values:data1
-					},{
-						key:"Hits",
-						values:data2
-					}]
-
-
-
-
-
-		var margin = {top: 30, right: 50, bottom: 100, left: 50}
+(function($){
+    $.fn.linePlusBarChart = function(){
+         //Public Variables with default settings
+              var margin = {top: 20, right: 50, bottom: 100, left: 50}
                   , width = null // width - margin.left - margin.right
                   , height = null // height -margin.top - margin.bottom
                   , color = null
@@ -200,8 +11,6 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                   ,barWidth=20,
                   space = 5;
 
-                var container = document.getElementById(id);
-                container = $(this);
                 var xAxis,
                   yRightAxis,
                   yLeftAxis,
@@ -218,14 +27,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                   if(datas[1].color ===undefined){
                     datas[1].color = defaultColors[1];
                   }
-                  var defaultHeight = 300;// taille par défaut 
-                  //width = 600,height = 300;
-                  height = container.height();
-                  if((height ===undefined)||(height===0)){
-                  height = defaultHeight;}
-                  width = 9*container.width()/10;   //pour occuper 9/10 de l'espace du span 12
-                  	//revoir ce qui se passe pour les composants de plus petite taille
-    //              
+
+                  width = 600,height = 300;
                   barWidth = width/(datas[0].values).length - space;
 
                   x = d3.time.scale().range([0, width]);
@@ -269,9 +72,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                         
                         return format(new Date(d[0]));
                   };
-                  if(id===undefined){
-                  	id = container[0].id;
-                  }
+                  
+
                   
                   var chart = d3.select('#'+id)
                     .append("svg")
@@ -279,6 +81,10 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                    chart.append("path")      // Add the valueline path.
+                      .attr("d", line(datas));
+
                     // Draw X-axis grid lines
 
                     chart.selectAll("line.x")
@@ -301,7 +107,13 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                       .attr("y1", yL)
                       .attr("y2", yL)
                       .style("stroke", "#ccc");
-        
+                     
+
+
+
+
+
+
                     chart.append("g")       // Add the X Axis
                         .attr("class", "x axis")
                         .attr("transform", "translate(0," + height + ")")
@@ -370,9 +182,10 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                             .attr("fill-opacity", 0)
                         });
 
+
                 var legend = chart.append("g")
                 .attr("class", "legend")
-                .attr("transform", "translate(0 ,"+ (-margin.top)+")");
+                .attr("transform", "translate(" + (width/2 + 100) + " ,"+ (-margin.top)+")");
                 var color_hash = {  
                 0 : ["Response Time", "#09C"],
                 1 : ["Hits", "black"]
@@ -389,7 +202,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                     .data(datas)
                     .enter().append("rect")
                         .attr("y", height +margin.bottom/2 + margin.top)
-                        .attr("x", function(d, i){return i * 150+25;})
+                        .attr("x", function(d, i){return i * 100+25;})
                         .attr("width", 10)
                         .attr("height", 10)
                         .style("fill", function(d, i) {return datas[datas.indexOf(d)].color;});
@@ -398,78 +211,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
                     .data(datas)
                     .enter().append("text")
                         .attr("y", height +margin.bottom/2 + margin.top+8)
-                        .attr("x", function(d, i){return i *150 + 25+20;})
+                        .attr("x", function(d, i){return i *100 + 25+20;})
                         .text(function(d) {return datas[datas.indexOf(d)].key;});
-	};
-	
-	$.fn.drawSparklineWithNvd3 = function(data,id){
 
-		var datas = [];
-		var defaults = {}, options = $.extend(defaults, datas);
-		var container = $(this);
-		nv.addGraph(function() {
-			var chart = nv.models.sparklinePlus()
-			.width(70)
-            .height(30)
-
-			chart
-				.margin({
-				top: 5, right: 0, bottom: 10, left: 0
-			})
-				.x(function(d, i) {
-				return i
-			})
-				.xTickFormat(function(d) {
-				return d.x
-			})
-
-			d3.select(container.selector)
-				.datum(data)
-				.transition().duration(250)
-				.call(chart);
-
-
-			return chart;
-		});
-	};
-
-$.fn.d3Sparkline = function(datas,id){
-		var data = datas;
-		var data = ["1", "2", "3", "4", "5", "10", "9", "8", "7", "6"];
-		if(typeof data ==='String'){
-			data = data.split(",");
-		}
-
-		return this.each(function() {
-			var space = 1; // space between the bars
-			var barWidth = 3;
-			var height = 10;
-            container = $(this);
-			//----------------------------------------
-			var	width = (barWidth+space) * data.length;
-			var y = d3.scale.linear()
-				.domain([0, d3.max(data)])
-				.range([0, height]);
-			if(id===undefined){
-            	id = container[0].id;
-            }
-
-			var rectangle = d3.selectAll(("."+id)).append("svg")
-				.attr("width", width)
-				.attr("height", height)
-				.attr("class","bar"); 
-
-			var rectangle = rectangle.selectAll("rect")
-				.data(data)
-				.enter().append("rect")
-					.attr("class", "bar")
-					.attr("width", barWidth)
-					.attr("height", y)
-					.attr("y", function(d) {return height-y(d) ;})
-					.attr("x", function(d, i) {return i * (barWidth+space);})
-					.style("fill", function(d, i) { return i==(data.length-1)? "#C00" : "#09C";})
-					.append("title").text(function(d) {return d;});
-		});
-	};
-
-})(jQuery);
+    }
+})(jQuery)

@@ -135,7 +135,11 @@ function initializeTestHelperAnalytica() {
   graphique7.ui.type = "punchcard";
   
   var graphs = [
-    
+    graphique1,
+    graphique2,
+    graphique3,
+    graphique4,
+    graphique5,
     graphique6
   ];
 

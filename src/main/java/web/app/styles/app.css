@@ -17,9 +17,9 @@
 }
 .ui-widget-header{
   background-color: #bbb;
-  font-family:Georgia,serif;
+ /*font-family:monospace;
 /*  color:#4E443C;*/
-  font-variant: small-caps; 
+  /*font-variant: small-caps; */
   text-transform: none; f
   font-weight: 100; 
   margin-bottom: 0;
@@ -63,7 +63,9 @@
   font-family:Arial,Helvetica,sans-serif;
   /*font-weight:bold;*/
   font-size:56pt;
-  color:black;
+  /*color:black;*/
+    color:#FF4444;
+
   line-height:100%;
 }
 
@@ -152,12 +154,14 @@ svg{
 
 .table th , .table td {
   font-weight: 100;
-  line-height:10px;
+  line-height:12px;
+  vertical-align: middle;
 }
 
 .table p{
   text-align: right;
 }
+
 
  #footer {
           margin-left: -20px;
@@ -202,4 +206,65 @@ svg{
 
 .mixed-table td{
  /* height: 20px;*/
+}
+
+      .axis path,
+      .axis line {
+          fill: none;
+          stroke: grey;
+          stroke-width: 1;
+          shape-rendering: crispEdges;
+          
+      }
+      .axis text{
+        font-size: 10px;        
+      }
+
+      .line {
+         fill: none;
+         stroke: #FF4444;
+         stroke-width: 1.5px;
+      }
+
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 60px;
+        height: 15px;
+        padding: 20px;
+        font: 10px sans-serif;
+        background: black;
+        border: solid 1px black;
+        border-radius: 8px;
+        pointer-events: none;
+      }
+      .legend {
+              padding: 5px;
+              font: 10px sans-serif;
+              background: yellow;
+              box-shadow: 2px 2px 1px #888;
+      }
+
+      .area{
+        fill: #ADD8E6;                  
+          stroke-width: 0px;     
+      }
+
+      .bar:hover { 
+                 fill: orange !important;
+            }
+
+.text-right
+{
+    text-align: right !important;
+}
+
+.text-center
+{
+    text-align: center !important;
+}
+
+.text-left
+{
+    text-align: left !important;
 }

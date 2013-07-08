@@ -50,9 +50,9 @@
 	<body>
 		<div>
 			<ul>
-				<li id="box">Serie1</li>
-				<li id ="box1">Serie2</li> 
-				<li id = "box2"> Serie3</li>
+				<li class = "test">Serie1</li>
+				<li class = "test">Serie2</li> 
+				<li class = "test"> Serie3</li>
 				<li id = "box3">Serie4</li>
 				<li id = "box4" >Serie5</li>
 			</ul>
@@ -109,14 +109,14 @@
 		var drawBar = function (data,id){
 			var space = 1; // space between the bars
 			var barWidth = 3;
-			var height = 20;
+			var height = 10;
 			//----------------------------------------
 			var	width = (barWidth+space) * data.length;
 			var y = d3.scale.linear()
 				.domain([0, d3.max(data)])
 				.range([0, height]);
 
-			var rectangle = d3.select(("#"+id)).append("svg")
+			var rectangle = d3.selectAll(("."+id)).append("svg")
 				.attr("width", width)
 				.attr("height", height)
 				.attr("class","bar"); 
@@ -284,17 +284,17 @@
 		</script>
 
 		<script type="text/javascript">
-			var data = [1, 2, 3, 4, 5, 10, 9, 8, 7, 6];
-			drawBar(data,"box");
+			var data = ["1", "2", "3", "4", "5", "10", "9", "8", "7", "6"];
+			drawBar(data,"test");
 
-			data = [1, 2, 3, 4, 5, 10, 9, 8, 7, 6,5,8,9,2,15,6,5,5,8,25];
+			/*data = [1, 2, 3, 4, 5, 10, 9, 8, 7, 6,5,8,9,2,15,6,5,5,8,25];
 			drawBar(data,"box1");
 
 			data = [15, 2, 21, 8, 13, 11, 9, 10, 7, 17,22,8,14,25,5,11,5,18,8,25,4,19,2,20,8,0,1,2,9,5,4];
 			drawBar(data,"box2");
 
 			data = [45000, 24000, 30000, 78000, 100000, 58000, 64000];
-			drawBar(data,"box3");
+			drawBar(data,"box3");*/
 
 			//the line sparkline
 			data = [15, 2, 21, 8, 13, 11, 9, 10, 7, 17,22,8,14,25,5,11,5,18,8,25,4,19,2,20,8,0,1,2,9,5,4];

@@ -53,7 +53,7 @@ var generateGraph = function generateGraph(graph) {
 					/*Loading the datatable in the DOM*/
 					$('div#' + graph.html.container).html(Handlebars.templates.table(data));
 					//Drawing the sparklines after the table have been loaded in the DOM
-					$('.line-spark').sparkline('html', {
+					/*$('.line-spark').sparkline('html', {
 						type: 'line',
 						width: 80,
 						lineColor: '#33B5E5',
@@ -69,7 +69,8 @@ var generateGraph = function generateGraph(graph) {
 						//maxSpotColor: false, 
 						spotColor: '#FF4444',
 						spotRadius: 3
-					});
+					});*/
+					$('.bar-spark').d3Sparkline(undefined,undefined);
 				} else if (graphtype === "bigValue") {
 					data.icon = graph.ui.icon;
 					data.title = graph.html.title;

@@ -5,6 +5,35 @@
 		<script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
 
 		<style type="text/css">
+			.background {
+				stroke: #808080;
+				stroke-width: 1;
+				fill: none;
+			}
+
+			.area{
+				fill: #ADD8E6;                  
+    			stroke-width: 0px;     
+			}
+
+			.axis path, .axis line {
+			  fill: none;
+			  stroke: #000;
+			  shape-rendering: crispEdges;
+			}
+
+			.metrics-container {
+	width: auto;
+	height: auto;
+	padding: 10px 10px 10px 10px;
+	border-style: solid;
+	border-width: 1px;
+	float: left;
+	margin-left: 20px;
+	margin-top: 20px;
+}
+
+			
 		</style>			
 
 	</head>
@@ -12,6 +41,7 @@
 	<body>
 
  		<div id ="box6"></div>
+ 		<div id = "line"></div>
  	
 
 		<script type="text/javascript">
@@ -35,10 +65,72 @@
 				    return data[i].label;}
 						);
 			   }
-		</script>
+			</script>
 
 
+			<script type="text/javascript">
+				var plot = function(data,id){
+					var margin = {top: 50, right: 50, bottom: 50, left: 50};
+					var height = 400;
+					var width = 500;
+					width = width - margin.left - margin.right;
+					height = height - margin.top - margin.bottom;
+					var graph = d3.select("#"+id).append("svg:svg").attr("width", width+margin.left+margin.right).attr("height", height+margin.top+margin.bottom).attr("class", "metrics-container")
+					.append("g")
+			    	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+					// X scale will fit values from 0-10 within pixels 0-100
+					var x = d3.scale.linear().domain([0, data.length]).range([0, width]); 
+					
+					// Y scale will fit values from 0-10 within pixels 0-100
+					var y = d3.scale.linear().domain([0, d3.max(data)]).range([0, height]);
+			 		
+			 		var xAxis = d3.svg.axis()
+						.scale(x)
+						.orient("bottom");
+
+					var yLeftAxis = d3.svg.axis()
+						.scale(y)
+						.orient("left");
+
+					graph.append("g")
+						.attr("class", "x axis")
+						.attr("transform", "translate(0," + height + ")")
+						.call(xAxis)
+						.selectAll("text")  
+				            .style("text-anchor", "end")
+				            .attr("dx", "-.8em")
+				            .attr("dy", ".15em")
+				            ;
+
+					graph.append("g")
+						.attr("class", "y axis")
+						.attr("fill","#808080")
+						.call(yLeftAxis)
+						.append("text")
+					    .attr("transform", "rotate(-90)")
+					    .attr("y", 2)
+					    .attr("dy", ".71em")
+				      	.style("text-anchor", "end");
+
+					// create a line object that represents the SVN line we're creating
+					var line = d3.svg.line()
+					.x(function(d,i) {console.log(x(i)); return x(i);})
+					.y(function(d) { return height-y(d);})
+
+					var area = d3.svg.area()
+					.x(function(d,i) { return x(i);})
+					.y0(height)
+					.y1(function(d) { return height-y(d);})
+
+					graph.append("svg:path").attr("d", line(data)).style("stroke", function() { return "#808080";
+					})
+		.style("fill", "none")
+		.style("stroke-width", "1");
+					graph.append("svg:path").datum(data).attr("class", "area").attr("d", area);
+				}
+
+			</script>
 			<script type="text/javascript">
 
 
@@ -46,10 +138,11 @@
 						          {"label":"PAGE/Search", "value":10}, 
 						          {"label":"PAGE/Home", "value":30}];
 					drawPieChart(data,"box6");
+
+					data = [15, 2, 21, 8, 13, 11, 9, 10, 7, 17,22,8,14,25,5,11,5,18,8,25,4,19,2,20,8,0,1,2,9,5,4];
+					plot(data,"line")
+
 			</script>
-
-
-		
 
 	</body>
 </html>
