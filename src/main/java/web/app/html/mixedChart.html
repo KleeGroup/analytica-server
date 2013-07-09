@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <head id= "header">
+      <title>Analytica DashBoard</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- stylessheets-->
+      <link rel="stylesheet" type="text/css" href="/static/vendor/styles/bootstrap/bootstrap-combined.min.css">
+      <link href="/static/vendor/styles/bootstrap/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+      <link href="/static/app/styles/app.css" rel="stylesheet">
+
+      <!-- scripts js-->
+      <script type="text/javascript" src="/static/vendor/scripts/jquery/jquery.js"></script>
+      <script type="text/javascript" src="/static/vendor/scripts/jquery/jquery.peity.js"></script>
+        <script type="text/javascript" src="/static/vendor/scripts/jquery/jquery.sparkline.js"></script>
+    
+    
+      <!-- <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>-->
+      <script type="text/javascript" src="/static/vendor/scripts/bootstrap/bootstrap.min.js"></script>
+      <!-- scripts d3-->
+      <script type="text/javascript" src="/static/vendor/scripts/d3/d3.v2.js"></script>
+
+      <script type="text/javascript" src="/static/vendor/scripts/handlebars.js"></script>
+        <script type="text/javascript" src="/static/app/scripts/template/HandlebarsHelper.js"></script>
+        
+
+      <script type="text/javascript" src="/static/app/scripts/template/partial-templates.js"></script>
+      <script type="text/javascript" src="/static/app/scripts/template/templates.js"></script>
+      <script type="text/javascript" src="/static/app/scripts/analytica_client_helper.js"></script>
+      <script type="text/javascript" src="/static/app/scripts/template/tests/mixedDataSource.js"></script>
+    <script type="text/javascript" src="/static/app/scripts/analyticandv3linechart.js"></script>
+        <script type="text/javascript" src="/static/app/scripts/d3.punchcard.js"></script>
+
+    <script type="text/javascript" src="/static/app/scripts/clock.js"></script>
+
+    <!--<script type="text/javascript" src="/static/app/scripts/analytica_client_helper.js"></script>
+    <script type="text/javascript" src="/static/app/scripts/analytica_dashboardsource.js"></script>-->
+  </head>
+
+  <body id="index">
+    <!-- Barre de navigation.-->
+      <header id="header">
+      </header>
+    <div id="breadcrumb">
+    </div>
+  <!-- Container -->
+   <div id = 'dashboard' class="container">
+      <!-- Mettre le contenu des graphes ici.-->    <!-- Composants graphiques.-->
+ 
+    </div>
+    <!--FOOTER-->
+    <footer id='footer' class="footer">
+    </footer>
+
+    <script type="text/javascript">
+        var hash = window.location.hash;  
+        if(hash===""){
+          $('div#dashboard').html(Handlebars.templates.mixedChart());
+        }else{
+
+        }
+          
+       $('header#header').html(Handlebars.templates.header());
+       $('div#breadcrumb').html(Handlebars.templates.breadcrumb());
+       $(document).ready(function() {
+         initializeTestHelperAnalytica()
+       });
+       $('footer#footer').html(Handlebars.templates.footer({version: "v1.1 ",date:"16/01/2013",contact:"npiedeloup@kleegroup.com"}));
+  </script>
+  <!--Remove this part and set it in a template-->
+  
+
+<script type="text/javascript">
+/*$(window).load(function () { 
+   $(".spark-chart").sparkline("bar");
+}*/
+
+/*$(window).load(function () { 
+   $(".spark-chart").peity("bar");
+}*/
+
+
+  
+</script>
+  </body>
+</html>

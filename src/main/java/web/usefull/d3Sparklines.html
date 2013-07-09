@@ -159,11 +159,12 @@
 
 			var parseDate = d3.time.format("%d-%b-%y").parse;
 
-			x.domain([new Date(d3.min(datas[1].values, function(d) {
-					return d[0];
-				})),new Date(d3.max(datas[1].values, function(d) {
-					return d[0];
-				})+3600000 )]);
+			x.domain([new Date(d3.min(datas[1].values, function(d) {  
+                      return d[0];
+                    })-3600000),d3.time.day.offset(new Date(d3.max(datas[1].values, function(d) {
+                      return d[0];
+                    })+3600000),0)]);
+
 
 			
 

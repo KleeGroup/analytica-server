@@ -1,1 +1,1 @@
-handlebars header.handlebars footer.handlebars breadcrumb.handlebars bigvalue.handlebars table.handlebars graph.handlebars dashboard.handlebars dashboardtest.handlebars dashboardAnalytica.handlebars -f templates.js
+handlebars header.handlebars footer.handlebars breadcrumb.handlebars bigvalue.handlebars table.handlebars graph.handlebars dashboard.handlebars dashboardtest.handlebars dashboardAnalytica.handlebars mixedChart.handlebars bigValueDash.handlebars -f templates.js

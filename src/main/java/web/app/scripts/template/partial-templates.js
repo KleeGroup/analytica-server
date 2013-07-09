@@ -7,7 +7,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 
 
   buffer += "<tr > "
-    + "\r\n  <td>\r\n\r\n	<a href=\"#/";
+    + "\r\n  <td>\r\n	<a href=\"#/";
   if (stack1 = helpers.value1) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.value1; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)

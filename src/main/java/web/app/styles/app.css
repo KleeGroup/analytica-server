@@ -141,7 +141,9 @@
 
 svg{
   /*padding-bottom: 20px;*/
-}
+    display:block;
+    margin:auto;
+  }
 
 /*.table th, .table td {
   text-align: right;
@@ -149,7 +151,6 @@ svg{
 
 .table th {
   text-align:center;
-
 }
 
 .table th , .table td {
@@ -226,18 +227,20 @@ svg{
          stroke-width: 1.5px;
       }
 
-      div.tooltip {
+      .tooltip {
         position: absolute;
         text-align: center;
         width: 60px;
-        height: 15px;
-        padding: 20px;
-        font: 10px sans-serif;
-        background: black;
-        border: solid 1px black;
-        border-radius: 8px;
+        height: 25px;
+        font: 9px Helvetica,sans-serif;
+        background: #FFF;
+        border: 0px;
+        border-radius: 6px;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.6);
         pointer-events: none;
+        text-shadow: 0px 1px 0px #ccc;
       }
+
       .legend {
               padding: 5px;
               font: 10px sans-serif;

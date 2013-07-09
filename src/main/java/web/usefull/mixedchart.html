@@ -3,6 +3,7 @@
 		<meta charset="utf-8">
 		<title></title>
 		<script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+		<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 		<style type="text/css">
 
 			.axis path,
@@ -23,17 +24,18 @@
 				 stroke-width: 1.5px;
 			}
 
-			div.tooltip {
-			  position: absolute;
-			  text-align: center;
-			  width: 60px;
-			  height: 15px;
-			  padding: 20px;
-			  font: 10px sans-serif;
-			  background: #ddd;
-			  border: solid 1px #aaa;
-			  border-radius: 8px;
-			  pointer-events: none;
+			.tooltip {
+			position: absolute;
+			text-align: center;
+			width: 60px;
+			height: 25px;
+			font: 9px Helvetica,sans-serif;
+			background: #FFF;
+			border: 0px;
+			border-radius: 6px;
+			box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.6);
+			pointer-events: none;
+			text-shadow: 0px 1px 0px #ccc;
 			}
 			.legend {
 	            padding: 5px;
@@ -41,11 +43,24 @@
 	            background: yellow;
 	            box-shadow: 2px 2px 1px #888;
             }
+
+            .span6{
+            	border-style: solid;
+            	
+            }
+            svg{
+            	border-style: solid;
+            	display:block;
+  				margin:auto;
+            	color:red;
+            }
+
 		</style>
 	</head>
 
-	<body>
- 		<div id = "box5">
+	<body class ="container">
+		<div></div>
+ 		<div id = "box5" class ="span6">
  		</div>
  		<!--Script for line sparklines-->
  		<!--Script for bar and line chart-->
@@ -53,7 +68,7 @@
 			var linePlusBarChart = function(datas,id){
 
 			  //Public Variables with default settings
-			  var margin = {top: 20, right: 50, bottom: 100, left: 50}
+			  var margin = {top: 20, right: 30, bottom: 50, left: 30}
 			      , width = null // width - margin.left - margin.right
 			      , height = null // height -margin.top - margin.bottom
 			      , getX = function(d) { return d.x }
@@ -85,8 +100,10 @@
 			      if(datas[1].color ===undefined){
 			      	datas[1].color = defaultColors[1];
 			      }
-
-			      width = 600,height = 300;
+				  var container = document.getElementById(id);
+			      height = 155;
+			      width = 460; // span6
+			      var aux = 460 - width;
 			      barWidth = width/(datas[0].values).length - space;
 
 			      x = d3.time.scale().range([0, width]);
@@ -96,11 +113,12 @@
 			      /*var minValue =  // find min and max value of the two ranges and use them for the x domain below
 			      ,maxValeu =*/
 
-			      x.domain([new Date(d3.min(datas[1].values, function(d) {
-			          return d[0];
-			        })-3600000),new Date(d3.max(datas[1].values, function(d) {
-			          return d[0];
-			        })+3600000)]);
+			      x.domain([new Date(d3.min(datas[1].values, function(d) {  
+                      return d[0];
+                    })-3600000),d3.time.hour.offset(new Date(d3.max(datas[1].values, function(d) {
+                      return d[0];
+                    })+3600000),0)]);
+
 
 			      yL.domain([0, d3.max(datas[0].values, function(d) {
 			          return d[1];
@@ -109,11 +127,11 @@
 			          return d[1];
 			        })])
 
-			      xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
+			      xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, 5);
 			      yRightAxis = d3.svg.axis().scale(yR).orient("right").ticks(5);
 			      yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
 
-			      line = d3.svg.line().x(function(d){return x(d[0]);}).y(function(d){return yR(d[1])}).interpolate("basis");
+			      line = d3.svg.line().x(function(d){return x(d[0]);}).y(function(d){return yR(d[1])});
 
 			      var div = d3.select("#"+id).append("div")
 				    .attr("class", "tooltip")
@@ -131,14 +149,31 @@
 				  		return format(new Date(d[0]));
 				  };
 				  
+				  var getTextY = function(d){
+				  	if((d===undefined)||((d.key === undefined)&&(d.unit===undefined))){
+				  		throw "Labels and units not defined" ;
+				  	}
+				  	var text="";
+				  	if(d.key===undefined){
+				  		text += d.unit;
+				  	}
+				  	else if(d.unit === undefined){
+				  		text+=d.key;
+				  	}
+				  	else {
+				  		text = d.key+" ( "+d.unit+" )";
+				  	}
 
-				  
+				  	return text;
+
+				  }
+
 			      var chart = d3.select('#'+id)
 			        .append("svg")
 			        .attr("width", width + margin.left + margin.right)
 			        .attr("height", height + margin.top + margin.bottom)
 			        .append("g")
-			        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			        .attr("transform", "translate(" +margin.left+ "," + margin.top + ")");
 
 			        /*chart.append("path")      // Add the valueline path.
 			          .attr("d", line(datas));*/
@@ -165,12 +200,6 @@
 					  .attr("y1", yL)
 					  .attr("y2", yL)
 					  .style("stroke", "#ccc");
-					 
-
-
-
-
-
 
 			        chart.append("g")       // Add the X Axis
 			            .attr("class", "x axis")
@@ -185,7 +214,9 @@
 					    .attr("y", 2)
 					    .attr("dy", ".71em")
 				      	.style("text-anchor", "end")
-			            .text(datas[0].key);
+			            .text(getTextY(datas[0]))
+			            ;
+
 
 			        chart.append("g")             
 				        .attr("class", "y axis")    
@@ -196,20 +227,33 @@
 					    .attr("y", 2)
 					    .attr("dy", ".71em")
 				      	.style("text-anchor", "end")
-				        .text(datas[1].key);;
+				        .text(getTextY(datas[1]));
+
+				       var getToolTipText = function(d,datas){
+				       		var text = "";
+				       		if (datas.unit === undefined){
+				       			text = d[1] + " " +datas.key +" Le "+parseToDate(d);
+				       		}
+				       		else {
+				       			text = d[1] + " "+ datas.unit +" Le "+parseToDate(d);
+				       		}
+				       		return text;
+				       }
 
 			        bars = chart.selectAll("rect")
 			          .data(datas[0].values)
 			          .enter().append("rect")
+			          .attr("width",barWidth)
 			          .attr("height", function(d) {return height-yL(d[1]);})
 			          .attr("y", function(d){return yL(d[1])})
-			          .attr("x", function(d, i) {return x((new Date(d[0])))-15;})
-			          .attr("width",barWidth)
+			          .attr("x", function(d, i) {return x((new Date(d[0])))-barWidth/2;})
 			          .style("fill",datas[0].color)
 			          .style("stroke","white")
 			          .style("stroke-width",1)
 			          .on("mouseover", function(d){div.transition().duration(500).style("opacity", 1)})
-					  .on("mousemove", function(d){div.text(d[1] +" at "+parseToDate(d)).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 50) + "px");})
+					  .on("mousemove", function(d){
+					  	div.text(getToolTipText(d,datas[0])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 50) + "px");
+					  })
 					  .on("mouseout", function(d){div.transition().duration(500).style("opacity", 1e-6);});	;
 
 			        chart.append("svg:path")
@@ -226,18 +270,18 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 					    .attr("cy", function(d) { return yR(d[1]) })
 					    .attr("stroke-width", "none")
 					    .attr("fill", function() { return c(Math.random()) })
-					    .attr("fill-opacity", 0)
-					    .attr("r", 5)
+					    .attr("fill-opacity", .5)
+					    .attr("r", 3)
 					    .style("display","inline")
 					    .on("mouseover", function(d) {
 					    	div.transition().duration(500).style("opacity", 1);
 					        d3.select(this).transition().duration(200).attr("fill-opacity", .5)
 					    })
-					    .on("mousemove", function(d){div.text(d[1] +" at "+parseToDate(d)).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 70) + "px");})
+					    .on("mousemove", function(d){div.text(getToolTipText(d,datas[1])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 70) + "px");})
 					    .on("mouseout",function(){
 					    	div.transition().duration(500).style("opacity", 1e-6);
 					    	d3.select(this).transition().duration(200)
-					    	.attr("fill-opacity", 0)
+					    	.attr("fill-opacity", .5)
 					    });
 
 
@@ -247,13 +291,15 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 				var color_hash = {  
 				0 : ["Response Time", "#09C"],
 				1 : ["Hits", "black"]
-			 };  var val = height+margin.bottom/2;
-				legend.append("rect")
-					.attr("height", 40)
-					.attr("width", 300)
-					.attr("rx", 6)
-					.attr("ry", 6)
-					.attr("transform", "translate(10,"+val+")")
+			 };  var val = height+3*margin.bottom/4;
+				var legendHeight = margin.bottom/2;
+             var legendWidth = width/2;
+                legend.append("rect")
+                    .attr("height", legendHeight)
+                    .attr("width", legendWidth)
+					.attr("rx", 5)
+					.attr("ry", 5)
+					.attr("transform", "translate(0,"+val+")")
 					.style("fill", "#EEE");
 
 				legend.selectAll('legend')
@@ -261,14 +307,14 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 					.enter().append("rect")
 						.attr("y", height +margin.bottom/2 + margin.top)
 						.attr("x", function(d, i){return i * 150+25;})
-						.attr("width", 10)
-						.attr("height", 10)
+						.attr("width", legendHeight/3)
+						.attr("height", legendHeight/3)
 						.style("fill", function(d, i) {return datas[datas.indexOf(d)].color;});
 
 				legend.selectAll('legend')
 					.data(datas)
 					.enter().append("text")
-						.attr("y", height +margin.bottom/2 + margin.top+8)
+						.attr("y", height +margin.bottom)
 						.attr("x", function(d, i){return i *150 + 25+20;})
 						.text(function(d) {return datas[datas.indexOf(d)].key;});
 			}
@@ -282,6 +328,7 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 
 
 					var datas = [{
+						unit:"ms",
 						key:"response Time",
 						values:data1
 					},{
