@@ -278,19 +278,12 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     if ((height === undefined) || (height === 0)) {
       height = defaultHeight;
     }
+    var axisSpacing = 3; // spacing between ticks
     var param = 0;
     width = container.width();
     if (width < 300) {
+      axisSpacing = 6;
       param = 7 / 10;
-    } else if (width < 600) {
-      param = 8 / 10;
-    } else {
-      param = 9 / 10;
-    }
-
-    width = param * width;
-
-    if (width < 600) {
       space = 5;
       height = 155;
       margin = {
@@ -299,9 +292,18 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
         bottom: 50,
         left: 30
       }
+    } else if (width < 600) {
+      axisSpacing = 4
+      param = 8 / 10;
+      space = 5;
+      height = 155;
+    } else {
+      param = 9 / 10;
     }
+    width = param * width;
 
-    barWidth = width / (datas[0].values).length - space;
+
+    barWidth = Math.min(width / (datas[0].values).length - space,50);
 
     x = d3.time.scale().range([0, width]);
     yL = d3.scale.linear().range([height, 0]);
@@ -323,7 +325,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
         return d[1];
       })])
 
-    xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, 6);
+    xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, axisSpacing);
     yRightAxis = d3.svg.axis().scale(yR).orient("right").ticks(5);
     yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
 
