@@ -37,7 +37,6 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
           .call(chart);
 
         nv.utils.windowResize(chart.update);
-
         return chart;
       });
 
@@ -174,74 +173,6 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
   $.fn.drawlinePlusBarWithNvd3 = function(datas, id) {
     datas[0].unit = "ms"; // must be removed here
 
-   /* var data1 = [
-      [3625200000, 1214],
-      [3628800000, 285],
-      [3632400000, 455],
-      [3636000000, 125],
-      [3639600000, 1850],
-      [3643200000, 789],
-      [3646800000, 458],
-      [3650400000, 999],
-      [3654000000, 775],
-      [3657600000, 328],
-      [3661200000, 389],
-      [3664800000, 552],
-      [3668400000, 566],
-      [3672000000, 398],
-      [3675600000, 455],
-      [3679200000, 566],
-      [3682800000, 635],
-      [3686400000, 985],
-      [3690000000, 777],
-      [3693600000, 1000],
-      [3697200000, 989],
-      [3700800000, 1245],
-      [3704400000, 522],
-      [3708000000, 300]
-    ];
-
-    var data2 = [
-      [3625200000, 145],
-      [3628800000, 285],
-      [3632400000, 455],
-      [3636000000, 15],
-      [3639600000, 510],
-      [3643200000, 89],
-      [3646800000, 58],
-      [3650400000, 99],
-      [3654000000, 75],
-      [3657600000, 28],
-      [3661200000, 39],
-      [3664800000, 52],
-      [3668400000, 566],
-      [3672000000, 398],
-      [3675600000, 455],
-      [3679200000, 566],
-      [3682800000, 35],
-      [3686400000, 85],
-      [3690000000, 77],
-      [3693600000, 100],
-      [3697200000, 89],
-      [3700800000, 125],
-      [3704400000, 22],
-      [3708000000, 30]
-    ];
-*/
-
-    /*var datas = [{
-        unit: "ms",
-        key: "response Time",
-        values: data1
-      }, {
-        key: "Hits",
-        values: data2
-      }
-    ]*/
-
-
-
-
     var margin = {
       top: 20,
       right: 50,
@@ -284,7 +215,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     if (width < 300) {
       axisSpacing = 6;
       param = 7 / 10;
-      space = 5;
+      //space = 5;
+      space = width/60;
       height = 155;
       margin = {
         top: 20,
@@ -295,12 +227,15 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     } else if (width < 600) {
       axisSpacing = 4
       param = 8 / 10;
-      space = 5;
+      //space = 5;
+      space = width/60;
       height = 155;
     } else {
       param = 9 / 10;
+      space = width/60;
     }
     width = param * width;
+    space = param*space;
 
 
     barWidth = Math.min(width / (datas[0].values).length - space,50);
@@ -422,7 +357,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .call(yRightAxis)
       .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 2)
+      .attr("y", -10)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text(getTextY(datas[1]));
@@ -469,7 +404,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .attr("class", "line")
       .style("stroke", datas[1].color);
 
-    var c = d3.scale.linear().domain([0, 1]).range(["hsl(250, 50%, 50%)", "hsl(350, 100%, 50%)"]).interpolate(d3.interpolateHsl);
+    var c = d3.scale.linear().domain([0, 1]).range(["hsl(250, 50%, 50%)", "hsl(250, 50%, 50%)"]).interpolate(d3.interpolateHsl);
     chart.selectAll("circle")
       .data(datas[1].values)
       .enter().append("svg:circle")
@@ -584,7 +519,6 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       data = data.split(",");
     }
 
-    return this.each(function() {
       var space = 1; // space between the bars
       var barWidth = 3;
       var height = 10;
@@ -598,7 +532,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
         id = container[0].id;
       }
 
-      var rectangle = d3.selectAll(("." + id)).append("svg")
+      var rectangle = d3.select(("#" + id)).append("svg")
         .attr("width", width)
         .attr("height", height)
         .attr("class", "bar");
@@ -621,7 +555,9 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
         .append("title").text(function(d) {
         return d;
       });
-    });
+
+        return rectangle;
+
   };
 
 })(jQuery);

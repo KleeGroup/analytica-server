@@ -115,8 +115,8 @@ function initializeTestHelperAnalytica() {
   var graphique5 = generateDefaultGraph();//MultiSerie
   //graphique5.data.filters.timeTo = 'NOW%2B6h';
   graphique5.data.url = "/home/multitimeLine/PAGE";
-  graphique5.data.filters.timeFrom = 'NOW-9h';
-  graphique5.data.filters.timeTo = 'NOW%2B5h';
+  graphique5.data.filters.timeFrom = 'NOW-3h';
+  graphique5.data.filters.timeTo = 'NOW%2B9h';
   graphique5.data.parse = parseMultiSeriesD3Datas;
   graphique5.html.container = "idgraphique3";
   graphique5.data.filters.datas = "duration:mean;duration:count";
@@ -137,8 +137,8 @@ function initializeTestHelperAnalytica() {
   
 
   graphique1.data.url = "/home/multitimeLine/PAGE";
-  graphique1.data.filters.timeFrom = 'NOW-9h';
-  graphique1.data.filters.timeTo = 'NOW%2B5h';
+  graphique1.data.filters.timeFrom = 'NOW-3h';
+  graphique1.data.filters.timeTo = 'NOW%2B9h';
   graphique1.data.parse = parseMultiSeriesD3Datas;
   graphique1.html.container = "idgraphique1";
   graphique1.data.filters.datas = "duration:mean;duration:count";
@@ -147,8 +147,8 @@ function initializeTestHelperAnalytica() {
   graphique1.ui.type = "linebar";
 
   graphique2.data.url = "/home/multitimeLine/PAGE";
-  graphique2.data.filters.timeFrom = 'NOW-9h';
-  graphique2.data.filters.timeTo = 'NOW%2B5h';
+  graphique2.data.filters.timeFrom = 'NOW-3h';
+  graphique2.data.filters.timeTo = 'NOW%2B9h';
   graphique2.data.parse = parseMultiSeriesD3Datas;
   graphique2.html.container = "idgraphique2";
   graphique2.data.filters.datas = "duration:mean;duration:count";

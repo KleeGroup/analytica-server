@@ -292,7 +292,6 @@ public final class Utils {
 	 */
 	private String getStringList(final HCategory category, final HResult result, final String dataKey) {
 		final StringBuilder stringBuilder = new StringBuilder();
-		int compt = 0;
 		for (final HCube cube : result.getSerie(category).getCubes()) {
 			final String[] metricKey = dataKey.split(":");
 			final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
@@ -309,13 +308,12 @@ public final class Utils {
 			if (!Double.toString(val).equals("NaN")) {
 				val = Math.ceil(100 * val) / 100;
 				stringBuilder.append(val);
-				if (compt < result.getSerie(category).getCubes().size() - 1) {
-					stringBuilder.append(",");
-				}
+				stringBuilder.append(",");
 			}
-			compt++;
 		}
-		return stringBuilder.toString();
+
+		return stringBuilder.toString().substring(0, stringBuilder.toString().length() - 1);
+
 	}
 
 	/**
@@ -375,11 +373,11 @@ public final class Utils {
 
 		final String[] metricKey = dataKey.split(":");
 
-		for (HCategory category : result.getQuery().getAllCategories()) {
-			for (HCube cube : result.getSerie(category).getCubes()) {
+		for (final HCategory category : result.getQuery().getAllCategories()) {
+			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
-				int h = cube.getKey().getTime().getValue().getHours();
-				int d = cube.getKey().getTime().getValue().getDay();
+				final int h = cube.getKey().getTime().getValue().getHours();
+				final int d = cube.getKey().getTime().getValue().getDay();
 				punchcard.data[d][h] = hMetric == null ? 0d : hMetric.getCount();
 			}
 		}

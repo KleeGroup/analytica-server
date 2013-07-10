@@ -33,8 +33,8 @@ var graph3 = {
       url: '/home/agregatedDatasByCategory/PAGE', // home/datas
       type: 'Mono', // Mono or multi series.   
       filters: {
-        timeFrom: "NOW-12h", //
-        timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
+        timeFrom: "NOW-8h", //
+        timeTo: "NOW%2B4h", //ProblÃ¨me ici avec le +
         timeDim: "Hour", //
         category: "PAGE", //
         datas: "duration:count" //  
@@ -123,8 +123,8 @@ var graph3 = {
         url: '/home/timeLine/PAGE', // home/datas
         type: 'Mono', // Mono or multi series.   
         filters: {
-          timeFrom: "NOW-1h", //
-          timeTo: "NOW%2B3h", //ProblÃ¨me ici avec le +
+          timeFrom: "NOW-10h", //
+          timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
           timeDim: "Hour", //
           category: "PAGE", //
           datas: "duration:mean" //  
@@ -175,14 +175,16 @@ var graph3 = {
   graphique4.html.title = "Pages Response Time";
   var graphique5 = generateDefaultGraph();//MultiSerie
   //graphique5.data.filters.timeTo = 'NOW%2B6h';
-  graphique5.data.url = "/home/stackedDatas/PAGE";
-  graphique5.data.filters.timeFrom = 'NOW-5h';
-  graphique5.data.filters.timeTo = 'NOW%2B5h';
+  graphique5.data.url = "/home/multitimeLine/PAGE";
+  graphique5.data.filters.timeFrom = 'NOW-10h';
+  graphique5.data.filters.timeTo = 'NOW%2B2h';
   graphique5.data.parse = parseMultiSeriesD3Datas;
-  graphique5.data.filters.datas = "duration:mean";
+  graphique5.data.filters.datas = "duration:mean;duration:count";
   graphique5.ui.labels = "Response Time;Hits";
   graphique5.html.title = "Page hits and response time";
   graphique5.ui.type = "linebar";
+
+
   var graphique6 = generateDefaultGraph();//MultiSerie
   graphique6.data.url = "/home/tableSparkline/PAGE";
   graphique6.html.title = "DataTable Graph";
@@ -195,8 +197,17 @@ var graph3 = {
   graphique7.data.parse = parsePunchCard;
   graphique7.ui.type = "punchcard";
   
-  
 
+ bigValuegraph.ui.type = "bignumbercount";
+  //Other graphs
+ graph3.ui.type = "tablelisting";
+ graph3.html.title = "Hits per hour";
+ graph3.ui.type = "tablelisting";
+ graph3.data.parse = parseHitsCountDatas;
+
+
+ graph4.ui.type = "showchange";
+ 
   var graphs = [
     bigValuegraph,
     graph3,
@@ -204,6 +215,5 @@ var graph3 = {
     graphique5,
     graphique6
   ];
-
   KLEE.Analytica.generateGraphs(graphs);
 }

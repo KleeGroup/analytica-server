@@ -1,0 +1,109 @@
+.span3{
+	background-color: #eeeeee;
+}
+
+.ui-widget-header{
+  background-color: #bbb;
+  text-transform: none; f
+  font-weight: 100; 
+  margin-bottom: 0;
+}
+.ui-widget-header h{
+  margin-left: 10px;
+}	
+.widget-canvas{
+
+font-family: Helvetica, Arial, sans-serif;
+
+margin: 0px auto;
+padding: 0 30px;
+border: 0;
+font: inherit;
+font-size: 100%;
+vertical-align: baseline;
+}
+
+.negative{
+color: #CC0000
+}
+.level{ color: #FFBB33}
+.positive{color:#669900}
+
+.led{position:absolute;width:10px;height:10px;top:16px;left:12px;padding:0 !important;display:block !important}
+.led.success
+{background-position:0 -3117px;cursor:default}
+.widget-size-1x1{height:200px; margin: 0;}
+.success{padding:20px 20px 20px 61px;color:white;position:relative;border-radius:3px;line-height:1.4;display:none}
+.success{background-color:#6db64c;padding-left:54px}
+.monitoring-widget .widget-canvas .status
+{text-transform:capitalize;padding-top:10px;margin-bottom:24px}
+.monitoring-widget .widget-canvas .server-time
+{width:50%;float:left}
+.monitoring-widget .widget-canvas .server-time .label
+{color:#828282;text-transform:uppercase;margin:0 0 6px}
+.monitoring-widget .widget-canvas
+{padding-top:5px;margin:48px 0}
+.t-size-x10
+{font-size:10px}
+.t-size-x11
+{font-size:11px}
+.t-size-x12
+{font-size:12px}
+.t-size-x14
+{font-size:14px}
+.t-size-x18
+{font-size:18px}
+.t-size-x20
+{font-size:20px}
+.t-size-x24
+{font-size:24px}
+.t-size-x28
+{font-size:28px}
+.t-size-x30
+{font-size:30px}
+.t-size-x36
+{font-size:36px}
+.t-size-x40
+{font-size:40px}
+.t-size-x44
+{font-size:44px}
+.t-size-x48
+{font-size:48px}
+.t-size-x52
+{font-size:52px}
+.t-size-x60
+{font-size:60px}
+.t-size-x72
+{font-size:72px}
+.t-size-x100
+{font-size:100px}
+
+.number-widget .widget-canvas .unit
+{font-size:0.7em}
+.widget-size-1x1 .number-widget .secondary-stat
+{margin:12px 0 0}
+section
+{display:block}
+body{font:400 0.95em/1 "Proxima Nova",Helvetica,sans-serif}
+
+.rag-widget table,.widget-canvas table
+{width:100%}
+.rag-widget table tr,.widget-canvas table tr
+{border-bottom:solid 1px #363636}
+.rag-widget .widget-canvas table tr:last-child
+{border-bottom:none}
+.rag-widget .widget-canvas table tr:first-child td
+{padding-top:0}
+.rag-widget .widget-canvas table td
+{padding:6px 0}
+.rag-widget .widget-canvas table td.t-secondary
+{font-size:12px;padding-left:12px}
+
+.represent{
+	color: #0099CC
+}
+
+.ass{
+	margin: 0 auto;
+	padding: 40px;
+}

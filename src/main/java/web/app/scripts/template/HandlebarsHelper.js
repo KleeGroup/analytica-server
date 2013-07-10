@@ -24,7 +24,9 @@ Handlebars.registerHelper('drawSparkline', function(value, options) {
 			throw "drawSparkline  error:" + value + " value.values is not defined in your JSON.";
 		}
 
-		$("#" + this[value].id).d3Sparkline(this[value].sparklineValues,this[value].id);
+		$("#"+this[value].id).d3Sparkline(this[value].sparklineValues,this[value].id);
+
+		//$("#" + this[value].id).d3Sparkline(this[value].sparklineValues,this[value].id);
 		//$("#" + this[value].id).innerHTML = this[value].sparklineValues;
 		//$("#" + this[value].id).sparkline(this[value].sparklineValues);
 		

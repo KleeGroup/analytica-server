@@ -62,8 +62,8 @@ function initializeTestHelperAnalytica() {
         url: '/home/timeLine/PAGE', // home/datas
         type: 'Mono', // Mono or multi series.   
         filters: {
-          timeFrom: "NOW-1h", //
-          timeTo: "NOW%2B3h", //ProblÃ¨me ici avec le +
+          timeFrom: "NOW-11h", //
+          timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
           timeDim: "Hour", //
           category: "PAGE", //
           datas: "duration:mean" //  
@@ -135,11 +135,7 @@ function initializeTestHelperAnalytica() {
   graphique7.ui.type = "punchcard";
   
   var graphs = [
-    graphique1,
-    graphique2,
-    graphique3,
-    graphique4,
-    graphique5,
+
     graphique6
   ];
 

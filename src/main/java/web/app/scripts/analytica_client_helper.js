@@ -47,39 +47,68 @@ var generateGraph = function generateGraph(graph) {
 
 			if (document.getElementById(graph.html.container)) {
 				var graphtype = graph.ui.type;
-				if (graphtype === "table") {
-					data.htmlIcon = graph.ui.icon;
-					data.htmlTitle = graph.html.title;
-					/*Loading the datatable in the DOM*/
-					$('div#' + graph.html.container).html(Handlebars.templates.table(data));
-					//Drawing the sparklines after the table have been loaded in the DOM
-					/*$('.line-spark').sparkline('html', {
-						type: 'line',
-						width: 80,
-						lineColor: '#33B5E5',
-						minSpotColor: 'black',
-						maxSpotColor: false,
-						spotColor: '#FF4444'
-						//spotRadius: 3
-					});
-					$('.bar-spark').sparkline('html', {
-						type: 'bar',
-						barColor: '#33B5E5',
-						//minSpotColor: false, 
-						//maxSpotColor: false, 
-						spotColor: '#FF4444',
-						spotRadius: 3
-					});*/
-					$('.bar-spark').d3Sparkline(undefined,undefined);
-				} else if (graphtype === "bigValue") {
-					data.icon = graph.ui.icon;
-					data.title = graph.html.title;
-					//Loading the bigValue HandleBars template in the DOM
-					$('div#' + graph.html.container).html(Handlebars.templates.bigvalue(data));
+				switch (graphtype){
+					case "table":
+						data.htmlIcon = graph.ui.icon;
+						data.htmlTitle = graph.html.title;
+						/*Loading the datatable in the DOM*/
+						$('div#' + graph.html.container).html(Handlebars.templates.table(data));
+						
+						$('.line-spark').sparkline('html', {
+							width:80,
+							height:12,
+							type: 'line',
+							lineColor: '#33B5E5'
+						});
+						$('.bar-spark').sparkline('html', {
+							height: 12,
+							type: 'bar',
+							barColor: '#33B5E5'
+						});
 
-				} else {
-			//Loading the other charts template in the dom
-			//We have to do a callback with the name defined in the plugin because the function has to be registered in jquery.
+					break;
+
+					case "bigValue":
+						data.icon = graph.ui.icon;
+						data.title = graph.html.title;
+						//Loading the bigValue HandleBars template in the DOM
+						$('div#' + graph.html.container).html(Handlebars.templates.bigvalue(data));
+					break;
+
+					case "uptime":
+						$('div#' + graph.html.container).html(Handlebars.templates.uptime(data));
+					break;
+
+					case "showchange":
+						$('div#' + graph.html.container).html(Handlebars.templates.showchange(data));
+						$('.show-spark').sparkline('html', {
+							width:150,
+							height:24,
+							type: 'line',
+							lineColor: '#33B5E5'
+						});
+
+					break;
+
+					case "tablelisting":
+						data.icon = graph.ui.icon;
+						data.title = graph.html.title;
+						$('div#' + graph.html.container).html(Handlebars.templates.tablelisting(data));
+
+					break;
+
+					case "bignumbercount":
+						$('div#' + graph.html.container).html(Handlebars.templates.bignumbercount(data));
+						$('.visitor-spark').sparkline('html', {
+							width:150,
+							height:24,
+							type: 'line',
+							lineColor: '#33B5E5'
+						});
+
+					break;
+
+					default:
 					$('#' + graph.ui.id)[drawGraphCallbackName](data);
 				}
 			}
@@ -328,7 +357,6 @@ function parsePieDatas(dataResult, labels) {
 function parseBigValue(dataResult, labels) {
 	var data = {};
 	var reconstructedData = [];
-
 	for (var r in dataResult) {
 		var name = r.split("::");
 
@@ -340,8 +368,50 @@ function parseBigValue(dataResult, labels) {
 	reconstructedData.sort(sort_by('value', false, parseFloat));
 	data.label = labels;
 	data.data = reconstructedData[0].value;
+
+
 	return data;
 }
+
+function parseHitsCountDatas(dataResult, labels) {
+	var data = {};
+	var reconstructedData = [];
+	var result = {};
+	var average = 0;
+	for (var r in dataResult) {
+		var name = r.split("::");
+
+		reconstructedData.push({
+			label: name[1],
+			value: dataResult[r]
+		});
+		average += dataResult[r];
+	}
+	var tableLength = reconstructedData.length;
+	reconstructedData.sort(sort_by('value', false, parseFloat));
+	data.label = labels;
+	data.data = reconstructedData[0].value;
+
+	var maxValue = {};
+	maxValue.label = "Max";
+	maxValue.data = reconstructedData[0].value;
+
+	var minValue = {};
+	minValue.label = "Min";
+	minValue.data = reconstructedData[tableLength-1].value;
+
+	var meanValue = {};
+	meanValue.label = "Mean";
+	meanValue.data = Math.round((average/tableLength));
+
+	result.max = maxValue;
+	result.min = minValue;
+	result.mean = meanValue;
+
+	return result;
+}
+
+
 
 function parseDataTable(dataResult, labels) {
 
