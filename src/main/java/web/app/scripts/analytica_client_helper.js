@@ -65,6 +65,8 @@ var generateGraph = function generateGraph(graph) {
 							type: 'bar',
 							barColor: '#33B5E5'
 						});
+						//$('#bar-spark').d3Sparkline("","bar-spark");
+
 
 					break;
 
@@ -98,6 +100,8 @@ var generateGraph = function generateGraph(graph) {
 					break;
 
 					case "bignumbercount":
+						data.icon = graph.ui.icon;
+						data.title = graph.html.title;
 						$('div#' + graph.html.container).html(Handlebars.templates.bignumbercount(data));
 						$('.visitor-spark').sparkline('html', {
 							width:150,
@@ -407,6 +411,7 @@ function parseHitsCountDatas(dataResult, labels) {
 	result.max = maxValue;
 	result.min = minValue;
 	result.mean = meanValue;
+	result.Total=average;
 
 	return result;
 }

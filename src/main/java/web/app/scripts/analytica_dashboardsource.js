@@ -6,7 +6,7 @@ function initializeTestHelperAnalytica() {
       type: 'Mono', // Mono or multi series.   
       filters: {
         timeFrom: "NOW-12h", //
-        timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
+        timeTo: "NOW%2B12h", //ProblÃ¨me ici avec le +
         timeDim: "Hour", //
         category: "PAGE", //
         datas: "duration:count" //  
@@ -21,7 +21,7 @@ function initializeTestHelperAnalytica() {
       options: undefined //
     },
     html: {
-      title: "Page Hits", // Title of the panel.
+      title: "Visitors", // Title of the panel.
       container: "idbigvalue", // id of the container.
     },
     options: {
@@ -33,8 +33,8 @@ var graph3 = {
       url: '/home/agregatedDatasByCategory/PAGE', // home/datas
       type: 'Mono', // Mono or multi series.   
       filters: {
-        timeFrom: "NOW-8h", //
-        timeTo: "NOW%2B4h", //ProblÃ¨me ici avec le +
+        timeFrom: "NOW-12h", //
+        timeTo: "NOW%2B12h", //ProblÃ¨me ici avec le +
         timeDim: "Hour", //
         category: "PAGE", //
         datas: "duration:count" //  
@@ -63,7 +63,7 @@ var graph3 = {
       type: 'Mono', // Mono or multi series.   
       filters: {
         timeFrom: "NOW-12h", //
-        timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
+        timeTo: "NOW%2B12h", //ProblÃ¨me ici avec le +
         timeDim: "Hour", //
         category: "PAGE", //
         datas: "duration:count" //  
@@ -94,7 +94,7 @@ var graph3 = {
       type: 'Mono', // Mono or multi series.   
       filters: {
         timeFrom: "NOW-12h", //
-        timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
+        timeTo: "NOW%2B12h", //ProblÃ¨me ici avec le +
         timeDim: "Hour", //
         category: "PAGE", //
         datas: "duration:count" //  
@@ -123,8 +123,8 @@ var graph3 = {
         url: '/home/timeLine/PAGE', // home/datas
         type: 'Mono', // Mono or multi series.   
         filters: {
-          timeFrom: "NOW-10h", //
-          timeTo: "NOW%2B2h", //ProblÃ¨me ici avec le +
+          timeFrom: "NOW-12h", //
+          timeTo: "NOW%2B12h", //ProblÃ¨me ici avec le +
           timeDim: "Hour", //
           category: "PAGE", //
           datas: "duration:mean" //  
@@ -149,7 +149,7 @@ var graph3 = {
 
   //Other graphs
  var graphique1 = generateDefaultGraph();
-  graphique1.data.filters.timeFrom = 'NOW';
+  graphique1.data.filters.timeFrom = 'NOW-12h';
   graphique1.ui.type = "bigValue";
   graphique1.html.title = "Graphe MonoSerie1";
   var graphique2 = generateDefaultGraph();
@@ -164,8 +164,8 @@ var graph3 = {
   graphique3.html.title = "Graphe MonoSerie3";
   //graphique3.data.filters.timeDim = 'Hour';
   var graphique4 = generateDefaultGraph();
-  graphique4.data.filters.timeFrom = 'NOW-5h';
-  graphique4.data.filters.timeTo = 'NOW%2B5h';
+  graphique4.data.filters.timeFrom = 'NOW-12h';
+  graphique4.data.filters.timeTo = 'NOW%2B12h';
   graphique4.data.url = "/home/stackedDatas/PAGE";
 
   graphique4.data.parse = parseDataResult;
@@ -176,8 +176,8 @@ var graph3 = {
   var graphique5 = generateDefaultGraph();//MultiSerie
   //graphique5.data.filters.timeTo = 'NOW%2B6h';
   graphique5.data.url = "/home/multitimeLine/PAGE";
-  graphique5.data.filters.timeFrom = 'NOW-10h';
-  graphique5.data.filters.timeTo = 'NOW%2B2h';
+  graphique5.data.filters.timeFrom = 'NOW-12h';
+  graphique5.data.filters.timeTo = 'NOW%2B12h';
   graphique5.data.parse = parseMultiSeriesD3Datas;
   graphique5.data.filters.datas = "duration:mean;duration:count";
   graphique5.ui.labels = "Response Time;Hits";
@@ -204,7 +204,7 @@ var graph3 = {
  graph3.html.title = "Hits per hour";
  graph3.ui.type = "tablelisting";
  graph3.data.parse = parseHitsCountDatas;
-
+bigValuegraph.data.parse = parseHitsCountDatas;
 
  graph4.ui.type = "showchange";
  

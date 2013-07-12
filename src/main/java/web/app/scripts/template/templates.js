@@ -47,11 +47,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "\r\n<div class = \"ui-widget-header \"><i class=\"";
+  buffer += "\r\n<div class = \"ui-widget-header \">\r\n	<i class=\"";
   if (stack1 = helpers.icon) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.icon; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\"></i><h>";
+    + "\"></i>\r\n	<h>";
   if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
@@ -221,9 +221,22 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 templates['bignumbercount'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  return "<div class = 'widget-size-1x1'>\r\n  <div class=\"ui-widget-header \">\r\n    <i class=\"icon-picture\"></i>\r\n    <h>Visitors</h>\r\n  </div>\r\n  <section class=\"widget-body \">\r\n    <div class=\"widget-canvas ass\">\r\n      <div class=\" t-size-x72 represent \">\r\n        <span >3,152</span>\r\n      </div>\r\n      <div class=\" t-size-x30\">Last 3 Hours</div>\r\n      <div class=\" t-size-x44 visitor-spark text-center\">\r\n        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14\r\n      </div>\r\n    </div><!-- .widget-canvas -->\r\n  </section>\r\n</div>";
+  buffer += "<div class = 'widget-size-1x1'>\r\n  <div class=\"ui-widget-header \">\r\n    <i class=\"";
+  if (stack1 = helpers.icon) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.icon; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"></i>\r\n  <h>";
+  if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</h> \r\n  </div>\r\n  <section class=\"widget-body \">\r\n    <div class=\"widget-canvas ass\">\r\n      <div class=\" t-size-x72 represent text-center \">\r\n        <span class=\"text-center\">";
+  if (stack1 = helpers.Total) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.Total; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</span>\r\n      </div>\r\n      <div class=\" t-size-x30 text-center\">Last 3 Hours</div>\r\n      <div class=\" t-size-x44 visitor-spark text-center\">\r\n        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14\r\n      </div>\r\n    </div><!-- .widget-canvas -->\r\n  </section>\r\n</div>";
+  return buffer;
   });
 })();

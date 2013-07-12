@@ -33,9 +33,9 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + escapeExpression(((stack1 = ((stack1 = depth0.value4),stack1 == null || stack1 === false ? stack1 : stack1.sparklineValues)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span> <span class =\"spark-text\"> "
     + escapeExpression(((stack1 = ((stack1 = depth0.value4),stack1 == null || stack1 === false ? stack1 : stack1.lastValue)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</span>\r\n  </td>\r\n  <td id=\""
+    + "</span>\r\n  </td>\r\n  <td class = \"text-center \">\r\n    <span id=\""
     + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" class = \"text-center \">\r\n    <span class = \"bar-spark text-center\"> "
+    + "\" class = \"bar-spark text-center\"> "
     + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.sparklineValues)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span> <span class =\"spark-text\"> "
     + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.lastValue)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))

@@ -72,8 +72,10 @@ public final class Utils {
 		Assertion.notNull(result);
 
 		// ---------------------------------------------------------------------
+		final String[] type = datas.split(":");
 		final HMetricKey metricKey = new HMetricKey("duration", true);
-		final HCounterType counterType = HCounterType.count;
+		final HCounterType counterType = HCounterType.valueOf(type[1]);
+		//		final HCounterType counterType = HCounterType.count;
 		final Map<String, Double> valueByCategory = new HashMap<>();
 
 		System.out.println(result.getQuery().getAllCategories());
@@ -381,7 +383,6 @@ public final class Utils {
 				punchcard.data[d][h] = hMetric == null ? 0d : hMetric.getCount();
 			}
 		}
-
 		return punchcard;
 	}
 }

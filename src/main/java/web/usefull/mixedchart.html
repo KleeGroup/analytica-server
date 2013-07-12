@@ -102,7 +102,7 @@
 			      }
 				  var container = document.getElementById(id);
 			      height = 155;
-			      width = 460; // span6
+			      width = 900; // span6
 			      var aux = 460 - width;
 			      barWidth = width/(datas[0].values).length - space;
 
@@ -119,23 +119,33 @@
                       return d[0];
                     })+3600000),0)]);
 
-
-			      yL.domain([0, d3.max(datas[0].values, function(d) {
+			      var delta  = 5/Math.min(d3.max(datas[0].values, function(d) {
 			          return d[1];
-			        })])
-			      yR.domain([0, d3.max(datas[1].values, function(d) {
+			        }),d3.max(datas[1].values, function(d) {
 			          return d[1];
-			        })])
+			        }));
+			     // alert(delta);
+			     yLMax = d3.max(datas[0].values, function(d) {
+			          return d[1];
+			        });
+			     yRMax = d3.max(datas[1].values, function(d) {
+			          return d[1];
+			        });
 
+			      yL.domain([0, yLMax]);
+			      yR.domain([0, yRMax]);
+
+			     
 			      xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, 5);
 			      yRightAxis = d3.svg.axis().scale(yR).orient("right").ticks(5);
 			      yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
 
-			      line = d3.svg.line().x(function(d){return x(d[0]);}).y(function(d){return yR(d[1])});
+			      line = d3.svg.line().x(function(d){return x(d[0]);}).y(function(d){return yR(d[1])}).interpolate(interpolateSankey);
 
 			      var div = d3.select("#"+id).append("div")
 				    .attr("class", "tooltip")
 					.style("opacity", 1e-6);
+					//div.fadeIn(200);
 
 				  var parseToDate = function(d){
 				  		var format = d3.time.format.utc("%d/%m-%H:%M");
@@ -250,11 +260,11 @@
 			          .style("fill",datas[0].color)
 			          .style("stroke","white")
 			          .style("stroke-width",1)
-			          .on("mouseover", function(d){div.transition().duration(500).style("opacity", 1)})
+			          .on("mouseover", function(d){div.transition().duration(200).style("opacity", 1)})
 					  .on("mousemove", function(d){
 					  	div.text(getToolTipText(d,datas[0])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 50) + "px");
 					  })
-					  .on("mouseout", function(d){div.transition().duration(500).style("opacity", 1e-6);});	;
+					  .on("mouseout", function(d){div.transition().duration(200).style("opacity", 1e-6);});	;
 
 			        chart.append("svg:path")
 			          .datum(datas[1].values)
@@ -274,12 +284,12 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 					    .attr("r", 3)
 					    .style("display","inline")
 					    .on("mouseover", function(d) {
-					    	div.transition().duration(500).style("opacity", 1);
+					    	div.transition().duration(200).style("opacity", 1);
 					        d3.select(this).transition().duration(200).attr("fill-opacity", .5)
 					    })
 					    .on("mousemove", function(d){div.text(getToolTipText(d,datas[1])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 70) + "px");})
 					    .on("mouseout",function(){
-					    	div.transition().duration(500).style("opacity", 1e-6);
+					    	div.transition().duration(200).style("opacity", 1e-6);
 					    	d3.select(this).transition().duration(200)
 					    	.attr("fill-opacity", .5)
 					    });
@@ -293,7 +303,13 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 				1 : ["Hits", "black"]
 			 };  var val = height+3*margin.bottom/4;
 				var legendHeight = margin.bottom/2;
-             var legendWidth = width/2;
+             	var legendWidth = width/2;
+             //-----------Calcul de la largeur de la légende
+             	var globalLength =0;
+             	var keyLength = 0;
+
+
+
                 legend.append("rect")
                     .attr("height", legendHeight)
                     .attr("width", legendWidth)
@@ -306,7 +322,7 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 					.data(datas)
 					.enter().append("rect")
 						.attr("y", height +margin.bottom/2 + margin.top)
-						.attr("x", function(d, i){return i * 150+25;})
+						.attr("x", function(d, i){return i * 150;})//Doit être calculée à partir de la taille du texte
 						.attr("width", legendHeight/3)
 						.attr("height", legendHeight/3)
 						.style("fill", function(d, i) {return datas[datas.indexOf(d)].color;});
@@ -314,9 +330,23 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 				legend.selectAll('legend')
 					.data(datas)
 					.enter().append("text")
-						.attr("y", height +margin.bottom)
-						.attr("x", function(d, i){return i *150 + 25+20;})
+						.attr("y", height +margin.bottom/2 + margin.top+7)
+						.attr("x", function(d, i){return i *150 +20;})
 						.text(function(d) {return datas[datas.indexOf(d)].key;});
+			}
+
+
+			function interpolateSankey(points) {
+			  var x0 = points[0][0], y0 = points[0][1], x1, y1, x2,
+			      path = [x0, ",", y0],
+			      i = 0,
+			      n = points.length;
+			  while (++i < n) {
+			    x1 = points[i][0], y1 = points[i][1], x2 = (x0 + x1) / 2;
+			    path.push("C", x2, ",", y0, " ", x2, ",", y1, " ", x1, ",", y1);
+			    x0 = x1, y0 = y1;
+			  }
+			  return path.join("");
 			}
 		</script>
 
@@ -331,6 +361,18 @@ var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 1
 						unit:"ms",
 						key:"response Time",
 						values:data1
+					},{
+						key:"Hits",
+						values:data2
+					},{
+						key:"Hits",
+						values:data2
+					},{
+						key:"Hits",
+						values:data2
+					},{
+						key:"Hits",
+						values:data2
 					},{
 						key:"Hits",
 						values:data2
