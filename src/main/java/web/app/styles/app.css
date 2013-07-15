@@ -344,13 +344,13 @@ div.pager span {
     line-height: 1;
     text-align: center;
     cursor: pointer;
-    background: #000;
+    background: #A9A9A9;
     color: #fff;
     margin-right: 0.5em;
 }
 
 div.pager span.active {
-    background: #c00;
+    background: #696969;
 }
 
 div.pager{

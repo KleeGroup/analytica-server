@@ -198,14 +198,15 @@
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // Draw X-axis grid lines
 
     chart.selectAll("line.x")
-      .data(x.ticks(10))
+      .data(x.ticks(5))
       .enter().append("line")
       .attr("class", "x")
       .attr("x1", x)
       .attr("x2", x)
       .attr("y1", 0)
       .attr("y2", height)
-      .style("stroke", "#ccc");
+      .style("stroke", "black")
+      .style("stroke-width",0.1);
 
     // Draw Y-axis grid lines
     chart.selectAll("line.y")
@@ -216,7 +217,8 @@
       .attr("x2", width)
       .attr("y1", yL)
       .attr("y2", yL)
-      .style("stroke", "#ccc");
+      .style("stroke", "black")
+      .style("stroke-width",0.1);
 
     chart.append("g") // Add the X Axis
     .attr("class", "x axis")

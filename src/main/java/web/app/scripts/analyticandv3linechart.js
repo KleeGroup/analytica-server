@@ -552,7 +552,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .attr("x2", x)
       .attr("y1", 0)
       .attr("y2", height)
-      .style("stroke", "#ccc");
+      .style("stroke", "black")
+      .style("stroke-width",0.1);
 
     // Draw Y-axis grid lines
     chart.selectAll("line.y")
@@ -563,7 +564,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .attr("x2", width)
       .attr("y1", yL)
       .attr("y2", yL)
-      .style("stroke", "#ccc");
+      .style("stroke", "black")
+      .style("stroke-width",0.1);
 
     chart.append("g") // Add the X Axis
     .attr("class", "x axis")
@@ -634,7 +636,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .attr("class", "line")
       .style("stroke", datas[1].color);
 
-    var c = d3.scale.linear().domain([0, 1]).range(["hsl(250, 50%, 50%)", "hsl(250, 50%, 50%)"]).interpolate(d3.interpolateHsl);
+    var c = d3.scale.linear().domain([0, 1]).range([datas[1].color, datas[1].color]).interpolate(d3.interpolateHsl);
     chart.selectAll("circle")
       .data(datas[1].values)
       .enter().append("svg:circle")
@@ -809,9 +811,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       });
 
     }
-
   };
-
+  //Returns the width in pixels of a text
   $.fn.textWidth = function(text) {
     var canvas = $(this);
     var html = $('<span style="postion:absolute;width:auto;left:-9999px">' + (text || canvas.html) + '</span>');
@@ -823,6 +824,253 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     var width = html.width();
     html.remove();
     return width;
+  };
+
+  $.fn.drawPieChart = function(data,id){
+          var container = document.getElementById(id);
+          container = $(this);       
+          var w = 650;
+          w = container.width();
+          var h = 400;
+          var r = 150;
+          var ir = 75;
+          var textOffset = 24;
+          var tweenDuration = 1050;
+
+          if (id === undefined) {
+            id = container[0].id;
+          }
+
+          //OBJECTS TO BE POPULATED WITH DATA LATER
+          var lines, valueLabels, nameLabels;
+          var pieData = [];
+          var filteredPieData = [];
+
+          //D3 helper function to populate pie slice parameters from array data
+          var donut = d3.layout.pie().value(function(d) {
+            return d.itemValue;
+          }).sort(null);
+
+          //D3 helper function to create colors from an ordinal scale
+          var color = d3.scale.category20c();
+
+          //D3 helper function to draw arcs, populates parameter "d" in path object
+          var arc = d3.svg.arc()
+            .startAngle(function(d) {
+            return d.startAngle;
+          })
+            .endAngle(function(d) {
+            return d.endAngle;
+          })
+            .innerRadius(ir)
+            .outerRadius(r);
+         
+
+
+          ///////////////////////////////////////////////////////////
+          // CREATE VIS & GROUPS ////////////////////////////////////
+          ///////////////////////////////////////////////////////////
+
+          var vis = d3.select("#"+id).append("svg:svg")
+            .attr("width", w)
+            .attr("height", h);
+
+          //GROUP FOR ARCS/PATHS
+          var arc_group = vis.append("svg:g")
+            .attr("class", "arc")
+            .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
+
+          //GROUP FOR LABELS
+          var label_group = vis.append("svg:g")
+            .attr("class", "label_group")
+            .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
+
+          //GROUP FOR CENTER TEXT  
+          var center_group = vis.append("svg:g")
+            .attr("class", "center_group")
+            .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
+
+          //PLACEHOLDER GRAY CIRCLE
+          // var paths = arc_group.append("svg:circle")
+          //     .attr("fill", "#EFEFEF")
+          //     .attr("r", r);
+
+          ///////////////////////////////////////////////////////////
+          // CENTER TEXT ////////////////////////////////////////////
+          ///////////////////////////////////////////////////////////
+
+          //WHITE CIRCLE BEHIND LABELS
+          var whiteCircle = center_group.append("svg:circle")
+            .attr("fill", "white")
+            .attr("r", ir);
+
+          ///////////////////////////////////////////////////////////
+          // STREAKER CONNECTION ////////////////////////////////////
+          ///////////////////////////////////////////////////////////
+
+          // to draw the chart
+
+          function draw() {
+
+            pieData = donut(data);
+
+            var sliceProportion = 0; //size of this slice
+            filteredPieData = pieData.filter(filterData);
+
+            function filterData(element, index, array) {
+              element.name = data[index].itemLabel;
+              element.value = data[index].itemValue;
+              sliceProportion += element.value;
+              return (element.value > 0);
+            }
+
+            //DRAW ARC PATHS
+            paths = arc_group.selectAll("path").data(filteredPieData);
+            paths.enter().append("svg:path")
+              .attr("stroke", "white")
+              .attr("stroke-width", 0.5)
+              .attr("fill", function(d, i) {
+              return color(i);
+            })
+              .transition()
+              .duration(tweenDuration)
+              .attrTween("d", pieTween);
+
+
+
+            //DRAW TICK MARK LINES FOR LABELS
+            lines = label_group.selectAll("line").data(filteredPieData);
+            lines.enter().append("svg:line")
+              .attr("x1", 0)
+              .attr("x2", 0)
+              .attr("y1", -r - 3)
+              .attr("y2", -r - 15)
+              .attr("stroke", "gray")
+              .attr("transform", function(d) {
+              return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
+            });
+            lines.transition()
+              .duration(tweenDuration)
+              .attr("transform", function(d) {
+              return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
+            });
+            lines.exit().remove();
+
+            //DRAW LABELS WITH PERCENTAGE VALUES
+            valueLabels = label_group.selectAll("text.value").data(filteredPieData)
+              .attr("dy", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+                return 5;
+              } else {
+                return -7;
+              }
+            })
+              .attr("text-anchor", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+                return "beginning";
+              } else {
+                return "end";
+              }
+            })
+              .text(function(d) {
+              var percentage = (d.value / sliceProportion) * 100;
+              return percentage.toFixed(1) + "%";
+            });
+
+            valueLabels.enter().append("svg:text")
+              .attr("class", "value")
+              .attr("transform", function(d) {
+              return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (r + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (r + textOffset) + ")";
+            })
+              .attr("dy", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+                return 5;
+              } else {
+                return -7;
+              }
+            })
+              .attr("text-anchor", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+                return "beginning";
+              } else {
+                return "end";
+              }
+            }).text(function(d) {
+              var percentage = (d.value / sliceProportion) * 100;
+              return percentage.toFixed(1) + "%";
+            });
+
+
+            valueLabels.exit().remove();
+
+
+            //DRAW LABELS WITH ENTITY NAMES
+            nameLabels = label_group.selectAll("text.units").data(filteredPieData)
+              .attr("dy", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+                return 17;
+              } else {
+                return 5;
+              }
+            })
+              .attr("text-anchor", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+                return "beginning";
+              } else {
+                return "end";
+              }
+            }).text(function(d) {
+              return d.name;
+            });
+
+            nameLabels.enter().append("svg:text")
+              .attr("class", "units")
+              .attr("transform", function(d) {
+              return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (r + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (r + textOffset) + ")";
+            })
+              .attr("dy", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+                return 17;
+              } else {
+                return 5;
+              }
+            })
+              .attr("text-anchor", function(d) {
+              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+                return "beginning";
+              } else {
+                return "end";
+              }
+            }).text(function(d) {
+              return d.name;
+            });
+
+            nameLabels.exit().remove();
+          }
+
+          ///////////////////////////////////////////////////////////
+          // FUNCTIONS //////////////////////////////////////////////
+          ///////////////////////////////////////////////////////////
+
+          // Interpolate the arcs in data space.
+
+          function pieTween(d, i) {
+            var s0 = 0;
+            var e0 = 0;
+            var i = d3.interpolate({
+              startAngle: s0,
+              endAngle: e0
+            }, {
+              startAngle: d.startAngle,
+              endAngle: d.endAngle
+            });
+            return function(t) {
+              var b = i(t);
+              return arc(b);
+            };
+          }
+
+          draw();
   };
 
 

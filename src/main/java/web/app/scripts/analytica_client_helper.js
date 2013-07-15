@@ -157,7 +157,7 @@ function getDrawFunction(dataType, uiType) {
 			break;
 
 		case "pie":
-			return 'drawpieChartWithNvd3';
+			return 'drawPieChart';
 			break;
 
 		case "clock":

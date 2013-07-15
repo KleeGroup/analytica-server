@@ -1,0 +1,196 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+        <style type="text/css">
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
+}
+
+</style>
+</head>
+
+    <body class ="container">
+
+
+<script>
+//------------------------------------------------
+/*var data1 = [ [ 3625200000 , 1214] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 125] , [ 3639600000 , 1850] , [ 3643200000 , 789] , [ 3646800000 , 458] , [ 3650400000 , 999] , [ 3654000000 , 775] , [ 3657600000 , 328] , [ 3661200000 , 389],[3664800000,552],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,635],[3686400000,985],[3690000000,777],[3693600000,1000],[3697200000,989],[3700800000,1245],[3704400000,522],[3708000000,300]];
+
+                    var data2 = [ [ 3625200000 , 145] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 15] , [ 3639600000 , 510] , [ 3643200000 , 89] , [ 3646800000 , 58] , [ 3650400000 , 99] , [ 3654000000 , 75] , [ 3657600000 , 28] , [ 3661200000 , 39],[3664800000,52],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,35],[3686400000,85],[3690000000,77],[3693600000,100],[3697200000,89],[3700800000,125],[3704400000,22],[3708000000,30]];
+
+
+                    var datas = [{
+                        unit:"ms",
+                        key:"response Time",
+                        values:data1
+                    },{
+                        key:"Hits",
+                        values:data2
+                    },{
+                        key:"Hits",
+                        values:data2
+                    },{
+                        key:"Hits",
+                        values:data2
+                    },{
+                        key:"Hits",
+                        values:data2
+                    },{
+                        key:"Hits",
+                        values:data2
+                    }]
+*/
+
+
+
+var data =
+            [
+                {
+                    "date": "CA",
+                    "A": "45",
+                    "B": "19"
+                },
+                {
+                    "date": "TX",
+                    "A": "55",
+                    "B": "11"
+                },
+                {
+                    "date": "NY",
+                    "A": "45",
+                    "B": "11"
+                },
+                {
+                    "date": "FL",
+                    "A": "45",
+                    "B": "5"
+                },
+                {
+                    "date": "IL",
+                    "A": "45",
+                    "B": "0"
+                },
+                {
+                    "date": "PA",
+                    "A": "45",
+                    "B": "11"
+                }
+            ];
+
+//------------------------------------------------
+
+
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x0 = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var x1 = d3.scale.ordinal();
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.ordinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+var xAxis = d3.svg.axis()
+    .scale(x0)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(d3.format(".2s"));
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "date"; });
+
+  data.forEach(function(d) {
+    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+  });
+
+  x0.domain(data.map(function(d) { return d.date; }));
+  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+  y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Population");
+
+  var chart = svg.selectAll(".chart")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { return "translate(" + x0(d.date) + ",0)"; });
+
+  chart.selectAll("rect")
+      .data(function(d) { return d.ages; })
+    .enter().append("rect")
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) { return x1(d.name); })
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); })
+      .style("fill", function(d) { return color(d.name); });
+
+  var legend = svg.selectAll(".legend")
+      .data(ageNames.slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
+
+</script>
+</body>
+</html>

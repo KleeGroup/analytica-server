@@ -137,8 +137,8 @@
 
 			     
 			      xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, 5);
-			      yRightAxis = d3.svg.axis().scale(yR).orient("right").ticks(5);
-			      yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
+			      yRightAxis = d3.svg.axis().scale(yR).orient("right").ticks(4);
+			      yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(4);
 
 			      line = d3.svg.line().x(function(d){return x(d[0]);}).y(function(d){return yR(d[1])}).interpolate(interpolateSankey);
 
@@ -272,7 +272,7 @@
 			          .attr("class","line")
 			          .style("stroke",datas[1].color);		       
 
-var c = d3.scale.linear().domain([0,1]).range(["hsl(250, 50%, 50%)", "hsl(350, 100%, 50%)"]).interpolate(d3.interpolateHsl);
+var c = d3.scale.linear().domain([0,1]).range([datas[1].color, datas[1].color]).interpolate(d3.interpolateHsl);
 			       chart.selectAll("circle")
 					    .data(datas[1].values)
 					    .enter().append("svg:circle")
