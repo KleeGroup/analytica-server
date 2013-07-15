@@ -54,7 +54,7 @@ var generateGraph = function generateGraph(graph) {
 						/*Loading the datatable in the DOM*/
 						$('div#' + graph.html.container).html(Handlebars.templates.table(data));
 						
-						$('.line-spark').sparkline('html', {
+						/*$('.line-spark').sparkline('html', {
 							width:80,
 							height:12,
 							type: 'line',
@@ -65,7 +65,7 @@ var generateGraph = function generateGraph(graph) {
 							type: 'bar',
 							barColor: '#33B5E5'
 						});
-						//$('#bar-spark').d3Sparkline("","bar-spark");
+						//$('#bar-spark').d3Sparkline("","bar-spark");*/
 
 
 					break;

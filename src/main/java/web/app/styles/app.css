@@ -335,3 +335,28 @@ body{font:400 0.95em/1 "Proxima Nova",Helvetica,sans-serif}
   margin: 0 auto;
 
 }
+
+
+div.pager span {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    background: #000;
+    color: #fff;
+    margin-right: 0.5em;
+}
+
+div.pager span.active {
+    background: #c00;
+}
+
+div.pager{
+  height:20px;
+}
+.selected { background-color: #ddd !important; }
+.table-striped-override tbody > tr:nth-child(odd) > td, .table-striped-override tbody > tr:nth-child(odd) > th {
+    background-color: #f9f9f9;
+}

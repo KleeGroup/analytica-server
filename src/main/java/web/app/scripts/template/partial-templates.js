@@ -39,7 +39,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.sparklineValues)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span> <span class =\"spark-text\"> "
     + escapeExpression(((stack1 = ((stack1 = depth0.value5),stack1 == null || stack1 === false ? stack1 : stack1.lastValue)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</span>\r\n</td>\r\n</tr>\r\n\r\n"
+    + "</span>\r\n</td>\r\n</tr>\r\n<script  type=\"text/javascript\" >\r\n\r\n</script>\r\n"
     + "\r\n ";
   return buffer;
   });

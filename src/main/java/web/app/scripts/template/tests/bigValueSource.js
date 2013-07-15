@@ -21,7 +21,7 @@ function initializeTestHelperAnalytica() {
       options: undefined //
     },
     html: {
-      title: "Page Hits", // Title of the panel.
+      title: "Visitors", // Title of the panel.
       container: "idgraphique0", // id of the container.
     },
     options: {

@@ -104,7 +104,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
   };
 
   $.fn.drawbarChartWithNvd3 = function(datas, id) {
-          datas[0].unit = "ms"; // must be removed here
+    datas[0].unit = "ms"; // must be removed here
 
     var margin = {
       top: 20,
@@ -146,7 +146,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       axisSpacing = 6;
       param = 7 / 10;
       //space = 5;
-      space = width/60;
+      space = width / 60;
       height = 155;
       margin = {
         top: 20,
@@ -158,17 +158,17 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       axisSpacing = 4
       param = 8 / 10;
       //space = 5;
-      space = width/60;
+      space = width / 60;
       height = 155;
     } else {
       param = 9 / 10;
-      space = width/60;
+      space = width / 60;
     }
     width = param * width;
-    space = param*space;
+    space = param * space;
 
 
-    barWidth = Math.min(width / (datas[0].values).length - space,50);
+    barWidth = Math.min(width / (datas[0].values).length - space, 50);
 
     x = d3.time.scale().range([0, width]);
     yL = d3.scale.linear().range([height, 0]);
@@ -185,11 +185,11 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     yL.domain([0, d3.max(datas[0].values, function(d) {
         return d[1];
       })])
-   
+
     xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, axisSpacing);
     yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
 
-    
+
     var toolTip = d3.select("#" + id).append("div")
       .attr("class", "tooltip")
       .style("opacity", 1e-6);
@@ -271,7 +271,6 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .text(getTextY(datas[0]));
 
 
-    
 
     var getToolTipText = function(d, datas) {
       var text = "";
@@ -309,15 +308,15 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       toolTip.transition().duration(200).style("opacity", 1e-6);
     });
 
-//-----------Calcul de la largeur de la légende
-    var globalLength =0;
+    //-----------Calcul de la largeur de la légende
+    var globalLength = 0;
     var keyLength = 0;
 
     for (var i = 0; i < datas.length; i++) {
       keyLength = textWidth(datas[i].key);
-      globalLength = globalLength+keyLength;
+      globalLength = globalLength + keyLength;
     };
-    globalLength = globalLength+(datas.length)*legendHeight/3;
+    globalLength = globalLength + (datas.length) * legendHeight / 3;
     var legendWidth = globalLength;
 
 
@@ -330,7 +329,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     };
     var val = height + 3 * margin.bottom / 4;
     var legendHeight = margin.bottom / 2;
-   // var legendWidth = width / 2;
+    // var legendWidth = width / 2;
     legend.append("rect")
       .attr("height", legendHeight)
       .attr("width", legendWidth)
@@ -355,7 +354,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     legend.selectAll('legend')
       .data(datas)
       .enter().append("text")
-      .attr("y", height + margin.bottom/2 + margin.top+7)
+      .attr("y", height + margin.bottom / 2 + margin.top + 7)
       .attr("x", function(d, i) {
       return i * 150 + 20;
     })
@@ -447,7 +446,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       axisSpacing = 6;
       param = 7 / 10;
       //space = 5;
-      space = width/60;
+      space = width / 60;
       height = 155;
       margin = {
         top: 20,
@@ -459,17 +458,17 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       axisSpacing = 4
       param = 8 / 10;
       //space = 5;
-      space = width/60;
+      space = width / 60;
       height = 155;
     } else {
       param = 9 / 10;
-      space = width/60;
+      space = width / 60;
     }
     width = param * width;
-    space = param*space;
+    space = param * space;
 
 
-    barWidth = Math.min(width / (datas[0].values).length - space,50);
+    barWidth = Math.min(width / (datas[0].values).length - space, 50);
 
     x = d3.time.scale().range([0, width]);
     yL = d3.scale.linear().range([height, 0]);
@@ -700,7 +699,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     legend.selectAll('legend')
       .data(datas)
       .enter().append("text")
-      .attr("y", height +margin.bottom/2 + margin.top+7)
+      .attr("y", height + margin.bottom / 2 + margin.top + 7)
       .attr("x", function(d, i) {
       return i * 150 + 20;
     })
@@ -710,17 +709,19 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
   };
 
   function interpolateSankey(points) {
-        var x0 = points[0][0], y0 = points[0][1], x1, y1, x2,
-            path = [x0, ",", y0],
-            i = 0,
-            n = points.length;
-        while (++i < n) {
-          x1 = points[i][0], y1 = points[i][1], x2 = (x0 + x1) / 2;
-          path.push("C", x2, ",", y0, " ", x2, ",", y1, " ", x1, ",", y1);
-          x0 = x1, y0 = y1;
-        }
-        return path.join("");
-      }
+    var x0 = points[0][0],
+      y0 = points[0][1],
+      x1, y1, x2,
+      path = [x0, ",", y0],
+      i = 0,
+      n = points.length;
+    while (++i < n) {
+      x1 = points[i][0], y1 = points[i][1], x2 = (x0 + x1) / 2;
+      path.push("C", x2, ",", y0, " ", x2, ",", y1, " ", x1, ",", y1);
+      x0 = x1, y0 = y1;
+    }
+    return path.join("");
+  }
 
 
 
@@ -759,9 +760,9 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
   };
 
   $.fn.d3Sparkline = function(datas, classId) {
-    
+
     var element = document.getElementsByClassName(classId);
-    for(var i =0;i<element.length;i++){
+    for (var i = 0; i < element.length; i++) {
       cont = element[i];
       data = cont.textContent;
       if ((typeof data) === "string") {
@@ -769,59 +770,60 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       }
 
 
-        var space = 1; // space between the bars
-        var barWidth = 3;
-        var height = 10;
-        container = $(this);
-        //----------------------------------------
-        var width = (barWidth + space) * data.length;
-        
-        if (classId === undefined) {
-          var classId = container[0].id;
-        }
+      var space = 1; // space between the bars
+      var barWidth = 3;
+      var height = 10;
+      container = $(this);
+      //----------------------------------------
+      var width = (barWidth + space) * data.length;
 
-        var rectangle = d3.selectAll(("#" + cont.id)).append("svg")
-          .attr("width", width)
-          .attr("height", height)
-          .attr("class", "bar");
+      if (classId === undefined) {
+        var classId = container[0].id;
+      }
+
+      var rectangle = d3.selectAll(("#" + cont.id)).append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("class", "bar");
       var y = d3.scale.linear()
-          .domain([0, d3.max(data)])
-          .range([0, height]);
+        .domain([0, d3.max(data)])
+        .range([0, height]);
 
-        var rectangle = rectangle.selectAll("rect")
-          .data(data)
-          .enter().append("rect")
-          .attr("class", "bar")
-          .attr("width", barWidth)
-          .attr("height", y)
-          .attr("y", function(d) {
-          return height - y(d);
-        })
-          .attr("x", function(d, i) {
-          return i * (barWidth + space);
-        })
-          .style("fill", function(d, i) {
-          return i == (data.length - 1) ? "#C00" : "#09C";
-        })
-          .append("title").text(function(d) {
-          return d;
-        });
+      var rectangle = rectangle.selectAll("rect")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("width", barWidth)
+        .attr("height", y)
+        .attr("y", function(d) {
+        return height - y(d);
+      })
+        .attr("x", function(d, i) {
+        return i * (barWidth + space);
+      })
+        .style("fill", function(d, i) {
+        return i == (data.length - 1) ? "#C00" : "#09C";
+      })
+        .append("title").text(function(d) {
+        return d;
+      });
 
     }
 
   };
 
-    $.fn.textWidth = function(text){
-            var canvas = $(this);
-            var html = $('<span style="postion:absolute;width:auto;left:-9999px">' + (text || canvas.html) + '</span>');
-            if (!text) {
-              html.css("font-family", canvas.css("font-family"));
-              html.css("font-size", canvas.css("font-size"));
-            }
-            $('body').append(html);
-            var width = html.width();
-            html.remove();
-            return width;
-          };
+  $.fn.textWidth = function(text) {
+    var canvas = $(this);
+    var html = $('<span style="postion:absolute;width:auto;left:-9999px">' + (text || canvas.html) + '</span>');
+    if (!text) {
+      html.css("font-family", canvas.css("font-family"));
+      html.css("font-size", canvas.css("font-size"));
+    }
+    $('body').append(html);
+    var width = html.width();
+    html.remove();
+    return width;
+  };
+
 
 })(jQuery);
