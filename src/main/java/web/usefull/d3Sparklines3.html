@@ -5,43 +5,6 @@
 		<script type="text/javascript" src="d3Sparklines.js"></script>
 		<script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
 		<style type="text/css">
-			path {
-				stroke: #808080;
-				stroke-width: 1;
-				fill: none;
-			}
-
-			.area{
-				fill: #ADD8E6;                  
-    			stroke-width: 0px;     
-			}
-
-			.line {
-				 fill: none;
-				 stroke: #444;
-				 stroke-width: 1.5px;
-			}
-
-			div.tooltip {
-			  position: absolute;
-			  text-align: center;
-			  width: 60px;
-			  height: 12px;
-			  padding: 8px;
-			  font: 10px sans-serif;
-			  background: #ddd;
-			  border: solid 1px #aaa;
-			  border-radius: 8px;
-			  pointer-events: none;
-			}
-
-			.legend {
-				padding: 5px;
-				font: 10px sans-serif;
-				background: #CCC;
-				box-shadow: 2px 2px 1px #888;
-			}
-			
 			.bar:hover { 
    				 fill: orange !important;
 			}
@@ -49,13 +12,12 @@
 	</head>
 
 	<body>
-		<div>
-			<ul>
-				<li id="serie1">Serie1</li>
-				<li id="serie2">Serie2</li> 
-				<li id="serie3"> Serie3</li>
-			</ul>
-		</div>		
+		<h2>Exemple de sparklines en barres</h2>
+		<ul>
+			<li id="serie1">Serie1</li>
+			<li id="serie2">Serie2</li> 
+			<li id="serie3"> Serie3</li>
+		</ul>
 		<script type="text/javascript">
 			var data1 = ["1", "2", "3", "4", "5", "10", "9", "8", "7", "6"];
 			drawBarSparklines(data1,"serie1");
@@ -63,22 +25,6 @@
 			drawBarSparklines(data2,"serie2");
 			var data3 = ["10", "2475", "453", "445", "545", "1250", "549", "821", "424", "45254"];
 			drawBarSparklines(data3,"serie3");
-
-			var datas = {
-				bar:data1,
-				line:data2
-			}
-			var datas = [{
-				color:"#09C",
-				key:"resp Time",
-				values:data1
-			},{
-				color:"#F00",
-				key:"Hits",
-				values:data2
-			}]
-
-			drawBrAndLine(datas,"box5");
 		</script>
 	</body>
 </html>

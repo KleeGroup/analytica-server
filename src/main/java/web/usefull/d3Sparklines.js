@@ -25,5 +25,6 @@ var drawBarSparklines = function (data, id){
 			.attr("y", function(d) {return height-y(d) ;})
 			.attr("x", function(d, i) {return i * (barWidth+space);})
 			.style("fill", function(d, i) { return i==(data.length-1)? color : lastColor;})
-			.append("title").text(function(d) {return d;});
+			.append("title")
+				.text(function(d) {return d;});
 }
