@@ -1,8 +1,10 @@
 <!--Script for bar sparklines-->
 var drawBarSparklines = function (data, id){
 	var space = 1; // space between the bars
-	var barWidth = 3;
+	var barWidth = 3; //width of bars 
 	var height = 10;
+	var color = "#C00";
+	var lastColor = "#09C";
 	//----------------------------------------
 	var	width = (barWidth+space) * data.length;
 	var y = d3.scale.linear()
@@ -22,6 +24,6 @@ var drawBarSparklines = function (data, id){
 			.attr("height", y)
 			.attr("y", function(d) {return height-y(d) ;})
 			.attr("x", function(d, i) {return i * (barWidth+space);})
-			.style("fill", function(d, i) { return i==(data.length-1)? "#C00" : "#09C";})
+			.style("fill", function(d, i) { return i==(data.length-1)? color : lastColor;})
 			.append("title").text(function(d) {return d;});
 }
