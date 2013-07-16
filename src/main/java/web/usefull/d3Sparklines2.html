@@ -2,6 +2,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
+		<script type="text/javascript" src="d3Sparklines.js"></script>
 		<script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
 		<style type="text/css">
 			path {
@@ -104,36 +105,7 @@
 				.attr("cy", function(d) { return height-y(d); });
 		}
 		</script>
- 		<!--Script for bar sparklines-->
-		<script type="text/javascript">
-		var drawBar = function (data,id){
-			var space = 1; // space between the bars
-			var barWidth = 3;
-			var height = 10;
-			//----------------------------------------
-			var	width = (barWidth+space) * data.length;
-			var y = d3.scale.linear()
-				.domain([0, d3.max(data)])
-				.range([0, height]);
-
-			var rectangle = d3.selectAll(("."+id)).append("svg")
-				.attr("width", width)
-				.attr("height", height)
-				.attr("class","bar"); 
-
-			var rectangle = rectangle.selectAll("rect")
-				.data(data)
-				.enter().append("rect")
-					.attr("class", "bar")
-					.attr("width", barWidth)
-					.attr("height", y)
-					.attr("y", function(d) {return height-y(d) ;})
-					.attr("x", function(d, i) {return i * (barWidth+space);})
-					.style("fill", function(d, i) { return i==(data.length-1)? "#C00" : "#09C";})
-					.append("title").text(function(d) {return d;});
-		}
-		</script>
-
+		
  		<!--Script for bar and line chart-->
 		<script type="text/javascript">
 		/*
@@ -285,7 +257,7 @@
 
 		<script type="text/javascript">
 			var data = ["1", "2", "3", "4", "5", "10", "9", "8", "7", "6"];
-			drawBar(data,"test");
+			drawBarSparklines(data,"test");
 
 			/*data = [1, 2, 3, 4, 5, 10, 9, 8, 7, 6,5,8,9,2,15,6,5,5,8,25];
 			drawBar(data,"box1");
