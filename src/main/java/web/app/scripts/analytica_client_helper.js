@@ -78,6 +78,8 @@ var generateGraph = function generateGraph(graph) {
 					break;
 
 					case "uptime":
+						data.icon = graph.ui.icon;
+						data.title = graph.html.title;
 						$('div#' + graph.html.container).html(Handlebars.templates.uptime(data));
 					break;
 

@@ -21,7 +21,7 @@ function initializeTestHelperAnalytica() {
       options: undefined //
     },
     html: {
-      title: "Visitors", // Title of the panel.
+      title: "Visites", // Title of the panel.
       container: "idbigvalue", // id of the container.
     },
     options: {
@@ -66,7 +66,7 @@ var graph3 = {
         timeTo: "NOW%2B12h", //ProblÃ¨me ici avec le +
         timeDim: "Hour", //
         category: "PAGE", //
-        datas: "duration:count" //  
+        datas: "duration:mean" //  
       },
       parse: parseBigValue, //function parseData() {} // Function which transforms all the data received from the server.
     },
@@ -78,7 +78,7 @@ var graph3 = {
       options: undefined //
     },
     html: {
-      title: "Page Hits", // Title of the panel.
+      title: "Temps de Réponse (ms)", // Title of the panel.
       container: "idgraphique4", // id of the container.
     },
     options: {
@@ -172,7 +172,7 @@ var graph3 = {
   graphique4.ui.type ="stack";
   graphique4.data.filters.datas = "duration:mean";
   graphique4.ui.labels = "Response Time";
-  graphique4.html.title = "Pages Response Time";
+  graphique4.html.title = "Temps de Réponse";
   var graphique5 = generateDefaultGraph();//MultiSerie
   //graphique5.data.filters.timeTo = 'NOW%2B6h';
   graphique5.data.url = "/home/multitimeLine/PAGE";
@@ -181,13 +181,13 @@ var graph3 = {
   graphique5.data.parse = parseMultiSeriesD3Datas;
   graphique5.data.filters.datas = "duration:mean;duration:count";
   graphique5.ui.labels = "Response Time;Hits";
-  graphique5.html.title = "Page hits and response time";
+  graphique5.html.title = "Nombre d'accès & Temps de Réponse";
   graphique5.ui.type = "linebar";
 
 
   var graphique6 = generateDefaultGraph();//MultiSerie
   graphique6.data.url = "/home/tableSparkline/PAGE";
-  graphique6.html.title = "DataTable Graph";
+  graphique6.html.title = "Activités Récentes"; // Pages Actives
   graphique6.data.parse = parseDataTable;
   graphique6.ui.type = "table";
   graphique6.ui.labels = "Labels;Hits;Response Time(ms);Response Time;Activity";
@@ -201,7 +201,7 @@ var graph3 = {
  bigValuegraph.ui.type = "bignumbercount";
   //Other graphs
  graph3.ui.type = "tablelisting";
- graph3.html.title = "Hits per hour";
+ graph3.html.title = "Hits par heures";
  graph3.ui.type = "tablelisting";
  graph3.data.parse = parseHitsCountDatas;
 bigValuegraph.data.parse = parseHitsCountDatas;

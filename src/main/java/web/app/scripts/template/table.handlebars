@@ -4,7 +4,7 @@
     <h>{{htmlTitle}}</h>
   </div>
   <div>
-<table class="table table-bordered mixed-table paginated table-hover table-striped-override">
+<table id = "analytica-table" class="table table-bordered mixed-table paginated table-hover table-striped-override">
   <caption>{{title}}</caption>
   <thead>
     <tr >
@@ -88,6 +88,12 @@ $('.line-spark').sparkline('html', {
               barColor: '#33B5E5'
             });
   
+</script>
+
+<script type="text/javascript">
+  $(function() {
+    $("#analytica-table").tablesorter();
+  });
 </script>
 
 {{!

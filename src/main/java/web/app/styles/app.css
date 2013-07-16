@@ -262,7 +262,7 @@ svg{
 .monitoring-widget .widget-canvas .server-time
 {width:50%;float:left}
 .monitoring-widget .widget-canvas .server-time .label
-{color:#828282;text-transform:uppercase;margin:0 0 6px}
+{color:#828282;text-transform:uppercase;margin:auto}
 .monitoring-widget .widget-canvas
 {padding-top:5px;margin:48px 0}
 .t-size-x10
@@ -357,4 +357,10 @@ div.pager{
 }
 .table-striped-override tbody > tr:nth-child(odd) > td, .table-striped-override tbody > tr:nth-child(odd) > th {
     background-color: #f9f9f9;
+}
+
+.th-label{
+  background-color:#828282;
+  text-transform:uppercase;
+  margin:auto
 }

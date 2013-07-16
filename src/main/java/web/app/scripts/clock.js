@@ -1,15 +1,15 @@
 
 var clockTimerID = null;
 var monNames = new Array ('',
-    'Jan','Feb','Mar',
-    'Apr','May','Jun',
-    'Jul','Aug','Sep',
+    'Jan','Fev','Mar',
+    'Avr','Mai','Jui',
+    'Juil','Août','Sep',
     'Oct','Nov','Dec');
 var dayNames = new Array ('',
-    'Sunday','Monday',
-    'Tuesday','Wednesday',
-    'Thursday','Friday',
-    'Saturday' );
+    'Dimanche','Lundi',
+    'Mardi','Mercredi',
+    'Jeudi','Vendredi',
+    'Samedi' );
 
 function startClock () {
 

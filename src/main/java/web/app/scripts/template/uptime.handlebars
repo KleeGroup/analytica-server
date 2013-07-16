@@ -3,23 +3,30 @@
     <i class="{{icon}}"></i><h>{{title}}</h>
   </div> 
   <!--<a class="led success" href="#"></a>-->
-  <section class="widget-body monitoring-widget">
-    <div class="widget-canvas">
-      <div class="status positive text-center">
-        <div class=" visitor-spark text-center">
+  <section class="widget-body">
+    <div class="widget-canvas ass">
+      <div class="positive text-center t-size-x72">
+        <span class="text-center">
           {{mean.data}}
+      </span>
       </div>
-      </div>
-      <div class="server-times">
-        <div class="server-time">
-          <div class="label t-size-x10">  {{max.label}} </div>
-          <div class="t-size-x24 ">{{max.data}}ms</div>
-        </div>
-        <div class="server-time">
-          <div class="label t-size-x10">  {{min.label}} </div>
-          <div class="t-size-x24 ">{{min.data}}ms</div>
-        </div>
+      <div>
+        <table class = "table ">
+          <thead>
+            <tr>
+              <th class = "text-left"><span class = "label">{{max.label}}</span></th>
+              <th class = "text-left "><span class = "label">{{min.label}}</span></th>
+            </tr>
+          </thead>
+          <tbody>
+          <tr >
+            <td class = "text-left">{{max.data}}</td>
+            <td class = "text-left">{{min.data}}</td>
+          </tr>
+        </tbody>
+        </table>
       </div>
     </div><!-- .widget-canvas -->
   </section>    
 </div>
+
