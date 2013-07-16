@@ -176,10 +176,29 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 templates['uptime'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  return "<div class=\"widget-inner  widget-size-1x1\">\r\n  <div class=\"ui-widget-header \">\r\n    <i class=\"icon-picture\"></i>\r\n    <h>Up Time</h>\r\n  </div> \r\n  <a class=\"led success\" href=\"#\"></a>\r\n  <section class=\"widget-body monitoring-widget\">\r\n    <div class=\"widget-canvas\">\r\n      <div class=\"status positive text-center\">\r\n        <div class=\" t-size-x44 visitor-spark text-center\">\r\n        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14\r\n      </div>\r\n      </div>\r\n      <div class=\"server-times\">\r\n        <div class=\"server-time\">\r\n          <div class=\"label t-size-x10\">Last downtime</div>\r\n          <div class=\"t-size-x24 \">12d 22h </div>\r\n        </div>\r\n        <div class=\"server-time\">\r\n          <div class=\"label t-size-x10\">Response time</div>\r\n          <div class=\"t-size-x24 \">181ms</div>\r\n        </div>\r\n      </div>\r\n    </div><!-- .widget-canvas -->\r\n  </section>    \r\n</div>";
+  buffer += "<div class=\"widget-inner  widget-size-1x1\">\r\n  <div class=\"ui-widget-header \">\r\n    <i class=\"";
+  if (stack1 = helpers.icon) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.icon; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\"></i><h>";
+  if (stack1 = helpers.title) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.title; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</h>\r\n  </div> \r\n  <!--<a class=\"led success\" href=\"#\"></a>-->\r\n  <section class=\"widget-body monitoring-widget\">\r\n    <div class=\"widget-canvas\">\r\n      <div class=\"status positive text-center\">\r\n        <div class=\" visitor-spark text-center\">\r\n          "
+    + escapeExpression(((stack1 = ((stack1 = depth0.mean),stack1 == null || stack1 === false ? stack1 : stack1.data)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\r\n      </div>\r\n      </div>\r\n      <div class=\"server-times\">\r\n        <div class=\"server-time\">\r\n          <div class=\"label t-size-x10\">  "
+    + escapeExpression(((stack1 = ((stack1 = depth0.max),stack1 == null || stack1 === false ? stack1 : stack1.label)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + " </div>\r\n          <div class=\"t-size-x24 \">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.max),stack1 == null || stack1 === false ? stack1 : stack1.data)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "ms</div>\r\n        </div>\r\n        <div class=\"server-time\">\r\n          <div class=\"label t-size-x10\">  "
+    + escapeExpression(((stack1 = ((stack1 = depth0.min),stack1 == null || stack1 === false ? stack1 : stack1.label)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + " </div>\r\n          <div class=\"t-size-x24 \">"
+    + escapeExpression(((stack1 = ((stack1 = depth0.min),stack1 == null || stack1 === false ? stack1 : stack1.data)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "ms</div>\r\n        </div>\r\n      </div>\r\n    </div><!-- .widget-canvas -->\r\n  </section>    \r\n</div>";
+  return buffer;
   });
 templates['showchange'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -187,7 +206,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"widget-inner  widget-size-1x1\">\r\n  <div class=\"ui-widget-header \">\r\n    <i class=\"icon-picture\"></i>\r\n    <h>Avg time on Pages</h>\r\n  </div>\r\n  <section class=\"widget-body number-widget represent\">\r\n    <div class=\"widget-canvas ass\">\r\n      <div class=\" t-size-x52\">\r\n        6<span class=\"unit\">m</span> 52<span class=\"unit\">s</span>\r\n      </div>\r\n      <div class=\"secondary-stat t-size-x48 negative \">\r\n        <span>-19<sup>.29%</sup></span>\r\n      </div>\r\n      <div class=\"show-spark text-center\">\r\n        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14\r\n      </div>\r\n    </div><!-- .widget-canvas -->\r\n  </section>\r\n</div>";
+  return "<div class=\"widget-inner  widget-size-1x1\">\r\n  <div class=\"ui-widget-header \">\r\n    <i class=\"icon-picture\"></i>\r\n    <h>Avg time on Pages</h>\r\n  </div>\r\n  <section class=\"widget-body number-widget represent\">\r\n    <div class=\"widget-canvas ass\">\r\n      <div class=\" t-size-x52\">\r\n        6<span class=\"unit\">m</span> 52<span class=\"unit\">s</span>\r\n      </div>\r\n      <div class=\"secondary-stat t-size-x48 negative \">\r\n      <!--        <span>-19<sup>.29%</sup></span>-->\r\n        <span>-19.29%</span>\r\n\r\n      </div>\r\n      <div class=\"show-spark text-center\">\r\n        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14\r\n      </div>\r\n    </div><!-- .widget-canvas -->\r\n  </section>\r\n</div>";
   });
 templates['tablelisting'] = template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
@@ -236,7 +255,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.Total) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.Total; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "</span>\r\n      </div>\r\n      <div class=\" t-size-x30 text-center\">Last 3 Hours</div>\r\n      <div class=\" t-size-x44 visitor-spark text-center\">\r\n        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14\r\n      </div>\r\n    </div><!-- .widget-canvas -->\r\n  </section>\r\n</div>";
+    + "</span>\r\n      </div>\r\n      <div class=\" t-size-x20 text-center\">TDB sur 3 heures</div>\r\n      <!--<div class=\" t-size-x44 visitor-spark text-center\">\r\n        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14\r\n      </div>-->\r\n    </div><!-- .widget-canvas -->\r\n  </section>\r\n</div>";
   return buffer;
   });
 })();

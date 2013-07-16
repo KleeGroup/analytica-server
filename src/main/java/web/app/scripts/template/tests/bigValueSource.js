@@ -160,7 +160,7 @@ var graph3 = {
  var graphique3 = generateDefaultGraph();
  graphique3.ui.type = "tablelisting";
  graphique3.data.parse = parseHitsCountDatas;
- graphique3.html.title = "Hits per hour";
+ graphique3.html.title = "Response Time (ms)";
 
   
   

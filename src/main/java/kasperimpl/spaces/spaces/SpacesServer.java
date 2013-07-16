@@ -1,5 +1,7 @@
 package kasperimpl.spaces.spaces;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 
@@ -12,6 +14,8 @@ import kasperimpl.spaces.spaces.kraft.HomeServices;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
+
+import application.mimifier.Mimifier;
 
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.ClassNamesResourceConfig;
@@ -62,6 +66,20 @@ final class SpacesServer implements Activeable {
 		httpServer.getServerConfiguration().addHttpHandler(staticHttpHandler, STATIC_ROUTE);
 
 		httpServer.getServerConfiguration().addHttpHandler(staticHttpHandler, "/static");
+
+		//-------------------------------------Add JavaScript Mimifier--------------------------
+
+		final File inputDir = new File(SpacesServer.class.getResource(STATIC_ROUTE).getFile() + "\\app\\scripts");
+		final File outPutDir = new File(SpacesServer.class.getResource(STATIC_ROUTE).getFile() + "\\app\\app.min.js");
+		try {
+			Mimifier.mimifyAllIn(inputDir, new FileOutputStream(outPutDir));
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		//--------------------------------------------------------------------------------------
+
+		System.out.println(SpacesServer.class.getResource(STATIC_ROUTE).getFile());
+
 		return httpServer;
 	}
 }

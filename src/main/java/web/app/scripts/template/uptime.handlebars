@@ -1,24 +1,23 @@
 <div class="widget-inner  widget-size-1x1">
   <div class="ui-widget-header ">
-    <i class="icon-picture"></i>
-    <h>Up Time</h>
+    <i class="{{icon}}"></i><h>{{title}}</h>
   </div> 
-  <a class="led success" href="#"></a>
+  <!--<a class="led success" href="#"></a>-->
   <section class="widget-body monitoring-widget">
     <div class="widget-canvas">
       <div class="status positive text-center">
-        <div class=" t-size-x44 visitor-spark text-center">
-        1,2,4,58,95,62,14,52,44,55,22,5,0,14,23,9,32,20,14
+        <div class=" visitor-spark text-center">
+          {{mean.data}}
       </div>
       </div>
       <div class="server-times">
         <div class="server-time">
-          <div class="label t-size-x10">Last downtime</div>
-          <div class="t-size-x24 ">12d 22h </div>
+          <div class="label t-size-x10">  {{max.label}} </div>
+          <div class="t-size-x24 ">{{max.data}}ms</div>
         </div>
         <div class="server-time">
-          <div class="label t-size-x10">Response time</div>
-          <div class="t-size-x24 ">181ms</div>
+          <div class="label t-size-x10">  {{min.label}} </div>
+          <div class="t-size-x24 ">{{min.data}}ms</div>
         </div>
       </div>
     </div><!-- .widget-canvas -->

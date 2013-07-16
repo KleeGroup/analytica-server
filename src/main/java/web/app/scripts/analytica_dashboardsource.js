@@ -206,7 +206,8 @@ var graph3 = {
  graph3.data.parse = parseHitsCountDatas;
 bigValuegraph.data.parse = parseHitsCountDatas;
 
- graph4.ui.type = "showchange";
+ graph4.ui.type = "uptime";
+ graph4.data.parse = parseHitsCountDatas;
  
   var graphs = [
     bigValuegraph,

@@ -398,11 +398,11 @@ function parseHitsCountDatas(dataResult, labels) {
 
 	var maxValue = {};
 	maxValue.label = "Max";
-	maxValue.data = reconstructedData[0].value;
+	maxValue.data = Math.round((reconstructedData[0].value)*100)/100;
 
 	var minValue = {};
 	minValue.label = "Min";
-	minValue.data = reconstructedData[tableLength-1].value;
+	minValue.data = Math.round((reconstructedData[tableLength-1].value)*100)/100;
 
 	var meanValue = {};
 	meanValue.label = "Mean";

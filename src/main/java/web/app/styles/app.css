@@ -336,7 +336,6 @@ body{font:400 0.95em/1 "Proxima Nova",Helvetica,sans-serif}
 
 }
 
-
 div.pager span {
     display: inline-block;
     width: 1.2em;
@@ -356,7 +355,6 @@ div.pager span.active {
 div.pager{
   height:20px;
 }
-.selected { background-color: #ddd !important; }
 .table-striped-override tbody > tr:nth-child(odd) > td, .table-striped-override tbody > tr:nth-child(odd) > th {
     background-color: #f9f9f9;
 }

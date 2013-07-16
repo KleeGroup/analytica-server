@@ -14,16 +14,18 @@ import com.kleegroup.analytica.server.ServerManager;
  */
 public final class App {
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		Home.start(AppConfig.createHomeConfig());
 
 		loadDatas();
 
 		try {
+
 			System.out.println("Taper sur entrée pour sortir");
 			final Scanner sc = new Scanner(System.in);
 			sc.nextLine();
 			sc.close();
+
 		} finally {
 			Home.stop();
 		}
@@ -33,7 +35,7 @@ public final class App {
 		final ServerManager serverManager = Home.getContainer().getManager(ServerManager.class);
 		new Museum(new PageListener() {
 			@Override
-			public void onPage(KProcess process) {
+			public void onPage(final KProcess process) {
 				serverManager.push(process);
 
 			}
