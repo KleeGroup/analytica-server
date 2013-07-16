@@ -45,65 +45,6 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
 
 
   $.fn.drawStackedAreaChartWithNvd3 = function(datas, id) {
-    var defaults = {}, options = $.extend(defaults, datas);
-    var container = $(this);
-
-    return this.each(function() {
-      nv.addGraph(function() {
-        var chart = nv.models.stackedAreaChart().x(function(d) {
-          return d[0]
-        }).y(function(d) {
-          return d[1]
-        }) // adjusting, 100% is 1.00, not 100 as it is in the data
-        .color(d3.scale.category10().range()).showLegend(true);
-
-        chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-          return d3.time.format("%H:%M")(new Date(d))
-        });
-
-        // chart.yAxis.tickFormat(d3.format(',f'));
-
-        d3.select('#' + container[0].id + ' svg').datum(datas)
-          .transition().duration(500).call(chart);
-
-        nv.utils.windowResize(chart.update);
-
-        return chart;
-      });
-
-    });
-  };
-  $.fn.drawMultiBarChartWithNvd3 = function(datas, id) {
-    var defaults = {}, options = $.extend(defaults, datas);
-    var container = $(this);
-
-    return this.each(function() {
-      nv.addGraph(function() {
-        var chart = nv.models.multiBarChart().x(function(d) {
-          return d[0]
-        }).y(function(d) {
-          return d[1]
-        }) // adjusting, 100% is 1.00, not 100 as it is in the data
-        .color(d3.scale.category10().range());
-
-        chart.xAxis.rotateLabels(-45).tickFormat(function(d) {
-          return d3.time.format("%H:%M")(new Date(d))
-        });
-
-        // chart.yAxis.tickFormat(d3.format(',f'));
-
-        d3.select('#' + container[0].id + ' svg').datum(datas)
-          .transition().duration(500).call(chart);
-
-        nv.utils.windowResize(chart.update);
-
-        return chart;
-      });
-
-    });
-  };
-
-  $.fn.drawbarChartWithNvd3 = function(datas, id) {
     datas[0].unit = "ms"; // must be removed here
 
     var margin = {
@@ -120,9 +61,11 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       space = 10;
 
     var container = document.getElementById(id);
+    container = $(this);
     var xAxis,
       yLeftAxis,
-      bars,
+      line,
+      area,
       legend;
 
     var defaultColors = ["#33B5E5", "#FF4444"];
@@ -130,9 +73,8 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     if (datas[0].color === undefined) {
       datas[0].color = defaultColors[0];
     }
-    if (datas[1].color === undefined) {
-      datas[1].color = defaultColors[1];
-    }
+
+
     var defaultHeight = 300; // taille par défaut 
     //width = 600,height = 300;
     height = container.height();
@@ -176,9 +118,441 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     /*var minValue =  // find min and max value of the two ranges and use them for the x domain below
                   ,maxValeu =*/
 
-    x.domain([new Date(d3.min(datas[1].values, function(d) {
+    x.domain([new Date(d3.min(datas[0].values, function(d) {
         return d[0];
-      }) - 3600000), d3.time.day.offset(new Date(d3.max(datas[1].values, function(d) {
+      }) - 3600000), d3.time.day.offset(new Date(d3.max(datas[0].values, function(d) {
+        return d[0];
+      }) + 3600000), 0)]);
+
+    yL.domain([0, d3.max(datas[0].values, function(d) {
+        return d[1];
+      })])
+
+    xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, axisSpacing);
+    yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
+
+    var div = d3.select("#" + id).append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 1e-6);
+
+    var toolTip = d3.select("#" + id).append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 1e-6);
+
+    var parseToDate = function(d) {
+      var format = d3.time.format.utc("%d/%m-%H:%M");
+
+      return format(new Date(d[0]));
+    };
+
+    var parseToDate = function(d) {
+      var format = d3.time.format.utc("%d/%m-%H:%M");
+
+      return format(new Date(d[0]));
+    };
+    if (id === undefined) {
+      id = container[0].id;
+    }
+
+    var getTextY = function(d) {
+      if ((d === undefined) || ((d.key === undefined) && (d.unit === undefined))) {
+        throw "Labels and units not defined";
+      }
+      var text = "";
+      if (d.key === undefined) {
+        text += d.unit;
+      } else if (d.unit === undefined) {
+        text += d.key;
+      } else {
+        text = d.key + " ( " + d.unit + " )";
+      }
+
+      return text;
+
+    }
+
+
+    var chart = d3.select('#' + id)
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // Draw X-axis grid lines
+
+    chart.selectAll("line.x")
+      .data(x.ticks(10))
+      .enter().append("line")
+      .attr("class", "x")
+      .attr("x1", x)
+      .attr("x2", x)
+      .attr("y1", 0)
+      .attr("y2", height)
+      .style("stroke", "#ccc");
+
+    // Draw Y-axis grid lines
+    chart.selectAll("line.y")
+      .data(yL.ticks(10))
+      .enter().append("line")
+      .attr("class", "y")
+      .attr("x1", 0)
+      .attr("x2", width)
+      .attr("y1", yL)
+      .attr("y2", yL)
+      .style("stroke", "#ccc");
+
+    chart.append("g") // Add the X Axis
+    .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    chart.append("g") // Add the Y Axis
+    .attr("class", "y axis")
+      .call(yLeftAxis)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 2)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text(getTextY(datas[0]));
+
+
+
+    var getToolTipText = function(d, datas) {
+      var text = "";
+      if (datas.unit === undefined) {
+        text = d[1] + " " + datas.key + " Le " + parseToDate(d);
+      } else {
+        text = d[1] + " " + datas.unit + " Le " + parseToDate(d);
+      }
+      return text;
+    }
+
+    line = d3.svg.line().x(function(d) {
+      return x(d[0]);
+    }).y(function(d) {
+      return yL(d[1])
+    });
+    var area = d3.svg.area()
+      .x(function(d) {
+      return x(d[0]);
+    })
+      .y0(height)
+      .y1(function(d) {
+      return yL(d[1]);
+    })
+    chart.append("svg:path")
+      .datum(datas[0].values)
+      .attr("d", area)
+      .attr("class", "area")
+      .style("stroke", datas[0].color);
+    var c = d3.scale.linear().domain([0, 1]).range(["hsl(250, 50%, 50%)", "hsl(350, 100%, 50%)"]).interpolate(d3.interpolateHsl);
+    chart.selectAll("circle")
+      .data(datas[0].values)
+      .enter().append("svg:circle")
+      .attr("cx", function(d) {
+      return x(d[0])
+    })
+      .attr("cy", function(d) {
+      return yL(d[1])
+    })
+      .attr("stroke-width", "none")
+      .attr("fill", function() {
+      return c(Math.random())
+    })
+      .attr("fill-opacity", .5)
+      .attr("r", 3)
+      .style("display", "inline")
+      .on("mouseover", function(d) {
+      div.transition().duration(200).style("opacity", 1);
+      d3.select(this).transition().duration(200).attr("fill-opacity", .5)
+    })
+      .on("mousemove", function(d) {
+      div.text(getToolTipText(d, datas[0])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 70) + "px");
+    })
+      .on("mouseout", function() {
+      div.transition().duration(200).style("opacity", 1e-6);
+      d3.select(this).transition().duration(200)
+        .attr("fill-opacity", .5)
+    });
+
+    var legend = chart.append("g")
+      .attr("class", "legend")
+      .attr("transform", "translate(" + 0 + " ," + (-margin.top) + ")");
+    var color_hash = {
+      0: ["Response Time", "#09C"],
+      1: ["Hits", "black"]
+    };
+    var val = height + 3 * margin.bottom / 4;
+    var legendHeight = margin.bottom / 2;
+    var legendWidth = width / 2;
+    legend.append("rect")
+      .attr("height", legendHeight)
+      .attr("width", legendWidth)
+      .attr("rx", 5)
+      .attr("ry", 5)
+      .attr("transform", "translate(0," + val + ")")
+      .style("fill", "#EEE");
+
+    legend.selectAll('legend')
+      .data(datas)
+      .enter().append("rect")
+      .attr("y", height + margin.bottom / 2 + margin.top)
+      .attr("x", function(d, i) {
+      return i * 150 + 25;
+    })
+      .attr("width", legendHeight / 3)
+      .attr("height", legendHeight / 3)
+      .style("fill", function(d, i) {
+      return datas[datas.indexOf(d)].color;
+    });
+
+    legend.selectAll('legend')
+      .data(datas)
+      .enter().append("text")
+      .attr("y", height + margin.bottom)
+      .attr("x", function(d, i) {
+      return i * 150 + 25 + 20;
+    })
+      .text(function(d) {
+      return datas[datas.indexOf(d)].key;
+    });
+
+
+
+  };
+  $.fn.drawMultiBarChartWithNvd3 = function(datas, id) {
+
+    var data = datas;
+    var margin = {
+      top: 20,
+      right: 20,
+      bottom: 30,
+      left: 40
+    };
+  
+    var container = document.getElementById(id);
+    container = $(this);
+    
+
+    //------------------------------------------------------
+
+
+    var defaultHeight = 300; // taille par défaut 
+    //width = 600,height = 300;
+    height = container.height();
+    if ((height === undefined) || (height === 0)) {
+      height = defaultHeight;
+    }
+    var param = 0;
+    width = container.width();
+    if (width < 300) {
+      param = 7 / 10;
+      //space = 5;
+      space = width / 60;
+      height = 155;
+    } else if (width < 600) {
+      param = 8 / 10;
+      //space = 5;
+      height = 155;
+    }
+
+
+    width = width - margin.left - margin.right;
+    height = height + margin.top ;
+    
+    var x0 = d3.scale.ordinal()
+      .rangeRoundBands([0, width], .1);
+
+    var x1 = d3.scale.ordinal();
+
+    var y = d3.scale.linear()
+      .range([height, 0]);
+
+    var color = d3.scale.ordinal()
+      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+    var xAxis = d3.svg.axis()
+      .scale(x0)
+      .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+      .tickFormat(d3.format(".2s"));
+
+    var svg = d3.select("#"+id).append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+    var ageNames = d3.keys(data[0]).filter(function(key) {
+      return key !== "date";
+    });
+
+    data.forEach(function(d) {
+      d.ages = ageNames.map(function(name) {
+        return {
+          name: name,
+          value: +d[name]
+        };
+      });
+    });
+
+    x0.domain(data.map(function(d) {
+      return d.date;
+    }));
+    x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+    y.domain([0, d3.max(data, function(d) {
+        return d3.max(d.ages, function(d) {
+          return d.value;
+        });
+      })]);
+
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Population");
+
+    var chart = svg.selectAll(".chart")
+      .data(data)
+      .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) {
+      return "translate(" + x0(d.date) + ",0)";
+    });
+
+    chart.selectAll("rect")
+      .data(function(d) {
+      return d.ages;
+    })
+      .enter().append("rect")
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) {
+      return x1(d.name);
+    })
+      .attr("y", function(d) {
+      return y(d.value);
+    })
+      .attr("height", function(d) {
+      return height - y(d.value);
+    })
+      .style("fill", function(d) {
+      return color(d.name);
+    });
+
+    var legend = svg.selectAll(".legend")
+      .data(ageNames.slice().reverse())
+      .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) {
+      return "translate(0," + i * 20 + ")";
+    });
+
+    legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+    legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) {
+      return d;
+    });
+
+  };
+
+  $.fn.drawbarChartWithNvd3 = function(datas, id) {
+    datas[0].unit = "ms"; // must be removed here
+
+    var margin = {
+      top: 20,
+      right: 50,
+      bottom: 50,
+      left: 50
+    }, width = null // width - margin.left - margin.right
+      ,
+      height = null // height -margin.top - margin.bottom
+      ,
+      color = null,
+      x, y1, y2, barWidth = 50,
+      space = 10;
+
+    var container = document.getElementById(id);
+    container = $(this);
+    var xAxis,
+      yLeftAxis,
+      bars,
+      legend;
+
+    var defaultColors = ["#33B5E5", "#FF4444"];
+    //-------------------------------------------------------
+    if (datas[0].color === undefined) {
+      datas[0].color = defaultColors[0];
+    }
+
+    var defaultHeight = 300; // taille par défaut 
+    //width = 600,height = 300;
+    height = container.height();
+    if ((height === undefined) || (height === 0)) {
+      height = defaultHeight;
+    }
+    var axisSpacing = 3; // spacing between ticks
+    var param = 0;
+    width = container.width();
+    if (width < 300) {
+      axisSpacing = 6;
+      param = 7 / 10;
+      //space = 5;
+      space = width / 60;
+      height = 155;
+      margin = {
+        top: 20,
+        right: 30,
+        bottom: 50,
+        left: 30
+      }
+    } else if (width < 600) {
+      axisSpacing = 4
+      param = 8 / 10;
+      //space = 5;
+      space = width / 60;
+      height = 155;
+    } else {
+      param = 9 / 10;
+      space = width / 60;
+    }
+    width = param * width;
+    space = param * space;
+
+
+    barWidth = Math.min(width / (datas[0].values).length - space, 50);
+
+    x = d3.time.scale().range([0, width]);
+    yL = d3.scale.linear().range([height, 0]);
+
+    /*var minValue =  // find min and max value of the two ranges and use them for the x domain below
+                  ,maxValeu =*/
+
+    x.domain([new Date(d3.min(datas[0].values, function(d) {
+        return d[0];
+      }) - 3600000), d3.time.day.offset(new Date(d3.max(datas[0].values, function(d) {
         return d[0];
       }) + 3600000), 0)]);
 
@@ -312,12 +686,14 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     var globalLength = 0;
     var keyLength = 0;
 
-    for (var i = 0; i < datas.length; i++) {
+    /* for (var i = 0; i < datas.length; i++) {
       keyLength = textWidth(datas[i].key);
       globalLength = globalLength + keyLength;
     };
     globalLength = globalLength + (datas.length) * legendHeight / 3;
-    var legendWidth = globalLength;
+    var legendWidth = globalLength;*/
+    var legendWidth = globalLength / 2;
+
 
 
     var legend = chart.append("g")
@@ -442,6 +818,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     var axisSpacing = 3; // spacing between ticks
     var param = 0;
     width = container.width();
+
     if (width < 300) {
       axisSpacing = 6;
       param = 7 / 10;
@@ -553,7 +930,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .attr("y1", 0)
       .attr("y2", height)
       .style("stroke", "black")
-      .style("stroke-width",0.1);
+      .style("stroke-width", 0.1);
 
     // Draw Y-axis grid lines
     chart.selectAll("line.y")
@@ -565,7 +942,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       .attr("y1", yL)
       .attr("y2", yL)
       .style("stroke", "black")
-      .style("stroke-width",0.1);
+      .style("stroke-width", 0.1);
 
     chart.append("g") // Add the X Axis
     .attr("class", "x axis")
@@ -658,7 +1035,7 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
       d3.select(this).transition().duration(200).attr("fill-opacity", .5)
     })
       .on("mousemove", function(d) {
-      toolTip.text(getToolTipText(d, datas[1])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 70) + "px");
+      toolTip.text(getToolTipText(d, datas[0])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 70) + "px");
     })
       .on("mouseout", function() {
       toolTip.transition().duration(200).style("opacity", 1e-6);
@@ -826,251 +1203,251 @@ Les fonctions prennent en paramètre un objet json data de la structure suivante
     return width;
   };
 
-  $.fn.drawPieChart = function(data,id){
-          var container = document.getElementById(id);
-          container = $(this);       
-          var w = 650;
-          w = container.width();
-          var h = 400;
-          var r = 150;
-          var ir = 75;
-          var textOffset = 24;
-          var tweenDuration = 1050;
+  $.fn.drawPieChart = function(data, id) {
+    var container = document.getElementById(id);
+    container = $(this);
+    var w = 650;
+    w = container.width();
+    var h = 400;
+    var r = 150;
+    var ir = 75;
+    var textOffset = 24;
+    var tweenDuration = 1050;
 
-          if (id === undefined) {
-            id = container[0].id;
-          }
+    if (id === undefined) {
+      id = container[0].id;
+    }
 
-          //OBJECTS TO BE POPULATED WITH DATA LATER
-          var lines, valueLabels, nameLabels;
-          var pieData = [];
-          var filteredPieData = [];
+    //OBJECTS TO BE POPULATED WITH DATA LATER
+    var lines, valueLabels, nameLabels;
+    var pieData = [];
+    var filteredPieData = [];
 
-          //D3 helper function to populate pie slice parameters from array data
-          var donut = d3.layout.pie().value(function(d) {
-            return d.itemValue;
-          }).sort(null);
+    //D3 helper function to populate pie slice parameters from array data
+    var donut = d3.layout.pie().value(function(d) {
+      return d.itemValue;
+    }).sort(null);
 
-          //D3 helper function to create colors from an ordinal scale
-          var color = d3.scale.category20c();
+    //D3 helper function to create colors from an ordinal scale
+    var color = d3.scale.category20c();
 
-          //D3 helper function to draw arcs, populates parameter "d" in path object
-          var arc = d3.svg.arc()
-            .startAngle(function(d) {
-            return d.startAngle;
-          })
-            .endAngle(function(d) {
-            return d.endAngle;
-          })
-            .innerRadius(ir)
-            .outerRadius(r);
-         
-
-
-          ///////////////////////////////////////////////////////////
-          // CREATE VIS & GROUPS ////////////////////////////////////
-          ///////////////////////////////////////////////////////////
-
-          var vis = d3.select("#"+id).append("svg:svg")
-            .attr("width", w)
-            .attr("height", h);
-
-          //GROUP FOR ARCS/PATHS
-          var arc_group = vis.append("svg:g")
-            .attr("class", "arc")
-            .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
-
-          //GROUP FOR LABELS
-          var label_group = vis.append("svg:g")
-            .attr("class", "label_group")
-            .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
-
-          //GROUP FOR CENTER TEXT  
-          var center_group = vis.append("svg:g")
-            .attr("class", "center_group")
-            .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
-
-          //PLACEHOLDER GRAY CIRCLE
-          // var paths = arc_group.append("svg:circle")
-          //     .attr("fill", "#EFEFEF")
-          //     .attr("r", r);
-
-          ///////////////////////////////////////////////////////////
-          // CENTER TEXT ////////////////////////////////////////////
-          ///////////////////////////////////////////////////////////
-
-          //WHITE CIRCLE BEHIND LABELS
-          var whiteCircle = center_group.append("svg:circle")
-            .attr("fill", "white")
-            .attr("r", ir);
-
-          ///////////////////////////////////////////////////////////
-          // STREAKER CONNECTION ////////////////////////////////////
-          ///////////////////////////////////////////////////////////
-
-          // to draw the chart
-
-          function draw() {
-
-            pieData = donut(data);
-
-            var sliceProportion = 0; //size of this slice
-            filteredPieData = pieData.filter(filterData);
-
-            function filterData(element, index, array) {
-              element.name = data[index].itemLabel;
-              element.value = data[index].itemValue;
-              sliceProportion += element.value;
-              return (element.value > 0);
-            }
-
-            //DRAW ARC PATHS
-            paths = arc_group.selectAll("path").data(filteredPieData);
-            paths.enter().append("svg:path")
-              .attr("stroke", "white")
-              .attr("stroke-width", 0.5)
-              .attr("fill", function(d, i) {
-              return color(i);
-            })
-              .transition()
-              .duration(tweenDuration)
-              .attrTween("d", pieTween);
+    //D3 helper function to draw arcs, populates parameter "d" in path object
+    var arc = d3.svg.arc()
+      .startAngle(function(d) {
+      return d.startAngle;
+    })
+      .endAngle(function(d) {
+      return d.endAngle;
+    })
+      .innerRadius(ir)
+      .outerRadius(r);
 
 
 
-            //DRAW TICK MARK LINES FOR LABELS
-            lines = label_group.selectAll("line").data(filteredPieData);
-            lines.enter().append("svg:line")
-              .attr("x1", 0)
-              .attr("x2", 0)
-              .attr("y1", -r - 3)
-              .attr("y2", -r - 15)
-              .attr("stroke", "gray")
-              .attr("transform", function(d) {
-              return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
-            });
-            lines.transition()
-              .duration(tweenDuration)
-              .attr("transform", function(d) {
-              return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
-            });
-            lines.exit().remove();
+    ///////////////////////////////////////////////////////////
+    // CREATE VIS & GROUPS ////////////////////////////////////
+    ///////////////////////////////////////////////////////////
 
-            //DRAW LABELS WITH PERCENTAGE VALUES
-            valueLabels = label_group.selectAll("text.value").data(filteredPieData)
-              .attr("dy", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
-                return 5;
-              } else {
-                return -7;
-              }
-            })
-              .attr("text-anchor", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
-                return "beginning";
-              } else {
-                return "end";
-              }
-            })
-              .text(function(d) {
-              var percentage = (d.value / sliceProportion) * 100;
-              return percentage.toFixed(1) + "%";
-            });
+    var vis = d3.select("#" + id).append("svg:svg")
+      .attr("width", w)
+      .attr("height", h);
 
-            valueLabels.enter().append("svg:text")
-              .attr("class", "value")
-              .attr("transform", function(d) {
-              return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (r + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (r + textOffset) + ")";
-            })
-              .attr("dy", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
-                return 5;
-              } else {
-                return -7;
-              }
-            })
-              .attr("text-anchor", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
-                return "beginning";
-              } else {
-                return "end";
-              }
-            }).text(function(d) {
-              var percentage = (d.value / sliceProportion) * 100;
-              return percentage.toFixed(1) + "%";
-            });
+    //GROUP FOR ARCS/PATHS
+    var arc_group = vis.append("svg:g")
+      .attr("class", "arc")
+      .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
+
+    //GROUP FOR LABELS
+    var label_group = vis.append("svg:g")
+      .attr("class", "label_group")
+      .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
+
+    //GROUP FOR CENTER TEXT  
+    var center_group = vis.append("svg:g")
+      .attr("class", "center_group")
+      .attr("transform", "translate(" + (w / 2) + "," + (h / 2) + ")");
+
+    //PLACEHOLDER GRAY CIRCLE
+    // var paths = arc_group.append("svg:circle")
+    //     .attr("fill", "#EFEFEF")
+    //     .attr("r", r);
+
+    ///////////////////////////////////////////////////////////
+    // CENTER TEXT ////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+
+    //WHITE CIRCLE BEHIND LABELS
+    var whiteCircle = center_group.append("svg:circle")
+      .attr("fill", "white")
+      .attr("r", ir);
+
+    ///////////////////////////////////////////////////////////
+    // STREAKER CONNECTION ////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+
+    // to draw the chart
+
+    function draw() {
+
+      pieData = donut(data);
+
+      var sliceProportion = 0; //size of this slice
+      filteredPieData = pieData.filter(filterData);
+
+      function filterData(element, index, array) {
+        element.name = data[index].itemLabel;
+        element.value = data[index].itemValue;
+        sliceProportion += element.value;
+        return (element.value > 0);
+      }
+
+      //DRAW ARC PATHS
+      paths = arc_group.selectAll("path").data(filteredPieData);
+      paths.enter().append("svg:path")
+        .attr("stroke", "white")
+        .attr("stroke-width", 0.5)
+        .attr("fill", function(d, i) {
+        return color(i);
+      })
+        .transition()
+        .duration(tweenDuration)
+        .attrTween("d", pieTween);
 
 
-            valueLabels.exit().remove();
+
+      //DRAW TICK MARK LINES FOR LABELS
+      lines = label_group.selectAll("line").data(filteredPieData);
+      lines.enter().append("svg:line")
+        .attr("x1", 0)
+        .attr("x2", 0)
+        .attr("y1", -r - 3)
+        .attr("y2", -r - 15)
+        .attr("stroke", "gray")
+        .attr("transform", function(d) {
+        return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
+      });
+      lines.transition()
+        .duration(tweenDuration)
+        .attr("transform", function(d) {
+        return "rotate(" + (d.startAngle + d.endAngle) / 2 * (180 / Math.PI) + ")";
+      });
+      lines.exit().remove();
+
+      //DRAW LABELS WITH PERCENTAGE VALUES
+      valueLabels = label_group.selectAll("text.value").data(filteredPieData)
+        .attr("dy", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+          return 5;
+        } else {
+          return -7;
+        }
+      })
+        .attr("text-anchor", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+          return "beginning";
+        } else {
+          return "end";
+        }
+      })
+        .text(function(d) {
+        var percentage = (d.value / sliceProportion) * 100;
+        return percentage.toFixed(1) + "%";
+      });
+
+      valueLabels.enter().append("svg:text")
+        .attr("class", "value")
+        .attr("transform", function(d) {
+        return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (r + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (r + textOffset) + ")";
+      })
+        .attr("dy", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+          return 5;
+        } else {
+          return -7;
+        }
+      })
+        .attr("text-anchor", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+          return "beginning";
+        } else {
+          return "end";
+        }
+      }).text(function(d) {
+        var percentage = (d.value / sliceProportion) * 100;
+        return percentage.toFixed(1) + "%";
+      });
 
 
-            //DRAW LABELS WITH ENTITY NAMES
-            nameLabels = label_group.selectAll("text.units").data(filteredPieData)
-              .attr("dy", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
-                return 17;
-              } else {
-                return 5;
-              }
-            })
-              .attr("text-anchor", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
-                return "beginning";
-              } else {
-                return "end";
-              }
-            }).text(function(d) {
-              return d.name;
-            });
+      valueLabels.exit().remove();
 
-            nameLabels.enter().append("svg:text")
-              .attr("class", "units")
-              .attr("transform", function(d) {
-              return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (r + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (r + textOffset) + ")";
-            })
-              .attr("dy", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
-                return 17;
-              } else {
-                return 5;
-              }
-            })
-              .attr("text-anchor", function(d) {
-              if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
-                return "beginning";
-              } else {
-                return "end";
-              }
-            }).text(function(d) {
-              return d.name;
-            });
 
-            nameLabels.exit().remove();
-          }
+      //DRAW LABELS WITH ENTITY NAMES
+      nameLabels = label_group.selectAll("text.units").data(filteredPieData)
+        .attr("dy", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+          return 17;
+        } else {
+          return 5;
+        }
+      })
+        .attr("text-anchor", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+          return "beginning";
+        } else {
+          return "end";
+        }
+      }).text(function(d) {
+        return d.name;
+      });
 
-          ///////////////////////////////////////////////////////////
-          // FUNCTIONS //////////////////////////////////////////////
-          ///////////////////////////////////////////////////////////
+      nameLabels.enter().append("svg:text")
+        .attr("class", "units")
+        .attr("transform", function(d) {
+        return "translate(" + Math.cos(((d.startAngle + d.endAngle - Math.PI) / 2)) * (r + textOffset) + "," + Math.sin((d.startAngle + d.endAngle - Math.PI) / 2) * (r + textOffset) + ")";
+      })
+        .attr("dy", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 > Math.PI / 2 && (d.startAngle + d.endAngle) / 2 < Math.PI * 1.5) {
+          return 17;
+        } else {
+          return 5;
+        }
+      })
+        .attr("text-anchor", function(d) {
+        if ((d.startAngle + d.endAngle) / 2 < Math.PI) {
+          return "beginning";
+        } else {
+          return "end";
+        }
+      }).text(function(d) {
+        return d.name;
+      });
 
-          // Interpolate the arcs in data space.
+      nameLabels.exit().remove();
+    }
 
-          function pieTween(d, i) {
-            var s0 = 0;
-            var e0 = 0;
-            var i = d3.interpolate({
-              startAngle: s0,
-              endAngle: e0
-            }, {
-              startAngle: d.startAngle,
-              endAngle: d.endAngle
-            });
-            return function(t) {
-              var b = i(t);
-              return arc(b);
-            };
-          }
+    ///////////////////////////////////////////////////////////
+    // FUNCTIONS //////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
 
-          draw();
+    // Interpolate the arcs in data space.
+
+    function pieTween(d, i) {
+      var s0 = 0;
+      var e0 = 0;
+      var i = d3.interpolate({
+        startAngle: s0,
+        endAngle: e0
+      }, {
+        startAngle: d.startAngle,
+        endAngle: d.endAngle
+      });
+      return function(t) {
+        var b = i(t);
+        return arc(b);
+      };
+    }
+
+    draw();
   };
 
 

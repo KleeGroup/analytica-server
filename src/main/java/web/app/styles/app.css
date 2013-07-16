@@ -3,6 +3,7 @@
 }
 
 
+
 /* Special grid styles
 -------------------------------------------------- */
 
@@ -18,6 +19,7 @@
 }
 .ui-widget-header h{
   margin-left: 10px;
+  /*Margin should be set auto*/
 }
 
 
