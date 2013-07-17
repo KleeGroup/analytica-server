@@ -13,95 +13,93 @@ var drawBarChart = function(datas,id){
 		bottom: 50,
 		left: 50
 	}; 
+	
 	var width = undefined; // width - margin.left - margin.right
 	var height = undefined; // height -margin.top - margin.bottom
 	var color = null;
 	var x, y1, y2;
 
-	var xAxis,
-      yLeftAxis,
-      bars,
-      legend;
+	var xAxis; 
+	var yLeftAxis; 
+	var bars;
+	var legend;
 
     //-------------------------------------------------------
-    if (datas[0].color === undefined) {
-      datas[0].color = defaultColors[0];
-    }
+	if (datas[0].color === undefined) {
+		datas[0].color = defaultColors[0];
+	}
 
     // taille par défaut 
-    if ((height === undefined) || (height === 0)) {
-      height = defaultHeight;
-    }
-    if ((width === undefined) || (width === 0)) {
-      width = defaultWidth;
-    }
+	if ((height === undefined) || (height === 0)) {
+		height = defaultHeight;
+	}
+	if ((width === undefined) || (width === 0)) {
+		width = defaultWidth;
+	}
 
-    var param = 0; // reduces the space of the chart according to that of it's container
-    if (width < 300) {
-      axisSpacing = 6;
-      param = 7 / 10;
-      //space = 5;
-      space = width / 60;
-      height = 155;
-      margin = {
-        top: 20,
-        right: 30,
-        bottom: 50,
-        left: 30
-      }
-    } else if (width < 600) {
-      axisSpacing = 4
-      param = 8 / 10;
-      //space = 5;
-      space = width / 60;
-      height = 155;
-    } else {
-      param = 9 / 10;
-      space = width / 60;
-    }
-    width = param * width;
-    space = param * space;
-
-
-    barWidth = Math.min(width / (datas[0].values).length - space, 50);
-
-    x = d3.time.scale().range([0, width]);
-    yL = d3.scale.linear().range([height, 0]);
-
-    /*var minValue =  // find min and max value of the two ranges and use them for the x domain below
-                  ,maxValeu =*/
-
-    x.domain([new Date(d3.min(datas[0].values, function(d) {
-        return d[0];
-      }) - 3600000), d3.time.day.offset(new Date(d3.max(datas[0].values, function(d) {
-        return d[0];
-      }) + 3600000), 0)]);
-
-    yL.domain([0, d3.max(datas[0].values, function(d) {
-        return d[1];
-      })])
-
-    xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, axisSpacing);
-    yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
+	var param = 0; // reduces the space of the chart according to that of it's container
+	if (width < 300) {
+		axisSpacing = 6;
+		param = 7 / 10;
+		//space = 5;
+		space = width / 60;
+		height = 155;
+		margin = {
+			top: 20,
+			right: 30,
+			bottom: 50,
+			left: 30
+		}
+	} else if (width < 600) {
+		axisSpacing = 4
+		param = 8 / 10;
+		//space = 5;
+		space = width / 60;
+		height = 155;
+	} else {
+		param = 9 / 10;
+		space = width / 60;
+	}
+	width = param * width;
+	space = param * space;
 
 
-    var toolTip = d3.select("#" + id).append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 1e-6);
+	barWidth = Math.min(width / (datas[0].values).length - space, 50);
 
-    var parseToDate = function(d) {
-      var format = d3.time.format.utc("%d/%m-%H:%M");
-      return format(new Date(d[0]));
-    };
+	x = d3.time.scale().range([0, width]);
+	yL = d3.scale.linear().range([height, 0]);
 
-    var parseToDate = function(d) {
-      var format = d3.time.format.utc("%d/%m-%H:%M");
-      return format(new Date(d[0]));
-    };
+	/*var minValue =  // find min and max value of the two ranges and use them for the x domain below
+			  ,maxValeu =*/
 
-    if (id === undefined) {
-      id = container[0].id;
-    }
+	x.domain([
+		new Date(d3.min(datas[0].values, function(d) { return d[0];}) - 3600000), 
+		d3.time.day.offset(new Date(d3.max(datas[0].values, function(d) { return d[0]; }) + 3600000), 0)
+	]);
+
+	yL.domain([0, d3.max(datas[0].values, function(d) {	return d[1];})])
+
+	xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, axisSpacing);
+	yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
+
+
+	var toolTip = d3.select("#" + id).append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 1e-6);
+
+	var parseToDate = function(d) {
+		var format = d3.time.format.utc("%d/%m-%H:%M");
+		return format(new Date(d[0]));
+	};
+
+	var parseToDate = function(d) {
+		var format = d3.time.format.utc("%d/%m-%H:%M");
+		return format(new Date(d[0]));
+	};
+
+	if (id === undefined) {
+		id = container[0].id;
+	}
 
 	var getTextY = function(d) {
 		if ((d === undefined) || ((d.key === undefined) && (d.unit === undefined))) {
@@ -137,7 +135,7 @@ var drawBarChart = function(datas,id){
 
 	// Draw Y-axis grid lines
 	chart.selectAll("line.y")
-	.data(yL.ticks(10))
+		.data(yL.ticks(10))
 		.enter().append("line")
 			.attr("class", "y")
 			.attr("x1", 0)
@@ -146,10 +144,10 @@ var drawBarChart = function(datas,id){
 			.attr("y2", yL)
 			.style("stroke", "#ccc");
 
-    chart.append("g") // Add the X Axis
-    .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+	chart.append("g") // Add the X Axis
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
 
 	chart.append("g") // Add the Y Axis
 		.attr("class", "y axis")
@@ -161,17 +159,13 @@ var drawBarChart = function(datas,id){
 			.style("text-anchor", "end")
 			.text(getTextY(datas[0]));
 
-
-
-    var getToolTipText = function(d, datas) {
-      var text = "";
-      if (datas.unit === undefined) {
-        text = d[1] + " " + datas.key + " Le " + parseToDate(d);
-      } else {
-        text = d[1] + " " + datas.unit + " Le " + parseToDate(d);
-      }
-      return text;
-    }
+	var getToolTipText = function(d, datas) {
+		if (datas.unit === undefined) {
+			 return d[1] + " " + datas.key + " Le " + parseToDate(d);
+		} else {
+			return  d[1] + " " + datas.unit + " Le " + parseToDate(d);
+		}
+	}
 
 	bars = chart.selectAll("rect")
 		.data(datas[0].values)
@@ -190,16 +184,16 @@ var drawBarChart = function(datas,id){
 			.on("mouseout", function(d) { toolTip.transition().duration(200).style("opacity", 1e-6);});
 
     //-----------Calcul de la taille de la légende
-    
-    var legendWidth = width / 2;
 
-    var legend = chart.append("g")
-      .attr("class", "legend")
-      .attr("transform", "translate(" + 0 + " ," + (-margin.top) + ")");
-    
-    var val = height + 3 * margin.bottom / 4;
-    var legendHeight = margin.bottom / 2;
-    // var legendWidth = width / 2;
+	var legendWidth = width / 2;
+
+	var legend = chart.append("g")
+		.attr("class", "legend")
+		.attr("transform", "translate(" + 0 + " ," + (-margin.top) + ")");
+
+	var val = height + 3 * margin.bottom / 4;
+	var legendHeight = margin.bottom / 2;
+	// var legendWidth = width / 2;
 	
 	legend.append("rect")
 		.attr("height", legendHeight)
