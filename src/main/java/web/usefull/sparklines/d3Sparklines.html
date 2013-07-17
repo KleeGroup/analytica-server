@@ -21,6 +21,7 @@
     			stroke-width: 0px;     
 			}
 		</style>
+		
 	</head>
 
 	<body>
@@ -48,10 +49,17 @@
 			<li id="btest">&nbsp;</li> 
 		</ul>
 		<form>	
-			<input type="textarea" value="1;2;3;4;5;10;9;8;7;6"/>
-			<input type="submit">draw</input> 	
+			<input type="textarea" id="sparkValues" value="1;2;3;4;5;10;9;8;7;6"/>
+  			<input type="button" name="draw" onclick="drawSparklines()" value="Draw" />
 		</form>
-		
+		<script type="text/javascript">
+			function drawSparklines(){
+				var datas = document.getElementById("sparkValues").value; 
+				drawBarSparklines(datas,"btest");				
+				drawLineSparklines(datas,"ltest");	
+			}
+		</script>
+
 		<script type="text/javascript">
 			var data1 = ["1", "2", "3", "4", "5", "10", "9", "8", "7", "6"];
 			var data2 = ["112", "256", "345", "478", "589", "1120", "789", "874", "457", "456"];

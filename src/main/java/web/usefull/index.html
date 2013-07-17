@@ -8,35 +8,20 @@
     	<link rel="stylesheet" type="text/css" href="../vendor/styles/bootstrap/bootstrap-combined.min.css">
     	<link href="../vendor/styles/bootstrap/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     	<link href="../app/styles/app.css" rel="stylesheet">
-
     	<!-- scripts js-->
     	<script type="text/javascript" src="../vendor/scripts/jquery/jquery.js"></script>
-    	<script type="text/javascript" src="../vendor/scripts/jquery/jquery.peity.js"></script>
-        <script type="text/javascript" src="../vendor/scripts/jquery/jquery.sparkline.js"></script>
+    	
     
     
-    	<!-- <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>-->
     	<script type="text/javascript" src="../vendor/scripts/bootstrap/bootstrap.min.js"></script>
+
     	<!-- scripts d3-->
     	<script type="text/javascript" src="../vendor/scripts/d3/d3.v2.js"></script>
 
-    	<!-- scripts nvd3-->
+      <!-- Scripts analytica-->
 
-
-
-    	<script type="text/javascript" src="../vendor/scripts/handlebars.js"></script>
-        <script type="text/javascript" src="../app/scripts/template/HandlebarsHelper.js"></script>
-        
-        
-
-	    <script type="text/javascript" src="../app/scripts/template/partial-templates.js"></script>
-    	<script type="text/javascript" src="../app/scripts/template/templates.js"></script>
-    	<script type="text/javascript" src="../app/scripts/analytica_client_helper.js"></script>
-    	<script type="text/javascript" src="../app/scripts/analytica_datasource.js"></script>
-		<script type="text/javascript" src="../app/scripts/analyticandv3linechart.js"></script>
-        <script type="text/javascript" src="../app/scripts/d3.punchcard.js"></script>
-
-		<script type="text/javascript" src="../app/scripts/clock.js"></script>
+    	<script type="text/javascript" src="../app/scripts/analyticandv3linechart.js"></script>
+      <script type="text/javascript" src="../app/scripts/d3.punchcard.js"></script>
 
 		
 	</head>
@@ -196,6 +181,34 @@
 
       </div>
       <div class = 'row show-grid'>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Example of Sparklines</h>
+          </div >
+          <div id = 'sparklines'>  
+            <ul>
+              <li id="serie1">Serie1</li>
+              <li id="serie2">Serie2</li> 
+              <li id="serie3"> Serie3</li>
+            </ul>
+          </div>
+        </div>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Example of Sparklines</h>
+          </div >
+          <div id = 'sparklines'>  
+            <ul>
+              <li id="serie4">Serie1</li>
+              <li id="serie5">Serie2</li> 
+              <li id="serie6"> Serie3</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class = 'row show-grid'>
         <div class = 'span12 grey-bg'>
             <div class="ui-widget-header ">
             <i class="icon-picture"></i>
@@ -302,9 +315,7 @@ $( document ).ready(function() {
 
           $("#areaChart").drawStackedAreaChartWithNvd3(datas,"areaChart");
 
-          
-
-
+  
 
           var datas =
             [
@@ -343,8 +354,6 @@ $( document ).ready(function() {
           $("#groupedBarChart").drawMultiBarChartWithNvd3(datas,"groupedBarChart");
 
 
-
-
           data = [
     [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
     [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
@@ -361,6 +370,21 @@ $( document ).ready(function() {
     labels:labels
   }
     $("#punchcard1").drawD3PunchCard(datas);
+
+  var data1 = ["1", "2", "3", "4", "5", "10", "9", "8", "7", "6"];
+      $("#serie1").d3BarSparkline(data1,"serie1");
+      $("#serie4").d3LineSparkline(data1,"serie4");
+
+  var data2 = ["112", "256", "345", "478", "589", "1120", "789", "874", "457", "456"];
+      $("serie2").d3BarSparkline(data2,"serie2");
+      $("serie5").d3LineSparkline(data2,"serie5");
+
+  var data3 = ["10", "2475", "453", "445", "545", "1250", "549", "821", "424", "45254"];
+      $("serie3").d3BarSparkline(data3,"serie3");
+      $("serie6").d3LineSparkline(data3,"serie6");
+
+
+
 
 });  
 </script>
