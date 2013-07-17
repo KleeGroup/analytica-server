@@ -87,9 +87,7 @@ var drawGroupedBars = function(datas,id){
       });
     });
 
-    x0.domain(data.map(function(d) {
-      return d.item;
-    }));
+    x0.domain(data.map(function(d) {return d.item;}));
     x1.domain(values).rangeRoundBands([0, x0.rangeBand()]);
     y.domain([0, d3.max(data, function(d) {
         return d3.max(d.val, function(d) {
@@ -106,38 +104,27 @@ var drawGroupedBars = function(datas,id){
       .attr("class", "y axis")
       .call(yLAxis)
       .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 2)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text(label);
+		  .attr("transform", "rotate(-90)")
+		  .attr("y", 2)
+		  .attr("dy", ".71em")
+		  .style("text-anchor", "end")
+		  .text(label);
 
     var chart = svg.selectAll(".chart")
       .data(data)
       .enter().append("g")
-      .attr("class", "g")
-      .attr("transform", function(d) {
-      return "translate(" + x0(d.item) + ",0)";
-    });
+		  .attr("class", "g")
+		  .attr("transform", function(d) { return "translate(" + x0(d.item) + ",0)"; });
 
     chart.selectAll("rect")
-      .data(function(d) {
-      return d.val;
-    })
+      .data(function(d) { return d.val;})
       .enter().append("rect")
-      .attr("width", x1.rangeBand())
-      .attr("x", function(d) {
-      return x1(d.name);
-    })
-      .attr("y", function(d) {
-      return y(d.value);
-    })
-      .attr("height", function(d) {
-      return height - y(d.value);
-    })
-      .style("fill", function(d) {
-      return color(d.name);
-    }).on("mouseover", function(d) {
+		  .attr("width", x1.rangeBand())
+		  .attr("x", function(d) { return x1(d.name);})
+		  .attr("y", function(d) {return y(d.value);})
+		  .attr("height", function(d) { return height - y(d.value);})
+		  .style("fill", function(d) { return color(d.name);})
+	  .on("mouseover", function(d) {
       toolTip.transition().duration(200).style("opacity", 1)
     })
       .on("mousemove", function(d) {
@@ -152,9 +139,7 @@ var drawGroupedBars = function(datas,id){
       .data(values.slice().reverse())
       .enter().append("g")
       .attr("class", "legend")
-      .attr("transform", function(d, i) {
-      return "translate(0," + i * 20 + ")";
-    });
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
     legend.append("rect")
       .attr("x", width - 18)
@@ -167,8 +152,5 @@ var drawGroupedBars = function(datas,id){
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) {
-      return d;
-    });
-
+      .text(function(d) { return d;});
 }
