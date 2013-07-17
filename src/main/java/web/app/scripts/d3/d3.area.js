@@ -1,115 +1,50 @@
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title></title>
-		<script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
-		<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-		<style type="text/css">
+var areaChart = function (datas,id){
+var defaultColors = ["#33B5E5", "#FF4444"];
+	var defaultHeight = 300;
+	var defaultWidth = 600;
+	var barWidth = 50;
+	var space = 10;
+	var axisSpacing = 3; // spacing between ticks
+	//--------------------------
+	var margin = {
+		top: 20,
+		right: 50,
+		bottom: 50,
+		left: 50
+	}; 
+	var width = undefined; // width - margin.left - margin.right
+	var height = undefined; // height -margin.top - margin.bottom
+	var color = null;
+	var x, y1, y2;
 
-			.axis path,
-			.axis line {
-			    fill: none;
-			    stroke: grey;
-			    stroke-width: 1;
-			    shape-rendering: crispEdges;
-			    
-			}
-			.axis text{
-				font-size: 10px;				
-			}
-
-			.line {
-				 fill: none;
-				 stroke: #FF4444;
-				 stroke-width: 1.5px;
-			}
-
-			.tooltip {
-			position: absolute;
-			text-align: center;
-			width: 60px;
-			height: 25px;
-			font: 9px Helvetica,sans-serif;
-			background: #FFF;
-			border: 0px;
-			border-radius: 6px;
-			box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.6);
-			pointer-events: none;
-			text-shadow: 0px 1px 0px #ccc;
-			}
-			.legend {
-	            padding: 5px;
-	            font: 10px sans-serif;
-	            background: yellow;
-	            box-shadow: 2px 2px 1px #888;
-            }
-
-            .span6{
-            	/*border-style: solid;*/
-            	
-            }
-            svg{
-            	border-style: solid;
-            	display:block;
-  				margin:auto;
-            	color:red;
-            }
-
-		</style>
-	</head>
-
-	<body class ="container">
-		<div></div>
- 		<div id = "box5" class ="span6">
- 		</div>
- 		<!--Script for line sparklines-->
- 		<!--Script for bar and line chart-->
-		<script type="text/javascript">
-			var BarChart = function(datas,id){
-
-				datas[0].unit = "ms"; // must be removed here
-
-    var margin = {
-      top: 20,
-      right: 50,
-      bottom: 50,
-      left: 50
-    }, width = null // width - margin.left - margin.right
-      ,
-      height = null // height -margin.top - margin.bottom
-      ,
-      color = null,
-      x, y1, y2, barWidth = 50,
-      space = 10;
 
     var container = document.getElementById(id);
     var xAxis,
       yLeftAxis,
-      bars,
+      line,
+      area,
       legend;
 
-    var defaultColors = ["#33B5E5", "#FF4444"];
     //-------------------------------------------------------
     if (datas[0].color === undefined) {
       datas[0].color = defaultColors[0];
     }
-    if (datas[1].color === undefined) {
-      datas[1].color = defaultColors[1];
-    }
-    var defaultHeight = 300; // taille par défaut 
-    width = 600,height = 300;
-    //height = container.height();
+
+    // taille par défaut 
     if ((height === undefined) || (height === 0)) {
       height = defaultHeight;
     }
+    if ((width === undefined) || (width === 0)) {
+      width = defaultWidth;
+    }
+
     var axisSpacing = 3; // spacing between ticks
     var param = 0;
-    //width = container.width();
     if (width < 300) {
       axisSpacing = 6;
       param = 7 / 10;
       //space = 5;
-      space = width/60;
+      space = width / 60;
       height = 155;
       margin = {
         top: 20,
@@ -121,17 +56,16 @@
       axisSpacing = 4
       param = 8 / 10;
       //space = 5;
-      space = width/60;
+      space = width / 60;
       height = 155;
     } else {
       param = 9 / 10;
-      space = width/60;
+      space = width / 60;
     }
     width = param * width;
-    space = param*space;
+    space = param * space;
 
 
-    barWidth = Math.min(width / (datas[0].values).length - space,50);
 
     x = d3.time.scale().range([0, width]);
     yL = d3.scale.linear().range([height, 0]);
@@ -139,20 +73,23 @@
     /*var minValue =  // find min and max value of the two ranges and use them for the x domain below
                   ,maxValeu =*/
 
-    x.domain([new Date(d3.min(datas[1].values, function(d) {
+    x.domain([new Date(d3.min(datas[0].values, function(d) {
         return d[0];
-      }) - 3600000), d3.time.day.offset(new Date(d3.max(datas[1].values, function(d) {
+      }) - 3600000), d3.time.day.offset(new Date(d3.max(datas[0].values, function(d) {
         return d[0];
       }) + 3600000), 0)]);
 
     yL.domain([0, d3.max(datas[0].values, function(d) {
         return d[1];
       })])
-   
+
     xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, axisSpacing);
     yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
 
-    
+    var div = d3.select("#" + id).append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 1e-6);
+
     var toolTip = d3.select("#" + id).append("div")
       .attr("class", "tooltip")
       .style("opacity", 1e-6);
@@ -198,15 +135,14 @@
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // Draw X-axis grid lines
 
     chart.selectAll("line.x")
-      .data(x.ticks(5))
+      .data(x.ticks(10))
       .enter().append("line")
       .attr("class", "x")
       .attr("x1", x)
       .attr("x2", x)
       .attr("y1", 0)
       .attr("y2", height)
-      .style("stroke", "black")
-      .style("stroke-width",0.1);
+      .style("stroke", "#ccc");
 
     // Draw Y-axis grid lines
     chart.selectAll("line.y")
@@ -217,8 +153,7 @@
       .attr("x2", width)
       .attr("y1", yL)
       .attr("y2", yL)
-      .style("stroke", "black")
-      .style("stroke-width",0.1);
+      .style("stroke", "#ccc");
 
     chart.append("g") // Add the X Axis
     .attr("class", "x axis")
@@ -236,7 +171,6 @@
       .text(getTextY(datas[0]));
 
 
-    
 
     var getToolTipText = function(d, datas) {
       var text = "";
@@ -248,30 +182,52 @@
       return text;
     }
 
-    bars = chart.selectAll("rect")
-      .data(datas[0].values)
-      .enter().append("rect")
-      .attr("height", function(d) {
-      return height - yL(d[1]);
+    line = d3.svg.line().x(function(d) {
+      return x(d[0]);
+    }).y(function(d) {
+      return yL(d[1])
+    });
+    var area = d3.svg.area()
+      .x(function(d) {
+      return x(d[0]);
     })
-      .attr("y", function(d) {
+      .y0(height)
+      .y1(function(d) {
+      return yL(d[1]);
+    })
+    chart.append("svg:path")
+      .datum(datas[0].values)
+      .attr("d", area)
+      .attr("class", "area")
+      .style("stroke", datas[0].color);
+    var c = d3.scale.linear().domain([0, 1]).range(["hsl(250, 50%, 50%)", "hsl(350, 100%, 50%)"]).interpolate(d3.interpolateHsl);
+    chart.selectAll("circle")
+      .data(datas[0].values)
+      .enter().append("svg:circle")
+      .attr("cx", function(d) {
+      return x(d[0])
+    })
+      .attr("cy", function(d) {
       return yL(d[1])
     })
-      .attr("x", function(d, i) {
-      return x((new Date(d[0]))) - barWidth / 2;
+      .attr("stroke-width", "none")
+      .attr("fill", function() {
+      return c(Math.random())
     })
-      .attr("width", barWidth)
-      .style("fill", datas[0].color)
-      .style("stroke", "white")
-      .style("stroke-width", 1)
+      .attr("fill-opacity", .5)
+      .attr("r", 3)
+      .style("display", "inline")
       .on("mouseover", function(d) {
-      toolTip.transition().duration(500).style("opacity", 1)
+      div.transition().duration(200).style("opacity", 1);
+      d3.select(this).transition().duration(200).attr("fill-opacity", .5)
     })
       .on("mousemove", function(d) {
-      toolTip.text(d[1] + " at " + parseToDate(d)).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 50) + "px");
+      div.text(getToolTipText(d, datas[0])).style("left", (d3.event.pageX - 34) + "px").style("top", (d3.event.pageY - 70) + "px");
     })
-      .on("mouseout", function(d) {
-      toolTip.transition().duration(500).style("opacity", 1e-6);
+      .on("mouseout", function() {
+      div.transition().duration(200).style("opacity", 1e-6);
+      d3.select(this).transition().duration(200)
+        .attr("fill-opacity", .5)
     });
 
     var legend = chart.append("g")
@@ -315,30 +271,6 @@
       .text(function(d) {
       return datas[datas.indexOf(d)].key;
     });
+
+
 }
-		</script>
-
-			<script type="text/javascript">
-
-					var data1 = [ [ 3625200000 , 1214] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 125] , [ 3639600000 , 1850] , [ 3643200000 , 789] , [ 3646800000 , 458] , [ 3650400000 , 999] , [ 3654000000 , 775] , [ 3657600000 , 328] , [ 3661200000 , 389],[3664800000,552],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,635],[3686400000,985],[3690000000,777],[3693600000,1000],[3697200000,989],[3700800000,1245],[3704400000,522],[3708000000,300]];
-
-					var data2 = [ [ 3625200000 , 145] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 15] , [ 3639600000 , 510] , [ 3643200000 , 89] , [ 3646800000 , 58] , [ 3650400000 , 99] , [ 3654000000 , 75] , [ 3657600000 , 28] , [ 3661200000 , 39],[3664800000,52],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,35],[3686400000,85],[3690000000,77],[3693600000,100],[3697200000,89],[3700800000,125],[3704400000,22],[3708000000,30]];
-
-
-					var datas = [{
-						unit:"ms",
-						key:"response Time",
-						values:data1
-					},{
-						key:"Hits",
-						values:data2
-					}]
-
-					BarChart(datas,"box5");
-			</script>
-
-
-		
-
-	</body>
-</html>
