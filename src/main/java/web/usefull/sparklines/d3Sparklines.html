@@ -54,7 +54,10 @@
 		</form>
 		<script type="text/javascript">
 			function drawSparklines(){
-				var datas = document.getElementById("sparkValues").value; 
+				var datas = document.getElementById("sparkValues").value;
+				document.getElementById("btest").innerHTML = ""; 
+				document.getElementById("ltest").innerHTML = ""; 
+
 				drawBarSparklines(datas,"btest");				
 				drawLineSparklines(datas,"ltest");	
 			}
