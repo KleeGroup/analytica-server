@@ -50,7 +50,7 @@
 		</ul>
 		<form>	
 			<input type="textarea" id="sparkValues" value="1;2;3;4;5;10;9;8;7;6"/>
-  			<input type="button" name="draw" onclick="drawSparklines()" value="Draw" />
+  			<input type="button" name="draw" onclick="drawSparklines()" value="redraw" />
 		</form>
 		<script type="text/javascript">
 			function drawSparklines(){
@@ -81,6 +81,8 @@
 			drawLineSparklines(data3,"lserie3");
 			drawLineSparklines(data4,"lserie4");
 			drawLineSparklines(data5,"lserie5");
+			
+			drawSparklines();
 		</script>
 
 	</body>

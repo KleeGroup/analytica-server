@@ -1,13 +1,19 @@
-<!--Script for bar sparklines-->
 var splitter = function(value){
+	var myArray;
 	//si data est un tableau retourne le tableau
 	//Si data est une string alors ion constitue un tableau en splittant 
 	if ((typeof value) === "string") {
-		return  value.split(";");
+		myArray = value.split(";");
+	}else {
+		myArray = value;
 	}
-	return value;
+
+	for(var i=0; i<myArray.length; i++) { myArray[i] = +myArray[i]; } 
+	//The +myArray[i] is just a quick way to do the number conversion
+	return myArray;
 }
 			
+<!--Script for bar sparklines-->
 var drawBarSparklines = function (inData, id){
 	var spacing = 4;// space between 2 ticks
 	var height = 15;
@@ -18,28 +24,30 @@ var drawBarSparklines = function (inData, id){
 	//----------------------------------------
 	var barWidth = spacing - space; 
 	var data = splitter(inData);
-	var	width = (barWidth+space) * data.length;
+	var	width = spacing * data.length;
+	
 	var y = d3.scale.linear()
 		.domain([0, d3.max(data)])
 		.range([0, height]);
 
-	var rectangle = d3.selectAll("#"+id).append("svg")
+	var svg = d3.selectAll("#"+id).append("svg")
 		.attr("width", width)
 		.attr("height", height)
 		.attr("class","bar"); 
 
-	var rectangle = rectangle.selectAll("rect")
+	svg.selectAll("rect")
 		.data(data)
 		.enter().append("rect")
 			.attr("class", "bar")
 			.attr("width", barWidth)
 			.attr("height", y)
-			.attr("y", function(d) {return height-y(d) ;})
-			.attr("x", function(d, i) {return i * (barWidth+space);})
+			.attr("y", function(d) { return height-y(d) ;})
+			.attr("x", function(d, i) { return i * spacing;})
 			.style("fill", function(d, i) { return i==(data.length-1)? color : lastColor;})
 			.append("title")
 				.text(function(d) {return d;});
 }
+
 <!--Script for line sparklines-->
 var drawLineSparklines = function (inData,id){
 	var spacing = 4; // space between 2 ticks
