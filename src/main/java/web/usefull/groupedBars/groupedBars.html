@@ -9,7 +9,10 @@
 
 	<body>
 	<h2>Exemple de graphe mixte</h2>
+		
 		<div id="groupedBarChart"></div>
+		</br>
+		<div id="cities"></div>
 
 		<script type="text/javascript">
 			var datas ={
@@ -45,10 +48,37 @@
 						"Hits": "45",
 						"(ms) Resp Time": "11"
 					}
-				]
-            };
-
+				]};
+	var data2s ={
+				label: "Villes",
+                data: [
+					{
+						"item": "paris",
+						"Habitants(M)": "2.234",
+						"Agglomeration(M)" :"11.82",
+						"Elevation(m)" :"45"
+					},
+					{
+						"item": "londres",
+						"Habitants(M)": "8.174",
+						"Agglomeration(M)" :"12.58",
+						"Elevation(m)" :"7"
+					},
+					{
+						"item": "berlin",
+						"Habitants(M)": "3.443",
+						"Agglomeration(M)" :"4.041",
+						"Elevation(m)" :"74"
+					},
+					{
+						"item": "rome",
+						"Habitants(M)": "2.612",
+						"Agglomeration(M)" :"3.858",
+						"Elevation(m)" :"45"
+					}
+				]};	
           drawGroupedBars(datas,"groupedBarChart");
+          drawGroupedBars(data2s,"cities");
 		</script>
 
 	</body>
