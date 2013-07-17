@@ -228,7 +228,7 @@ var drawLineBarChart = function(datas,id){
     })
       .on("mouseout", function(d) {
       toolTip.transition().duration(200).style("opacity", 1e-6);
-    });;
+    });
 
     chart.append("svg:path")
       .datum(datas[1].values)
