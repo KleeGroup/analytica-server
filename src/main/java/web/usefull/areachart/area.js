@@ -1,43 +1,45 @@
 var areaChart = function (datas,id){
-	datas[0].unit = "ms"; // must be removed here
+var defaultColors = ["#33B5E5", "#FF4444"];
+	var defaultHeight = 300;
+	var defaultWidth = 600;
+	var barWidth = 50;
+	var space = 10;
+	var axisSpacing = 3; // spacing between ticks
+	//--------------------------
+	var margin = {
+		top: 20,
+		right: 50,
+		bottom: 50,
+		left: 50
+	}; 
+	var width = undefined; // width - margin.left - margin.right
+	var height = undefined; // height -margin.top - margin.bottom
+	var color = null;
+	var x, y1, y2;
 
-    var margin = {
-      top: 20,
-      right: 50,
-      bottom: 50,
-      left: 50
-    }, width = null // width - margin.left - margin.right
-      ,
-      height = null // height -margin.top - margin.bottom
-      ,
-      color = null,
-      x, y1, y2, barWidth = 50,
-      space = 10;
 
     var container = document.getElementById(id);
-    container = $(this);
     var xAxis,
       yLeftAxis,
       line,
       area,
       legend;
 
-    var defaultColors = ["#33B5E5", "#FF4444"];
     //-------------------------------------------------------
     if (datas[0].color === undefined) {
       datas[0].color = defaultColors[0];
     }
 
-
-    var defaultHeight = 300; // taille par défaut 
-    //width = 600,height = 300;
-    height = container.height();
+    // taille par défaut 
     if ((height === undefined) || (height === 0)) {
       height = defaultHeight;
     }
+    if ((width === undefined) || (width === 0)) {
+      width = defaultWidth;
+    }
+
     var axisSpacing = 3; // spacing between ticks
     var param = 0;
-    width = container.width();
     if (width < 300) {
       axisSpacing = 6;
       param = 7 / 10;
@@ -64,7 +66,6 @@ var areaChart = function (datas,id){
     space = param * space;
 
 
-    barWidth = Math.min(width / (datas[0].values).length - space, 50);
 
     x = d3.time.scale().range([0, width]);
     yL = d3.scale.linear().range([height, 0]);

@@ -82,8 +82,7 @@ var drawLineSparklines = function (inData,id){
 		.enter().append("circle")
 			.filter(function(d,i) { return i ==data.length-1;}) // <== This line
 			.style("fill", "red") // <== and this one
-			.attr("r", 3.5)
+			.attr("r", 2)
 			.attr("cx", function(d,i) { return width; })
 			.attr("cy", function(d) { return height-y(d); });
 }
-

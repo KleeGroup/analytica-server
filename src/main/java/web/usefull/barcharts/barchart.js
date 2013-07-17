@@ -3,7 +3,7 @@ var drawBarChart = function(datas,id){
 	var defaultColors = ["#33B5E5", "#FF4444"];
 	var defaultHeight = 300;
 	var defaultWidth = 600;
-	var barWidth = 50;0
+	var barWidth = 50;
 	var space = 10;
 	var axisSpacing = 3; // spacing between ticks
 	//--------------------------
@@ -14,7 +14,7 @@ var drawBarChart = function(datas,id){
 		left: 50
 	}; 
 	var width = undefined; // width - margin.left - margin.right
-	var height = undefined, // height -margin.top - margin.bottom
+	var height = undefined; // height -margin.top - margin.bottom
 	var color = null;
 	var x, y1, y2;
 
