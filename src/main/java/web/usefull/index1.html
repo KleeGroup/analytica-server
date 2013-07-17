@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+	<head id= "header" class="">
+    	<title>Analytica DashBoard</title>
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<!-- stylessheets-->
+    	<link rel="stylesheet" type="text/css" href="../vendor/styles/bootstrap/bootstrap-combined.min.css">
+    	<link href="../vendor/styles/bootstrap/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    	<link href="../app/styles/app.css" rel="stylesheet">
+    	<!-- scripts js-->
+    	<script type="text/javascript" src="../vendor/scripts/jquery/jquery.js"></script>
+    	
+    
+    
+    	<script type="text/javascript" src="../vendor/scripts/bootstrap/bootstrap.min.js"></script>
+
+    	<!-- scripts d3-->
+    	<script type="text/javascript" src="../vendor/scripts/d3/d3.v2.js"></script>
+
+      <!-- Scripts analytica-->
+
+    	<script type="text/javascript" src="../app/scripts/analyticandv3linechart.js"></script>
+      <script type="text/javascript" src="../app/scripts/d3.punchcard.js"></script>
+
+		
+	</head>
+
+	<body id="index">
+		<!-- Barre de navigation.-->
+    	<header id="header">
+    	</header>
+    <div id="breadcrumb">
+    </div>
+	<!-- Container -->
+   <div id = 'dashboard' class="container">
+      <!-- Mettre le contenu des graphes ici.-->    <!-- Composants graphiques.-->
+      <div class = 'row show-grid'>
+
+        <div class = 'span3 grey-bg'>
+          <div class="widget-inner widget-size-1x1">
+            <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>Pages Hits</h>
+          </div>
+            <section class="widget-body rag-widget no-title">
+
+              <div class = 'widget-canvas'>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td class = "t-size-x48 number positive">926</td>
+                      <td class = "t-secondary">Max Value</td>
+                    </tr>
+                    <tr>
+                      <td class = "t-size-x48 number level">625</td>
+                      <td class = "t-secondary">Average</td>
+                    </tr>
+                    <tr>
+                      <td class = "t-size-x48 number negative">200</td>
+                      <td class = "t-secondary">Min Value</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </div>
+        <div class = 'span3 grey-bg'>
+          <div class="widget-inner  widget-size-1x1">
+            <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>Avg time on Pages</h>
+          </div>
+            <section class="widget-body number-widget represent">
+                <div class="widget-canvas ass">
+
+                <div class=" t-size-x52">
+                  6<span class="unit">m</span> 52<span class="unit">s</span>
+                </div>
+                    <div class="secondary-stat t-size-x48 negative ">
+                        <span>-19<sup>.29%</sup></span>
+                  </div>
+                  <div class="sparkline-wrapper">
+                    Sparkline Here(NO)
+                  </div>
+                </div><!-- .widget-canvas -->
+            </section>
+        </div>
+        </div>
+        <div class = 'span3 grey-bg'>
+          <div class = 'widget-inner widget-size-1x1'>
+            <div class="ui-widget-header ">
+              <i class="icon-bar"></i>
+              <h>Visitors</h>
+          </div>
+            <section class="widget-body ">
+              <div class="widget-canvas ass">
+              <div class=" t-size-x72 represent ">
+                <span >3,152</span>
+              </div>
+                <div class=" t-size-x30">Last 3 Hours</div>
+                   <div class=" t-size-x44">
+                </div>
+            </div><!-- .widget-canvas -->
+          </section>
+        </div>
+        </div>
+        <div class = 'span3 grey-bg'>
+          <div class="widget-inner  widget-size-1x1">
+  
+          <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>Up Time</h>
+          </div> 
+          <a class="led success" href="#"></a>
+          
+          <section class="widget-body monitoring-widget">
+          <div class="widget-canvas">
+            <div class="status positive text-center">
+            <div class="sparkline-wrapper">
+                Sparkline Here(YES)
+              </div>
+            </div>
+            <div class="server-times">
+              <div class="server-time">
+                <div class="label t-size-x10">Last downtime</div>
+                <div class="t-size-x24 ">12d 22h </div>
+              </div>
+              <div class="server-time">
+                <div class="label t-size-x10">Response time</div>
+                <div class="t-size-x24 ">181ms</div>
+              </div>
+            </div>
+            </div><!-- .widget-canvas -->
+          </section>    
+        </div>
+        </div>
+      </div>
+
+      <div class = 'row show-grid'>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>Mixed Charts</h>
+          </div >
+          <div id = 'mixedChart'>  
+            
+          </div>
+        </div>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>Bar Chart</h>
+          </div >
+          <div id = 'barChart'>  
+            
+          </div>
+        </div>
+
+      </div>
+      <div class = 'row show-grid'>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>Area Chart</h>
+          </div >
+          <div id = 'areaChart'>  
+            
+          </div>
+        </div>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>grouped Bar Chart/h>
+          </div >
+          <div id = 'groupedBarChart'>  
+            
+          </div>
+        </div>
+
+      </div>
+      <div class = 'row show-grid'>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Example of Sparklines</h>
+          </div >
+          <div id = 'sparklines'>  
+            <ul>
+              <li id="serie1">Serie1</li>
+              <li id="serie2">Serie2</li> 
+              <li id="serie3"> Serie3</li>
+            </ul>
+          </div>
+        </div>
+        <div class = 'span6 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Example of Sparklines</h>
+          </div >
+          <div id = 'sparklines'>  
+            <ul>
+              <li id="serie4">Serie1</li>
+              <li id="serie5">Serie2</li> 
+              <li id="serie6"> Serie3</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class = 'row show-grid'>
+        <div class = 'span12 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>PunchCard</h>
+          </div >
+          <div id = 'punchcard1'>  
+            
+          </div>
+        </div>
+      </div>
+      <div class = 'row show-grid'>
+        <div class = 'span12 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-bar"></i>
+            <h>Data Table</h>
+          </div >
+          <div id = 'dataTable'>  
+            
+          </div>
+        </div>
+      </div>
+      <div class = 'row show-grid'>
+        <div class = 'span12 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Funnel</h>
+          </div >
+          <div id = 'funnelChart'>  
+            
+          </div>
+        </div>
+      </div>
+
+      <div class = 'row show-grid'>
+        <div class = 'span12 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Stacked Chart</h>
+          </div >
+          <div id = 'stackedChart'>  
+            
+          </div>
+        </div>
+      </div>
+      <div class = 'row show-grid'>
+        <div class = 'span12 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Stacked Bar Chart</h>
+          </div >
+          <div id = 'stackedbar'>  
+            
+          </div>
+        </div>
+      </div>
+      <div class = 'row show-grid'>
+        <div class = 'span12 grey-bg'>
+            <div class="ui-widget-header ">
+            <i class="icon-picture"></i>
+            <h>Pie Chart</h>
+          </div >
+          <div id = 'pie'>  
+            
+          </div>
+        </div>
+      </div>
+ 
+    </div>
+  	<!--FOOTER-->
+    <footer id='footer' class="footer">
+    </footer>
+
+    <script type="text/javascript">
+       
+  </script>
+  <!--Remove this part and set it in a template-->
+  
+
+<script type="text/javascript">
+$( document ).ready(function() {
+  var data1 = [ [ 3625200000 , 1214] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 125] , [ 3639600000 , 1850] , [ 3643200000 , 789] , [ 3646800000 , 458] , [ 3650400000 , 999] , [ 3654000000 , 775] , [ 3657600000 , 328] , [ 3661200000 , 389],[3664800000,552],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,635],[3686400000,985],[3690000000,777],[3693600000,1000],[3697200000,989],[3700800000,1245],[3704400000,522],[3708000000,300]];
+
+          var data2 = [ [ 3625200000 , 145] , [ 3628800000 , 285] , [ 3632400000 , 455] , [ 3636000000 , 15] , [ 3639600000 , 510] , [ 3643200000 , 89] , [ 3646800000 , 58] , [ 3650400000 , 99] , [ 3654000000 , 75] , [ 3657600000 , 28] , [ 3661200000 , 39],[3664800000,52],[3668400000,566],[3672000000,398],[3675600000,455],[3679200000,566],[3682800000,35],[3686400000,85],[3690000000,77],[3693600000,100],[3697200000,89],[3700800000,125],[3704400000,22],[3708000000,30]];
+
+
+          var datas = [{
+            unit:"ms",
+            key:"response Time",
+            values:data1
+          },{
+            key:"Hits",
+            values:data2
+          }]
+
+          $("#mixedChart").drawlinePlusBarWithNvd3(datas,"mixedChart");
+
+          datas = [{
+            unit:"ms",
+            key:"response Time",
+            values:data1
+          }]
+
+          $("#barChart").drawbarChartWithNvd3(datas,"barChart");
+
+          $("#areaChart").drawStackedAreaChartWithNvd3(datas,"areaChart");
+
+  
+
+          var datas =
+            [
+                {
+                    "date": "bacon",
+                    "Hits": "45",
+                    "Resp Time": "19"
+                },
+                {
+                    "date": "bazille",
+                    "Hits": "55",
+                    "Resp Time": "11"
+                },
+                {
+                    "date": "home",
+                    "Hits": "45",
+                    "Resp Time": "11"
+                },
+                {
+                    "date": "hopper",
+                    "Hits": "45",
+                    "Resp Time": "5"
+                },
+                {
+                    "date": "monet",
+                    "Hits": "45",
+                    "Resp Time": "0"
+                },
+                {
+                    "date": "picasso",
+                    "Hits": "45",
+                    "Resp Time": "11"
+                }
+            ];
+
+          $("#groupedBarChart").drawMultiBarChartWithNvd3(datas,"groupedBarChart");
+
+
+          data = [
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 45, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0, 0]
+  ];
+  labels = ["Sunday", "Saturday", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday"];
+
+  datas = {
+    data:data,
+    labels:labels
+  }
+    $("#punchcard1").drawD3PunchCard(datas);
+
+  var data1 = ["1", "2", "3", "4", "5", "10", "9", "8", "7", "6"];
+      $("#serie1").d3BarSparkline(data1,"serie1");
+      $("#serie4").d3LineSparkline(data1,"serie4");
+
+  var data2 = ["112", "256", "345", "478", "589", "1120", "789", "874", "457", "456"];
+      $("serie2").d3BarSparkline(data2,"serie2");
+      $("serie5").d3LineSparkline(data2,"serie5");
+
+  var data3 = ["10", "2475", "453", "445", "545", "1250", "549", "821", "424", "45254"];
+      $("serie3").d3BarSparkline(data3,"serie3");
+      $("serie6").d3LineSparkline(data3,"serie6");
+
+
+
+
+});  
+</script>
+  </body>
+</html>
