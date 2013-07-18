@@ -7,12 +7,7 @@ var drawBarChart = function(datas,id){
 	var space = 10;
 	var axisSpacing = 3; // spacing between ticks
 	//--------------------------
-	var margin = {
-		top: 20,
-		right: 50,
-		bottom: 50,
-		left: 50
-	}; 
+	var margin = {top: 20, right: 50, bottom: 50, left: 50};
 	
 	var width = undefined; // width - margin.left - margin.right
 	var height = undefined; // height -margin.top - margin.bottom
@@ -66,31 +61,31 @@ var drawBarChart = function(datas,id){
 
 	barWidth = Math.min(width / (datas[0].values).length - space, 50);
 
-	x = d3.time.scale().range([0, width]);
-	yL = d3.scale.linear().range([height, 0]);
-
+	x = d3.time.scale()
+		.range([0, width])
+		.domain([
+			new Date(d3.min(datas[0].values, function(d) { return d[0];}) - 3600000), 
+			d3.time.day.offset(new Date(d3.max(datas[0].values, function(d) { return d[0]; }) + 3600000), 0)
+		]);
+	
+	yL = d3.scale.linear()
+		.range([height, 0])
+		.domain([0, d3.max(datas[0].values, function(d) {	return d[1];})]);
 	/*var minValue =  // find min and max value of the two ranges and use them for the x domain below
 			  ,maxValeu =*/
 
-	x.domain([
-		new Date(d3.min(datas[0].values, function(d) { return d[0];}) - 3600000), 
-		d3.time.day.offset(new Date(d3.max(datas[0].values, function(d) { return d[0]; }) + 3600000), 0)
-	]);
-
-	yL.domain([0, d3.max(datas[0].values, function(d) {	return d[1];})])
-
-	xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format.utc("%d/%m-%H:%M")).ticks(d3.time.hours, axisSpacing);
-	yLeftAxis = d3.svg.axis().scale(yL).orient("left").ticks(5);
-
+	xAxis = d3.svg.axis().scale(x)
+		.orient("bottom")
+		.tickFormat(d3.time.format.utc("%d/%m-%H:%M"))
+		.ticks(d3.time.hours, axisSpacing);
+	
+	yLeftAxis = d3.svg.axis().scale(yL)
+		.orient("left")
+		.ticks(5);
 
 	var toolTip = d3.select("#" + id).append("div")
 		.attr("class", "tooltip")
 		.style("opacity", 1e-6);
-
-	var parseToDate = function(d) {
-		var format = d3.time.format.utc("%d/%m-%H:%M");
-		return format(new Date(d[0]));
-	};
 
 	var parseToDate = function(d) {
 		var format = d3.time.format.utc("%d/%m-%H:%M");
