@@ -23,9 +23,9 @@ import com.kleegroup.analytica.server.ServerManager;
 
 @Path("/home")
 public class HomeServices {
-	private final String dTimeTo = "NOW+10h";
-	private final String dTimeFrom = "NOW-2h";
-	private final String dTimeDim = "Hour";
+	private final String dTimeTo = "NOW+6h";
+	private final String dTimeFrom = "NOW-8h";
+	private final String dTimeDim = "Minute";
 	private final String dDatas = "duration:mean";
 	private final String dDatasMult = "duration:count;duration:mean";
 
@@ -89,9 +89,18 @@ public class HomeServices {
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCategories() {
-
 		return gson.toJson(cubeManager.getCategoryDictionary().getAllRootCategories());
 	}
+
+	//	@GET
+	//	@Path("/bollinger/{category}")
+	//	@Produces(MediaType.APPLICATION_JSON)
+	//	public String getBollingerBands(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatasMult) @QueryParam("datas") final String datas) {
+	//		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
+	//		final Map<String, List<DataPoint>> pointsMap = utils.loadBollingerBands(result, datas);
+	//
+	//		return gson.toJson(pointsMap);
+	//	}
 
 	@GET
 	@Path("/stackedDatas/{category}")
@@ -126,4 +135,5 @@ public class HomeServices {
 		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
 		return gson.toJson(utils.getPunchCardFakeDatas(result, datas));
 	}
+
 }

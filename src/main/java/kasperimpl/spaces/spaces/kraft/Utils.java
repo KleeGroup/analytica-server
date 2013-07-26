@@ -13,6 +13,9 @@ import java.util.Map;
 
 import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
+import anomalies.performance.BollingerBand;
+import anomalies.performance.PerformanceManager;
+import anomalies.signal.Signal;
 
 import com.kleegroup.analytica.hcube.cube.HCounterType;
 import com.kleegroup.analytica.hcube.cube.HCube;
@@ -44,6 +47,8 @@ public final class Utils {
 	 * @return La liste de poins retravaillée.
 	 */
 	public List<DataPoint> loadDataPointsMonoSerie(final HResult result, final String datas) {
+		final PerformanceManager manager = new PerformanceManager(1000, 0, 2);
+		final Signal signal = new Signal();
 		Assertion.notNull(result);
 		// ---------------------------------------------------------------------
 		final HMetricKey metricKey = new HMetricKey("duration", true);
@@ -60,6 +65,7 @@ public final class Utils {
 
 					if (dataPoint.getValue() != null) {
 						dataPoints.add(dataPoint);
+						manager.checkMeasure(dataPoint, signal);
 					}
 				}
 			}
@@ -384,5 +390,46 @@ public final class Utils {
 			}
 		}
 		return punchcard;
+	}
+
+	/**
+	 * @param result
+	 * @param datas
+	 * @return
+	 */
+	public Map<String, List<DataPoint>> loadBollingerBands(final HResult result, final String datas) {
+
+		final PerformanceManager manager = new PerformanceManager(1000, 0, 2);
+		final Signal signal = new Signal();
+		Assertion.notNull(result);
+		// ---------------------------------------------------------------------
+		final HMetricKey metricKey = new HMetricKey("duration", true);
+		final HCounterType counterType = HCounterType.mean;
+		final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
+
+		for (final HCategory category : result.getQuery().getAllCategories()) {
+			for (final HCube cube : result.getSerie(category).getCubes()) {
+				final HMetric metric = cube.getMetric(metricKey);
+
+				if (metric != null) {
+					final double value = metric.get(counterType);
+					final DataPoint dataPoint = new DataPoint(cube.getKey().getTime().getValue(), value);
+
+					if (dataPoint.getValue() != null) {
+						dataPoints.add(dataPoint);
+						manager.checkMeasure(dataPoint, signal);
+					}
+				}
+			}
+		}
+
+		final BollingerBand bollingerBands = new BollingerBand(signal);
+		final Map<String, List<DataPoint>> pointsMap = new HashMap<String, List<DataPoint>>();
+		pointsMap.put("upperBand", bollingerBands.getUpperBand().getPoints());
+		pointsMap.put("lowerBand", bollingerBands.getLowerBand().getPoints());
+		pointsMap.put("meanBand", bollingerBands.getMeanMiddleBand().getPoints());
+		pointsMap.put("real", dataPoints);
+
+		return pointsMap;
 	}
 }
