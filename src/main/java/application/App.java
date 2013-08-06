@@ -3,10 +3,10 @@ package application;
 import java.util.Scanner;
 
 import kasper.kernel.Home;
-import application.museum.Museum;
-import application.museum.PageListener;
 
 import com.kleegroup.analytica.core.KProcess;
+import com.kleegroup.analytica.museum.Museum;
+import com.kleegroup.analytica.museum.PageListener;
 import com.kleegroup.analytica.server.ServerManager;
 
 /**

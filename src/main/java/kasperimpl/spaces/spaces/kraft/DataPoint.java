@@ -14,7 +14,7 @@ public final class DataPoint {
 	private final long x;
 	private final Double y;
 
-	DataPoint(final Date date, final double value) {
+	public DataPoint(final Date date, final double value) {
 		Assertion.notNull(date);
 		//---------------------------------------------------------------------
 		this.date = date;

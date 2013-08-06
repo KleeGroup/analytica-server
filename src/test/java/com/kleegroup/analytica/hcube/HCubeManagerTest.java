@@ -46,6 +46,8 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
+import com.kleegroup.analytica.museum.Museum;
+import com.kleegroup.analytica.museum.PageListener;
 
 /**
  * Cas de Test JUNIT de l'API Analytics.
@@ -502,5 +504,20 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		Assert.assertEquals(1, durationMetric.getClusteredValues().get(100d), 5);
 		Assert.assertEquals(1, durationMetric.getClusteredValues().get(500d), 1);
 		Assert.assertEquals(1, durationMetric.getClusteredValues().get(20000d), 1);
+	}
+
+	@Test
+	//On charge 10 jours à 50 visites par jourDURATION
+	public void testMuseum() {
+		final int days = 10;
+		final int visitsByDay = 50;
+		new Museum(new PageListener() {
+
+			@Override
+			public void onPage(KProcess process) {
+				hcubeManager.push(process);
+			}
+		}).load(days, visitsByDay);
+
 	}
 }
