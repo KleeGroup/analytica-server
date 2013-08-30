@@ -46,6 +46,10 @@ public final class KProcess {
 	 */
 	public static final String DURATION = "duration";
 	/**
+	 * Mesure de type durée.  
+	 */
+	public static final String SUB_DURATION = "sub-duration";
+	/**
 	 * REGEX décrivant les règles du type de process. (exemples : SQL, MAIL, REQUEST)
 	 */
 	public static final Pattern TYPE_REGEX = Pattern.compile("[A-Z][A-Z0-9_]*");

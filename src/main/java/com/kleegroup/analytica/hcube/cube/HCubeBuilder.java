@@ -41,7 +41,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 * Constructeur.
 	 * @param cubeKey Identifiant du cube
 	 */
-	public HCubeBuilder(HCubeKey cubeKey) {
+	public HCubeBuilder(final HCubeKey cubeKey) {
 		Assertion.notNull(cubeKey);
 		//---------------------------------------------------------------------
 		this.cubeKey = cubeKey;

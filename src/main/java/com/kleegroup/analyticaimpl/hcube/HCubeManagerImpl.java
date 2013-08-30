@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import kasper.kernel.lang.Option;
 import kasper.kernel.util.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
@@ -38,32 +39,40 @@ import com.kleegroup.analytica.hcube.result.HResult;
 public final class HCubeManagerImpl implements HCubeManager {
 	private final ProcessEncoder processEncoder;
 	private final CubeStorePlugin cubeStorePlugin;
-	private final HCategoryDictionary categoryDictionary = new HCategoryDictionaryImpl() ;
+	private final HCategoryDictionary categoryDictionary = new HCategoryDictionaryImpl();
+	private final Option<ProcessStatsPlugin> processStatsPlugin;
 
 	/**
 	 * Constructeur.
 	 * @param cubeStorePlugin Plugin de stockage des Cubes
+	 * @param processStatsPlugin Plugin de statistique des process
 	 */
 	@Inject
-	public HCubeManagerImpl(final CubeStorePlugin cubeStorePlugin) {
+	public HCubeManagerImpl(final CubeStorePlugin cubeStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin) {
 		Assertion.notNull(cubeStorePlugin);
+		Assertion.notNull(processStatsPlugin);
 		//-----------------------------------------------------------------
-		this.processEncoder = new ProcessEncoder();
+		processEncoder = new ProcessEncoder();
 		this.cubeStorePlugin = cubeStorePlugin;
+		//this.processStatsPlugin = Option.option(processStatsPlugin);
+		this.processStatsPlugin = processStatsPlugin;
 	}
 
 	/** {@inheritDoc} */
 	public void push(final KProcess process) {
-		List<HCube> cubes = processEncoder.encode(process);
+		final List<HCube> cubes = processEncoder.encode(process);
+		if (processStatsPlugin.isDefined()) {
+			processStatsPlugin.get().merge(process);
+		}
 		//---Alimentation du dictionnaire des catégories puis des cubes
-		for (HCube cube : cubes) {
+		for (final HCube cube : cubes) {
 			categoryDictionary.add(cube.getKey().getCategory());
 			cubeStorePlugin.merge(cube);
 		}
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(HQuery query) {
+	public HResult execute(final HQuery query) {
 		return new HResult(query, cubeStorePlugin.findAll(query));
 	}
 
@@ -83,5 +92,5 @@ public final class HCubeManagerImpl implements HCubeManager {
 	public HQueryBuilder createQueryBuilder() {
 		return new HQueryBuilder(this);
 	}
-	
+
 }

@@ -48,6 +48,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 
 	private final long start;
 	private Double durationMs = null;
+	private final Double subDurationMs = null;
 	private final List<KProcess> subProcesses;
 	private final KProcessBuilder parent;
 
@@ -110,7 +111,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param mName Nom de la mesure
 	 * @param mValue  Valeur à incrémenter
 	 */
-	public KProcessBuilder incMeasure(final String mName, double mValue) {
+	public KProcessBuilder incMeasure(final String mName, final double mValue) {
 		Assertion.notNull(mName);
 		//---------------------------------------------------------------------
 		final Double lastmValue = measures.get(mName);
@@ -123,7 +124,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param mName Nom de la mesure
 	 * @param mValue  Valeur à incrémenter
 	 */
-	public KProcessBuilder setMeasure(final String mName, double mValue) {
+	public KProcessBuilder setMeasure(final String mName, final double mValue) {
 		Assertion.notNull(mName);
 		//---------------------------------------------------------------------
 		measures.put(mName, mValue);
@@ -135,7 +136,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param mdName Nom de la métadonnée
 	 * @param mdValue  Valeur de la métadonnée
 	 */
-	public KProcessBuilder setMetaData(final String mdName, String mdValue) {
+	public KProcessBuilder setMetaData(final String mdName, final String mdValue) {
 		Assertion.notNull(mdName);
 		Assertion.notNull(mdValue);
 		//---------------------------------------------------------------------
@@ -159,7 +160,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	public KProcessBuilder endSubProcess() {
 		Assertion.notNull(parent);
 		//---------------------------------------------------------------------
-		parent.addSubProcess(this.build());
+		parent.addSubProcess(build());
 		return parent;
 	}
 
@@ -171,6 +172,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 		Assertion.notNull(process);
 		//---------------------------------------------------------------------
 		subProcesses.add(process);
+		incMeasure(KProcess.SUB_DURATION, process.getDuration());
 		return this;
 	}
 

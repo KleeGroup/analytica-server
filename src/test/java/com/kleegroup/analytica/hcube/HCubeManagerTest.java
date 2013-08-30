@@ -60,6 +60,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 	private static final HMetricKey POIDS = new HMetricKey("POIDS", false);
 	private static final HMetricKey DURATION = new HMetricKey(KProcess.DURATION, true);
 
+	private static final String PROCESS_REQUEST = "REQUEST";
 	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
 
@@ -315,6 +316,92 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		assertMetricEquals(sqlMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 	}
 
+	/**
+	 * Test composite à 3 niveaux
+	 * - d'un processus maitre : //requete/get articles
+	 * - consititué de n sous-processus : //services/get article
+	 * - consititué de n sous-processus : //sql/select article
+	 * les sous processus possèdent deux mesures
+	 *  - Poids des articles (25 kg) par sous processus
+	 *  - Prix des articles 10€
+	 */
+	@Test
+	public void testDeepCompositeProcess() throws ParseException {
+		//for (int i = 0; i < 60 * 24; i++) {
+
+		final int nbService = 5;
+		final int nbSelect = 3;
+		final int dureeSelect = 100;
+		final int dureeService = 150 + nbSelect * dureeSelect;
+		final int dureeRequete = 75 + nbService * dureeService;
+
+		final KProcessBuilder kProcessBuilder = new KProcessBuilder(date, dureeRequete, PROCESS_REQUEST, "articles.html");
+		Date selectDate = date;
+		for (int i = 0; i < nbService; i++) {
+			selectDate = new DateBuilder(selectDate).addHours(1).toDateTime();
+			final KProcessBuilder serviceProcessBuilder = kProcessBuilder.beginSubProcess(selectDate, dureeService, PROCESS_SERVICES, "get articles");//
+			for (int j = 0; j < nbSelect; j++) {
+				selectDate = new DateBuilder(selectDate).addMinutes(1).toDateTime();
+				serviceProcessBuilder//
+						.beginSubProcess(selectDate, dureeSelect, PROCESS_SQL, "select article")//
+						.incMeasure(POIDS.id(), 25)//
+						.incMeasure(MONTANT.id(), price)//
+						.endSubProcess();
+			}
+			serviceProcessBuilder.endSubProcess();
+		}
+
+		final KProcess process = kProcessBuilder.build();
+
+		hcubeManager.push(process);
+		//---------------------------------------------------------------------
+		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+				.on(HTimeDimension.Day)//
+				.from(date)//
+				.to(date)//
+				.with("SQL")//
+				.build();
+		final HCategory sqlCategory = new HCategory("SQL");
+		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		Assert.assertEquals(1, cubes.size());
+		//
+		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
+		assertMetricEquals(montantMetric, nbSelect * nbService, price * nbSelect * nbService, price, price, price);
+		//Durée
+		HMetric durationMetric = cubes.get(0).getMetric(DURATION);
+		assertMetricEquals(durationMetric, nbSelect * nbService, nbService * nbSelect * 100, 100, 100, 100);
+		//---------------------------------------------------------------------
+		final HQuery hourQuery = hcubeManager.createQueryBuilder()//
+				.on(HTimeDimension.Hour)//
+				.from(date)//
+				.to(new DateBuilder(date).addDays(1).build())//
+				.with("SQL")//
+				.build();
+		cubes = hcubeManager.execute(hourQuery).getSerie(sqlCategory).getCubes();
+		Assert.assertEquals(14, cubes.size());
+		//cube 0==>10h00, 1==>11h etc
+		montantMetric = cubes.get(5).getMetric(MONTANT);
+		assertMetricEquals(montantMetric, nbSelect, price * nbSelect, price, price, price);
+		//---------------------------------------------------------------------
+		final HQuery dayServiceslQuery = hcubeManager.createQueryBuilder()//
+				.on(HTimeDimension.Day)//
+				.from(date)//
+				.to(date)//
+				.with("SERVICES")//
+				.build();
+
+		final HCategory servicesCategory = new HCategory("SERVICES", new String[0]);
+
+		cubes = hcubeManager.execute(dayServiceslQuery).getSerie(servicesCategory).getCubes();
+		Assert.assertEquals(1, cubes.size());
+		//Vérification de la durée du process principal
+		durationMetric = cubes.get(0).getMetric(DURATION);
+		assertMetricEquals(durationMetric, nbService, nbService * dureeService, dureeService, dureeService, dureeService);
+		//Vérification de la durée des sous-process
+		final HMetric sqlMetric = cubes.get(0).getMetric(new HMetricKey(PROCESS_SQL, true));
+		assertMetricEquals(sqlMetric, nbService * nbSelect, nbService * nbSelect * 100, 100, 100, 100);
+	}
+
 	@Test
 	public void testSimpleProcessWithMultiIncMeasure() {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
@@ -514,7 +601,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		new Museum(new PageListener() {
 
 			@Override
-			public void onPage(KProcess process) {
+			public void onPage(final KProcess process) {
 				hcubeManager.push(process);
 			}
 		}).load(days, visitsByDay);
