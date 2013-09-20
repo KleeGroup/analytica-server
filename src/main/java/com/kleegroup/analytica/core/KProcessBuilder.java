@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kasper.kernel.lang.Builder;
-import kasper.kernel.util.Assertion;
-
 /**
  * Builder permettant de contruire un processus.
  * Il y a deux modes de création.
@@ -35,7 +32,7 @@ import kasper.kernel.util.Assertion;
  * @author pchretien
  * @version $Id: KProcessBuilder.java,v 1.18 2012/11/08 17:06:27 pchretien Exp $
  */
-public final class KProcessBuilder implements Builder<KProcess> {
+public final class KProcessBuilder {
 	private final String type;
 	private final String[] names;
 	private final Date startDate;
@@ -48,7 +45,6 @@ public final class KProcessBuilder implements Builder<KProcess> {
 
 	private final long start;
 	private Double durationMs = null;
-	private final Double subDurationMs = null;
 	private final List<KProcess> subProcesses;
 	private final KProcessBuilder parent;
 
@@ -57,7 +53,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * La date de début du processus est implicitement la date actuelle
 	 * La durée du processus sera obtenue lors de l'appel à la méthode build().
 	 * @param type Type du processus
-	 * @param name Nom du processus
+	 * @param names sous noms du processus
 	 */
 	public KProcessBuilder(final String type, final String... names) {
 		this(null, new Date(), type, names);
@@ -68,7 +64,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * @param type Type du processus
 	 * @param names Nom du processus
 	 * @param startDate Date de début processus
-	 * @param duration Durée du processus (Millisecondes)
+	 * @param durationMs Durée du processus (Millisecondes)
 	 */
 	public KProcessBuilder(final Date startDate, final double durationMs, final String type, final String... names) {
 		this(null, startDate, type, names);
@@ -110,6 +106,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * Si la mesure est nouvelle, elle est automatiquement créée avec la valeur
 	 * @param mName Nom de la mesure
 	 * @param mValue  Valeur à incrémenter
+	 * @return Builder
 	 */
 	public KProcessBuilder incMeasure(final String mName, final double mValue) {
 		Assertion.notNull(mName);
@@ -123,6 +120,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * Mise à jour d'une mesure.
 	 * @param mName Nom de la mesure
 	 * @param mValue  Valeur à incrémenter
+	 * @return Builder
 	 */
 	public KProcessBuilder setMeasure(final String mName, final double mValue) {
 		Assertion.notNull(mName);
@@ -135,6 +133,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	 * Mise à jour d'une metadonnée.
 	 * @param mdName Nom de la métadonnée
 	 * @param mdValue  Valeur de la métadonnée
+	 * @return Builder
 	 */
 	public KProcessBuilder setMetaData(final String mdName, final String mdValue) {
 		Assertion.notNull(mdName);
@@ -146,16 +145,20 @@ public final class KProcessBuilder implements Builder<KProcess> {
 
 	/**
 	 * Ajout d'un sous processus.
-	 * @param process Sous-Processus à ajouter
+	 * @param subStartDate Date de début
+	 * @param subDurationMs Durée du sous process en Ms
+	 * @param subType Type du sous process
+	 * @param subNames Noms du sous process
+	 * @return Builder
 	 */
-	public KProcessBuilder beginSubProcess(final Date startDate, final double durationMs, final String type, final String... names) {
-		return new KProcessBuilder(this, startDate, durationMs, type, names);
+	public KProcessBuilder beginSubProcess(final Date subStartDate, final double subDurationMs, final String subType, final String... subNames) {
+		return new KProcessBuilder(this, subStartDate, subDurationMs, subType, subNames);
 	}
 
 	/**
 	 * Fin d'un sous processus.
 	 * Le sous processus est automatiquement ajouté au processus parent.
-	 * @param process Sous-Processus parent
+	 * @return Builder
 	 */
 	public KProcessBuilder endSubProcess() {
 		Assertion.notNull(parent);
@@ -167,6 +170,7 @@ public final class KProcessBuilder implements Builder<KProcess> {
 	/**
 	 * Ajout d'un sous processus.
 	 * @param process Sous-Processus à ajouter
+	 * @return Builder
 	 */
 	public KProcessBuilder addSubProcess(final KProcess process) {
 		Assertion.notNull(process);
