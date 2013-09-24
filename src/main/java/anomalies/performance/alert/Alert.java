@@ -40,6 +40,6 @@ public class Alert implements IAlert {
 		final String subject = "[Analytica-Anomaly] Anomaly detected";
 		final String to = "stephane.tatchum@kleegroup.com";
 		final String from = "stephane.tatchum@kleegroup.com";
-		SendMail.send(from, to, subject, msg);
+		//SendMail.send(from, to, subject, msg);
 	}
 }
