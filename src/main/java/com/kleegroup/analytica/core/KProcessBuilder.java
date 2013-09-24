@@ -86,9 +86,9 @@ public final class KProcessBuilder {
 			throw new IllegalArgumentException("process type must match regex :" + KProcess.TYPE_REGEX);
 		}
 		//---------------------------------------------------------------------
-		measures = new HashMap<String, Double>();
-		metaDatas = new HashMap<String, String>();
-		subProcesses = new ArrayList<KProcess>();
+		measures = new HashMap<>();
+		metaDatas = new HashMap<>();
+		subProcesses = new ArrayList<>();
 		this.startDate = startDate;
 		start = startDate.getTime();
 		this.type = type;

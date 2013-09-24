@@ -35,7 +35,7 @@ import com.kleegroup.analytica.hcube.dimension.HCubeKey;
  */
 public final class HCubeBuilder implements Builder<HCube> {
 	private final HCubeKey cubeKey;
-	private final Map<HMetricKey, HMetricBuilder> metrics = new HashMap<HMetricKey, HMetricBuilder>();
+	private final Map<HMetricKey, HMetricBuilder> metrics = new HashMap<>();
 
 	/**
 	 * Constructeur.
