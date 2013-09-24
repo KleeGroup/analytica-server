@@ -17,12 +17,8 @@
  */
 package com.kleegroup.analytica.hcube.query;
 
-import java.util.Collections;
-import java.util.Set;
-
 import kasper.kernel.util.Assertion;
 
-import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 
 /**
@@ -44,14 +40,14 @@ final class HCategorySelection {
 		selectedCategory = category;
 	}
 
-	Set<HCategory> getAllCategories(final HCategoryDictionary categoryDictionary) {
-		Assertion.notNull(categoryDictionary);
-		// ---------------------------------------------------------------------
-		if (children) {
-			return categoryDictionary.getAllSubCategories(selectedCategory);
-		} else {
-			return Collections.singleton(selectedCategory);
-		}
+	HCategory getCategory() {
+		return selectedCategory;
+
+	}
+
+	boolean hasChildren() {
+		return children;
+
 	}
 
 	/** {@inheritDoc} */

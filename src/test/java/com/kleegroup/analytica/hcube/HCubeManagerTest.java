@@ -138,9 +138,11 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 
 		//final HCategory sqlCategory = new HCategory(PROCESS_SQL);
-		final Set<HCategory> sqlCategories = daySqlQuery.getAllCategories(hcubeManager.getCategoryDictionary());
-		Assert.assertEquals(2, sqlCategories.size());
 		final HResult result = hcubeManager.execute(daySqlQuery);
+
+		final Set<HCategory> sqlCategories = result.getAllCategories();
+		Assert.assertEquals(2, sqlCategories.size());
+
 		for (final HCategory category : sqlCategories) {
 			final List<HCube> cubes = result.getSerie(category).getCubes();
 			Assert.assertEquals(1, cubes.size());
@@ -180,11 +182,12 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		System.out.println(daySqlQuery + "Requete");
 		final String[] sub = { "select article" };
 		final HCategory sqlCategory = new HCategory(PROCESS_SQL, sub);
-		final Set<HCategory> sqlCategories = daySqlQuery.getAllCategories(hcubeManager.getCategoryDictionary());
+		final HResult result = hcubeManager.execute(daySqlQuery);
+
+		final Set<HCategory> sqlCategories = result.getAllCategories();
 		System.out.println(sqlCategory + "-----------");
 		System.out.println(sqlCategories);
 		Assert.assertEquals(2, sqlCategories.size());
-		final HResult result = hcubeManager.execute(daySqlQuery);
 		for (final HCategory category : sqlCategories) {
 			final List<HCube> cubes = result.getSerie(category).getCubes();
 			Assert.assertEquals(1, cubes.size());

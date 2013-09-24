@@ -1,5 +1,6 @@
 package com.kleegroup.analytica.hcube.query;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +34,14 @@ public final class HQuery {
 	 * @return
 	 */
 	public Set<HCategory> getAllCategories(final HCategoryDictionary categoryDictionary) {
-		return categorySelection.getAllCategories(categoryDictionary);
+		Assertion.notNull(categoryDictionary);
+		// ---------------------------------------------------------------------
+		if (categorySelection.hasChildren()) {
+			return categoryDictionary.getAllSubCategories(categorySelection.getCategory());
+		} else {
+			return Collections.singleton(categorySelection.getCategory());
+		}
+
 	}
 
 	//-----------------------When----------------------------------------------
