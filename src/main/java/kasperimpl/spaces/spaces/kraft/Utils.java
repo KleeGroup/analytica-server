@@ -168,17 +168,19 @@ public final class Utils {
 	 * @param categories
 	 * @return Construit une Hresult à partir des infos fournies
 	 */
-	public HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
-		final HQuery query = createQuery(timeFrom, timeTo, timeDimension, categories, children);
+	//	public HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
+	//		final HQuery query = createQuery(timeFrom, timeTo, timeDimension, categories, children);
+	//	}
 
-		return serverManager.execute(query);
-	}
+	public HQuery createQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
+		final HTimeDimension hTimeDimensiontimeDim = HTimeDimension.valueOf(timeDimension);
+		final Date minValue = readDate(timeFrom, hTimeDimensiontimeDim);
+		final Date maxValue = readDate(timeTo, hTimeDimensiontimeDim);
 
-	private HQuery createQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
-		final HTimeDimension timeDim = HTimeDimension.valueOf(timeDimension);
-		final Date minValue = readDate(timeFrom, timeDim);
-		final Date maxValue = readDate(timeTo, timeDim);
-		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder().on(timeDim).from(minValue).to(maxValue);
+		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder()//
+				.on(hTimeDimensiontimeDim)//
+				.from(minValue)//
+				.to(maxValue);
 		// @formatter:off
 		if(children){
 			queryBuilder.withChildren(categories);
