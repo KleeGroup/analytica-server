@@ -85,7 +85,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 */
 	public HCube build() {
 		//---------------------------------------------------------------------
-		final List<HMetric> list = new ArrayList<HMetric>(metrics.size());
+		final List<HMetric> list = new ArrayList<>(metrics.size());
 		for (final HMetricBuilder metricBuilder : metrics.values()) {
 			list.add(metricBuilder.build());
 		}
