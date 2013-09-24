@@ -72,10 +72,10 @@ public final class KProcess {
 			throw new NullPointerException("subTypes of process are required");
 		}
 		if (!TYPE_REGEX.matcher(type).matches()) {
-			throw new NullPointerException("process type must match regex :" + TYPE_REGEX);
+			throw new IllegalArgumentException("process type must match regex :" + TYPE_REGEX);
 		}
 		if (!measures.containsKey(DURATION)) {
-			throw new NullPointerException("measures must contain DURATION");
+			throw new IllegalArgumentException("measures must contain DURATION");
 		}
 		//---------------------------------------------------------------------
 		this.type = type;

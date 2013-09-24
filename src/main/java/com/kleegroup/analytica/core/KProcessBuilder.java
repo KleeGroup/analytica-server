@@ -83,7 +83,7 @@ public final class KProcessBuilder {
 			throw new NullPointerException("startDate is required");
 		}
 		if (!KProcess.TYPE_REGEX.matcher(type).matches()) {
-			throw new NullPointerException("process type must match regex :" + KProcess.TYPE_REGEX);
+			throw new IllegalArgumentException("process type must match regex :" + KProcess.TYPE_REGEX);
 		}
 		//---------------------------------------------------------------------
 		measures = new HashMap<String, Double>();
