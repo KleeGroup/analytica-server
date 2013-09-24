@@ -26,13 +26,14 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Un process est un événement ayant 
- * - un type 
- * - un nom
- * - une date de début 
- * - une liste de sous process
- * - une durée (cf.mesures)
- * - une liste de mesures dont obligatoirement une mesure de type 'duration'
+ * A process is an event with
+ * - a category defined by 
+ * 		--a type 
+ * 		--an array of subTypes	
+ * - a start date
+ * - a list of sub processes
+ * - a duration (cf.measures)
+ * - a list of measures  with a DURATION  measure 
  * - une liste de métadonnées
  * 
  * @author pchretien
@@ -53,7 +54,7 @@ public final class KProcess {
 	public static final Pattern TYPE_REGEX = Pattern.compile("[A-Z][A-Z0-9_]*");
 
 	private final String type;
-	private final String[] names;
+	private final String[] subTypes;
 	private final Date startDate;
 
 	private final Map<String, Double> measures;
@@ -63,14 +64,22 @@ public final class KProcess {
 	/*
 	 * Le constructeur est package car il faut passer par le builder.
 	 */
-	KProcess(final String type, final String[] names, final Date startDate, final Map<String, Double> measures, final Map<String, String> metaDatas, final List<KProcess> subProcesses) {
-		Assertion.notEmpty(type);
-		Assertion.notNull(names);
-		Assertion.precondition(TYPE_REGEX.matcher(type).matches(), "le type du processus ne respecte pas la regex {0}", TYPE_REGEX);
-		Assertion.precondition(measures.containsKey(DURATION), "durée est obligatoire");
+	KProcess(final String type, final String[] subTypes, final Date startDate, final Map<String, Double> measures, final Map<String, String> metaDatas, final List<KProcess> subProcesses) {
+		if (type == null) {
+			throw new NullPointerException("type of process is required");
+		}
+		if (subTypes == null) {
+			throw new NullPointerException("subTypes of process are required");
+		}
+		if (!TYPE_REGEX.matcher(type).matches()) {
+			throw new NullPointerException("process type must match regex :" + TYPE_REGEX);
+		}
+		if (!measures.containsKey(DURATION)) {
+			throw new NullPointerException("measures must contain DURATION");
+		}
 		//---------------------------------------------------------------------
 		this.type = type;
-		this.names = names;
+		this.subTypes = subTypes;
 		this.startDate = startDate;
 		this.measures = Collections.unmodifiableMap(new HashMap<String, Double>(measures));
 		this.metaDatas = Collections.unmodifiableMap(new HashMap<String, String>(metaDatas));
@@ -88,46 +97,32 @@ public final class KProcess {
 	 * @return Sous-types du processus
 	 */
 	public String[] getSubTypes() {
-		return names;
+		return subTypes;
 	}
 
-	/**
-	 * @return Durée du process
-	 */
+	/**@return Process duration */
 	public double getDuration() {
 		return measures.get(DURATION);
 	}
 
-	/**
-	 * @return Date de début du processus
-	 */
 	public Date getStartDate() {
 		return startDate;
 	}
 
-	/**
-	 * @return Liste des mesures 
-	 */
 	public Map<String, Double> getMeasures() {
 		return measures;
 	}
 
-	/**
-	 * @return Liste des meta-données 
-	 */
 	public Map<String, String> getMetaDatas() {
 		return metaDatas;
 	}
 
-	/**
-	 * @return Liste des Sous-Processus
-	 */
 	public List<KProcess> getSubProcesses() {
 		return subProcesses;
 	}
 
 	@Override
 	public String toString() {
-		return "process:{name:" + Arrays.asList(names) + "; startDate:" + startDate + "}";
+		return "process:{category:{ type:" + type + ", subTypes:" + Arrays.asList(subTypes) + "}; startDate:" + startDate + "}";
 	}
 }

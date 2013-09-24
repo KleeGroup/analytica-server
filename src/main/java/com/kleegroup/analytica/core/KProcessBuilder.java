@@ -34,7 +34,7 @@ import java.util.Map;
  */
 public final class KProcessBuilder {
 	private final String type;
-	private final String[] names;
+	private final String[] subTypes;
 	private final Date startDate;
 
 	//Tableau des mesures identifiées par leur nom. 
@@ -72,11 +72,19 @@ public final class KProcessBuilder {
 		this.durationMs = durationMs;
 	}
 
-	private KProcessBuilder(final KProcessBuilder parent, final Date startDate, final String type, final String[] names) {
-		Assertion.notEmpty(type);
-		Assertion.notNull(names);
-		Assertion.notNull(startDate);
-		Assertion.precondition(KProcess.TYPE_REGEX.matcher(type).matches(), "le type du processus ne respecte pas la regex {0}", KProcess.TYPE_REGEX);
+	private KProcessBuilder(final KProcessBuilder parent, final Date startDate, final String type, final String[] subTypes) {
+		if (type == null) {
+			throw new NullPointerException("type of process is required");
+		}
+		if (subTypes == null) {
+			throw new NullPointerException("subTypes of process are required");
+		}
+		if (startDate == null) {
+			throw new NullPointerException("startDate is required");
+		}
+		if (!KProcess.TYPE_REGEX.matcher(type).matches()) {
+			throw new NullPointerException("process type must match regex :" + KProcess.TYPE_REGEX);
+		}
 		//---------------------------------------------------------------------
 		measures = new HashMap<String, Double>();
 		metaDatas = new HashMap<String, String>();
@@ -84,7 +92,7 @@ public final class KProcessBuilder {
 		this.startDate = startDate;
 		start = startDate.getTime();
 		this.type = type;
-		this.names = names;
+		this.subTypes = subTypes;
 		this.parent = parent;
 	}
 
@@ -109,7 +117,9 @@ public final class KProcessBuilder {
 	 * @return Builder
 	 */
 	public KProcessBuilder incMeasure(final String mName, final double mValue) {
-		Assertion.notNull(mName);
+		if (mName == null) {
+			throw new NullPointerException("Measure name is required");
+		}
 		//---------------------------------------------------------------------
 		final Double lastmValue = measures.get(mName);
 		measures.put(mName, lastmValue == null ? mValue : mValue + lastmValue);
@@ -123,7 +133,9 @@ public final class KProcessBuilder {
 	 * @return Builder
 	 */
 	public KProcessBuilder setMeasure(final String mName, final double mValue) {
-		Assertion.notNull(mName);
+		if (mName == null) {
+			throw new NullPointerException("Measure name is required");
+		}
 		//---------------------------------------------------------------------
 		measures.put(mName, mValue);
 		return this;
@@ -136,8 +148,12 @@ public final class KProcessBuilder {
 	 * @return Builder
 	 */
 	public KProcessBuilder setMetaData(final String mdName, final String mdValue) {
-		Assertion.notNull(mdName);
-		Assertion.notNull(mdValue);
+		if (mdName == null) {
+			throw new NullPointerException("Metadata name is required");
+		}
+		if (mdValue == null) {
+			throw new NullPointerException("Metadata value is required");
+		}
 		//---------------------------------------------------------------------
 		metaDatas.put(mdName, mdValue);
 		return this;
@@ -161,7 +177,9 @@ public final class KProcessBuilder {
 	 * @return Builder
 	 */
 	public KProcessBuilder endSubProcess() {
-		Assertion.notNull(parent);
+		if (parent == null) {
+			throw new NullPointerException("parent is required when you close a subprocess");
+		}
 		//---------------------------------------------------------------------
 		parent.addSubProcess(build());
 		return parent;
@@ -172,11 +190,13 @@ public final class KProcessBuilder {
 	 * @param process Sous-Processus à ajouter
 	 * @return Builder
 	 */
-	public KProcessBuilder addSubProcess(final KProcess process) {
-		Assertion.notNull(process);
+	public KProcessBuilder addSubProcess(final KProcess subPocess) {
+		if (subPocess == null) {
+			throw new NullPointerException("sub process is required ");
+		}
 		//---------------------------------------------------------------------
-		subProcesses.add(process);
-		incMeasure(KProcess.SUB_DURATION, process.getDuration());
+		subProcesses.add(subPocess);
+		incMeasure(KProcess.SUB_DURATION, subPocess.getDuration());
 		return this;
 	}
 
@@ -191,6 +211,6 @@ public final class KProcessBuilder {
 		}
 		//On ajoute la mesure obligatoire : durée
 		setMeasure(KProcess.DURATION, durationMs);
-		return new KProcess(type, names, startDate, measures, metaDatas, subProcesses);
+		return new KProcess(type, subTypes, startDate, measures, metaDatas, subProcesses);
 	}
 }
