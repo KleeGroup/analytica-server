@@ -27,6 +27,7 @@ import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 
 /**
  * @author Stephane TATCHUM
@@ -63,16 +64,16 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 	@Test
 	public void testSimpleProcess() {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
-		.incMeasure(MONTANT.id(), price)//
-		.build();
+				.incMeasure(MONTANT.id(), price)//
+				.build();
 		serverManager.push(selectProcess1);
 
-		final HQuery daySqlQuery = cubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL").build();
-		Assert.assertEquals(1, daySqlQuery.getAllCategories().size());
+		Assert.assertEquals(1, daySqlQuery.getAllCategories(cubeManager.getCategoryDictionary()).size());
 
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 		final List<HCube> cubes = serverManager.execute(daySqlQuery).getSerie(processSQLCategory).getCubes();

@@ -36,23 +36,22 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 final class HCategorySelection {
 	private final HCategory selectedCategory;
 	private final boolean children;
-	private final Set<HCategory> categories;
 
-	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, final boolean children) {
-		Assertion.notNull(categoryDictionary);
+	HCategorySelection(final HCategory category, final boolean children) {
 		Assertion.notNull(category);
 		// ---------------------------------------------------------------------
 		this.children = children;
 		selectedCategory = category;
-		if (children) {
-			categories = categoryDictionary.getAllSubCategories(category);
-		} else {
-			categories = Collections.singleton(category);
-		}
 	}
 
-	Set<HCategory> getAllCategories() {
-		return categories;
+	Set<HCategory> getAllCategories(final HCategoryDictionary categoryDictionary) {
+		Assertion.notNull(categoryDictionary);
+		// ---------------------------------------------------------------------
+		if (children) {
+			return categoryDictionary.getAllSubCategories(selectedCategory);
+		} else {
+			return Collections.singleton(selectedCategory);
+		}
 	}
 
 	/** {@inheritDoc} */

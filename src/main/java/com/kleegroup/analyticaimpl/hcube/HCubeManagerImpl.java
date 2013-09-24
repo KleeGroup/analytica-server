@@ -29,7 +29,6 @@ import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
@@ -73,7 +72,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	/** {@inheritDoc} */
 	public HResult execute(final HQuery query) {
-		return new HResult(query, cubeStorePlugin.findAll(query));
+		return new HResult(query, query.getAllCategories(categoryDictionary), cubeStorePlugin.findAll(query, categoryDictionary));
 	}
 
 	/**
@@ -87,10 +86,4 @@ public final class HCubeManagerImpl implements HCubeManager {
 	public HCategoryDictionary getCategoryDictionary() {
 		return categoryDictionary;
 	}
-
-	/** {@inheritDoc} */
-	public HQueryBuilder createQueryBuilder() {
-		return new HQueryBuilder(this);
-	}
-
 }

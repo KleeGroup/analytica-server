@@ -24,6 +24,7 @@ import java.util.Map;
 
 import kasper.kernel.util.Assertion;
 
+import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HCubeBuilder;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
@@ -72,13 +73,14 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Map<HCategory, HSerie> findAll(final HQuery query) {
+	public synchronized Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
 		Assertion.notNull(query);
+		Assertion.notNull(categoryDictionary);
 		//---------------------------------------------------------------------
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<HCategory, HSerie>();
 
-		for (final HCategory category : query.getAllCategories()) {
+		for (final HCategory category : query.getAllCategories(categoryDictionary)) {
 			final List<HCube> cubes = new ArrayList<HCube>();
 			for (HTime currentTime : query.getAllTimes()) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category);

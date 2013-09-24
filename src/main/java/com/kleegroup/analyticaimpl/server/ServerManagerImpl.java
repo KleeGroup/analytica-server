@@ -29,7 +29,6 @@ import kasper.kernel.util.Assertion;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
 
@@ -67,11 +66,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	/** {@inheritDoc} */
 	public HResult execute(final HQuery query) {
 		return hcubeManager.execute(query);
-	}
-
-	/** {@inheritDoc} */
-	public HQueryBuilder createQueryBuilder() {
-		return hcubeManager.createQueryBuilder();
 	}
 
 	/** {@inheritDoc} */

@@ -5,12 +5,14 @@ import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
+import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTime;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
  * Cette requête doit être construite avec QueryBuilder.
+ * Cette Requête est descriptive, elle peut fonctionner avec des dates absolues ou relatives via la notion NOW. 
  * @author npiedeloup, pchretien
  */
 public final class HQuery {
@@ -30,8 +32,8 @@ public final class HQuery {
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 * @return
 	 */
-	public Set<HCategory> getAllCategories() {
-		return categorySelection.getAllCategories();
+	public Set<HCategory> getAllCategories(final HCategoryDictionary categoryDictionary) {
+		return categorySelection.getAllCategories(categoryDictionary);
 	}
 
 	//-----------------------When----------------------------------------------

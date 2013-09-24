@@ -45,6 +45,7 @@ import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.museum.Museum;
 import com.kleegroup.analytica.museum.PageListener;
@@ -129,7 +130,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess2);
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -137,7 +138,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 
 		//final HCategory sqlCategory = new HCategory(PROCESS_SQL);
-		final Set<HCategory> sqlCategories = daySqlQuery.getAllCategories();
+		final Set<HCategory> sqlCategories = daySqlQuery.getAllCategories(hcubeManager.getCategoryDictionary());
 		Assert.assertEquals(2, sqlCategories.size());
 		final HResult result = hcubeManager.execute(daySqlQuery);
 		for (final HCategory category : sqlCategories) {
@@ -169,7 +170,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess6);
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -179,7 +180,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		System.out.println(daySqlQuery + "Requete");
 		final String[] sub = { "select article" };
 		final HCategory sqlCategory = new HCategory(PROCESS_SQL, sub);
-		final Set<HCategory> sqlCategories = daySqlQuery.getAllCategories();
+		final Set<HCategory> sqlCategories = daySqlQuery.getAllCategories(hcubeManager.getCategoryDictionary());
 		System.out.println(sqlCategory + "-----------");
 		System.out.println(sqlCategories);
 		Assert.assertEquals(2, sqlCategories.size());
@@ -199,7 +200,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -214,7 +215,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 
-		final HQuery monthSqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery monthSqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Month)//
 				.from(date)//
 				.to(date)//
@@ -227,7 +228,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 
-		final HQuery yearSqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery yearSqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Month)//
 				.from(date)//
 				.to(date)//
@@ -269,7 +270,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 		hcubeManager.push(process);
 		//---------------------------------------------------------------------
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -285,7 +286,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		HMetric durationMetric = cubes.get(0).getMetric(DURATION);
 		assertMetricEquals(durationMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 		//---------------------------------------------------------------------
-		final HQuery hourQuery = hcubeManager.createQueryBuilder()//
+		final HQuery hourQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from(date)//
 				.to(new DateBuilder(date).addDays(1).build())//
@@ -297,7 +298,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		montantMetric = cubes.get(5).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 		//---------------------------------------------------------------------
-		final HQuery dayServiceslQuery = hcubeManager.createQueryBuilder()//
+		final HQuery dayServiceslQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -355,7 +356,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 
 		hcubeManager.push(process);
 		//---------------------------------------------------------------------
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -371,7 +372,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		HMetric durationMetric = cubes.get(0).getMetric(DURATION);
 		assertMetricEquals(durationMetric, nbSelect * nbService, nbService * nbSelect * 100, 100, 100, 100);
 		//---------------------------------------------------------------------
-		final HQuery hourQuery = hcubeManager.createQueryBuilder()//
+		final HQuery hourQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from(date)//
 				.to(new DateBuilder(date).addDays(1).build())//
@@ -383,7 +384,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		montantMetric = cubes.get(5).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, nbSelect, price * nbSelect, price, price, price);
 		//---------------------------------------------------------------------
-		final HQuery dayServiceslQuery = hcubeManager.createQueryBuilder()//
+		final HQuery dayServiceslQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -412,7 +413,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -444,7 +445,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess3);
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -458,7 +459,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 2, price * 4, 2 * price, price, 3 * price);
 		//Check SQL/select article#1
-		final HQuery daySelectQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySelectQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -492,7 +493,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		workersPool.awaitTermination(30, TimeUnit.SECONDS); //On laisse 30 secondes pour vider la pile
 		Assert.assertTrue("Les threads ne sont pas tous stoppés", workersPool.isTerminated());
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -525,7 +526,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 				.build();
 		hcubeManager.push(selectProcess3);
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
@@ -566,7 +567,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 		hcubeManager.push(createSqlProcess(486)); //<=500
 		hcubeManager.push(createSqlProcess(15623)); //<=20000
 
-		final HQuery daySqlQuery = hcubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//

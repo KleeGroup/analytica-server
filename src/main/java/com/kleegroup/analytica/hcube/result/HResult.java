@@ -1,6 +1,7 @@
 package com.kleegroup.analytica.hcube.result;
 
 import java.util.Map;
+import java.util.Set;
 
 import kasper.kernel.util.Assertion;
 
@@ -17,18 +18,31 @@ import com.kleegroup.analytica.hcube.query.HQuery;
 public final class HResult {
 	private final HQuery query;
 	private final Map<HCategory, HSerie> series;
+	//Liste des catagories matchant la query
+	private final Set<HCategory> categories;
 
 	/**
 	 * Constructeur.
 	 * @param query Requete initiale
 	 * @param series Liste des séries par catégorie
 	 */
-	public HResult(final HQuery query, final Map<HCategory, HSerie> series) {
+	public HResult(final HQuery query, Set<HCategory> categories, final Map<HCategory, HSerie> series) {
 		Assertion.notNull(query);
+		Assertion.notNull(categories);
 		Assertion.notNull(series);
 		//---------------------------------------------------------------------
 		this.query = query;
+		this.categories = categories;
 		this.series = series;
+	}
+
+	//-----------------------What----------------------------------------------
+	/**
+	 * Liste triée par ordre alphabétique des catégories matchant la sélection
+	 * @return
+	 */
+	public Set<HCategory> getAllCategories() {
+		return categories;
 	}
 
 	/**
