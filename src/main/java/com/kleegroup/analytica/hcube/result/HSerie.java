@@ -62,7 +62,7 @@ public final class HSerie implements HVirtualCube {
 	//-------------------------------------------------------------------------
 	private Map<HMetricKey, HMetric> getLazyMetrics() {
 		if (metrics == null) {
-			final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<HMetricKey, HMetricBuilder>();
+			final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
 			for (final HCube cube : cubes) {
 				for (final HMetric metric : cube.getMetrics()) {
 					HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
@@ -94,8 +94,8 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	public List<HPoint> getPoints(final HMetricKey metricKey) {
-		final List<HPoint> points = new ArrayList<HPoint>();
-		for (final HCube cube : cubes){
+		final List<HPoint> points = new ArrayList<>();
+		for (final HCube cube : cubes) {
 			points.add(new HPoint() {
 				/** {@inheritDoc} */
 				public HMetric getMetric() {

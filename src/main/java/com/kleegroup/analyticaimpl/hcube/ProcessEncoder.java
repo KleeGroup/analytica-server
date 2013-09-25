@@ -68,7 +68,7 @@ final class ProcessEncoder {
 	 * @param result Liste des cubes résultat
 	 */
 	private static void doEncode(final KProcess process, final List<HCubeBuilder> parentBuilders, final List<HCubeBuilder> allResultBuilders) {
-		//On ajoute les mesures
+		//On aggrège les mesures dans un nouveau cube 
 		final HCubeBuilder localBuilder = encodeMeasures(process);
 		//On ajoute les durées du process dans ses parents
 		encodeSubDurations(process, parentBuilders);
