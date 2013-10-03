@@ -76,11 +76,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 				.with("SQL").build();
 
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
-<<<<<<< HEAD
 		final HResult result = serverManager.execute(daySqlQuery);
-=======
-		HResult result = serverManager.execute(daySqlQuery);
->>>>>>> 863c24b3682363dbac4f2702ae76ea599db5b250
 		Assert.assertEquals(1, result.getAllCategories().size());
 
 		final List<HCube> cubes = result.getSerie(processSQLCategory).getCubes();

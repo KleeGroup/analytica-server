@@ -26,16 +26,10 @@ public final class HResult {
 	 * @param query Requete initiale
 	 * @param series Liste des séries par catégorie
 	 */
-	public HResult(final HQuery query, Set<HCategory> categories, final Map<HCategory, HSerie> series) {
-<<<<<<< HEAD
+	public HResult(final HQuery query, final Set<HCategory> categories, final Map<HCategory, HSerie> series) {
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categories);
 		Assertion.checkNotNull(series);
-=======
-		Assertion.notNull(query);
-		Assertion.notNull(categories);
-		Assertion.notNull(series);
->>>>>>> 863c24b3682363dbac4f2702ae76ea599db5b250
 		//---------------------------------------------------------------------
 		this.query = query;
 		this.categories = categories;

@@ -74,13 +74,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	/** {@inheritDoc} */
 	public synchronized Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
-<<<<<<< HEAD
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categoryDictionary);
-=======
-		Assertion.notNull(query);
-		Assertion.notNull(categoryDictionary);
->>>>>>> 863c24b3682363dbac4f2702ae76ea599db5b250
 		//---------------------------------------------------------------------
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<HCategory, HSerie>();
