@@ -24,9 +24,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import kasper.kernel.Home;
-
 import org.apache.log4j.Logger;
+
+import vertigo.kernel.Home;
 
 import com.google.gson.Gson;
 import com.kleegroup.analytica.core.KProcess;
@@ -79,6 +79,6 @@ public final class RestNetApiPlugin implements NetApiPlugin {
 	}*/
 
 	private static ServerManager getServerManager() {
-		return Home.getContainer().getManager(ServerManager.class);
+		return Home.getComponentSpace().resolve(ServerManager.class);
 	}
 }

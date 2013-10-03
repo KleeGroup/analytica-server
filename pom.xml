@@ -1,30 +1,40 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
+	<parent>
+		<groupId>com.kleegroup.analytica</groupId>
+		<artifactId>analytica</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+	</parent>
+	
 	<groupId>com.kleegroup.analytica</groupId>
-	<artifactId>kasper-analytica-server</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>analytica-server</artifactId>
+	<version>1.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>kasper-analytica-server</name>
+	<name>analytica-server</name>
 	<url>http://analytica.kleegroup.com</url>
 
 	<properties>
-		<compileSource>1.6</compileSource>
+		<compileSource>1.7</compileSource>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 		<maven.test.error.ignore>true</maven.test.error.ignore>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.kleegroup.kasper</groupId>
-			<artifactId>kasper-kernel</artifactId>
-			<version>6.1.17</version>
+			<groupId>com.kleegroup.analytica</groupId>
+			<artifactId>analytica-client-api</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>com.kleegroup.kasper</groupId>
-			<artifactId>kasper-kernel</artifactId>
-			<version>6.1.17</version>
+			<groupId>io.vertigo</groupId>
+			<artifactId>vertigo</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.vertigo</groupId>
+			<artifactId>vertigo</artifactId>
+			<version>1.0.0</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
@@ -72,14 +82,12 @@
 		<dependency>
 		  <groupId>com.sun.jersey</groupId>
 		  <artifactId>jersey-server</artifactId>
-		  <version>1.15</version>
-		  <optional>true</optional><!-- pour RestNetApiPlugin -->
+		  <version>1.17.1</version><!-- pour RestNetApiPlugin -->
 		</dependency>
 		<dependency>
 		  <groupId>com.sun.jersey</groupId>
 	      <artifactId>jersey-servlet</artifactId>
-	      <version>1.15</version>
-	      <optional>true</optional><!-- pour RestNetApiPlugin -->
+	      <version>1.17.1</version><!-- pour RestNetApiPlugin -->
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -96,55 +104,7 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>./src/dev/lib/</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<skipTests>true</skipTests>
-				</configuration>
-			</plugin>
-			<plugin>
-	            <groupId>com.mycila.maven-license-plugin</groupId>
-	            <artifactId>maven-license-plugin</artifactId>
-	            <configuration>
-	                <header>license.txt</header>
-	            </configuration>
-	        </plugin>
-		</plugins>
+		<!-- see parent -->
 	</build>
 
 </project>

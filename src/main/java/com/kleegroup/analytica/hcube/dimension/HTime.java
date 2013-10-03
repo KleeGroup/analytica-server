@@ -20,8 +20,7 @@ package com.kleegroup.analytica.hcube.dimension;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.lang.DateBuilder;
+import vertigo.kernel.lang.DateBuilder;
 
 import com.kleegroup.analytica.hcube.HKey;
 
@@ -36,7 +35,7 @@ public final class HTime extends HKey implements HPosition<HTime> {
 	public HTime(final Date date, final HTimeDimension timeDimension) {
 		super("time:[" + timeDimension.name() + "]" + new SimpleDateFormat(timeDimension.getPattern()).format(date));
 		//---------------------------------------------------------------------
-		this.dimension = timeDimension;
+		dimension = timeDimension;
 		this.date = timeDimension.reduce(date);
 	}
 
@@ -74,7 +73,7 @@ public final class HTime extends HKey implements HPosition<HTime> {
 				nextDate = new DateBuilder(date).addMinutes(1).toDateTime();
 				break;
 			default:
-				throw new KRuntimeException("TimeDimension inconnu");
+				throw new RuntimeException("TimeDimension inconnu : " + dimension.name());
 		}
 		return new HTime(nextDate, dimension);
 	}

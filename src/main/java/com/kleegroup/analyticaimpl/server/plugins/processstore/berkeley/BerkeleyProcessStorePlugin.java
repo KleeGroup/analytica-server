@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import kasper.kernel.lang.Activeable;
+import vertigo.kernel.lang.Activeable;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analyticaimpl.server.Identified;

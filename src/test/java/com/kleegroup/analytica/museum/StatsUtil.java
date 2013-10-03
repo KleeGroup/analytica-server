@@ -2,7 +2,7 @@ package com.kleegroup.analytica.museum;
 
 import java.util.Random;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 final class StatsUtil {
 	private static final Random RANDOM = new Random();
@@ -23,8 +23,8 @@ final class StatsUtil {
 	}
 
 	private static long nextGaussian(final double avg, final double maxValue) {
-		Assertion.precondition(avg >= 1, "La moyenne doit être supérieure ou égale à 1");
-		Assertion.precondition(maxValue > avg, "La valeur max doit être supérieure à la moyenne");
+		Assertion.checkArgument(avg >= 1, "La moyenne doit être supérieure ou égale à 1");
+		Assertion.checkArgument(maxValue > avg, "La valeur max doit être supérieure à la moyenne");
 		//---------------------------------------------------------------------
 		long result = Math.round(RANDOM.nextGaussian() * maxValue / 5d + avg);
 		if (result < 0 || result > maxValue) {

@@ -18,6 +18,7 @@ import kasper.kernel.di.injector.Injector;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kleegroup.analytica.hcube.HCubeManager;
+import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
 
@@ -35,12 +36,10 @@ public class HomeServices {
 	private ServerManager serverManager;
 	@Inject
 	private HCubeManager cubeManager;
-	private final Utils utils;
 
 	public HomeServices() {
 		final Injector injector = new Injector();
 		injector.injectMembers(this, Home.getContainer().getRootContainer());
-		utils = new Utils(serverManager);
 	}
 
 	@GET
@@ -60,8 +59,10 @@ public class HomeServices {
 	@Path("/timeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
-		final List<DataPoint> points = utils.loadDataPointsMonoSerie(result, datas);
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, false);
+		final HResult result = serverManager.execute(query);
+
+		final List<DataPoint> points = Utils.loadDataPointsMonoSerie(result, datas);
 
 		return gson.toJson(points);
 	}
@@ -70,8 +71,10 @@ public class HomeServices {
 	@Path("/multitimeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMultiSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatasMult) @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
-		final Map<String, List<DataPoint>> pointsMap = utils.loadDataPointsMuliSerie(result, datas);
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, false);
+		final HResult result = serverManager.execute(query);
+
+		final Map<String, List<DataPoint>> pointsMap = Utils.loadDataPointsMuliSerie(result, datas);
 
 		return gson.toJson(pointsMap);
 	}
@@ -80,9 +83,10 @@ public class HomeServices {
 	@Path("/agregatedDatasByCategory/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, true);
+		final HResult result = serverManager.execute(query);
 
-		return gson.toJson(utils.getAggregatedValuesByCategory(result, datas));
+		return gson.toJson(Utils.getAggregatedValuesByCategory(result, datas));
 	}
 
 	@GET
@@ -96,8 +100,8 @@ public class HomeServices {
 	//	@Path("/bollinger/{category}")
 	//	@Produces(MediaType.APPLICATION_JSON)
 	//	public String getBollingerBands(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatasMult) @QueryParam("datas") final String datas) {
-	//		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
-	//		final Map<String, List<DataPoint>> pointsMap = utils.loadBollingerBands(result, datas);
+	//		final HResult result = Utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
+	//		final Map<String, List<DataPoint>> pointsMap = Utils.loadBollingerBands(result, datas);
 	//
 	//		return gson.toJson(pointsMap);
 	//	}
@@ -106,34 +110,38 @@ public class HomeServices {
 	@Path("/stackedDatas/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAllCategoriesToStack(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, true);
+		final HResult result = serverManager.execute(query);
 
-		return gson.toJson(utils.loadDataPointsStackedByCategory(result, datas));
+		return gson.toJson(Utils.loadDataPointsStackedByCategory(result, datas));
 	}
 
 	@GET
 	@Path("/tableSparkline/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getTableSparklineDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, true);
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, true);
+		final HResult result = serverManager.execute(query);
 
-		return gson.toJson(utils.getSparklinesTableDatas(result, datas));
+		return gson.toJson(Utils.getSparklinesTableDatas(result, datas));
 	}
 
 	@GET
 	@Path("/tablePunchcard/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getPunchCardDatas(@QueryParam("timeFrom") @DefaultValue("NOW-240h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
-		return gson.toJson(utils.getPunchCardDatas(result, datas));
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, false);
+		final HResult result = serverManager.execute(query);
+		return gson.toJson(Utils.getPunchCardDatas(result, datas));
 	}
 
 	@GET
 	@Path("/faketablePunchcard/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getPunchCardFakeDatas(@QueryParam("timeFrom") @DefaultValue("NOW-240h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
-		final HResult result = utils.resolveQuery(timeFrom, timeTo, timeDim, category, false);
-		return gson.toJson(utils.getPunchCardFakeDatas(result, datas));
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, false);
+		final HResult result = serverManager.execute(query);
+		return gson.toJson(Utils.getPunchCardFakeDatas(result, datas));
 	}
 
 }

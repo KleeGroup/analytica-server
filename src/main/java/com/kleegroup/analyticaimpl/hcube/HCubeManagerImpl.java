@@ -21,15 +21,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import kasper.kernel.lang.Option;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
+import vertigo.kernel.lang.Option;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
@@ -49,8 +48,8 @@ public final class HCubeManagerImpl implements HCubeManager {
 	 */
 	@Inject
 	public HCubeManagerImpl(final CubeStorePlugin cubeStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin) {
-		Assertion.notNull(cubeStorePlugin);
-		Assertion.notNull(processStatsPlugin);
+		Assertion.checkNotNull(cubeStorePlugin);
+		Assertion.checkNotNull(processStatsPlugin);
 		//-----------------------------------------------------------------
 		processEncoder = new ProcessEncoder();
 		this.cubeStorePlugin = cubeStorePlugin;
@@ -73,7 +72,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	/** {@inheritDoc} */
 	public HResult execute(final HQuery query) {
-		return new HResult(query, cubeStorePlugin.findAll(query));
+		return new HResult(query, query.getAllCategories(categoryDictionary), cubeStorePlugin.findAll(query, categoryDictionary));
 	}
 
 	/**
@@ -87,10 +86,4 @@ public final class HCubeManagerImpl implements HCubeManager {
 	public HCategoryDictionary getCategoryDictionary() {
 		return categoryDictionary;
 	}
-
-	/** {@inheritDoc} */
-	public HQueryBuilder createQueryBuilder() {
-		return new HQueryBuilder(this);
-	}
-
 }

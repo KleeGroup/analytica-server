@@ -17,12 +17,8 @@
  */
 package com.kleegroup.analytica.hcube.query;
 
-import java.util.Collections;
-import java.util.Set;
+import vertigo.kernel.lang.Assertion;
 
-import kasper.kernel.util.Assertion;
-
-import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 
 /**
@@ -36,23 +32,22 @@ import com.kleegroup.analytica.hcube.dimension.HCategory;
 final class HCategorySelection {
 	private final HCategory selectedCategory;
 	private final boolean children;
-	private final Set<HCategory> categories;
 
-	HCategorySelection(final HCategoryDictionary categoryDictionary, final HCategory category, final boolean children) {
-		Assertion.notNull(categoryDictionary);
-		Assertion.notNull(category);
+	HCategorySelection(final HCategory category, final boolean children) {
+		Assertion.checkNotNull(category);
 		// ---------------------------------------------------------------------
 		this.children = children;
 		selectedCategory = category;
-		if (children) {
-			categories = categoryDictionary.getAllSubCategories(category);
-		} else {
-			categories = Collections.singleton(category);
-		}
 	}
 
-	Set<HCategory> getAllCategories() {
-		return categories;
+	HCategory getCategory() {
+		return selectedCategory;
+
+	}
+
+	boolean hasChildren() {
+		return children;
+
 	}
 
 	/** {@inheritDoc} */

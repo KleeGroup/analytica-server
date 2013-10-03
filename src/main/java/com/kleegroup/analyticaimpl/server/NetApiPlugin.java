@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
-import kasper.kernel.manager.Plugin;
+import vertigo.kernel.component.Plugin;
 
 /**
  * Plugin gérant l'api reseau.

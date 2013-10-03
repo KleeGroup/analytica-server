@@ -19,16 +19,16 @@
 -->
 <modules>
 	<module name="analytica">
-	<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
-       <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
+	<component api="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
+       <plugin class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
         	<param name="dbPath" value="d:/analytica/db-test" />
         </plugin>
          <!-- <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
         </plugin>  -->       
-     </manager>
-     <manager name="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
-			<plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin">
+     </component>
+     <component api="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
+			<plugin class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin">
 			</plugin>
-		</manager>
+		</component>
 	</module>
 </modules>

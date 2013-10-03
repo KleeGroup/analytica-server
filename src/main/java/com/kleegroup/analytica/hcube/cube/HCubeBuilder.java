@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kasper.kernel.lang.Builder;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
+import vertigo.kernel.lang.Builder;
 
 import com.kleegroup.analytica.hcube.dimension.HCubeKey;
 
@@ -35,14 +35,14 @@ import com.kleegroup.analytica.hcube.dimension.HCubeKey;
  */
 public final class HCubeBuilder implements Builder<HCube> {
 	private final HCubeKey cubeKey;
-	private final Map<HMetricKey, HMetricBuilder> metrics = new HashMap<HMetricKey, HMetricBuilder>();
+	private final Map<HMetricKey, HMetricBuilder> metrics = new HashMap<>();
 
 	/**
 	 * Constructeur.
 	 * @param cubeKey Identifiant du cube
 	 */
 	public HCubeBuilder(final HCubeKey cubeKey) {
-		Assertion.notNull(cubeKey);
+		Assertion.checkNotNull(cubeKey);
 		//---------------------------------------------------------------------
 		this.cubeKey = cubeKey;
 	}
@@ -52,7 +52,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 * @param metric Metric
 	 */
 	public HCubeBuilder withMetric(final HMetric metric) {
-		Assertion.notNull(metric);
+		Assertion.checkNotNull(metric);
 		//---------------------------------------------------------------------
 		HMetricBuilder metricBuilder = metrics.get(metric.getKey());
 		if (metricBuilder == null) {
@@ -69,9 +69,9 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 * @param cube Cube
 	 */
 	public HCubeBuilder withCube(final HCube cube) {
-		Assertion.notNull(cube);
+		Assertion.checkNotNull(cube);
 		//Assertion util mais 50% des perfs !!
-		Assertion.precondition(cubeKey.contains(cube.getKey()), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubeKey, cube.getKey());
+		Assertion.checkArgument(cubeKey.contains(cube.getKey()), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubeKey, cube.getKey());
 		//---------------------------------------------------------------------
 		for (final HMetric metric : cube.getMetrics()) {
 			withMetric(metric);
@@ -85,7 +85,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 */
 	public HCube build() {
 		//---------------------------------------------------------------------
-		final List<HMetric> list = new ArrayList<HMetric>(metrics.size());
+		final List<HMetric> list = new ArrayList<>(metrics.size());
 		for (final HMetricBuilder metricBuilder : metrics.values()) {
 			list.add(metricBuilder.build());
 		}

@@ -20,9 +20,9 @@
 -->
 <modules>
 	<module name="analytica">
-		<manager name="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
-			<plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin">
+		<component api="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
+			<plugin class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin">
 			</plugin>
-		</manager>
+		</component>
 	</module>
 </modules>

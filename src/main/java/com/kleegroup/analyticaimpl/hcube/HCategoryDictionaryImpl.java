@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
@@ -34,7 +34,7 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 
 	/** {@inheritDoc} */
 	public synchronized Set<HCategory> getAllSubCategories(HCategory category) {
-		Assertion.notNull(category);
+		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
 		Set<HCategory> set = categories.get(category);
 		return set == null ? Collections.<HCategory> emptySet() : Collections.unmodifiableSet(set);
@@ -42,7 +42,7 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 
 	/** {@inheritDoc} */
 	public synchronized void add(HCategory category) {
-		Assertion.notNull(category);
+		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
 		HCategory currentCategory = category;
 		HCategory parentCategory;
@@ -57,7 +57,7 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 	}
 
 	private boolean doPut(HCategory parentCategory, HCategory category) {
-		Assertion.notNull(category);
+		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
 		if (parentCategory == null) {
 			//category est une catégorie racine

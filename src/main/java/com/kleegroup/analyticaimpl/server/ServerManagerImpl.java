@@ -23,13 +23,12 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import kasper.kernel.lang.Activeable;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Activeable;
+import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
 
@@ -46,14 +45,13 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	/**
 	 * Constructeur.
 	 * @param processStorePlugin Plugin de stockage des Process
-	 * @param encoderPlugin Plugin de converssion de process en cube
-	 * @param cubeStorePlugin Plugin de stockage des Cubes
+	 * @param hcubeManager Manager de stockage des Cubes
 	 */
 	@Inject
 	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin) {
 		super();
-		Assertion.notNull(hcubeManager);
-		Assertion.notNull(processStorePlugin);
+		Assertion.checkNotNull(hcubeManager);
+		Assertion.checkNotNull(processStorePlugin);
 		//-----------------------------------------------------------------
 		this.hcubeManager = hcubeManager;
 		this.processStorePlugin = processStorePlugin;
@@ -67,11 +65,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	/** {@inheritDoc} */
 	public HResult execute(final HQuery query) {
 		return hcubeManager.execute(query);
-	}
-
-	/** {@inheritDoc} */
-	public HQueryBuilder createQueryBuilder() {
-		return hcubeManager.createQueryBuilder();
 	}
 
 	/** {@inheritDoc} */
@@ -215,7 +208,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 
 //	private double getCubeValue(final Cube cube, final DataKey dataKey) {
 //		final Metric metric = cube.getMetric(dataKey.getMetricKey());
-//		//Assertion.notNull(metric,"La metric {0} n''a pas été trouvée dans le cube {1}", dataKey.getName(), cube.getKey());
+//		//Assertion.checkNotNull(metric,"La metric {0} n''a pas été trouvée dans le cube {1}", dataKey.getName(), cube.getKey());
 //		//---------------------------------------------------------------------
 //		if (metric == null) { //la metric peut-être null sur certain cube (exemple 'CACHE_HIT' n'est présent que sur quelques cubes)
 //			return Double.NaN;

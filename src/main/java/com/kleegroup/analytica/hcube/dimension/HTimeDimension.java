@@ -20,8 +20,7 @@ package com.kleegroup.analytica.hcube.dimension;
 import java.util.Calendar;
 import java.util.Date;
 
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 /**
  * Niveaux heures, minutes ou secondes de la dimension hiérarchique temps.
@@ -94,9 +93,9 @@ public enum HTimeDimension {
 	//	 * @return Date maximum
 	//	 */
 	//	public Date getMaxDate(final Date date) {
-	//		Assertion.notNull(date);
+	//		Assertion.checkNotNull(date);
 	//		final Date reduceDate = reduce(date);
-	//		Assertion.precondition(reduceDate.equals(date), "La date de début doit déjà être réduite à cette dimenssion, et correspondre au point de début de cette dimenssion");
+	//		Assertion.checkArgument(reduceDate.equals(date), "La date de début doit déjà être réduite à cette dimenssion, et correspondre au point de début de cette dimenssion");
 	//		//---------------------------------------------------------------------
 	//		final Calendar calendar = Calendar.getInstance();
 	//		calendar.setTime(reduceDate);
@@ -126,7 +125,7 @@ public enum HTimeDimension {
 	 * @return Valeur normalisée
 	 */
 	public Date reduce(final Date date) {
-		Assertion.notNull(date);
+		Assertion.checkNotNull(date);
 		//---------------------------------------------------------------------
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
@@ -165,7 +164,7 @@ public enum HTimeDimension {
 			case Year:
 				return "yyyy";
 			default:
-				throw new KRuntimeException("TimeDimension inconnu");
+				throw new RuntimeException("TimeDimension inconnu : " + name());
 		}
 	}
 }

@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analytica.hcube;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 /**
  * Clé unique d'un objet de HCube.
@@ -28,7 +28,7 @@ public abstract class HKey {
 	private final String id;
 
 	public HKey(final String id) {
-		Assertion.notEmpty(id);
+		Assertion.checkArgNotEmpty(id);
 		//---------------------------------------------------------------------
 		this.id = id;
 	}

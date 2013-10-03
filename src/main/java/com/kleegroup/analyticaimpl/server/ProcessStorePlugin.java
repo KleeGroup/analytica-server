@@ -19,7 +19,7 @@ package com.kleegroup.analyticaimpl.server;
 
 import java.util.List;
 
-import kasper.kernel.manager.Plugin;
+import vertigo.kernel.component.Plugin;
 
 import com.kleegroup.analytica.core.KProcess;
 

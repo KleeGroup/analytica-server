@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HMetric;
@@ -36,8 +36,8 @@ public final class HSerie implements HVirtualCube {
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
 	public HSerie(final HCategory category, final List<HCube> cubes) {
-		Assertion.notNull(category);
-		Assertion.notNull(cubes);
+		Assertion.checkNotNull(category);
+		Assertion.checkNotNull(cubes);
 		//---------------------------------------------------------------------
 		this.category = category;
 		this.cubes = cubes;
@@ -54,7 +54,7 @@ public final class HSerie implements HVirtualCube {
 	 * @return Liste ordonnée des élements du parallélépipède
 	 */
 	public List<HCube> getCubes() {
-		Assertion.notNull(category);
+		Assertion.checkNotNull(category);
 		//-------------------------------------------------------------------------
 		return Collections.unmodifiableList(cubes);
 	}
@@ -62,7 +62,7 @@ public final class HSerie implements HVirtualCube {
 	//-------------------------------------------------------------------------
 	private Map<HMetricKey, HMetric> getLazyMetrics() {
 		if (metrics == null) {
-			final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<HMetricKey, HMetricBuilder>();
+			final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
 			for (final HCube cube : cubes) {
 				for (final HMetric metric : cube.getMetrics()) {
 					HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
@@ -83,7 +83,7 @@ public final class HSerie implements HVirtualCube {
 
 	/** {@inheritDoc} */
 	public HMetric getMetric(final HMetricKey metricKey) {
-		Assertion.notNull(metricKey);
+		Assertion.checkNotNull(metricKey);
 		//---------------------------------------------------------------------
 		return getLazyMetrics().get(metricKey);
 	}
@@ -94,8 +94,8 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	public List<HPoint> getPoints(final HMetricKey metricKey) {
-		final List<HPoint> points = new ArrayList<HPoint>();
-		for (final HCube cube : cubes){
+		final List<HPoint> points = new ArrayList<>();
+		for (final HCube cube : cubes) {
 			points.add(new HPoint() {
 				/** {@inheritDoc} */
 				public HMetric getMetric() {

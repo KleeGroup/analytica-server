@@ -20,8 +20,7 @@ package com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley;
 import java.util.Date;
 import java.util.Map.Entry;
 
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
@@ -57,7 +56,7 @@ final class KProcessBinding extends TupleBinding {
 			}
 
 		} catch (final Exception e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -77,13 +76,13 @@ final class KProcessBinding extends TupleBinding {
 			//			to.writeString(uuid.toString());
 			doProcessToEntry((KProcess) object, to);
 		} catch (final Exception e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
 	private KProcess doEntryToProcessV2(final TupleInput ti) throws Exception {
 		final String version = ti.readString();
-		Assertion.precondition(PROCESS_BINDING_V2.equals(version), "Version de l'encodage du process incompatible. lu: {0}, attendu : {1}", version, PROCESS_BINDING_V2);
+		Assertion.checkArgument(PROCESS_BINDING_V2.equals(version), "Version de l'encodage du process incompatible. lu: {0}, attendu : {1}", version, PROCESS_BINDING_V2);
 		//---------------------------------------------------------------------
 		final String type = ti.readString();
 		final int nbNames = ti.readInt();

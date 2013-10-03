@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
@@ -61,7 +60,7 @@ final class BerkeleyDatabase {
 	 * Constructeur.
 	 */
 	BerkeleyDatabase(final File myDbEnvPath) {
-		Assertion.notNull(myDbEnvPath);
+		Assertion.checkNotNull(myDbEnvPath);
 		//----------------------------------------------------------------------
 		this.myDbEnvPath = myDbEnvPath;
 	}
@@ -70,7 +69,7 @@ final class BerkeleyDatabase {
 		try {
 			return db.count();
 		} catch (final DatabaseException e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -91,7 +90,7 @@ final class BerkeleyDatabase {
 				}
 			}
 		} catch (final DatabaseException e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -113,8 +112,8 @@ final class BerkeleyDatabase {
 	//	}
 
 	Map<DatabaseEntry, DatabaseEntry> next(final DatabaseEntry lastKey, final Integer maxRow) {
-		Assertion.notNull(maxRow);
-		Assertion.precondition(maxRow >= 1, "MaxRow doit être strictement positif");
+		Assertion.checkNotNull(maxRow);
+		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
 		//---------------------------------------------------------------------
 		try {
 			final Map<DatabaseEntry, DatabaseEntry> result = new LinkedHashMap<DatabaseEntry, DatabaseEntry>(maxRow);
@@ -130,7 +129,7 @@ final class BerkeleyDatabase {
 					//Si on a dejà un lastKey, on repositionne le cursor dessus, puis on fait next()
 					theKey = new DatabaseEntry(lastKey.getData());
 					final OperationStatus status = cursor.getSearchKey(theKey, theData, null);
-					Assertion.postcondition(OperationStatus.SUCCESS.equals(status), "L'ancien document n'a pas été retrouvé : {0}", lastKey);
+					Assertion.checkState(OperationStatus.SUCCESS.equals(status), "L'ancien document n'a pas été retrouvé : {0}", lastKey);
 				}
 				while (result.size() < maxRow && cursor.getNext(theKey, theData, null).equals(OperationStatus.SUCCESS)) {
 					result.put(new DatabaseEntry(theKey.getData()), new DatabaseEntry(theData.getData()));
@@ -140,7 +139,7 @@ final class BerkeleyDatabase {
 				cursor.close();
 			}
 		} catch (final DatabaseException e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -152,7 +151,7 @@ final class BerkeleyDatabase {
 		try {
 			return sequence.get(null, 1);
 		} catch (final DatabaseException e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -165,7 +164,7 @@ final class BerkeleyDatabase {
 			}
 			return null; //pas trouvé
 		} catch (final DatabaseException e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -183,7 +182,7 @@ final class BerkeleyDatabase {
 					return theData;
 				}
 			} catch (final DatabaseException e) {
-				throw new KRuntimeException(e);
+				throw new RuntimeException(e);
 			}
 		}
 		//Pas trouvé
@@ -215,10 +214,10 @@ final class BerkeleyDatabase {
 			myEnvConfig.setCachePercent(20);
 			//CHECKME On limite l'utilisation du cache à 200Mo
 			//myEnvConfig.setCacheSize(200 * 1000 * 1000);
-			
+
 			// Open the environment
 			myEnv = new Environment(myDbEnvPath, myEnvConfig);
-			
+
 			// Now open, or create and open, our databases
 			// Open the vendors and inventory databases
 			db = myEnv.openDatabase(null, "MyDB", myDbConfig);
@@ -231,7 +230,7 @@ final class BerkeleyDatabase {
 			sequence = sequenceDb.openSequence(null, sequenceName, mySequenceConfig);
 
 		} catch (final DatabaseException e) {
-			throw new KRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -22,8 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
+import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HCubeBuilder;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
@@ -51,7 +52,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	/** {@inheritDoc} */
 	public synchronized void merge(final HCube lowLevelCube) {
-		Assertion.notNull(lowLevelCube);
+		Assertion.checkNotNull(lowLevelCube);
 		//---------------------------------------------------------------------
 		for (final HCubeKey upCubeKeys : lowLevelCube.getKey().drillUp()) {
 			final HCube cube = merge(lowLevelCube, upCubeKeys);
@@ -72,13 +73,14 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Map<HCategory, HSerie> findAll(final HQuery query) {
-		Assertion.notNull(query);
+	public synchronized Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
+		Assertion.checkNotNull(query);
+		Assertion.checkNotNull(categoryDictionary);
 		//---------------------------------------------------------------------
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<HCategory, HSerie>();
 
-		for (final HCategory category : query.getAllCategories()) {
+		for (final HCategory category : query.getAllCategories(categoryDictionary)) {
 			final List<HCube> cubes = new ArrayList<HCube>();
 			for (HTime currentTime : query.getAllTimes()) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category);

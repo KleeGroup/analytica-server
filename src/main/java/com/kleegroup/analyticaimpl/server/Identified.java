@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 /**
  * Objet avec identifiant externalisé.
@@ -35,8 +35,8 @@ public class Identified<T> {
 	 * @param data Données
 	 */
 	public Identified(final String key, final T data) {
-		Assertion.notEmpty(key);
-		Assertion.notNull(data);
+		Assertion.checkArgNotEmpty(key);
+		Assertion.checkNotNull(data);
 		//-------------------------------------------------------------------------
 		this.key = key;
 		this.data = data;

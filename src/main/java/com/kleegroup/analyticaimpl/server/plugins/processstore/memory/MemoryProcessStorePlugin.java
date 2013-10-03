@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analyticaimpl.server.Identified;
@@ -51,8 +51,8 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 
 	/** {@inheritDoc} */
 	public List<Identified<KProcess>> getProcess(final String lastKey, final Integer maxRow) {
-		Assertion.notNull(maxRow);
-		Assertion.precondition(maxRow >= 1, "MaxRow doit être strictement positif");
+		Assertion.checkNotNull(maxRow);
+		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
 		//---------------------------------------------------------------------
 		final List<Identified<KProcess>> processes = new ArrayList<Identified<KProcess>>();
 		Identified<KProcess> process = processQueue.poll();

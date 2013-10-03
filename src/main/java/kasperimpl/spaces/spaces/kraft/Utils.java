@@ -1,17 +1,13 @@
 package kasperimpl.spaces.spaces.kraft;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import kasper.kernel.exception.KRuntimeException;
 import kasper.kernel.util.Assertion;
 import anomalies.performance.BollingerBand;
 import anomalies.performance.PerformanceManager;
@@ -22,31 +18,22 @@ import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HMetric;
 import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
-import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
-import com.kleegroup.analytica.server.ServerManager;
 
 /**
  * @author statchum
  * @version $Id: codetemplates.xml,v 1.2 2011/06/21 14:33:16 npiedeloup Exp $
  */
 public final class Utils {
-	private final ServerManager serverManager;
-
-	Utils(final ServerManager serverManager) {
-		Assertion.notNull(serverManager);
-		// ---------------------------------------------------------------------
-		this.serverManager = serverManager;
-	}
 
 	/**
 	 * Charge Les données d'un graphe mono série.
 	 * @param Les données à transformer.
 	 * @return La liste de poins retravaillée.
 	 */
-	public List<DataPoint> loadDataPointsMonoSerie(final HResult result, final String datas) {
+	public static List<DataPoint> loadDataPointsMonoSerie(final HResult result, final String datas) {
 		final PerformanceManager manager = new PerformanceManager(1000, 0, 2);
 		final Signal signal = new Signal();
 		Assertion.notNull(result);
@@ -55,7 +42,7 @@ public final class Utils {
 		final HCounterType counterType = HCounterType.mean;
 		final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 
-		for (final HCategory category : result.getQuery().getAllCategories()) {
+		for (final HCategory category : result.getAllCategories()) {
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final HMetric metric = cube.getMetric(metricKey);
 
@@ -74,7 +61,7 @@ public final class Utils {
 		return dataPoints;
 	}
 
-	public Map<String, Double> getAggregatedValuesByCategory(final HResult result, final String datas) {
+	public static Map<String, Double> getAggregatedValuesByCategory(final HResult result, final String datas) {
 		Assertion.notNull(result);
 
 		// ---------------------------------------------------------------------
@@ -84,9 +71,9 @@ public final class Utils {
 		//		final HCounterType counterType = HCounterType.count;
 		final Map<String, Double> valueByCategory = new HashMap<>();
 
-		System.out.println(result.getQuery().getAllCategories());
+		System.out.println(result.getAllCategories());
 
-		for (final HCategory category : result.getQuery().getAllCategories()) {
+		for (final HCategory category : result.getAllCategories()) {
 			System.out.println(category.drillUp());
 
 			final HMetric metric = result.getSerie(category).getMetric(metricKey);
@@ -101,91 +88,17 @@ public final class Utils {
 		return valueByCategory;
 	}
 
-	/**
-	 *
-	 * @param timeStr : e.g: NOW+1h
-	 * @param dimension : Dimension temporelle : année/mois/jour/...
-	 * @return Date obtenue à partir des deux indications précedentes
-	 */
-	private static Date readDate(final String timeStr, final HTimeDimension dimension) {
-		Assertion.notEmpty(timeStr);
-
-		// ---------------------------------------------------------------------
-		if ("NOW".equals(timeStr)) {
-			return new Date();
-		} else if (timeStr.startsWith("NOW-")) {
-			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW-".length()));
-			return new Date(System.currentTimeMillis() - deltaMs);
-		} else if (timeStr.startsWith("NOW+")) {
-			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW+".length()));
-			return new Date(System.currentTimeMillis() + deltaMs);
-		}
-
-		final SimpleDateFormat sdf = new SimpleDateFormat(dimension.getPattern());
-
-		try {
-			return sdf.parse(timeStr);
-		} catch (final ParseException e) {
-			throw new KRuntimeException("Erreur de format de date (" + timeStr + "). Format attendu :" + sdf.toPattern());
-		}
-	}
-
-	/**
-	 *
-	 * @param deltaAsString
-	 * @return delta en millisecondes
-	 */
-	private static long readDeltaAsMs(final String deltaAsString) {
-		final Long delta;
-		char unit = deltaAsString.charAt(deltaAsString.length() - 1);
-
-		if (unit >= '0' && unit <= '9') {
-			unit = 'd';
-			delta = Long.valueOf(deltaAsString);
-		} else {
-			delta = Long.valueOf(deltaAsString.substring(0, deltaAsString.length() - 1));
-		}
-
-		switch (unit) {
-			case 'd':
-				return delta * 24 * 60 * 60 * 1000L;
-
-			case 'h':
-				return delta * 60 * 60 * 1000L;
-
-			case 'm':
-				return delta * 60 * 1000L;
-
-			default:
-				throw new KRuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
-		}
-	}
-
-	/**
-	 * @param timeFrom
-	 * @param timeTo
-	 * @param timeDim
-	 * @param categories
-	 * @return Construit une Hresult à partir des infos fournies
-	 */
-	public HResult resolveQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
-		final HQuery query = createQuery(timeFrom, timeTo, timeDimension, categories, children);
-
-		return serverManager.execute(query);
-	}
-
-	private HQuery createQuery(final String timeFrom, final String timeTo, final String timeDimension, final String categories, final boolean children) {
-		final HTimeDimension timeDim = HTimeDimension.valueOf(timeDimension);
-		final Date minValue = readDate(timeFrom, timeDim);
-		final Date maxValue = readDate(timeTo, timeDim);
-		final HQueryBuilder queryBuilder = serverManager.createQueryBuilder().on(timeDim).from(minValue).to(maxValue);
-		// @formatter:off
-		if(children){
+	public static HQuery createQuery(final String from, final String to, final String timeDimension, final String categories, final boolean children) {
+		final HQueryBuilder queryBuilder = new HQueryBuilder()//
+				.on(timeDimension)//
+				.from(from)//
+				.to(to);
+		if (children) {
 			queryBuilder.withChildren(categories);
-		}else{
+		} else {
 			queryBuilder.with(categories);
-		}        
-        // @formatter:on
+		}
+		// @formatter:on
 		return queryBuilder.build();
 	}
 
@@ -195,7 +108,7 @@ public final class Utils {
 	 * @param datas
 	 * @return
 	 */
-	public Map<String, List<DataPoint>> loadDataPointsMuliSerie(final HResult result, final String datas) {
+	public static Map<String, List<DataPoint>> loadDataPointsMuliSerie(final HResult result, final String datas) {
 		Assertion.notNull(result);
 
 		// ---------------------------------------------------------------------
@@ -208,7 +121,7 @@ public final class Utils {
 		for (final String dataKey : dataKeys) {
 			dataPoints = new ArrayList<DataPoint>();
 
-			for (final HCategory category : query.getAllCategories()) { //Normalement une seule categorie
+			for (final HCategory category : result.getAllCategories()) { //Normalement une seule categorie
 				for (final HCube cube : result.getSerie(category).getCubes()) {
 					final String[] metricKey = dataKey.split(":");
 					final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
@@ -233,7 +146,7 @@ public final class Utils {
 		return pointsMap;
 	}
 
-	public Map<String, List<DataPoint>> loadDataPointsStackedByCategory(final HResult result, final String datas) {
+	public static Map<String, List<DataPoint>> loadDataPointsStackedByCategory(final HResult result, final String datas) {
 		Assertion.notNull(result);
 
 		// ---------------------------------------------------------------------
@@ -244,7 +157,7 @@ public final class Utils {
 		final Map<String, List<DataPoint>> pointsMap = new HashMap<String, List<DataPoint>>();
 
 		final String dataKey = datas;
-		for (final HCategory category : query.getAllCategories()) {
+		for (final HCategory category : result.getAllCategories()) {
 			dataPoints = new ArrayList<DataPoint>();
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final String[] metricKey = dataKey.split(":");
@@ -278,11 +191,11 @@ public final class Utils {
 	 * @param datas
 	 * @return building a dataTbable
 	 */
-	public Map<String, Collection<Object>> getSparklinesTableDatas(final HResult result, final String datas) {
+	public static Map<String, Collection<Object>> getSparklinesTableDatas(final HResult result, final String datas) {
 
 		final Map<String, Collection<Object>> tableMap = new HashMap<String, Collection<Object>>();
 
-		for (final HCategory category : result.getQuery().getAllCategories()) {
+		for (final HCategory category : result.getAllCategories()) {
 			final Collection<Object> tableCollection = new ArrayList<>();
 			tableCollection.add(result.getSerie(category).getMetrics());
 			tableCollection.add(getStringList(category, result, "duration:mean"));
@@ -298,7 +211,7 @@ public final class Utils {
 	 * @param string
 	 * @return
 	 */
-	private String getStringList(final HCategory category, final HResult result, final String dataKey) {
+	private static String getStringList(final HCategory category, final HResult result, final String dataKey) {
 		final StringBuilder stringBuilder = new StringBuilder();
 		for (final HCube cube : result.getSerie(category).getCubes()) {
 			final String[] metricKey = dataKey.split(":");
@@ -329,9 +242,9 @@ public final class Utils {
 	 * @param datas
 	 * @return a Matrix matching metrics values by days and hours. It will be used to build a punchcard  
 	 */
-	public Map<String, Map<Long, Double>> getMetricByDayAndHour(final HResult result, final String dataKey) {
+	public static Map<String, Map<Long, Double>> getMetricByDayAndHour(final HResult result, final String dataKey) {
 
-		for (final HCategory category : result.getQuery().getAllCategories()) {
+		for (final HCategory category : result.getAllCategories()) {
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final String[] metricKey = dataKey.split(":");
 				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
@@ -349,7 +262,7 @@ public final class Utils {
 		return null;
 	}
 
-	public Map<String, Object> getPunchCardFakeDatas(final HResult result, final String dataKey) {
+	public static Map<String, Object> getPunchCardFakeDatas(final HResult result, final String dataKey) {
 		final Map<String, Object> matrix = new LinkedHashMap<>();
 		final String[] days = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
@@ -372,7 +285,7 @@ public final class Utils {
 		public double[][] data;
 	}
 
-	public Punchcard getPunchCardDatas(final HResult result, final String dataKey) {
+	public static Punchcard getPunchCardDatas(final HResult result, final String dataKey) {
 		final String[] days = { "dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi" };
 
 		final Punchcard punchcard = new Punchcard();
@@ -381,7 +294,7 @@ public final class Utils {
 
 		final String[] metricKey = dataKey.split(":");
 
-		for (final HCategory category : result.getQuery().getAllCategories()) {
+		for (final HCategory category : result.getAllCategories()) {
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
 				final int h = cube.getKey().getTime().getValue().getHours();
@@ -397,7 +310,7 @@ public final class Utils {
 	 * @param datas
 	 * @return
 	 */
-	public Map<String, List<DataPoint>> loadBollingerBands(final HResult result, final String datas) {
+	public static Map<String, List<DataPoint>> loadBollingerBands(final HResult result, final String datas) {
 
 		final PerformanceManager manager = new PerformanceManager(1000, 0, 2);
 		final Signal signal = new Signal();
@@ -407,7 +320,7 @@ public final class Utils {
 		final HCounterType counterType = HCounterType.mean;
 		final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 
-		for (final HCategory category : result.getQuery().getAllCategories()) {
+		for (final HCategory category : result.getAllCategories()) {
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final HMetric metric = cube.getMetric(metricKey);
 

@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.HKey;
 
@@ -41,7 +41,7 @@ public final class HCategory extends HKey implements HPosition<HCategory> {
 
 	public HCategory(final String type, final String[] subTypes) {
 		super(buildKey(type, subTypes));
-		Assertion.notEmpty(type);
+		Assertion.checkArgNotEmpty(type);
 		//---------------------------------------------------------------------
 		this.subTypes = subTypes;
 		this.type = type;
@@ -52,16 +52,16 @@ public final class HCategory extends HKey implements HPosition<HCategory> {
 		if (subTypes.length == 0) {
 			return null;
 		}
-		String[] redux = new String[subTypes.length - 1];
+		final String[] redux = new String[subTypes.length - 1];
 		for (int i = 0; i < subTypes.length - 1; i++) {
 			redux[i] = subTypes[i];
 		}
 		return new HCategory(type, redux);
 	}
 
-	private static String buildKey(String type, final String[] subCategory) {
-		StringBuilder sb = new StringBuilder("subCategory::").append(type);
-		for (String element : subCategory) {
+	private static String buildKey(final String type, final String[] subCategory) {
+		final StringBuilder sb = new StringBuilder("subCategory::").append(type);
+		for (final String element : subCategory) {
 			sb.append("/").append(element);
 		}
 		return sb.toString();

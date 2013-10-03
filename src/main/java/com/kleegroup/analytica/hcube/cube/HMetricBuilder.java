@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import kasper.kernel.lang.Builder;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
+import vertigo.kernel.lang.Builder;
 
 /**
  * Builder permettant de contruire une metric.
@@ -44,7 +44,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * @param metricName Nom de la metric
 	 */
 	public HMetricBuilder(final HMetricKey metricKey) {
-		Assertion.notNull(metricKey);
+		Assertion.checkNotNull(metricKey);
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
 		if (metricKey.isClustered()) {
@@ -77,9 +77,9 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * @return MetricBuilder builder
 	 */
 	public HMetricBuilder withMetric(final HMetric metric) {
-		Assertion.notNull(metric);
-		Assertion.precondition(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
-		Assertion.precondition(metricKey.isClustered() ^ !metric.getKey().isClustered(), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
+		Assertion.checkNotNull(metric);
+		Assertion.checkArgument(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
+		Assertion.checkArgument(metricKey.isClustered() ^ !metric.getKey().isClustered(), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
 		//---------------------------------------------------------------------
 		count += metric.get(HCounterType.count);
 		max = max(max, metric.get(HCounterType.max));
@@ -88,7 +88,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		sqrSum += metric.get(HCounterType.sqrSum);
 		//---------------------------------------------------------------------
 		if (metricKey.isClustered()) {
-			for (Entry<Double, Long> entry : metric.getClusteredValues().entrySet()) {
+			for (final Entry<Double, Long> entry : metric.getClusteredValues().entrySet()) {
 				incTreshold(entry.getKey(), entry.getValue());
 			}
 		}
@@ -100,16 +100,16 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * @return Metric du cube
 	 */
 	public HMetric build() {
-		Assertion.precondition(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
+		Assertion.checkArgument(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
 		//---------------------------------------------------------------------
 		return new HMetric(metricKey, count, min, max, sum, sqrSum, clusteredValues);
 	}
 
-	private static double max(double d1, double d2) {
+	private static double max(final double d1, final double d2) {
 		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : Math.max(d1, d2);
 	}
 
-	private static double min(double d1, double d2) {
+	private static double min(final double d1, final double d2) {
 		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : Math.min(d1, d2);
 	}
 
@@ -118,8 +118,8 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	//-----------------------------------------------------------------------------------
 	private final Map<Double, Long> clusteredValues;
 
-	private void incTreshold(final double treshold, long incBy) {
-		Long count = clusteredValues.get(treshold);
+	private void incTreshold(final double treshold, final long incBy) {
+		final Long count = clusteredValues.get(treshold);
 		clusteredValues.put(treshold, incBy + (count == null ? 0 : count));
 		//---
 	}
@@ -129,8 +129,8 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		if (value <= 0) {
 			incTreshold(0, 1);
 		} else {
-			double index = Math.floor(Math.log10(value));
-			double treshold = Math.pow(10, index);
+			final double index = Math.floor(Math.log10(value));
+			final double treshold = Math.pow(10, index);
 			if (value <= treshold) {
 				incTreshold(treshold, 1);
 			} else if (value <= 2 * treshold) {

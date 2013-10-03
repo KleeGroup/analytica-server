@@ -21,8 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.dimension.HTime;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
@@ -41,10 +40,10 @@ final class HTimeSelection {
 	//	private final TimeDimension dimension;
 
 	HTimeSelection(final HTimeDimension dimension, final Date minDate, final Date maxDate) {
-		Assertion.notNull(minDate);
-		Assertion.notNull(maxDate);
-		Assertion.precondition(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
-		Assertion.notNull(dimension);
+		Assertion.checkNotNull(minDate);
+		Assertion.checkNotNull(maxDate);
+		Assertion.checkArgument(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
+		Assertion.checkNotNull(dimension);
 		//---------------------------------------------------------------------
 		minTime = new HTime(minDate, dimension);
 		maxTime = new HTime(maxDate, dimension);
@@ -61,7 +60,7 @@ final class HTimeSelection {
 			currentTime = currentTime.next();
 			loops++;
 			if (loops > 1000) {
-				throw new KRuntimeException("Segment temporel trop grand : plus de 1000 positions");
+				throw new RuntimeException("Segment temporel trop grand : plus de 1000 positions");
 			}
 		} while (currentTime.getValue().before(maxTime.getValue()));
 

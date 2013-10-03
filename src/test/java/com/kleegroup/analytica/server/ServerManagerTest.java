@@ -11,11 +11,11 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import kasper.AbstractTestCaseJU4;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import vertigo.AbstractTestCaseJU4;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
@@ -27,6 +27,8 @@ import com.kleegroup.analytica.hcube.cube.HMetricKey;
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
+import com.kleegroup.analytica.hcube.query.HQueryBuilder;
+import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
  * @author Stephane TATCHUM
@@ -63,23 +65,24 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 	@Test
 	public void testSimpleProcess() {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
-		.incMeasure(MONTANT.id(), price)//
-		.build();
+				.incMeasure(MONTANT.id(), price)//
+				.build();
 		serverManager.push(selectProcess1);
 
-		final HQuery daySqlQuery = cubeManager.createQueryBuilder()//
+		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
 				.from(date)//
 				.to(date)//
 				.with("SQL").build();
-		Assert.assertEquals(1, daySqlQuery.getAllCategories().size());
 
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
-		final List<HCube> cubes = serverManager.execute(daySqlQuery).getSerie(processSQLCategory).getCubes();
+		final HResult result = serverManager.execute(daySqlQuery);
+		Assert.assertEquals(1, result.getAllCategories().size());
+
+		final List<HCube> cubes = result.getSerie(processSQLCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 	}
-
 }

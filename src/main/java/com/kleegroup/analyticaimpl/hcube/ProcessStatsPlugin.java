@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.hcube;
 
-import kasper.kernel.manager.Plugin;
+import vertigo.kernel.component.Plugin;
 
 import com.kleegroup.analytica.core.KProcess;
 

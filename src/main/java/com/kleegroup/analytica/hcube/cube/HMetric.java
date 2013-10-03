@@ -19,7 +19,7 @@ package com.kleegroup.analytica.hcube.cube;
 
 import java.util.Map;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 /**
  * Metric.
@@ -44,9 +44,9 @@ public final class HMetric {
 	private final double sqrSum;
 	private final Map<Double, Long> clusteredValues;
 
-	HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, Map<Double, Long> clusteredValues) {
-		Assertion.notNull(metricKey);
-		//Assertion.precondition(metricKey.isClustered() ^ clusteredValues != null, "la metric {0} cluster doit avoir des données clusterisées", metricKey);
+	HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, final Map<Double, Long> clusteredValues) {
+		Assertion.checkNotNull(metricKey);
+		//Assertion.checkArgument(metricKey.isClustered() ^ clusteredValues != null, "la metric {0} cluster doit avoir des données clusterisées", metricKey);
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
 		this.count = count;
@@ -78,7 +78,7 @@ public final class HMetric {
 	}
 
 	public double get(final HCounterType dataType) {
-		Assertion.notNull(dataType);
+		Assertion.checkNotNull(dataType);
 		//---------------------------------------------------------------------
 		switch (dataType) {
 			case count:
@@ -122,6 +122,7 @@ public final class HMetric {
 		return clusteredValues;
 	}
 
+	@Override
 	public String toString() {
 		return metricKey + "= {count:" + count + ", mean:" + getMean() + (clusteredValues == null ? " " : ", clustered:" + clusteredValues) + "}";
 	}

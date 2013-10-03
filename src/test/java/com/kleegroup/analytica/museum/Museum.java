@@ -2,8 +2,8 @@ package com.kleegroup.analytica.museum;
 
 import java.util.Date;
 
-import kasper.kernel.lang.DateBuilder;
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
+import vertigo.kernel.lang.DateBuilder;
 
 import com.kleegroup.analytica.core.KProcess;
 
@@ -14,13 +14,13 @@ public final class Museum {
 	private final PageListener pageListener;
 
 	public Museum(final PageListener pageListener) {
-		Assertion.notNull(pageListener);
+		Assertion.checkNotNull(pageListener);
 		// ---------------------------------------------------------------------
 		this.pageListener = pageListener;
 	}
 
 	public void load(final int days, final int visitsByDay) {
-		Assertion.precondition(days >= 0, "days must be >= 0");
+		Assertion.checkArgument(days >= 0, "days must be >= 0");
 		//---------------------------------------------------------------------	
 		//Toutes les visites sur 3h, 100visites par heures
 		final Date now = new Date();

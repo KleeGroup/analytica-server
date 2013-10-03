@@ -25,8 +25,7 @@ import java.util.List;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.lang.Activeable;
+import vertigo.kernel.lang.Activeable;
 
 import com.google.gson.Gson;
 import com.kleegroup.analytica.core.KProcess;
@@ -62,7 +61,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 			mbs.registerMBean(this, mbeanName);
 			System.out.println(mbeanName.getCanonicalName() + " : " + mbs.isRegistered(mbeanName));
 		} catch (final Throwable th) {
-			throw new KRuntimeException("Erreur de publication JMX du LastProcessMXBean", th, null);
+			throw new RuntimeException("Erreur de publication JMX du LastProcessMXBean", th);
 		}
 	}
 
@@ -76,7 +75,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 			// Unregister the processStorePlugin MBean
 			mbs.unregisterMBean(mbeanName);
 		} catch (final Throwable th) {
-			throw new KRuntimeException("Erreur de dépublication JMX du LastProcessMXBean", th, null);
+			throw new RuntimeException("Erreur de dépublication JMX du LastProcessMXBean", th);
 		}
 	}
 

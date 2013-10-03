@@ -17,11 +17,10 @@
  */
 package com.kleegroup.analytica.hcube;
 
-import kasper.kernel.manager.Manager;
+import vertigo.kernel.component.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 
 /**
@@ -41,11 +40,6 @@ public interface HCubeManager extends Manager {
 	 * @param process Process à ajouter 
 	 */
 	void push(KProcess process);
-
-	/**
-	 * @return constructeur de query
-	 */
-	HQueryBuilder createQueryBuilder();
 
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
