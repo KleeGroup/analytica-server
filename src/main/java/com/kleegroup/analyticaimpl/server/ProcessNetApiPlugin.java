@@ -20,10 +20,17 @@ package com.kleegroup.analyticaimpl.server;
 import vertigo.kernel.component.Plugin;
 
 /**
- * Plugin gérant l'api reseau.
+ * Plugin gérant l'api reseau de reception des process.
+ * Plugin proposant une API pour la méthode PUSH du ServerManager.
  * @author npiedeloup
- * @version $Id: NetApiPlugin.java,v 1.1 2012/05/11 17:12:17 npiedeloup Exp $
+ * @version $Id: ProcessNetApiPlugin.java,v 1.1 2012/05/11 17:12:17 npiedeloup Exp $
  */
-public interface NetApiPlugin extends Plugin {
-	//rien
+public interface ProcessNetApiPlugin extends Plugin {
+
+	// Wrappe cette méthode :  
+	// /**
+	//	 * Ajout d'un process.
+	//	 * @param process Process à ajouter 
+	//	 */
+	//	void push(KProcess process);
 }
