@@ -14,11 +14,13 @@ import vertigo.kernel.di.configurator.ModuleConfigBuilder;
 import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.HCubeManager;
+import com.kleegroup.analytica.restserver.RestServerManager;
 import com.kleegroup.analytica.server.ServerManager;
 import com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl;
 import com.kleegroup.analyticaimpl.hcube.plugins.memorystack.MemoryStackProcessStatsPlugin;
 import com.kleegroup.analyticaimpl.hcube.plugins.socketio.SocketIoProcessStatsPlugin;
 import com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin;
+import com.kleegroup.analyticaimpl.restserver.RestServerManagerImpl;
 import com.kleegroup.analyticaimpl.server.ServerManagerImpl;
 import com.kleegroup.analyticaimpl.server.plugins.processapi.rest.RestProcessNetApiPlugin;
 import com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin;
@@ -34,8 +36,12 @@ public final class Starter implements Runnable {
 	private static final String CUBE_STORE_PATH = "cubeStorePath";
 	private static final String SOCKET_IO_URL = "socketIoUrl";
 	private static final String STACK_PROCESS_STATS = "stackProcessStats";
-	private static final String REST_PROCESS_API_PORT = "restProcessApiPort";
-	private static final String REST_QUERY_API_PORT = "restQueryApiPort";
+	private static final String REST_API_PORT = "restApiPort";
+	private static final String TYPE_API_NONE = "NONE";
+	private static final String TYPE_API_REST = "REST";
+	private static final String PROCESS_API = "processApi";
+	private static final String QUERY_API = "queryApi";
+
 	private static boolean SILENCE = true;
 	private final Class<?> relativeRootClass;
 	private final String propertiesFileName;
@@ -118,6 +124,11 @@ public final class Starter implements Runnable {
 		final ComponentSpaceConfigBuilder componentSpaceConfigBuilder = new ComponentSpaceConfigBuilder() //
 				.withSilence(SILENCE);
 		final ModuleConfigBuilder moduleConfigBuilder = componentSpaceConfigBuilder.beginModule("analytica");
+		if (properties.containsKey(REST_API_PORT)) {
+			moduleConfigBuilder.beginComponent(RestServerManager.class, RestServerManagerImpl.class) //
+					.withParam("httpPort", properties.getProperty(REST_API_PORT)) //
+					.endComponent();
+		}
 		final ComponentConfigBuilder serverConfigBuilder = moduleConfigBuilder.beginComponent(ServerManager.class, ServerManagerImpl.class);
 		if (properties.containsKey(PROCESS_STORE_PATH)) {
 			serverConfigBuilder.beginPlugin(BerkeleyProcessStorePlugin.class) //
@@ -127,14 +138,12 @@ public final class Starter implements Runnable {
 			serverConfigBuilder.beginPlugin(MemoryProcessStorePlugin.class) //
 					.endPlugin();
 		}
-		if (properties.containsKey(REST_PROCESS_API_PORT)) {
+		if (TYPE_API_REST.equals(properties.getProperty(PROCESS_API, TYPE_API_NONE))) {
 			serverConfigBuilder.beginPlugin(RestProcessNetApiPlugin.class) //
-					.withParam("httpPort", properties.getProperty(REST_PROCESS_API_PORT)) //
 					.endPlugin();
 		}
-		if (properties.containsKey(REST_QUERY_API_PORT)) {
+		if (TYPE_API_REST.equals(properties.getProperty(QUERY_API, TYPE_API_NONE))) {
 			serverConfigBuilder.beginPlugin(RestQueryNetApiPlugin.class) //
-					.withParam("httpPort", properties.getProperty(REST_QUERY_API_PORT)) //
 					.endPlugin();
 		}
 		serverConfigBuilder.endComponent();

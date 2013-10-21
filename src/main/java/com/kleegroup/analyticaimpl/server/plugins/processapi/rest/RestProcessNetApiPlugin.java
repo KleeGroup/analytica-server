@@ -17,66 +17,24 @@
  */
 package com.kleegroup.analyticaimpl.server.plugins.processapi.rest;
 
-import java.io.IOException;
-import java.net.URI;
-
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.ws.rs.core.UriBuilder;
 
-import org.apache.log4j.Logger;
-import org.glassfish.grizzly.http.server.HttpServer;
-
-import vertigo.kernel.exception.VRuntimeException;
-import vertigo.kernel.lang.Activeable;
-
+import com.kleegroup.analytica.restserver.RestServerManager;
 import com.kleegroup.analyticaimpl.server.ProcessNetApiPlugin;
-import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
 
 /**
  * Plugin gérant l'api reseau en REST avec jersey.
  * @author npiedeloup
  * @version $Id: RestNetApiPlugin.java,v 1.3 2012/10/16 12:39:27 npiedeloup Exp $
  */
-public final class RestProcessNetApiPlugin implements ProcessNetApiPlugin, Activeable {
-	private static final Logger LOG = Logger.getLogger(RestProcessNetApiPlugin.class);
-	private final int httpPort;
-	private HttpServer httpServer;
+public final class RestProcessNetApiPlugin implements ProcessNetApiPlugin {
 
 	/**
 	 * Constructeur simple pour instanciation par jersey.
-	 * @param httpPort port du serveur web
+	 * @param restServerManager Manager de server Rest
 	 */
 	@Inject
-	public RestProcessNetApiPlugin(@Named("httpPort") final int httpPort) {
-		this.httpPort = httpPort;
+	public RestProcessNetApiPlugin(final RestServerManager restServerManager) {
+		restServerManager.addResourceHandler(JerseyRestProcessNetApi.class);
 	}
-
-	/** {@inheritDoc} */
-	public void start() {
-		try {
-			httpServer = startServer();
-		} catch (final IOException e) {
-			throw new VRuntimeException("Erreur de lancement du Server Web Analytica.");
-		}
-	}
-
-	/** {@inheritDoc} */
-	public void stop() {
-		httpServer.stop();
-	}
-
-	private final HttpServer startServer() throws IOException {
-		final URI baseUri = UriBuilder.fromUri("http://0.0.0.0/").port(httpPort).build();
-		LOG.info("Starting grizzly...");
-		final ResourceConfig rc = new PackagesResourceConfig(JerseyRestProcessNetApi.class.getPackage().getName());
-		rc.getProperties().put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, com.sun.jersey.api.container.filter.GZIPContentEncodingFilter.class.getName());
-		rc.getProperties().put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, com.sun.jersey.api.container.filter.GZIPContentEncodingFilter.class.getName());
-		final HttpServer grizzlyServer = GrizzlyServerFactory.createHttpServer(baseUri, rc);
-		LOG.info(String.format("Jersey app started with WADL available at " + "%sapplication.wadl", baseUri));
-		return grizzlyServer;
-	}
-
 }
