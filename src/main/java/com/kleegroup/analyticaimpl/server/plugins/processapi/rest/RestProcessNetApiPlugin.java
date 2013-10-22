@@ -30,7 +30,7 @@ import com.kleegroup.analyticaimpl.server.ProcessNetApiPlugin;
 public final class RestProcessNetApiPlugin implements ProcessNetApiPlugin {
 
 	/**
-	 * Constructeur simple pour instanciation par jersey.
+	 * Constructeur.
 	 * @param restServerManager Manager de server Rest
 	 */
 	@Inject

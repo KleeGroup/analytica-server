@@ -31,11 +31,12 @@ import com.kleegroup.analyticaimpl.server.plugins.queryapi.rest.RestQueryNetApiP
  * Charge et démarre un environnement.
  * @author pchretien, npiedeloup
  */
-public final class Starter implements Runnable {
+public class Starter implements Runnable {
 	private static final String PROCESS_STORE_PATH = "processStorePath";
 	private static final String CUBE_STORE_PATH = "cubeStorePath";
 	private static final String SOCKET_IO_URL = "socketIoUrl";
 	private static final String STACK_PROCESS_STATS = "stackProcessStats";
+	private static final String REST_API_PATH = "restApiPath";
 	private static final String REST_API_PORT = "restApiPort";
 	private static final String TYPE_API_NONE = "NONE";
 	private static final String TYPE_API_REST = "REST";
@@ -74,7 +75,7 @@ public final class Starter implements Runnable {
 	}
 
 	/** {@inheritDoc} */
-	public void run() {
+	public final void run() {
 		try {
 			start();
 
@@ -120,13 +121,34 @@ public final class Starter implements Runnable {
 			</plugin>
 		</component>
 	</module>*/
-	private ComponentSpaceConfig createComponentSpaceConfig(final Properties properties) {
+
+	/**
+	 * @param properties Propriétés de l'environnement.
+	 * @return ComponentSpaceConfig configuration de l'environnement
+	 */
+	protected final ComponentSpaceConfig createComponentSpaceConfig(final Properties properties) {
 		final ComponentSpaceConfigBuilder componentSpaceConfigBuilder = new ComponentSpaceConfigBuilder() //
 				.withSilence(SILENCE);
+		appendModuleAnalytica(properties, componentSpaceConfigBuilder);
+		appendOtherModules(properties, componentSpaceConfigBuilder);
+		return componentSpaceConfigBuilder.build();
+	}
+
+	/**
+	 * Ajoute d'autre modules à la configuration de l'environnement.
+	 * @param properties  Propriétés de l'environnement.
+	 * @param componentSpaceConfigBuilder Builder de la configuration de l'environnement
+	 */
+	protected void appendOtherModules(final Properties properties, final ComponentSpaceConfigBuilder componentSpaceConfigBuilder) {
+		//Possibilité d'ajouter d'autres modules à la conf.
+	}
+
+	private final void appendModuleAnalytica(final Properties properties, final ComponentSpaceConfigBuilder componentSpaceConfigBuilder) {
 		final ModuleConfigBuilder moduleConfigBuilder = componentSpaceConfigBuilder.beginModule("analytica");
-		if (properties.containsKey(REST_API_PORT)) {
+		if (properties.containsKey(REST_API_PORT) || properties.containsKey(REST_API_PATH)) {
 			moduleConfigBuilder.beginComponent(RestServerManager.class, RestServerManagerImpl.class) //
-					.withParam("httpPort", properties.getProperty(REST_API_PORT)) //
+					.withParam("apiPath", properties.getProperty(REST_API_PATH, "/rest/")) //
+					.withParam("httpPort", properties.getProperty(REST_API_PORT, "8080")) //
 					.endComponent();
 		}
 		final ComponentConfigBuilder serverConfigBuilder = moduleConfigBuilder.beginComponent(ServerManager.class, ServerManagerImpl.class);
@@ -166,7 +188,6 @@ public final class Starter implements Runnable {
 		}
 		hCubeConfigBuilder.endComponent();
 		moduleConfigBuilder.endModule();
-		return componentSpaceConfigBuilder.build();
 	}
 
 	/**

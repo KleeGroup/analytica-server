@@ -15,4 +15,12 @@ public interface RestServerManager extends Manager {
 	 */
 	void addResourceHandler(Class<?> handlerClass);
 
+	/**
+	 * Ajoute un classPath comme racine pour des fichiers static.
+	 * L'url d'accès sera préfixé par le context. 
+	 * @param classPath ClassPath racine des fichiers à proposer en static
+	 * @param context Préfix des urls de ces éléments
+	 */
+	void addStaticPath(final String classPath, String context);
+
 }

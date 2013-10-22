@@ -30,7 +30,7 @@ import com.kleegroup.analyticaimpl.server.QueryNetApiPlugin;
 public final class RestQueryNetApiPlugin implements QueryNetApiPlugin {
 
 	/**
-	 * Constructeur simple pour instanciation par jersey.
+	 * Constructeur.
 	 * @param restServerManager Manager de server Rest
 	 */
 	@Inject

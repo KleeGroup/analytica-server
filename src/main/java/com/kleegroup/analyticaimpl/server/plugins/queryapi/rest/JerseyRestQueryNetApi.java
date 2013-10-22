@@ -50,14 +50,6 @@ public class JerseyRestQueryNetApi {
 	}
 
 	@GET
-	@Produces(MediaType.TEXT_HTML)
-	public String hello() {
-		// @formatter:off
-		return new StringBuilder().append("<html><body>").append("<a href=\"\\/datas\">datas</a>").append("<a href=\"\\/categories\">categories</a>").append("</body></html>").toString();
-		// @formatter:on
-	}
-
-	@GET
 	@Path("/timeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
