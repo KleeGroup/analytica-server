@@ -1,0 +1,92 @@
+
+BODY{
+	background: #FFF;
+	/*background-image: url('../img/background.png');*/
+	min-width : 1024px;
+}
+
+.navbar-inverse, #sidebar {
+	background-image: url('../img/background.png');
+}
+
+.navbar-brand {
+	padding : 1px;
+	padding-right : 30px;
+}
+
+#main {
+	margin:0px;
+	margin-top:50px;
+	max-width:1950px;
+}
+
+#panels {
+	margin-top:30px;
+}
+
+.row {
+	overflow: hidden; /** Pour fixer la hauteur de la sidebar a celle des panels */
+}  
+
+#sidebar {
+	border-radius: 0px;
+	padding-top:30px;
+	padding-left:0px;
+	padding-right:0px;
+	margin-bottom: -99999px; /** Pour fixer la hauteur de la sidebar a celle des panels */
+    padding-bottom: 99999px;
+}
+
+#sidebar li {
+	width:100%;
+}
+
+.panel {
+  padding: 0px;
+  background: #EEE;
+  margin-bottom:30px;
+}
+
+.panel-body {
+  padding: 5px;
+  margin: 5px;
+}
+
+.panel-heading, .panel-footer {
+  margin: 0px;
+  padding: 5px;
+}
+
+.panel h5 {
+  margin: 0px;
+}
+
+.panel-footer {
+	position: absolute; 
+	bottom: 0;
+	width:100%;
+}
+
+.panel-h1 {height:185px;}
+.panel-h2 {height:400px;}
+
+.panel-h1 .chart {height:135px;}
+.panel-h2 .chart {height:350px;}
+
+.bigValue  {
+	font-size: 3em;
+	line-height:1.1em;
+	font-weight: bold;
+	color: #222;
+	/*text-shadow: #B3B3B3 1px 1px 3px;*/
+}
+
+.bigValuelabel {
+	margin-left:5px;
+	font-size: 1.0em; 
+	color: #777;
+}
+
+.panel img {
+	margin: 0px; padding: 0px;
+}
