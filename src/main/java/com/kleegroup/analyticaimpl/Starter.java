@@ -43,7 +43,7 @@ public class Starter implements Runnable {
 	private static final String PROCESS_API = "processApi";
 	private static final String QUERY_API = "queryApi";
 
-	private static boolean SILENCE = true;
+	private static boolean SILENCE = false;
 	private final Class<?> relativeRootClass;
 	private final String propertiesFileName;
 	private boolean started;

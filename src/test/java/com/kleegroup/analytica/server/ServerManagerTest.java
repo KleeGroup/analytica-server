@@ -29,6 +29,8 @@ import com.kleegroup.analytica.hcube.dimension.HTimeDimension;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
+import com.kleegroup.analytica.museum.Museum;
+import com.kleegroup.analytica.museum.PageListener;
 
 /**
  * @author Stephane TATCHUM
@@ -84,5 +86,25 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
+	}
+
+	@Test
+	public void testVirtualData() throws InterruptedException {
+		final VirtualDatas virtualDatas = new VirtualDatas(serverManager);
+		virtualDatas.load();
+	}
+
+	@Test
+	//On charge 10 jours à 50 visites par jourDURATION
+	public void testMuseum() throws InterruptedException {
+		final int days = 10;
+		final int visitsByDay = 50;
+		new Museum(new PageListener() {
+			@Override
+			public void onPage(final KProcess process) {
+				serverManager.push(process);
+			}
+		}).load(days, visitsByDay);
+		Thread.sleep(1000000000);
 	}
 }

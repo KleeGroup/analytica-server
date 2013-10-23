@@ -59,7 +59,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 
 	/** {@inheritDoc} */
 	public void push(final KProcess process) {
-		hcubeManager.push(process);
+		processStorePlugin.add(process);
+		//hcubeManager.push(process);
 	}
 
 	/** {@inheritDoc} */

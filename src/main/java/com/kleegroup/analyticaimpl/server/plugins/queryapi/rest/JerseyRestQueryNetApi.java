@@ -29,7 +29,7 @@ import com.kleegroup.analytica.server.ServerManager;
  */
 @Path("/query")
 public class JerseyRestQueryNetApi {
-	private final String dTimeTo = "NOW+6h";
+	private final String dTimeTo = "NOW+1h";
 	private final String dTimeFrom = "NOW-8h";
 	private final String dTimeDim = "Minute";
 	private final String dDatas = "duration:mean";
