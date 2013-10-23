@@ -18,11 +18,10 @@
 	<module name="analytica">
 		<manager name="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
 		        <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin"/>
-		</manager>
+		   	    <plugin name="ProcessStatsPlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.memorystack.MemoryStackProcessStatsPlugin"/>
+        </manager>
 		<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
-	        <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
-	        	<param name="dbPath" value="d:/analytica/db" />
-	        </plugin>
+	        <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.memory.MemoryProcessStorePlugin"/>
 	     </manager>
      </module>
 </modules>
