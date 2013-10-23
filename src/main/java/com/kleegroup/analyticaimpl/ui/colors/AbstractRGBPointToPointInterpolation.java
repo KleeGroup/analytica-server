@@ -21,7 +21,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import kasper.kernel.util.Assertion;
+import vertigo.kernel.lang.Assertion;
 
 /**
  * Classe abstraire d'interpolation de couleur.
@@ -40,7 +40,7 @@ abstract class AbstractRGBPointToPointInterpolation implements RGBInterpolation 
 
 	/** {@inheritDoc} */
 	public List<Color> getColors(final int nbColors) {
-		Assertion.notNull(mainColors, "Les couleurs principales n'ont pas été settées.");
+		Assertion.checkNotNull(mainColors, "Les couleurs principales n'ont pas été settées.");
 		//---------------------------------------------------------------------
 		int startJ = 0;
 		final List<Color> interpolatedColor = new ArrayList<Color>();
