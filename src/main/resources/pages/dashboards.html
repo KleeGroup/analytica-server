@@ -6,6 +6,7 @@
 		<title>Analytica - Dashboard</title>
 		<meta name="viewport" content="width=1024">
 		<!--[if lt IE 9]>	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--> 
+		<link rel="stylesheet" type="text/css" href="../static/css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/bootstrap-analytica.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/chart-analytica.css">
@@ -43,7 +44,7 @@
         </li>
         <li>
           <a href="/dashboard.html?name=perf">
-              <i class="glyphicon glyphicon-dashboard"></i>
+              <i class="fa fa-dashboard"></i>
               <span>Perfs</span>
           </a>
         </li>
@@ -66,39 +67,56 @@
 <!-- on rend les panneaux -->
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
-			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Petit panel</h5></div>
+			<div class="logo"><img src="../static/img/logoSpark.png" height="180px"/></div>
+		</div>
+	</div>
+	
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Temps de réponse</h5></div>
 			<div class="panel-body">
-				<div id="panel1" class="chart d3chart" data-url="rest/query/timeLine/PAGE" data-query="fromTime=NOW-30d&toTime=NOW&timeDim=Hour"></div>				
+				<div id="panel1" class="chart flotchart barchart" 
+				data-url="rest/query/timeLine/PAGE" 
+				data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:mean"}'></div>				
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
-			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Petit panel</h5></div>
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Temps de réponse</h5></div>
 			<div class="panel-body">
-				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
-				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
-				<div class="title">visits</div>
+			    <div id="panel2" class="chart flotchart linechart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:mean;SQL:mean"}' 
+			    data-labels='{"duration:mean":"Moyenne", "SQL:mean":"SQL"}'></div>				
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1" style="background-color:rgb(67, 200, 60); color:#FFF">
+			<div class="panel-body clock"><span class="hours"></span><span class="seconds"></span><span class="date"></span></div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Répartition temps de réponse</h5></div>
+			<div class="panel-body">
+				<div id="panel3" class="chart flotchart stakedareachart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
+			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+				data-colors='iHEAT'></div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
-			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Petit panel</h5></div>
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Nombre de requète</h5></div>
 			<div class="panel-body">
-				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
-				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
-				<div class="title">visits</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-3">
-		<div class="panel panel-primary panel-h1">
-			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Petit panel</h5></div>
-			<div class="panel-body">
-				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
-				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
-				<div class="title">visits</div>
+				<div id="panel3" class="chart flotchart linechart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:count"}'></div>
 			</div>
 		</div>
 	</div>
@@ -107,9 +125,11 @@
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
 			<div class="panel-body">
-				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
-				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
-				<div class="title">visits</div>
+				<div id="panel3" class="chart flotchart stakedareachart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
+			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+			    data-colors='iHEAT'></div>
 			</div>
 		</div>
 	</div>
@@ -117,9 +137,23 @@
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
 			<div class="panel-body">
-				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
-				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
-				<div class="title">visits</div>
+				<div id="panel3" class="chart flotchart stakedareachart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-3h", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
+			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+			    data-colors='iHEAT'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
+			<div class="panel-body">
+				<div id="panel3" class="chart flotchart stakedareachart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
+			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+			    data-colors='iHEAT'></div>
 			</div>
 		</div>
 	</div>
@@ -472,6 +506,7 @@
 	<script src="static/js/jquery.flot.pie.js"></script>
 	<script src="static/js/jquery.flot.stack.js"></script>
 	<script src="static/js/jquery.flot.resize.min.js"></script>
+	<script src="static/js/jquery.flot.time.js"></script>
 	<!-- <script src="js/jquery.chosen.min.js"></script>
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.cleditor.min.js"></script>
@@ -489,9 +524,11 @@
 	<script src="js/retina.js"></script>
 	<script src="js/custom.js"></script>  -->
 	<script src="static/js/d3.v3.js"></script> 
-	<script src="static/js/analytica.d3.js"></script> 
+	<!-- <script src="static/js/analytica.d3.js"></script>  -->
+	<script src="static/js/analytica.flot.js"></script>
 	<script src="static/js/analytica.js"></script> 
 	<!-- end: JavaScript-->
-	<script> $(document).ready(function() { showCharts(); }); </script> 
+	<script> $(document).ready(function() { startClock(); }); </script> 
+	<script> $(document).ready(function() { showCharts(); }); </script>
 	</body>
 </html>

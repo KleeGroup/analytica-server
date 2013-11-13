@@ -1,8 +1,9 @@
 
 BODY{
-	background: #FFF;
+	background: #EEE;
 	/*background-image: url('../img/background.png');*/
 	min-width : 1024px;
+	color: #555;
 }
 
 .navbar-inverse, #sidebar {
@@ -31,7 +32,7 @@ BODY{
 #sidebar {
 	border-radius: 0px;
 	padding-top:30px;
-	padding-left:0px;
+	/*padding-left:0px;*/
 	padding-right:0px;
 	margin-bottom: -99999px; /** Pour fixer la hauteur de la sidebar a celle des panels */
     padding-bottom: 99999px;
@@ -41,10 +42,32 @@ BODY{
 	width:100%;
 }
 
+.panel .clock {
+	margin-top:25px;
+	font-family:'Arial, Helvetica, sans-serif; 
+	font-size:36px; 
+	font-weight:bold;
+	text-align:center;
+}
+.panel .clock .hours {
+	font-size:64px;
+}
+.panel .clock .seconds {
+	padding-left:5px;
+	font-size:18px;
+}
+.panel .clock .date {
+	
+	display:block;
+	font-size:18px;
+}
+
 .panel {
   padding: 0px;
-  background: #EEE;
+  background: #FFF;
   margin-bottom:30px;
+  border-color: #DDD;
+  border-radius :0px;
 }
 
 .panel-body {
@@ -55,6 +78,16 @@ BODY{
 .panel-heading, .panel-footer {
   margin: 0px;
   padding: 5px;
+}
+
+.panel .panel-heading {
+	background-color: #FFF;
+	border-color: #DDD;
+	color:#333;
+}
+
+.panel .logo {
+	padding-left:10px;
 }
 
 .panel h5 {

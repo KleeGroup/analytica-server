@@ -91,31 +91,53 @@
 	};
 
 	$.fn.drawbarChart = function(datas) {
-		  
 		var defaults = {}, options = $.extend(defaults, datas);	
-		var width = $(this).width();
-		var height = $(this).height();
+		var margin = {top: 20, right: 20, bottom: 20, left: 30},
+	    width = $(this).width() - margin.left - margin.right,
+	    height = $(this).height() - margin.top - margin.bottom;
 		
 		var container = d3.select("#"+$(this).attr("id")).append("svg")
-		.attr("width", width)
-	    .attr("height", height)
-	    .append("g");
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 		
 		var x = d3.time.scale()
-		.domain([d3.min(datas, function(d) { return new Date(d.x);}), d3.max(datas, function(d) { return new Date(d.x);})])
-		.range([0, width]);
+		.domain([d3.min(datas, function(d) { return new Date(d.x+5);}), d3.max(datas, function(d) { return new Date(d.x+5);})])
+		.rangeRound([0, width]);
 		
 		var y = d3.scale.linear()
 		.domain([0, d3.max(datas, function(d) { return d.y;})])
 		.range([height, 0]);
-			
-		container.selectAll(".bar")
+		
+		var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom")
+	    .ticks(2)
+	    .tickFormat(d3.time.format("%H"));
+	
+		var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .ticks(2)
+	    .orient("left");	
+		
+		container.append("g").selectAll(".bar")
 	      .data(datas)
 	    .enter().append("rect")
 	      .attr("class", "bar")
-	      .attr("x", function(d) { return x(new Date(d.x)); })
+	      .attr("x", function(d) { return x(new Date(d.x))-10/2; })
 	      .attr("width", function(d) { return 10; })
 	      .attr("y", function(d) { return y(d.y); })
 	      .attr("height", function(d) { return height-y(d.y); });
+		
+		container.append("g")
+		  .attr("class", "x axis")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(xAxis);
+		
+		container.append("g")
+		  .attr("class", "y axis")
+	      .call(yAxis);
+		
 	};
 })(jQuery);
