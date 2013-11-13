@@ -1,5 +1,9 @@
 package com.kleegroup.analyticaimpl.server.plugins.queryapi.rest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +22,8 @@ import vertigo.kernel.di.injector.Injector;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kleegroup.analytica.hcube.HCubeManager;
+import com.kleegroup.analytica.hcube.cube.HMetric;
+import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.query.HQuery;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.server.ServerManager;
@@ -33,7 +39,6 @@ public class JerseyRestQueryNetApi {
 	private final String dTimeFrom = "NOW-8h";
 	private final String dTimeDim = "Minute";
 	private final String dDatas = "duration:mean";
-	private final String dDatasMult = "duration:count;duration:mean";
 
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -52,35 +57,23 @@ public class JerseyRestQueryNetApi {
 	@GET
 	@Path("/timeLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getMonoSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
+	public String getTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, false);
 		final HResult result = serverManager.execute(query);
-
-		final List<DataPoint> points = Utils.loadDataPointsMonoSerie(result, datas);
-
-		return gson.toJson(points);
+		final List<String> dataKeys = Arrays.asList(datas.split(";"));
+		final List<TimedDataSerie> dataSeries = Utils.loadDataSeriesByTime(result, dataKeys);
+		return gson.toJson(dataSeries);
 	}
 
 	@GET
-	@Path("/multitimeLine/{category}")
+	@Path("/categoryLine/{category}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getMultiSerieTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatasMult) @QueryParam("datas") final String datas) {
-		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, false);
-		final HResult result = serverManager.execute(query);
-
-		final Map<String, List<DataPoint>> pointsMap = Utils.loadDataPointsMuliSerie(result, datas);
-
-		return gson.toJson(pointsMap);
-	}
-
-	@GET
-	@Path("/agregatedDatasByCategory/{category}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("category") final String category, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, category, true);
 		final HResult result = serverManager.execute(query);
-
-		return gson.toJson(Utils.getAggregatedValuesByCategory(result, datas));
+		final List<String> dataKeys = Arrays.asList(datas.split(";"));
+		final List<DataSerie> dataSeries = Utils.loadDataSeriesByCategory(result, dataKeys);
+		return gson.toJson(dataSeries);
 	}
 
 	@GET
@@ -88,6 +81,43 @@ public class JerseyRestQueryNetApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCategories() {
 		return gson.toJson(cubeManager.getCategoryDictionary().getAllRootCategories());
+	}
+
+	@GET
+	@Path("/categories/{category}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getCategories(@PathParam("category") final String category) {
+		final HCategory hCategory = new HCategory(category);
+		return gson.toJson(cubeManager.getCategoryDictionary().getAllSubCategories(hCategory));
+	}
+
+	@GET
+	@Path("/metrics/{category}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getMetrics(@PathParam("category") final String category) {
+		final HCategory hCategory = new HCategory(category);
+		final HQuery query = Utils.createQuery("NOW-1m", "NOW", "Month", category, false);
+		final HResult result = serverManager.execute(query);
+		final Collection<HMetric> metrics = result.getSerie(hCategory).getMetrics();
+		final List<Map<String, Object>> metricsName = new ArrayList<Map<String, Object>>();
+		for (final HMetric metric : metrics) {
+			final Map<String, Object> metricName = new HashMap<String, Object>();
+			metricsName.add(metricName);
+			metricName.put("name", metric.getKey().id());
+			final List<String> type = new ArrayList<String>();
+			metricName.put("type", type);
+			type.add("count");
+			type.add("mean");
+			type.add("min");
+			type.add("max");
+			type.add("sum");
+			type.add("sqrSum");
+			type.add("stdDev");
+			if (metric.getKey().isClustered()) {
+				type.add("clustered");
+			}
+		}
+		return gson.toJson(metricsName);
 	}
 
 	//	@GET

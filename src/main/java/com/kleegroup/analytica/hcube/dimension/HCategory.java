@@ -59,6 +59,10 @@ public final class HCategory extends HKey implements HPosition<HCategory> {
 		return new HCategory(type, redux);
 	}
 
+	public String[] getValue() {
+		return subTypes;
+	}
+
 	private static String buildKey(final String type, final String[] subCategory) {
 		final StringBuilder sb = new StringBuilder("subCategory::").append(type);
 		for (final String element : subCategory) {
