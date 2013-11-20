@@ -53,6 +53,9 @@ function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, da
 		} else {
 			options.xaxis = {
 					mode: "categories",
+					tickFormatter : function(value, axis) {
+				    	return axis.ticks[Math.round(value)].label;
+					}
 			};			
 		}
 		

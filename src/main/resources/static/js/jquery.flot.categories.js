@@ -137,13 +137,8 @@ as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
         }
 
         // fix ticks
-        if (!series[axis].options.ticks) {
+        if (!series[axis].options.ticks)
             series[axis].options.ticks = categoriesTickGenerator;
-            series[axis].options.tickFormatter = function(value, axis) {
-            	// to check : value == array Index : more simple
-    			return axis.ticks[Math.round(value)].label;
-    		};
-        }
 
         transformPointsOnAxis(datapoints, axis, series[axis].categories);
     }
@@ -190,6 +185,6 @@ as "categories" on the axis object, e.g. plot.getAxes().xaxis.categories.
         init: init,
         options: options,
         name: 'categories',
-        version: '1.1'
+        version: '1.0'
     });
 })(jQuery);
