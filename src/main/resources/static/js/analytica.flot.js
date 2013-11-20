@@ -1,69 +1,157 @@
 
-function showFlotChart(elem, dataUrl, dataQuery, dataLabels, dataColors) {
-	$.getJSON(dataUrl, dataQuery)      
-	.done(
-	  function( datas ) {
-		  	var flotDatas = toFlotData(datas, dataQuery.datas.split(';'), dataLabels);
-		  	var defaultChartOptions = createDefaultChartOptions(dataQuery, datas, dataColors);
-		  	var chartOptions;
-			if (elem.hasClass ("barchart")) {
-				chartOptions = getBarOptions(dataQuery, dataColors);
-			} else if (elem.hasClass ("linechart")) {
-				chartOptions = getLineOptions(dataQuery, dataColors);
-			} else if (elem.hasClass ("stakedareachart")) {
-				chartOptions = getStakedAreaOptions(dataQuery, dataColors);
-			}
-			var options = $.extend({}, defaultChartOptions, chartOptions);
-			var plot = $.plot(elem, flotDatas, options);
-			var previousPoint = null;
-			elem.bind("plothover", showTooltipsFunction(previousPoint, plot));
-	  });
+function showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors) {
+	var allMetrics = dataQuery.datas.split(';');
+	var timedSeries = datas[0].time;
+	var flotDatas = toFlotData(datas, dataMetrics, allMetrics, dataLabels, timedSeries);
+	var defaultChartOptions = createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, dataColors);
+  	var chartOptions;
+	if (elem.hasClass ("barchart")) {
+		chartOptions = getBarOptions(dataQuery, datas, timedSeries, dataColors);
+	} else if (elem.hasClass ("linechart")) {
+		chartOptions = getLineOptions(dataQuery, timedSeries, dataColors);
+	} else if (elem.hasClass ("stakedareachart")) {
+		chartOptions = getStakedAreaOptions(dataQuery, timedSeries, dataColors);
+	} else if (elem.hasClass ("sparkbar")) {
+		chartOptions = getSparkBarOptions(dataQuery, datas, timedSeries, dataColors);
+	} else if (elem.hasClass ("sparkline")) {
+		chartOptions = getSparkLineOptions(dataQuery, datas, timedSeries, dataColors);
+	}
+	var options = $.extend({}, defaultChartOptions, chartOptions);
+	var plot = $.plot(elem, flotDatas, options);
+	elem.bind("plothover", options.tooltipsFunction(plot));
 }
 
-function createDefaultChartOptions(dataQuery, datas, dataColors) {
+
+function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, dataColors) {
 	var options = {
-		series: {
-			//specific
-		},
-		grid: { hoverable: true, borderWidth:1	},
-		xaxis: {
-			min: datas[0].time,
-		    max: datas[datas.length-1].time,
-			mode: "time",
-			timezone : "browser",
-			timeformat: getTimeFormat(dataQuery.timeDim)
-		},
-		yaxis: {
-			min:0
-		}};
-		if(dataColors) {
-			options.colors = colorTools.getColors(dataColors, dataQuery.datas.split(';').length);		
+			series: {
+				//specific
+			},
+			grid: { hoverable: true, borderWidth:1	},
+			xaxis: {
+				
+			},
+			yaxis: {
+				min:0
+			},
+			legend : {
+				show : false /*on cache la legend, en attendant de la placer mieux */
+			},
+			tooltipsFunction : function(plot) {
+				var previousPoint = null;
+				return showTooltipsFunction(previousPoint, plot, false, true);
+			}
+		};
+		if(timedSeries) {
+			options.xaxis = {
+				min: datas[0].time,
+			    max: datas[datas.length-1].time,
+				mode: "time",
+				timezone : "browser",
+				timeformat: analyticaTools.getTimeFormat(dataQuery.timeDim)
+			};	
+		} else {
+			options.xaxis = {
+					mode: "categories",
+			};			
 		}
+		
+		if(dataColors) {
+			options.colors = analyticaTools.getColors(dataColors, allMetrics.length);		
+		}
+		
 		return options;
 }
 
-function getBarOptions(dataQuery, flotDatas, dataColors) {
+function getBarOptions(dataQuery, datas, timedSeries, dataColors) {
+	var options = {
+			series: {
+				bars: {
+					show: true,
+					barWidth: timedSeries?analyticaTools.getTimeDimStep(dataQuery.timeDim):0.8,
+					align: "center",
+				}
+			},
+			tooltipsFunction : function(plot) {
+				var previousPoint = null;
+				return showTooltipsFunction(previousPoint, plot, true, true);
+			}
+	};
+	return options;
+}
+
+function getSparkBarOptions(dataQuery, datas, timedSeries, dataColors) {
 	var options = {
 		series: {
 			bars: {
 				show: true,
-				barWidth: getBarWidth(dataQuery.timeDim)
+				barWidth: analyticaTools.getTimeDimStep(dataQuery.timeDim),
+				align: "center",
 			}
+		},
+		xaxis: {
+			min: datas[0].time,
+		    max: datas[datas.length-1].time+analyticaTools.getTimeDimStep(dataQuery.timeDim)/2,
+			mode: "time",
+			timezone : "browser",
+			timeformat: analyticaTools.getTimeFormat(dataQuery.timeDim)
+		},
+		grid: {
+			show: false,
+			hoverable: false,
+		},
+		legend: {
+		    show: false,
 		}};
 		return options;
 }
 
-function getLineOptions(dataQuery, flotDatas, dataColors) {
+function getLineOptions(dataQuery, timedSeries, dataColors) {
 	var options = {
 		series: {
 			lines: {
-				show: true
+				show: true,
+			},
+			points: { 
+				show:true,
+				radius:1,
+				fill:false
 			}
 		}};
 	return options;
 }
 
-function getStakedAreaOptions(dataQuery, flotDatas, dataColors) {
+function getSparkLineOptions(dataQuery, datas, timedSeries, dataColors) {
+	var options = {
+		series: {
+			lines: {
+				show: true,
+				fill: true
+				/*fillColor: {colors: [ { opacity: 1.0 }, { opacity: 1.0 } ]},*/
+			},
+			points: { 
+				show:true,
+				radius:1,
+				fill:false
+			}
+		},
+		xaxis: {
+			ticks : [],
+		},yaxis: {
+			ticks : [],
+		},
+		grid: {
+			show: false,
+			hoverable: false,
+			borderWidth:1
+		},
+		legend: {
+		    show: false
+		}};
+		return options;
+}
+
+function getStakedAreaOptions(dataQuery, timedSeries, dataColors) {
 	var options = {
 		series: {
 			lines: {
@@ -73,18 +161,12 @@ function getStakedAreaOptions(dataQuery, flotDatas, dataColors) {
 	            lineWidth: 0
 			},
 			stack: true
+		},
+		tooltipsFunction : function(plot) {
+			var previousPoint = null;
+			return showTooltipsFunction(previousPoint, plot, false, false);
 		}};
 		return options;
-}
-
-
-function showTooltip(x, y, contents, serieColor) {
-	$("<div id='tooltip'>" + contents + "</div>").css({
-		display: "none",
-		top: y + 5,
-		left: x + 5,
-		"border-color":serieColor,
-	}).appendTo("body").fadeIn(200);
 }
 
 
@@ -108,7 +190,7 @@ function showTooltip(x, y, contents, serieColor) {
 }*/
 
 
-function showMultiTooltipsFunction(previousPoint, plot) {
+function showTooltipsFunction(previousPoint, plot, showAllValues, showSameValue) {
 	/** Fonction de tooltip Flot.*/
 	showTooltips = function (event, pos, item) {
 		if (item) {
@@ -116,35 +198,43 @@ function showMultiTooltipsFunction(previousPoint, plot) {
 				previousPoint = item.seriesIndex+':'+item.dataIndex;
 				$("#tooltip").remove();
 				var x = item.datapoint[0];
+				var y = item.datapoint.length>2?item.datapoint[1]-item.datapoint[2]:item.datapoint[1];
 				var content = "<span class='xvalue'>" +item.series.xaxis.tickFormatter(x,item.series.xaxis) + "</span><br/> ";
+				
 				for(var i=0; i<plot.getData().length;i++) {
 					var serie = plot.getData()[i];
+					var serieDatapoints = serie.datapoints;
 					content += "<div>";
-					var y;
-					for(var j=0; j < serie.data.length; j++) {
-						if(serie.data[j][0] == x) {
-							y = serie.data[j][1];
+					var otherY = null;
+					for(var j=0; j < serieDatapoints.points.length; j+=serieDatapoints.pointsize) {
+						if(serieDatapoints.points[j] == x) {
+							otherY = serieDatapoints.pointsize>2?serieDatapoints.points[j+1]-serieDatapoints.points[j+2]:serieDatapoints.points[j+1];
 							break;
 						}
 					}
-					if(y > 0) {
+					//if we found a data at the same x
+					//and we draw all series in tooltip or the data get the same Y (ie : one hide the other in chart)
+					//then we render all datas
+					if(otherY && (showAllValues || ((showSameValue || item.seriesIndex == i ) && otherY == y))) {
 						if(serie.label) {
 							content += "<span class='serie' style='color:"+serie.color+"'>"+serie.label+"</span> : ";
-						} else {
-							content += "<span class='serie'>valeur</span> : ";
 						}
-						content += "<span class='yvalue'>" + serie.yaxis.tickFormatter(y,serie.yaxis) + "</span>";
+						content += "<span class='yvalue'>" + serie.yaxis.tickFormatter(otherY,serie.yaxis) + "</span>";
 					}
 					content += "</div>";
 				}
-				showTooltip(item.pageX, item.pageY, content, item.series.color);
+				analyticaTools.showTooltip(item.pageX, item.pageY, content, item.series.color);
 			}
+		} else {
+			$("#tooltip").remove();
+			previousPoint = null;
 		}
 	}
 	return showTooltips;
 }
-function showTooltipsFunction(previousPoint, plot) {
-	/** Fonction de tooltip Flot.*/
+/*function showTooltipsFunction(previousPoint, plot) {
+	// Fonction de tooltip Flot.
+	console.log('showTooltipsFunction');
 	showTooltips = function (event, pos, item) {
 		if (item) {
 			if (previousPoint != item.seriesIndex+':'+item.dataIndex) {
@@ -157,21 +247,27 @@ function showTooltipsFunction(previousPoint, plot) {
 				var content = "<span class='xvalue'>" +serie.xaxis.tickFormatter(x,item.series.xaxis) + "</span><br/> ";
 				if(serie.label) {
 					content += "<span class='serie' style='color:"+serie.color+"'>"+serie.label+"</span> : ";
-				} else {
-					content += "<span class='serie'>valeur</span> : ";
 				}
 				content += "<span class='yvalue'>" + serie.yaxis.tickFormatter(y,serie.yaxis) + "</span>";
-				showTooltip(item.pageX, item.pageY, content, item.series.color);
+				analyticaTools.showTooltip(item.pageX, item.pageY, content, item.series.color);
 			}
+		} else {
+			$("#tooltip").remove();
+			previousPoint = null;
 		}
 	}
 	return showTooltips;
-}
+}*/
 
 /** Conversion de données servers List<date, Map<NomMetric, value>> en données Flot.*/
-function toFlotData(datas, metrics, dataLabels) {
+function toFlotData(datas, metrics, allMetrics, dataLabels, timedSeries) {
+	_endsWith = function(string, suffix) {
+	    return string.indexOf(suffix, string.length - suffix.length) !== -1;
+	};
+	var categorieIndex = new Array();
+	
 	var newSeries = new Array();
-	for(var i = 0 ; i<metrics.length; i++) {
+	for(var i = 0 ; i< metrics.length; i++) {
 		var metric = metrics[i];
 		var serie = new Object();
 		if(dataLabels && dataLabels[metric]) {
@@ -179,39 +275,40 @@ function toFlotData(datas, metrics, dataLabels) {
 		}
 		serie.data = new Array();
 		for(var j = 0 ; j<datas.length; j++) {
-			serie.data[j] = [datas[j].time, datas[j].values[metric]];			
+			var x = timedSeries ? datas[j].time : datas[j].category; // timed series by default, else categories 
+			var y = datas[j].values[metric];
+			serie.data[j]=([x, y]);
 		}
+		var index = allMetrics.indexOf(metric);
+		serie.color = index>=0 ? index : i;
+		
+		if(!serie.label) {
+			if(_endsWith(metric, 'count')) {
+				serie.label = "Quantit&eacute;";
+			} else if(_endsWith(metric, 'mean')) {
+				serie.label = "Moyenne";
+			} else if(_endsWith(metric, 'min')) {
+				serie.label = "Minimum";
+			} else if(_endsWith(metric, 'max')) {
+				serie.label = "Maximum";
+			}
+		}
+		
 		newSeries.push(serie);
 	}
 	return newSeries;
 }
 
-function getBarWidth(timeDim) {
-	if(timeDim == 'Year') {
-		return 364*24*60*60*1000;
-	} else if(timeDim == 'Month') {
-		return 28*24*60*60*1000;
-	} else if(timeDim == 'Day') {
-		return 24*60*60*1000;
-	} else if(timeDim == 'Hour') {
-		return 60*60*1000;
-	} else if(timeDim == 'Minute') {
-		return 60*1000;
-	}
-	return 60*1000;
-}
 
-function getTimeFormat(timeDim) {
-	if(timeDim == 'Year') {
-		return "%Y";
-	} else if(timeDim == 'Month') {
-		return "%m/%y";
-	} else if(timeDim == 'Day') {
-		return "%e/%m";
-	} else if(timeDim == 'Hour') {
-		return "%Hh";
-	} else if(timeDim == 'Minute') {
-		return "%H:%M";
+/*function removeGap(flotDatas) {
+	var newSeries = new Array();
+	for(var i = 0 ; i<flotDatas.length; i++) {
+		var serie = flotDatas[i];
+		for(var j = 0 ; j<serie.data.length; j++) {
+			serie.data.splice(j, 0, [serie.data[j][0]+timeStep, serie.data[j][1]])
+			serie.data[j]=([datas[j].time, datas[j].values[metric]]);
+		}		
 	}
-	return "%H:%M";
-}
+	return newSeries;
+}*/
+

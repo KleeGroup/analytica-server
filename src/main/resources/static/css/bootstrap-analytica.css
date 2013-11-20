@@ -25,6 +25,25 @@ BODY{
 	margin-top:30px;
 }
 
+.panel.zoom {
+	position: fixed;
+  	top: 50%;
+  	left: 50%;
+  	margin-top: -384px;
+  	margin-left: -512px;
+	height:768px;
+	width:1024px;	
+	z-index:8010;
+	box-shadow: 5px 5px 5px #000;
+}
+.panel.zoom .chart {
+	position: fixed;
+	height:720px;
+  	left: 50%;
+  	margin-left: -486px;
+	width:972px;	
+}
+
 .row {
 	overflow: hidden; /** Pour fixer la hauteur de la sidebar a celle des panels */
 }  
@@ -32,7 +51,7 @@ BODY{
 #sidebar {
 	border-radius: 0px;
 	padding-top:30px;
-	/*padding-left:0px;*/
+	padding-left:0px;
 	padding-right:0px;
 	margin-bottom: -99999px; /** Pour fixer la hauteur de la sidebar a celle des panels */
     padding-bottom: 99999px;
@@ -41,6 +60,20 @@ BODY{
 #sidebar li {
 	width:100%;
 }
+
+#sidebar li.active a {
+	background-color: rgb(45, 137, 239);
+}
+
+.panel.blue {
+	background-color: rgb(45, 137, 239);
+	color:#FFF;
+}
+.panel.green {
+	background-color: rgb(67, 200, 60);
+	color:#FFF;
+}
+
 
 .panel .clock {
 	margin-top:25px;
@@ -78,6 +111,7 @@ BODY{
 .panel-heading, .panel-footer {
   margin: 0px;
   padding: 5px;
+  border-radius :0px;
 }
 
 .panel .panel-heading {

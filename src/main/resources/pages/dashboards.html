@@ -13,6 +13,7 @@
 		<link rel="shortcut icon" href="static/ico/favicon.png">
 	</head>
 	<body>
+	
 <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
   <div class="navbar-header">
   	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-1-collapse">
@@ -75,9 +76,9 @@
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Temps de réponse</h5></div>
 			<div class="panel-body">
-				<div id="panel1" class="chart flotchart barchart" 
+				<div class="chart flotchart barchart" 
 				data-url="rest/query/timeLine/PAGE" 
-				data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:mean"}'></div>				
+				data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:mean"}'></div>				
 			</div>
 		</div>
 	</div>
@@ -85,27 +86,38 @@
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Temps de réponse</h5></div>
 			<div class="panel-body">
-			    <div id="panel2" class="chart flotchart linechart" 
+			    <div class="chart flotchart linechart" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:mean;SQL:mean"}' 
-			    data-labels='{"duration:mean":"Moyenne", "SQL:mean":"SQL"}'></div>				
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:mean;SQL:mean;SEARCH:mean"}' 
+			    data-labels='{"duration:mean":"Page", "SQL:mean":"Sql", "SEARCH:mean":"Recherches"}'></div>				
 			</div>
 		</div>
 	</div>
 	
 	<div class="col-md-3">
-		<div class="panel panel-primary panel-h1" style="background-color:rgb(67, 200, 60); color:#FFF">
-			<div class="panel-body clock"><span class="hours"></span><span class="seconds"></span><span class="date"></span></div>
+		<div class="panel panel-primary panel-h1 blue">
+			<div class="panel-body clock"></div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution du nombre d'appel</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart bignumber" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SQL:count"}' 
+			    data-labels='{"duration:count":"Nb Pages","SQL:count":"Nb Sql"}'></div>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Répartition temps de réponse</h5></div>
 			<div class="panel-body">
-				<div id="panel3" class="chart flotchart stakedareachart" 
+				<div class="chart flotchart stakedareachart" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
-			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
 				data-colors='iHEAT'></div>
 			</div>
 		</div>
@@ -114,21 +126,21 @@
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Nombre de requète</h5></div>
 			<div class="panel-body">
-				<div id="panel3" class="chart flotchart linechart" 
-			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:count"}'></div>
+				<div class="chart flotchart linechart" 
+			    data-url="rest/query/timeLine/PAGE/home" 
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:count"}'></div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="col-md-6">
+	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
 			<div class="panel-body">
-				<div id="panel3" class="chart flotchart stakedareachart" 
+				<div class="chart flotchart stakedareachart" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
-			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
 			    data-colors='iHEAT'></div>
 			</div>
 		</div>
@@ -137,10 +149,10 @@
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
 			<div class="panel-body">
-				<div id="panel3" class="chart flotchart stakedareachart" 
+				<div class="chart flotchart stakedareachart" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-3h", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
-			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+			    data-query='{"timeFrom":"NOW-3h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
 			    data-colors='iHEAT'></div>
 			</div>
 		</div>
@@ -149,16 +161,27 @@
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
 			<div class="panel-body">
-				<div id="panel3" class="chart flotchart stakedareachart" 
+				<div class="chart flotchart stakedareachart" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW+1h", "timeDim":"Hour", "datas":"duration:clustered:100-;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000;duration:clustered:5000+"}' 
-			    data-labels='{"duration:clustered:100-":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000":"<2s", "duration:clustered:5000+":">5s"}'
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
 			    data-colors='iHEAT'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart barchart" 
+			    data-url="rest/query/categoryLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:count;duration:mean"}' 
+			    data-labels='{"duration:count":"Nb","duration:mean":"Moyenne"}'></div>
 			</div>
 		</div>
 	</div>
 	</div> <!-- /row -->
-	<div class="row">
+	<!-- <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Grand panel</h5></div>
@@ -245,7 +268,7 @@
 								</ul>
 								<div class="clearfix"></div>
 							</div>
-							<!-- End .sparkStats --> 
+							End .sparkStats 
 						</div>
 						<div class="row hideInIE8 circleStats">
 							<div class="col-md-2" onTablet="col-md-4" onDesktop="col-md-2">
@@ -367,7 +390,7 @@
 									</div>
 								</div>
 							</div>
-							<!--/span--> 
+							/span 
 							<div class="widget span3 red" onTablet="col-md-6" onDesktop="col-md-3">
 								<h2> <span class="glyphicons pie_chart"><i></i></span> Browsers </h2>
 								<hr>
@@ -406,7 +429,7 @@
 									</ul>
 								</div>
 							</div>
-							<!--/span--> 
+							/span 
 							<div class="box black span4" onTablet="col-md-6" onDesktop="col-md-4">
 								<div class="box-header">
 									<h2> <i class="halflings-icon white user"></i><span class="break"></span>Last Users </h2>
@@ -421,7 +444,7 @@
 									</ul>
 								</div>
 							</div>
-							<!--/span--> 
+							/span 
 							<div class="box black span4 noMargin" onTablet="col-md-12" onDesktop="col-md-4">
 								<div class="box-header">
 									<h2> <i class="halflings-icon white check"></i><span class="break"></span>To Do List </h2>
@@ -474,7 +497,7 @@
 							</a>
 							<div class="clearfix"></div>
 						</div>
-						<!--/row--> 
+						/row  -->
 					</div>
 					<!--/.fluid-container--> <!-- end: Content --> 
 				</div>
@@ -503,10 +526,13 @@
 	<script src='js/fullcalendar.min.js'></script>
 	<script src='js/jquery.dataTables.min.js'></script> -->
 	<script src="static/js/jquery.flot.js"></script>
+	<!-- <script src="static/js/jquery.flot.orderBars.js"></script> --> <!-- must be before jquery.flot.stack.js -->
 	<script src="static/js/jquery.flot.pie.js"></script>
-	<script src="static/js/jquery.flot.stack.js"></script>
+	<script src="static/js/jquery.flot.categories.1.1.js"></script>
 	<script src="static/js/jquery.flot.resize.min.js"></script>
 	<script src="static/js/jquery.flot.time.js"></script>
+	<script src="static/js/jquery.flot.stack.js"></script>
+	<script src="static/js/jquery.flot.sidedBars.js"></script>
 	<!-- <script src="js/jquery.chosen.min.js"></script>
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.cleditor.min.js"></script>

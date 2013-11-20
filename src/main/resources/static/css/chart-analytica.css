@@ -15,6 +15,24 @@
   fill: steelblue;
 }
 
+.bignumber .metricLine {
+	margin-bottom: 15px;
+}
+.sparkbar, .sparkline {
+	height : 51px;  /*font-size: 36px; => height:51px */
+	display : inline-block;
+}
+.bignumber .number {
+	line-height : 36px;
+	font-size: 36px;
+	font-weight:bold;
+}
+.bignumber .title {
+	line-height : 18px;
+	float:right;
+	text-align: right;
+}
+
 #tooltip {
 	position: absolute;
 	display: none;
@@ -25,6 +43,7 @@
 	background-color:#F8F8F8;
 	/*opacity : 0.9;*/
 	font-size:0.9em;
+	z-index:8020;
 }
 
 #tooltip .xvalue {
