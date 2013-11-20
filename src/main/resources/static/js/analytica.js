@@ -24,21 +24,50 @@ function showCharts() {
 				  showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
 			  }
 		  });
-		toggle = function() {
-			var parent = elem.parent().parent();
-			if(parent.hasClass('zoom')) {
-				$("#overlay").remove();
-				parent.removeClass('zoom');
-			} else {
-				$("<div/>", {"id":"overlay", "class":"modal-backdrop fade in"}).appendTo($("body"));
-				parent.addClass('zoom');
-			}
-		};
+		toggle = getZoomFunction(elem);
 		elem.on("click", toggle);
 		//elem.on("mouseout", function() { elem.removeClass('zoom'); });
 	});
 }
 
+/**
+ * Charge les données lors du chargement de la page.
+ **/
+function showTables() {
+	$('div.datatable').each(function () {
+		var elem = $(this);
+		var dataUrl = elem.attr('data-url');
+		var dataQuery = jQuery.parseJSON( elem.attr('data-query') );
+		var dataColumns =  elem.attr('data-columns');
+		if(dataColumns) {
+			dataColumns = jQuery.parseJSON( dataColumns );
+		}
+		completeDataTableQuery(dataColumns, dataQuery);
+		$.getJSON(dataUrl, dataQuery)      
+		.done(
+		  function( datas ) {
+			  showDataTable(elem, datas, dataColumns, dataQuery);			  
+		  });
+		//toggle = getZoomFunction(elem);
+		//elem.on("click", toggle);
+		//elem.on("mouseout", function() { elem.removeClass('zoom'); });
+	});
+	
+}
+
+getZoomFunction = function(elem) {
+	var toggle = function() {
+		var parent = elem.parent().parent();
+		if(parent.hasClass('zoom')) {
+			$("#overlay").remove();
+			parent.removeClass('zoom');
+		} else {
+			$("<div/>", {"id":"overlay", "class":"modal-backdrop fade in"}).appendTo($("body"));
+			parent.addClass('zoom');
+		}
+	};
+	return toggle;
+} 
 
 function startClock() {
 //Create elements :

@@ -4,6 +4,14 @@
 	
 }
 
+.dataTable th {
+	text-align:center;
+}
+.dataTable td.right {
+	text-align:right;
+}
+
+
 .axis path,
 .axis line {
   fill: none;
