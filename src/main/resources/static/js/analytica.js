@@ -4,24 +4,32 @@
 function showCharts() {
 	$('div.chart').each(function () {
 		var elem = $(this);
-		var dataUrl = elem.attr('data-url');
+		var dataUrl = getDataUrl(elem); 
 		var dataQuery = jQuery.parseJSON( elem.attr('data-query') );
 		var dataLabels =  elem.attr('data-labels');
 		if(dataLabels) {
 			dataLabels = jQuery.parseJSON( dataLabels );
+		}
+		var dataIcons =  elem.attr('data-icons');
+		if(dataIcons) {
+			dataIcons = jQuery.parseJSON( dataIcons );
 		}
 		var dataColors =  elem.attr('data-colors');
 		
 		$.getJSON(dataUrl, dataQuery)      
 		.done(
 		  function( datas ) {
-			  var dataMetrics = dataQuery.datas.split(';');
-			  if (elem.hasClass ("bignumber")) {
-				  showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
-			  } else if (elem.hasClass ("d3chart")) {
-				  showD3Chart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
-			  } else if (elem.hasClass ("flotchart")) {
-				  showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
+			  if(notEmpty(datas)) {
+				  var dataMetrics = dataQuery.datas.split(';');
+				  if (elem.hasClass ("bignumber")) {
+					  showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
+				  } else if (elem.hasClass ("objective")) {
+					  showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors);
+				  } else if (elem.hasClass ("d3chart")) {
+					  showD3Chart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
+				  } else if (elem.hasClass ("flotchart")) {
+					  showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
+				  }
 			  }
 		  });
 		toggle = getZoomFunction(elem);
@@ -30,13 +38,21 @@ function showCharts() {
 	});
 }
 
+function notEmpty(datas) {
+	for(var i = 0; i < datas.length; i++) {
+		for(var value in datas[i].values) {
+			return true;
+		}
+	}
+	return false;
+}
 /**
  * Charge les données lors du chargement de la page.
  **/
 function showTables() {
 	$('div.datatable').each(function () {
 		var elem = $(this);
-		var dataUrl = elem.attr('data-url');
+		var dataUrl = getDataUrl(elem); 
 		var dataQuery = jQuery.parseJSON( elem.attr('data-query') );
 		var dataColumns =  elem.attr('data-columns');
 		if(dataColumns) {
@@ -54,6 +70,16 @@ function showTables() {
 	});
 	
 }
+
+getDataUrl = function(elem) {
+	var dataUrl = elem.attr('data-url');
+	if(dataUrl.indexOf('$')>-1) {			
+		dataUrl = dataUrl.replace(/\$([a-z:]+)/gi, function(match, v) {
+			return analyticaTools.getUrlVar(v);
+		});
+	}
+	return dataUrl;
+} 
 
 getZoomFunction = function(elem) {
 	var toggle = function() {
@@ -97,10 +123,8 @@ refreshClock = function() {
 	$(".clock .hours").html(( hours < 10 ? "0" : "" ) + hours + ":"+( minutes < 10 ? "0" : "" ) + minutes);
 	$('.clock .date').html(newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
 };
-
-setInterval( refreshClock ,1000);
+setInterval(refreshClock,1000);
 refreshClock();
-
 }
 
 
@@ -121,17 +145,16 @@ function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 			  }
 		  }
 	  };
-	  
+		
 	for(var i = 0; i < dataMetrics.length; i++) {
 		var metric = dataMetrics[i];
 		var firstValue = _getFirstValue(datas, metric);
 		var lastValue = _getLastValue(datas, metric);
 
-		var metricDiv = $('<div/>', {class:'metricLine'}).appendTo(elem);
+		var metricDiv = $('<div/>', {class:'metricLine col-md-3'}).appendTo(elem);
 		var flotPlaceholder = $('<div/>', {class:'sparkbar', width:((datas.length)*6)+'px'})
 		.appendTo(metricDiv);
 		showFlotChart(flotPlaceholder, datas, [metric], dataQuery, dataLabels, dataColors);
-		
 		var tendanceArrow = lastValue[1] > firstValue[1] ? 'fa fa-arrow-up' : 
 							lastValue[1] < firstValue[1] ? 'fa fa-arrow-down' : 
 							'fa fa-arrow-right';
@@ -145,6 +168,52 @@ function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 		  .appendTo(divTitle);
 		
 		divTitle.append(dataLabels[metric]);		
+	  }
+}
+
+function showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors) {
+		
+	colors = analyticaTools.getColors(dataColors, datas.length);
+	
+	for(var i = 0; i < datas.length; i++) {
+		var metricDiv = $('<div/>', {class:'gauge'}).appendTo(elem);
+		var gaugeDiv = $('<div/>').appendTo(metricDiv);
+		var guid = analyticaTools.guid();
+		var processingPlaceholder = $('<canvas/>', {id:guid, 'data-processing-sources':'static/pde/circleGauge.pde'})
+		.appendTo(gaugeDiv);
+		
+		var label = dataLabels[datas[i].category]; //category become x
+		if(!label) {
+			label = datas[i].category;
+		}
+		var icon = dataIcons?dataIcons[datas[i].category]:undefined;
+		var current = datas[i].values[dataMetrics[0]]; //first metric mean the current value
+		var objective = datas[i].values[dataMetrics[1]]; //second metric mean the objective value
+		var percent = current * 100 / objective;
+		
+		Processing.reload();
+		function getSetValueFunction(current, objective, d3color) { return function(processing) {
+			var gap = Math.max(elem.width() % 120, elem.height() % (120+20));
+			var nbRow = Math.ceil(elem.height() / (120+20));
+			var nbChartByRow = Math.ceil(datas.length / nbRow);
+			var chartSize = Math.max(120, Math.min((elem.width() - elem.width() % 120) / nbChartByRow, (elem.height() - elem.height() % (120+20)) / nbRow));
+			console.log(chartSize);
+			processing.size(chartSize, chartSize);
+			processing.initColor(d3color.r, d3color.g, d3color.b);
+			processing.setValue(current, objective);
+		}};
+		analyticaTools.doWhenProcessingReady(guid, getSetValueFunction(current, objective, d3.rgb(colors[i])));
+		
+		var divTitle = $('<div/>', {class:'title'})		  
+		  .appendTo(gaugeDiv);
+		divTitle.append(label);
+		
+		var divNumber = $('<div/>', {class:'number', style:'color:'+colors[i]}).appendTo(gaugeDiv);
+		if(icon) {
+			divNumber.append($('<i/>', {class:icon}));
+		}
+		divNumber.append(Math.round(percent)+'&nbsp;% ');
+		
 	  }	
 	  
 }
@@ -154,13 +223,46 @@ analyticaTools = function() {
 			"version" : "1.0.0"
 	};
 	
+	//From https://gist.github.com/varemenos/2531765
+	analyticaTools.getUrlVar =  function (key) {
+		var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
+		return result && unescape(result[1]) || ""; 
+	};
+	
+	analyticaTools.guid = function () {
+		//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+		function s4() {
+			  return Math.floor((1 + Math.random()) * 0x10000)
+			             .toString(16)
+			             .substring(1);
+		};
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+	           s4() + '-' + s4() + s4() + s4();		
+	};
+	
+	analyticaTools.doWhenProcessingReady = function (guid, callbackFunction) {
+		var timer = {key:null};
+		timer.key = setInterval( getTimer(guid, callbackFunction, timer), 500);
+
+		function getTimer(guid, callbackFunction, timer) {
+			return function() { 
+				if(Processing.getInstanceById(guid)) {
+					callbackFunction(Processing.getInstanceById(guid));
+					clearInterval(timer.key);
+				}
+			}
+		}
+	};
+	
 	analyticaTools.showTooltip = function (x, y, contents, serieColor) {
-		$("<div id='tooltip'>" + contents + "</div>").css({
-			display: "none",
-			top: y + 5,
-			left: x + 5,
-			"border-color":serieColor,
-		}).appendTo("body").fadeIn(200);		
+		var attrs = {display: "none", top: y + 5, left :  x + 5, "border-color":serieColor};
+		var elem = $("<div id='tooltip'>" + contents + "</div>").appendTo("body");//we must appends in order to get the correct size
+		if($( window ).width() - elem.width() - x -5 < 20) { //if no more space at right, we align a right of the cursor
+			attrs.left = 'initial';
+			attrs.right = $( window ).width() - x + 5;			
+		}
+		elem.css(attrs).fadeIn(200);
+		
 	}
 	
 
@@ -208,7 +310,7 @@ analyticaTools = function() {
 			resultColors = _interpolateHsl(mainColors, nbSeries);
 		} else if ("SPECTRUM" == colorName || "iSPECTRUM" == colorName) {
 			var mainColors = [ "rgb(230, 31, 30)", "rgb(230, 230, 30)", "rgb(30, 230, 30)", "rgb(30, 230, 230)", "rgb(30, 30, 230)", "rgb(230, 30, 230)", "rgb(230, 30, 31)" ];
-			resultColors = _interpolateCatmul(mainColors, nbSeries);
+			resultColors = _interpolateCatmul(mainColors, nbSeries+1); //+1 pour ne pas reprendre la dernière couleur
 		} else if ("RED2GREEN" == colorName || "iRED2GREEN" == colorName) {
 			var mainColors = [ "rgb(255, 51, 51)", "rgb(255, 255, 51)", "rgb(51, 153, 51)" ];
 			resultColors = _interpolateHsl(mainColors, nbSeries);
@@ -239,10 +341,8 @@ analyticaTools = function() {
 	
 	_interpolateCatmul = function(mainColors, nbColors) {
 		return _point2PointColors(mainColors, nbColors, function(t, c1, c2, c3, c4) {
-			var empty = {};
-			empty.r = null;
-			empty.g = null;
-			empty.b = null;
+			var empty = {r:null,g : null,b : null };
+			
 			var nc1 = c1 ? d3.rgb(c1) : empty;
 			var nc2 = d3.rgb(c2);
 			var nc3 = d3.rgb(c3);

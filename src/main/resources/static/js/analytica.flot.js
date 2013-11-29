@@ -1,26 +1,39 @@
 
 function showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors) {
+	if(elem.hasClass ("donut") || elem.hasClass ("gauge")) {
+		
+	} else {
+		
+	}
 	var allMetrics = dataQuery.datas.split(';');
 	var timedSeries = datas[0].time;
 	var flotDatas = toFlotData(datas, dataMetrics, allMetrics, dataLabels, timedSeries);
-	var defaultChartOptions = createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, dataColors);
-  	var chartOptions;
+	var defaultChartOptions = createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries);
+	
+	var chartOptions;
 	if (elem.hasClass ("barchart")) {
 		chartOptions = getBarOptions(dataQuery, datas, timedSeries, dataColors);
 	} else if (elem.hasClass ("linechart")) {
-		chartOptions = getLineOptions(dataQuery, timedSeries, dataColors);
+		chartOptions = getLineOptions(dataQuery, datas, timedSeries, dataColors);
 	} else if (elem.hasClass ("stakedareachart")) {
 		chartOptions = getStakedAreaOptions(dataQuery, timedSeries, dataColors);
 	} else if (elem.hasClass ("sparkbar")) {
 		chartOptions = getSparkBarOptions(dataQuery, datas, timedSeries, dataColors);
 	} else if (elem.hasClass ("sparkline")) {
 		chartOptions = getSparkLineOptions(dataQuery, datas, timedSeries, dataColors);
+	} else if (elem.hasClass ("donut")) {
+		flotDatas = inverseFlotData(flotDatas, dataLabels);
+		chartOptions = getDonutOptions(dataQuery, datas, timedSeries, dataColors);
+	} else if (elem.hasClass ("gauge")) {
+		flotDatas = inverseFlotData(flotDatas);
+		chartOptions = getGaugeOptions(dataQuery, datas, timedSeries, dataColors);
 	}
+	setColorOptions(defaultChartOptions, flotDatas.length, dataColors);
+  	
 	var options = $.extend({}, defaultChartOptions, chartOptions);
 	var plot = $.plot(elem, flotDatas, options);
 	elem.bind("plothover", options.tooltipsFunction(plot));
 }
-
 
 function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, dataColors) {
 	var options = {
@@ -56,14 +69,58 @@ function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, da
 					tickFormatter : function(value, axis) {
 				    	return axis.ticks[Math.round(value)].label;
 					}
-			};			
+			};
 		}
-		
-		if(dataColors) {
-			options.colors = analyticaTools.getColors(dataColors, allMetrics.length);		
-		}
-		
 		return options;
+}
+
+function setColorOptions(options, nbSeries, dataColors) {
+	if(dataColors) {
+		options.colors = analyticaTools.getColors(dataColors, nbSeries);		
+	}
+	return options;
+}
+
+
+function getDonutOptions(dataQuery, datas, timedSeries, dataColors) {
+	//console.log(datas);
+	var options = {
+		series: {
+			pie: {
+				show: true,
+				radius :1,
+				innerRadius: 0.5,
+				label: {
+	                show: false,
+	            }
+			}
+		},
+		tooltipsFunction : function(plot) {
+			var previousPoint = null;
+			return showPieTooltipsFunction(previousPoint, plot, false, true);
+		}};
+	return options;
+}
+
+function getGaugeOptions(dataQuery, datas, timedSeries, dataColors) {
+	//console.log(datas);
+	var options = {
+		series: {
+			pie: {
+				show: true,
+				radius : 1,
+				innerRadius: 0.8,
+				startAngle: -0.5,
+				label: {
+	                show: false,
+	            }
+			}
+		},
+		tooltipsFunction : function(plot) {
+			var previousPoint = null;
+			return showPieTooltipsFunction(previousPoint, plot, false, true);
+		}};
+	return options;
 }
 
 function getBarOptions(dataQuery, datas, timedSeries, dataColors) {
@@ -109,7 +166,7 @@ function getSparkBarOptions(dataQuery, datas, timedSeries, dataColors) {
 		return options;
 }
 
-function getLineOptions(dataQuery, timedSeries, dataColors) {
+function getLineOptions(dataQuery,  datas, timedSeries, dataColors) {
 	var options = {
 		series: {
 			lines: {
@@ -191,14 +248,52 @@ function getStakedAreaOptions(dataQuery, timedSeries, dataColors) {
 	}
 	return newSeries;
 }*/
+function isDifferentEnougth(previousPoint, item, pos) {
+	if(!previousPoint) {
+		return true;
+	}
+	var distance = Math.sqrt(Math.pow(previousPoint.pageX-pos.pageX,2)+Math.pow(previousPoint.pageY-pos.pageY,2));
+	return previousPoint.seriesIndex != item.seriesIndex || previousPoint.dataIndex != item.dataIndex || distance > 25;
+}
 
+function getPreviousPoint(item, pos) {
+	return {seriesIndex : item.seriesIndex,
+		dataIndex: item.dataIndex,
+		pageX : pos.pageX,
+		pageY : pos.pageY};
+}
+
+function showPieTooltipsFunction(previousPoint, plot, showAllValues, showSameValue) {
+	/** Fonction de tooltip Flot.*/
+	showTooltips = function (event, pos, item) {
+		if (item) {
+			if (isDifferentEnougth(previousPoint, item, pos)) {
+				previousPoint = getPreviousPoint(item,pos); 
+				$("#tooltip").remove();
+				var x = item.series.label;
+				var percent = parseFloat(item.datapoint[0]).toFixed(2);
+				var y = item.datapoint[1][0][1];
+				var content = "<span class='xvalue'>" + x + "</span><br/> ";
+				content += "<div>";
+				//content += "<span class='serie' style='color:"+item.series.color+"'>"+item.series.metriclabel+"</span> : ";
+				content += "<span class='yvalue'>" + y + " (" + percent +"%) </span>";
+				content += "</div>";
+				analyticaTools.showTooltip(pos.pageX, pos.pageY, content, item.series.color);
+			}
+		} else {
+			$("#tooltip").remove();
+			previousPoint = null;
+		}
+	}
+	return showTooltips;
+}
 
 function showTooltipsFunction(previousPoint, plot, showAllValues, showSameValue) {
 	/** Fonction de tooltip Flot.*/
 	showTooltips = function (event, pos, item) {
 		if (item) {
-			if (previousPoint != item.seriesIndex+':'+item.dataIndex) {
-				previousPoint = item.seriesIndex+':'+item.dataIndex;
+			if (isDifferentEnougth(previousPoint, item, pos)) {
+				previousPoint = getPreviousPoint(item, pos);
 				$("#tooltip").remove();
 				var x = item.datapoint[0];
 				var y = item.datapoint.length>2?item.datapoint[1]-item.datapoint[2]:item.datapoint[1];
@@ -297,6 +392,20 @@ function toFlotData(datas, metrics, allMetrics, dataLabels, timedSeries) {
 			}
 		}
 		
+		newSeries.push(serie);
+	}
+	return newSeries;
+}
+
+function inverseFlotData(flotData, dataLabels) {
+	var newSeries = new Array();
+	for(var i = 0 ; i< flotData[0].data.length; i++) {
+		var serie = new Object();
+		serie.label = flotData[0].data[i][0];
+		if(dataLabels && dataLabels[flotData[0].data[i][0]]) {
+			serie.label = dataLabels[flotData[0].data[i][0]];
+		}
+		serie.data  = flotData[0].data[i][1];
 		newSeries.push(serie);
 	}
 	return newSeries;

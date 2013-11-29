@@ -9,7 +9,6 @@ function completeDataTableQuery(dataColumns, dataQuery) {
 
 function showDataTable(elem, datas, dataColumns, dataQuery) {
 	var dataTableDatas = toDataTableDatas(datas, dataColumns);
-	console.log(dataTableDatas);
 	var table = $('<table/>').appendTo(elem);
 	var thead = $('<thead/>').appendTo(table);
 	var trthead = $('<tr/>').appendTo(thead);
@@ -54,7 +53,7 @@ function showDataTable(elem, datas, dataColumns, dataQuery) {
 		    "sInfoPostFix":    "",
 		    "sLoadingRecords": "Chargement en cours...",
 		    "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-		    "sEmptyTable":     "Aucune donnée disponible dans le tableau",
+		    "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
 		    "oPaginate": {
 		        "sFirst":      "Premier",
 		        "sPrevious":   "Pr&eacute;c&eacute;dent",
@@ -83,7 +82,6 @@ function toDataTableDatas(datas, metrics) {
 				serie[metrics[j].data] = datas[i].values[metrics[j].data];
 			}
 		}
-		console.log(serie);
 		newDatas.push(serie);
 	}
 	return newDatas;

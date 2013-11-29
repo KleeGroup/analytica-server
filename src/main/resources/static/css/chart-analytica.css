@@ -11,6 +11,37 @@
 	text-align:right;
 }
 
+.objective {
+	overflow: hidden;
+}
+.objective .gauge  {
+	float:left;
+	position: relative;
+	margin-right:5px;	
+	margin-bottom: 5px;
+}
+
+.objective .title {
+	text-align: center;
+	margin-top: -5px;	
+}
+
+.objective .number i  {
+	font-size: 30px;
+}
+
+.objective .number {
+	font-size: 15px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 50px;
+	width: 40px;
+	margin-left: -20px;
+	margin-top: -25px;
+	text-align: center;	
+}
+
 
 .axis path,
 .axis line {

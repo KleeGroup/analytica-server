@@ -155,7 +155,6 @@ public final class Utils {
 
 				if (metricKey.length > 1) {
 					final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
-
 					val = hMetric != null ? hMetric.get(counterType) : Double.NaN;
 				} else {
 					val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;

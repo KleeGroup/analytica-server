@@ -103,12 +103,54 @@
 	</div>
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Temps de réponse par modules</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart donut" 
+			    data-url="rest/query/categoryLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-2h", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:mean"}' 
+			    data-labels='{"sub-duration:mean":"Temps sous-jacent","duration:mean":"Temps",
+			    			 "search":"Recherches",
+			    			 "exposition":"Expositions",
+			    			 "artists":"Artistes",
+			    			 "oeuvres":"Oeuvres",
+			    			 "home":"Accueil",
+			    			 "images":"Images"}'
+			    			 data-colors='RED2GREEN'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Objectifs par modules</h5></div>
+			<div class="panel-body">
+				<div class="chart objective" 
+			    data-url="rest/query/categoryLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-2h", "timeTo":"NOW", "timeDim":"Hour", "datas":"sub-duration:mean;duration:mean"}' 
+			    data-labels='{"sub-duration:mean":"Temps sous-jacent","duration:mean":"Temps",
+			    			 "search":"Recherches",
+			    			 "exposition":"Expositions",
+			    			 "artists":"Artistes",
+			    			 "oeuvres":"Oeuvres",
+			    			 "home":"Accueil",
+			    			 "images":"Images"}'
+			    data-icons='{"search":"fa fa-search",
+			    			 "exposition":"fa fa-group",
+			    			 "artists":"fa fa-user",
+			    			 "oeuvres":"fa fa-picture-o",
+			    			 "home":"fa fa-home",
+			    			 "images":"fa fa-file"}'
+			    data-colors='RED2GREEN'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution du nombre d'appel</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart bignumber" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SQL:count"}' 
-			    data-labels='{"duration:count":"Nb Pages","SQL:count":"Nb Sql"}'></div>
+			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SERVICE:count;SQL:count"}' 
+			    data-labels='{"duration:count":"Nb Pages","SQL:count":"Nb Sql", "SERVICE:count":"Nb Services"}'></div>
 			</div>
 		</div>
 	</div>
@@ -189,10 +231,10 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Informations détaillées</h5></div>
 			<div class="panel-body">
 				<div class="datatable" 
-			    data-url="rest/query/categoryLine/PAGE" 
+			    data-url="rest/query/categoryLine/PAGE/$subcategory" 
 			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
 			    data-columns='[
-			    { "label":"Page", "data":"name", "content":"<a href=\"dashboard.html?category=$name\">$name</a>"},
+			    { "label":"Page", "data":"name", "content":"<a href=\"dashboards.html?subcategory=$name\">$name</a>"},
 			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
 			    { "label":"Temps moyen", "data":"duration:mean"},
 			    { "label":"Temps sous-jacent", "data":"sub-duration:mean"},
@@ -561,6 +603,7 @@
 	
 	<script src="static/js/jquery.sparkline.js"></script>
 	<script src="static/js/jquery.dataTables.js"></script>
+	<script src="static/js/jquery.knob.js"></script>
 	<!-- <script src="js/jquery.chosen.min.js"></script>
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.cleditor.min.js"></script>
@@ -582,6 +625,7 @@
 	<script src="static/js/analytica.datatable.js"></script>
 	<script src="static/js/analytica.flot.js"></script>
 	<script src="static/js/analytica.js"></script> 
+	<script src="static/js/processing-1.4.1.js"></script>
 	<!-- end: JavaScript-->
 	<script> $(document).ready(function() { 
 		startClock(); 
