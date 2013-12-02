@@ -18,11 +18,13 @@
 package com.kleegroup.analyticaimpl.hcube.plugins.store.memory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import vertigo.kernel.lang.Assertion;
+import vertigo.kernel.lang.DateBuilder;
 
 import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.cube.HCube;
@@ -50,14 +52,47 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		//
 	}
 
+	private int call = 0;
+
 	/** {@inheritDoc} */
 	public synchronized void merge(final HCube lowLevelCube) {
 		Assertion.checkNotNull(lowLevelCube);
 		//---------------------------------------------------------------------
 		for (final HCubeKey upCubeKeys : lowLevelCube.getKey().drillUp()) {
 			final HCube cube = merge(lowLevelCube, upCubeKeys);
-			store.put(cube.getKey(), cube);
+			if (tooOld(cube.getKey())) {
+				store.remove(cube.getKey());
+			} else {
+				store.put(cube.getKey(), cube);
+			}
 		}
+		printStats();
+
+	}
+
+	private boolean tooOld(final HCubeKey key) {
+		final Date maxDate;
+		switch (key.getTime().getDimension()) {
+			case Minute:
+				maxDate = new DateBuilder(new Date()).addDays(-3).build(); //précision minute : 3 jours 
+				break;
+			case SixMinutes:
+				maxDate = new DateBuilder(new Date()).addMonths(-2).build(); //précision six minutes : 2 mois 
+				break;
+			default:
+				maxDate = null;
+		}
+		if (maxDate != null) {
+			return key.getTime().getValue().before(maxDate);
+		}
+		return false;
+	}
+
+	private void printStats() {
+		if (call++ % 5000 == 0) {
+			//System.out.println("memStore : " + store.size() + "cubes");
+		}
+
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
@@ -74,6 +109,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	/** {@inheritDoc} */
 	public synchronized Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
+
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categoryDictionary);
 		//---------------------------------------------------------------------
@@ -99,6 +135,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 			cubeSeries.put(category, new HSerie(category, cubes));
 			//}
 		}
+		printStats();
 		return cubeSeries;
 	}
 

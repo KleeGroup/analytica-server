@@ -46,9 +46,13 @@ public enum HTimeDimension {
 	 */
 	Hour(Day),
 	/**
+	 * 6 Minutes.
+	 */
+	SixMinutes(Hour),
+	/**
 	 * Minute.
 	 */
-	Minute(Hour);
+	Minute(SixMinutes);
 
 	private final HTimeDimension up;
 
@@ -129,6 +133,7 @@ public enum HTimeDimension {
 		//---------------------------------------------------------------------
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
+		final int minute = calendar.get(Calendar.MINUTE);
 		switch (this) {
 			case Year:
 				calendar.set(Calendar.MONTH, 0);
@@ -142,6 +147,9 @@ public enum HTimeDimension {
 			case Hour:
 				calendar.set(Calendar.MINUTE, 0);
 				//$FALL-THROUGH$
+			case SixMinutes:
+				calendar.set(Calendar.MINUTE, minute - minute % 6);
+				//$FALL-THROUGH$				
 			case Minute:
 				calendar.set(Calendar.SECOND, 0);
 				//$FALL-THROUGH$
@@ -154,6 +162,7 @@ public enum HTimeDimension {
 	public String getPattern() {
 		switch (this) {
 			case Minute:
+			case SixMinutes:
 				return "yyyy/MM/dd HH:mm";
 			case Hour:
 				return "yyyy/MM/dd HH";

@@ -3,11 +3,14 @@
  */
 package com.kleegroup.analytica.server;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -31,6 +34,7 @@ import com.kleegroup.analytica.hcube.query.HQueryBuilder;
 import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.museum.Museum;
 import com.kleegroup.analytica.museum.PageListener;
+import com.kleegroup.analytica.museum.StatsUtil;
 
 /**
  * @author Stephane TATCHUM
@@ -95,16 +99,50 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 	}
 
 	@Test
+	public void testRandom() throws InterruptedException {
+		final SortedMap<Long, Integer> counts = new TreeMap<>();
+		for (int i = 0; i < 10000; i++) {
+			final long result = StatsUtil.random(5, 1);
+			final int count = counts.containsKey(result) ? counts.get(result) : 0;
+			counts.put(result, count + 1);
+		}
+		System.out.println(counts);
+	}
+
+	@Test
+	public void testFormat() throws InterruptedException {
+		final DecimalFormat df = new DecimalFormat("#.00");
+		System.out.println(format(456654.456123));
+		System.out.println(format(456654.45));
+		System.out.println(format(456654.456));
+		System.out.println(format(456654.455));
+		System.out.println(format(456654.454));
+		System.out.println(format(456654.4));
+
+		System.out.println(format(456654.5));
+
+		System.out.println(format(456654.6));
+	}
+
+	private String format(final double val) {
+		final String value = String.valueOf(Math.round(val * 100) / 100d);
+		if (value.indexOf('.') > value.length() - 3) {
+			return value + "0"; //it miss a 0 
+		}
+		return value;
+	}
+
+	@Test
 	//On charge 10 jours à 50 visites par jourDURATION
 	public void testMuseum() throws InterruptedException {
-		final int days = 10;
-		final int visitsByDay = 50;
+		final int days = 15;
+		final int visitsByDay = 200;
 		new Museum(new PageListener() {
 			@Override
 			public void onPage(final KProcess process) {
 				serverManager.push(process);
 			}
 		}).load(days, visitsByDay);
-		Thread.sleep(1000000000);
+		//Thread.sleep(1000000000);
 	}
 }

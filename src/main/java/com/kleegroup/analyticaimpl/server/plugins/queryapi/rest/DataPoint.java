@@ -12,14 +12,14 @@ import vertigo.kernel.lang.Assertion;
 public final class DataPoint {
 	private final Date date;
 	private final long x;
-	private final Double y;
+	private final String y;
 
-	public DataPoint(final Date date, final double value) {
+	public DataPoint(final Date date, final String value) {
 		Assertion.checkNotNull(date);
 		//---------------------------------------------------------------------
 		this.date = date;
 		x = date.getTime();
-		y = Double.isNaN(value) ? null : value;
+		y = value;
 	}
 
 	/**
@@ -39,7 +39,7 @@ public final class DataPoint {
 	/**
 	 * @return value
 	 */
-	public Double getValue() {
+	public String getValue() {
 		return y;
 	}
 }

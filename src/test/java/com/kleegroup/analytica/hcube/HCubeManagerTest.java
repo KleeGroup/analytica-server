@@ -601,7 +601,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4 {
 	//On charge 10 jours à 50 visites par jourDURATION
 	public void testMuseum() {
 		final int days = 10;
-		final int visitsByDay = 50;
+		final int visitsByDay = 200;
 		new Museum(new PageListener() {
 
 			@Override

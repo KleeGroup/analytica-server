@@ -11,9 +11,9 @@ import vertigo.kernel.lang.Assertion;
  */
 public final class DataSerie {
 	private final String category;
-	private final Map<String, Double> values;
+	private final Map<String, String> values;
 
-	public DataSerie(final String category, final Map<String, Double> values) {
+	public DataSerie(final String category, final Map<String, String> values) {
 		Assertion.checkArgNotEmpty(category);
 		//---------------------------------------------------------------------
 		this.category = category;

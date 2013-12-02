@@ -13,9 +13,9 @@ import vertigo.kernel.lang.Assertion;
 public final class TimedDataSerie {
 	private final Date date;
 	private final long time;
-	private final Map<String, Double> values;
+	private final Map<String, String> values;
 
-	public TimedDataSerie(final Date date, final Map<String, Double> values) {
+	public TimedDataSerie(final Date date, final Map<String, String> values) {
 		Assertion.checkNotNull(date);
 		//---------------------------------------------------------------------
 		this.date = date;

@@ -33,7 +33,7 @@ public final class HTime extends HKey implements HPosition<HTime> {
 	private final Date date;
 
 	public HTime(final Date date, final HTimeDimension timeDimension) {
-		super("time:[" + timeDimension.name() + "]" + new SimpleDateFormat(timeDimension.getPattern()).format(date));
+		super("time:[" + timeDimension.name() + "]" + new SimpleDateFormat(timeDimension.getPattern()).format(timeDimension.reduce(date)));
 		//---------------------------------------------------------------------
 		dimension = timeDimension;
 		this.date = timeDimension.reduce(date);
@@ -68,6 +68,9 @@ public final class HTime extends HKey implements HPosition<HTime> {
 				break;
 			case Hour:
 				nextDate = new DateBuilder(date).addHours(1).toDateTime();
+				break;
+			case SixMinutes:
+				nextDate = new DateBuilder(date).addMinutes(6).toDateTime();
 				break;
 			case Minute:
 				nextDate = new DateBuilder(date).addMinutes(1).toDateTime();

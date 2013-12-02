@@ -99,7 +99,9 @@ final class KProcessBinding extends TupleBinding {
 				final String mName = ti.readString();
 				final double mValue = ti.readDouble();
 				//Passer par un NS
-				processBuilder.setMeasure(mName, mValue);
+				if (mName != KProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead 
+					processBuilder.setMeasure(mName, mValue);
+				}
 			} else if ("MetaData".equals(subInfoType)) {
 				final String mdName = ti.readString();
 				final String mdValue = ti.readString();
@@ -128,9 +130,11 @@ final class KProcessBinding extends TupleBinding {
 		to.writeLong(process.getStartDate().getTime());
 		to.writeDouble(process.getMeasures().get(KProcess.DURATION));
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
-			to.writeString("Measure");
-			to.writeString(measure.getKey());
-			to.writeDouble(measure.getValue());
+			if (measure.getKey() != KProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead 				
+				to.writeString("Measure");
+				to.writeString(measure.getKey());
+				to.writeDouble(measure.getValue());
+			}
 		}
 		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
 			to.writeString("MetaData");

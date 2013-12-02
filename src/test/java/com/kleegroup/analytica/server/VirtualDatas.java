@@ -62,27 +62,27 @@ public class VirtualDatas {
 		//			}
 		//		}
 		long nbVisit;
-		for (int j = 0; j < 5; j++) {
+		for (int j = 4; j >= 0; j--) {
 			//			final Date dateJour = new Date(startDate.getTime() + j * 24 * 60 * 60 * 1000L);
-		final Date date = new Date(startDate.getTime() + j * 24 * 60 * 60 * 1000L);
-		for (int h = 7; h < 19; h++) {
+			final Date date = new Date(startDate.getTime() + j * 24 * 60 * 60 * 1000L);
+			for (int h = 7; h < 19; h++) {
 
-			//final double coef = 1.5 + 0.25 * Math.sin((h - 8) * Math.PI / 2 / (6 * 30));
-			final double coef = 0.25 + 0.25 * Math.sin((h - 7 + 4.5) * Math.PI / 3); //varie de 0 à 0.5
-			//if (h == 10 || h == 15) {
-			//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.6d);
-			//} else {
-			//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.2d);
-			nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% à 60% en fonction de l'heure
-			//}
-			//System.out.println(h + "\t" + coef + "\t" + nbVisit);
-			for (int visit = 0; visit < nbVisit; visit++) {
-				final Date dateVisite = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
-				//System.out.println(dateVisite + "\t" + h + "\t" + coef + "\t" + nbVisit);
-				addVisitorScenario(dateVisite, coef);
+				//final double coef = 1.5 + 0.25 * Math.sin((h - 8) * Math.PI / 2 / (6 * 30));
+				final double coef = 0.25 + 0.25 * Math.sin((h - 7 + 4.5) * Math.PI / 3); //varie de 0 à 0.5
+				//if (h == 10 || h == 15) {
+				//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.6d);
+				//} else {
+				//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.2d);
+				nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% à 60% en fonction de l'heure
+				//}
+				//System.out.println(h + "\t" + coef + "\t" + nbVisit);
+				for (int visit = 0; visit < nbVisit; visit++) {
+					final Date dateVisite = new Date(date.getTime() + h * 60 * 60 * 1000 + visit * 60 * 60 * 1000L / nbVisit);
+					//System.out.println(dateVisite + "\t" + h + "\t" + coef + "\t" + nbVisit);
+					addVisitorScenario(dateVisite, coef);
+				}
+
 			}
-
-		}
 		}
 
 	}
@@ -201,7 +201,7 @@ public class VirtualDatas {
 	 */
 	private long random(final double value, final double coef) {
 		final long result = Math.round(nextGaussian(value, Math.round(value * 1.20)) + coef * value);
-		System.out.println("random(" + value + ", " + coef + ") = " + result);
+		//System.out.println("random(" + value + ", " + coef + ") = " + result);
 		return result;
 	}
 
@@ -214,7 +214,7 @@ public class VirtualDatas {
 		if (result < 0 || result > maxValue) {
 			result = nextGaussian(moyenne, maxValue);
 		}
-		System.out.println("nextGaussian(" + moyenne + ", " + maxValue + ") = " + result);
+		//System.out.println("nextGaussian(" + moyenne + ", " + maxValue + ") = " + result);
 
 		return result;
 	}
