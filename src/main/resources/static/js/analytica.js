@@ -22,9 +22,11 @@ function showCharts() {
 			  if(notEmpty(datas)) {
 				  var dataMetrics = dataQuery.datas.split(';');
 				  if (elem.hasClass ("bignumber")) {
-					  showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
+					  showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors);
 				  } else if (elem.hasClass ("objective")) {
 					  showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors);
+				  } else if (elem.hasClass ("healthMonitor")) {
+					  showHealthMonitor(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors);
 				  } else if (elem.hasClass ("d3chart")) {
 					  showD3Chart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
 				  } else if (elem.hasClass ("flotchart")) {
@@ -102,7 +104,7 @@ $('<span/>', {class: 'seconds'}).appendTo('.clock');
 $('<span/>', {class: 'date'}).appendTo('.clock');
 
 // Create two variable with the names of the months and days in an array
-var monthNames = [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ]; 
+var monthNames = [ "Janvier", "F&eacute;vrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Ao&ucirc;t", "Septembre", "Octobre", "Novembre", "D&eacute;cembre" ]; 
 // Create a newDate() object
 var newDate = new Date();
 // Extract the current date from Date object
@@ -128,7 +130,7 @@ refreshClock();
 }
 
 
-function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors) {
+function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors) {
 	_getFirstValue = function(datas, metric) {
 		  for(var i = 0; i < datas.length; i++) {
 			  var val = datas[i].values[metric];
@@ -150,8 +152,9 @@ function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 		var metric = dataMetrics[i];
 		var firstValue = _getFirstValue(datas, metric);
 		var lastValue = _getLastValue(datas, metric);
-
-		var metricDiv = $('<div/>', {class:'metricLine col-md-3'}).appendTo(elem);
+		var icon = dataIcons?dataIcons[metric]:undefined;
+		
+		var metricDiv = $('<div/>', {class:'metricLine'}).appendTo(elem);
 		var flotPlaceholder = $('<div/>', {class:'sparkbar', width:((datas.length)*6)+'px'})
 		.appendTo(metricDiv);
 		showFlotChart(flotPlaceholder, datas, [metric], dataQuery, dataLabels, dataColors);
@@ -162,10 +165,15 @@ function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 		var divTitle = $('<div/>', {class:'title'})		  
 		  .appendTo(metricDiv);
 		
-		var divNumber = $('<div/>', {class:'number'})
-		  .append(Math.round(lastValue[1]))
-		  .append($('<i/>', {class:tendanceArrow}))
-		  .appendTo(divTitle);
+		var divNumber = $('<div/>', {class:'number'}).appendTo(divTitle);
+		divNumber.append(Math.round(lastValue[1]))
+		  .append($('<i/>', {class:tendanceArrow}));
+		
+		if(icon) {
+			//On ajoute l'icon avant le libellé, il n'y a pas la place avant le nombre
+			divTitle.append($('<i/>', {class:icon}));
+			divTitle.append('&nbsp;');
+		}
 		
 		divTitle.append(dataLabels[metric]);		
 	  }
@@ -173,22 +181,23 @@ function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 
 function showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors) {
 		
-	colors = analyticaTools.getColors(dataColors, datas.length);
-	
+	colors = analyticaTools.getColors(dataColors, datas.length * dataMetrics.length/2 );
+	var colorIndex = 0;
 	for(var i = 0; i < datas.length; i++) {
+		for(var j = 0; j < dataMetrics.length; j+=2) { //Les métrics vont 2 par deux
 		var metricDiv = $('<div/>', {class:'gauge'}).appendTo(elem);
 		var gaugeDiv = $('<div/>').appendTo(metricDiv);
 		var guid = analyticaTools.guid();
 		var processingPlaceholder = $('<canvas/>', {id:guid, 'data-processing-sources':'static/pde/circleGauge.pde'})
 		.appendTo(gaugeDiv);
-		
-		var label = dataLabels[datas[i].category]; //category become x
+		var x = datas[i].category?datas[i].category:dataMetrics[j];
+		var label = dataLabels[x]; //category become x
 		if(!label) {
 			label = datas[i].category;
 		}
-		var icon = dataIcons?dataIcons[datas[i].category]:undefined;
-		var current = datas[i].values[dataMetrics[0]]; //first metric mean the current value
-		var objective = datas[i].values[dataMetrics[1]]; //second metric mean the objective value
+		var icon = dataIcons?dataIcons[x]:undefined;
+		var current = datas[i].values[dataMetrics[j]]; //first metric mean the current value
+		var objective = datas[i].values[dataMetrics[j+1]]; //second metric mean the objective value
 		var percent = current * 100 / objective;
 		
 		Processing.reload();
@@ -197,25 +206,24 @@ function showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcon
 			var nbRow = Math.ceil(elem.height() / (120+20));
 			var nbChartByRow = Math.ceil(datas.length / nbRow);
 			var chartSize = Math.max(120, Math.min((elem.width() - elem.width() % 120) / nbChartByRow, (elem.height() - elem.height() % (120+20)) / nbRow));
-			console.log(chartSize);
 			processing.size(chartSize, chartSize);
 			processing.initColor(d3color.r, d3color.g, d3color.b);
 			processing.setValue(current, objective);
 		}};
-		analyticaTools.doWhenProcessingReady(guid, getSetValueFunction(current, objective, d3.rgb(colors[i])));
+		analyticaTools.doWhenProcessingReady(guid, getSetValueFunction(current, objective, d3.rgb(colors[colorIndex])));
 		
 		var divTitle = $('<div/>', {class:'title'})		  
 		  .appendTo(gaugeDiv);
 		divTitle.append(label);
 		
-		var divNumber = $('<div/>', {class:'number', style:'color:'+colors[i]}).appendTo(gaugeDiv);
+		var divNumber = $('<div/>', {class:'number', style:'color:'+colors[colorIndex]}).appendTo(gaugeDiv);
 		if(icon) {
 			divNumber.append($('<i/>', {class:icon}));
 		}
 		divNumber.append(Math.round(percent)+'&nbsp;% ');
-		
+		colorIndex++;
+		}
 	  }	
-	  
 }
 
 analyticaTools = function() {
@@ -312,15 +320,25 @@ analyticaTools = function() {
 			var mainColors = [ "rgb(230, 31, 30)", "rgb(230, 230, 30)", "rgb(30, 230, 30)", "rgb(30, 230, 230)", "rgb(30, 30, 230)", "rgb(230, 30, 230)", "rgb(230, 30, 31)" ];
 			resultColors = _interpolateCatmul(mainColors, nbSeries+1); //+1 pour ne pas reprendre la dernière couleur
 		} else if ("RED2GREEN" == colorName || "iRED2GREEN" == colorName) {
-			var mainColors = [ "rgb(255, 51, 51)", "rgb(255, 255, 51)", "rgb(51, 153, 51)" ];
+			var mainColors = [ "rgb(255, 51, 51)", "rgb(250, 235, 0)", "rgb(51, 200, 51)" ];
+			resultColors = _interpolateHsl(mainColors, nbSeries);
+		} else if ("GREEN2BLUE" == colorName || "iGREEN2BLUE" == colorName) {
+			var mainColors = [ "rgb(51, 153, 51)", "rgb(51, 153, 200)", "rgb(51, 51, 255)" ];
 			resultColors = _interpolateHsl(mainColors, nbSeries);
 		} else if ("HEAT" == colorName || "iHEAT" == colorName) {
 			var mainColors = [ "rgb(255, 51, 51)", "rgb(255, 255, 51)", "rgb(51, 153, 51)", "rgb(51, 153, 255)" ];
 			resultColors = _interpolateHsl(mainColors, nbSeries);
 		} else if ("GREEN:INTENSITY" == colorName || "iGREEN:INTENSITY" == colorName) {
-			var mainColors = [ "rgb(0, 170, 85)", "rgb(240, 240, 170)" ];
+			var mainColors = [ "rgb(51, 153, 51)", "rgb(170, 250, 170)" ];
 			resultColors = _interpolateLinear(mainColors, nbSeries);
-		}
+		} else if ("ANDROID" == colorName || "iANDROID" == colorName) {
+			var mainColors = [ "#0099CC", "#9933CC", "#CC0000", "#FF8800", "#669900"  ];
+			//var mainColors = [ "#33B5E5", "#AA66CC", "#ff4444", "#ffbb33", "#99cc00" ];
+			resultColors = _interpolateHsl(mainColors, nbSeries);
+		} else if ("ANDROID:LIGHT" == colorName || "iANDROID:LIGHT" == colorName) {
+			var mainColors = [ "#33B5E5", "#AA66CC", "#ff4444", "#ffbb33", "#99cc00" ];
+			resultColors = _interpolateHsl(mainColors, nbSeries);
+		}  
 		if(colorName.charAt(0) == 'i') { 
 			resultColors = resultColors.reverse(); 
 		}

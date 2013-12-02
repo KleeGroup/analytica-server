@@ -17,28 +17,34 @@
 .objective .gauge  {
 	float:left;
 	position: relative;
+	margin-left:5px;
 	margin-right:5px;	
 	margin-bottom: 5px;
 }
 
 .objective .title {
 	text-align: center;
-	margin-top: -5px;	
+	margin-top: -8px;	
 }
 
 .objective .number i  {
-	font-size: 30px;
+	font-size: 36px;
+}
+
+.objective .number i.glyphicon  {
+	margin-top: -5px;
 }
 
 .objective .number {
 	font-size: 15px;
+	line-height: 15px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	height: 50px;
 	width: 40px;
-	margin-left: -20px;
-	margin-top: -25px;
+	margin-left: -21px;
+	margin-top: -31px;
 	text-align: center;	
 }
 
@@ -54,9 +60,37 @@
   fill: steelblue;
 }
 
+.bignumber {
+	overflow: hidden;
+}
+
 .bignumber .metricLine {
 	margin-bottom: 15px;
+	float:left;
 }
+
+.col-md-12 .bignumber .metricLine {
+	width: 25%;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.col-md-9 .bignumber .metricLine {
+	width: 33%;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.col-md-6 .bignumber .metricLine {
+	width: 50%;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.col-md-3 .bignumber .metricLine {
+	width: 100%;
+}
+
 .sparkbar, .sparkline {
 	height : 51px;  /*font-size: 36px; => height:51px */
 	display : inline-block;

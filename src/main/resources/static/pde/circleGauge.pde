@@ -20,7 +20,7 @@ if(value >= 0) {
   stroke(210);
   strokeWeight(4);
   diameter -= 4;
-  ellipse(width/2,height/2,diameter, diameter);
+  //ellipse(width/2,height/2,diameter, diameter);
   noStroke();
   fill(255);
   diameter -= 2;
