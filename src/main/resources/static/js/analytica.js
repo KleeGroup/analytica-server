@@ -3,7 +3,12 @@
  **/
 function showCharts() {
 	$('div.chart').each(function () {
-		var elem = $(this);
+		showChart($(this));
+	});
+}
+
+
+function showChart(elem) {
 		var dataUrl = getDataUrl(elem); 
 		var dataQuery = jQuery.parseJSON( elem.attr('data-query') );
 		var dataLabels =  elem.attr('data-labels');
@@ -34,10 +39,7 @@ function showCharts() {
 				  }
 			  }
 		  });
-		toggle = getZoomFunction(elem);
-		elem.on("click", toggle);
-		//elem.on("mouseout", function() { elem.removeClass('zoom'); });
-	});
+		analyticaTools.zoomOnClick(elem);
 }
 
 function notEmpty(datas) {
@@ -66,9 +68,6 @@ function showTables() {
 		  function( datas ) {
 			  showDataTable(elem, datas, dataColumns, dataQuery);			  
 		  });
-		//toggle = getZoomFunction(elem);
-		//elem.on("click", toggle);
-		//elem.on("mouseout", function() { elem.removeClass('zoom'); });
 	});
 	
 }
@@ -81,20 +80,6 @@ getDataUrl = function(elem) {
 		});
 	}
 	return dataUrl;
-} 
-
-getZoomFunction = function(elem) {
-	var toggle = function() {
-		var parent = elem.parent().parent();
-		if(parent.hasClass('zoom')) {
-			$("#overlay").remove();
-			parent.removeClass('zoom');
-		} else {
-			$("<div/>", {"id":"overlay", "class":"modal-backdrop fade in"}).appendTo($("body"));
-			parent.addClass('zoom');
-		}
-	};
-	return toggle;
 } 
 
 function startClock() {
@@ -156,10 +141,13 @@ analyticaTools = function() {
 		timer.key = setInterval( getTimer(guid, callbackFunction, timer), 500);
 
 		function getTimer(guid, callbackFunction, timer) {
-			return function() { 
-				if(Processing.getInstanceById(guid)) {
+			return function() {
+				var elem = $('#'+guid);
+				if(elem.attr('load')!='true' && Processing.getInstanceById(guid)) {
 					callbackFunction(Processing.getInstanceById(guid));
 					clearInterval(timer.key);
+					elem.attr('load','true');
+					timer.key = setInterval( getTimer(guid, callbackFunction, timer), 1000);
 				}
 			}
 		}
@@ -175,6 +163,27 @@ analyticaTools = function() {
 		    }
 		})
 	}
+		
+	analyticaTools.zoomOnClick = function(elem) {
+		elem.on({
+			click :function() {
+				var parent = elem.parent().parent();
+				if(parent.hasClass('zoom')) {
+					$("#overlay").remove();
+					parent.removeClass('zoom');
+					$('canvas', parent).each(function () {
+						$(this).attr('load','false');
+					});
+				} else {
+					$("<div/>", {"id":"overlay", "class":"modal-backdrop fade in"}).appendTo($("body"));
+					parent.addClass('zoom').fadeIn(1000);
+					$('canvas', parent).each(function () {
+						$(this).attr('load','false');
+					});
+				}
+			}
+		})
+	}
 	
 	analyticaTools.showTooltip = function (x, y, contents, serieColor) {
 		var attrs = {display: "none", top: y + 5, left :  x + 5, "border-color":serieColor};
@@ -187,7 +196,6 @@ analyticaTools = function() {
 		
 	}
 	
-
 	analyticaTools.getTimeDimStep = function(timeDim) {
 		if(timeDim == 'Year') {
 			return 364*24*60*60*1000.0;
