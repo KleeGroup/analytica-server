@@ -14,6 +14,7 @@
 .objective {
 	overflow: hidden;
 }
+
 .objective .gauge  {
 	float:left;
 	position: relative;
@@ -23,8 +24,10 @@
 }
 
 .objective .title {
+	position:relative;
 	text-align: center;
-	margin-top: -8px;	
+	margin-top: -20px;
+	background: rgba(255, 255, 255, .7);
 }
 
 .objective .number i  {

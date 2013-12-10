@@ -136,9 +136,13 @@ BODY{
 
 .panel-h1 {height:185px;}
 .panel-h2 {height:400px;}
+.panel-h3 {height:615px;}
+.panel-h4 {height:830px;}
 
 .panel-h1 .chart {height:135px;}
 .panel-h2 .chart {height:350px;}
+.panel-h3 .chart {height:565px;}
+.panel-h4 .chart {height:780px;}
 
 .bigValue  {
 	font-size: 3em;

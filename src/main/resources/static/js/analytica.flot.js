@@ -1,14 +1,10 @@
 
 function showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors) {
-	if(elem.hasClass ("donut") || elem.hasClass ("gauge")) {
-		
-	} else {
-		
-	}
 	var allMetrics = dataQuery.datas.split(';');
 	var timedSeries = datas[0].time;
 	var flotDatas = toFlotData(datas, dataMetrics, allMetrics, dataLabels, timedSeries);
 	var defaultChartOptions = createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries);
+	setColorOptions(defaultChartOptions, allMetrics.length, dataColors);
 	
 	var chartOptions;
 	if (elem.hasClass ("barchart")) {
@@ -18,19 +14,20 @@ function showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 	} else if (elem.hasClass ("stakedareachart")) {
 		chartOptions = getStakedAreaOptions(dataQuery, timedSeries, dataColors);
 	} else if (elem.hasClass ("sparkbar")) {
-		chartOptions = getSparkBarOptions(dataQuery, datas, timedSeries, dataColors);
+		chartOptions = getSparkBarOptions(dataQuery, datas, timedSeries, dataColors);		
 	} else if (elem.hasClass ("sparkline")) {
 		chartOptions = getSparkLineOptions(dataQuery, datas, timedSeries, dataColors);
 	} else if (elem.hasClass ("donut")) {
 		flotDatas = inverseFlotData(flotDatas, dataLabels);
 		chartOptions = getDonutOptions(dataQuery, datas, timedSeries, dataColors);
+		setColorOptions(chartOptions, flotDatas.length, dataColors);
 	} else if (elem.hasClass ("gauge")) {
 		flotDatas = inverseFlotData(flotDatas);
 		chartOptions = getGaugeOptions(dataQuery, datas, timedSeries, dataColors);
+		setColorOptions(chartOptions, flotDatas.length, dataColors);
 	}
-	setColorOptions(defaultChartOptions, flotDatas.length, dataColors);
-  	
-	var options = $.extend({}, defaultChartOptions, chartOptions);
+	
+	var options = $.extend(defaultChartOptions, chartOptions);
 	var plot = $.plot(elem, flotDatas, options);
 	elem.bind("plothover", options.tooltipsFunction(plot));
 }
@@ -76,7 +73,7 @@ function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, da
 
 function setColorOptions(options, nbSeries, dataColors) {
 	if(dataColors) {
-		options.colors = analyticaTools.getColors(dataColors, nbSeries);		
+		options.colors = analyticaTools.getColors(dataColors, nbSeries);
 	}
 	return options;
 }
@@ -127,6 +124,7 @@ function getBarOptions(dataQuery, datas, timedSeries, dataColors) {
 	var options = {
 			series: {
 				bars: {
+					//horizontal:true,
 					show: true,
 					barWidth: timedSeries?analyticaTools.getTimeDimStep(dataQuery.timeDim):0.8,
 					align: "center",
@@ -137,6 +135,14 @@ function getBarOptions(dataQuery, datas, timedSeries, dataColors) {
 				return showTooltipsFunction(previousPoint, plot, true, true);
 			}
 	};
+	if(timedSeries) {
+		options.xaxis = {
+				mode: "time",
+				timezone : "browser",
+				timeformat: analyticaTools.getTimeFormat(dataQuery.timeDim)
+			};		
+	}
+	
 	return options;
 }
 
@@ -403,7 +409,7 @@ function inverseFlotData(flotData, dataLabels) {
 		var serie = new Object();
 		serie.label = flotData[0].data[i][0];
 		if(dataLabels && dataLabels[flotData[0].data[i][0]]) {
-			serie.label = dataLabels[flotData[0].data[i][0]];
+			serie.label = dataLabels[flotData[0].data[i][0]];			
 		}
 		serie.data  = flotData[0].data[i][1];
 		newSeries.push(serie);

@@ -129,103 +129,6 @@ setInterval(refreshClock,1000);
 refreshClock();
 }
 
-
-function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors) {
-	_getFirstValue = function(datas, metric) {
-		  for(var i = 0; i < datas.length; i++) {
-			  var val = datas[i].values[metric];
-			  if(datas[i].values[metric]) {
-				  return [datas[i].time, val];
-			  }
-		  }
-	  };
-	  _getLastValue= function(datas, metric) {
-		  for(var i = datas.length-1; i >= 0; i--) {
-			  var val = datas[i].values[metric];
-			  if(datas[i].values[metric]) {
-				  return [datas[i].time, val];
-			  }
-		  }
-	  };
-		
-	for(var i = 0; i < dataMetrics.length; i++) {
-		var metric = dataMetrics[i];
-		var firstValue = _getFirstValue(datas, metric);
-		var lastValue = _getLastValue(datas, metric);
-		var icon = dataIcons?dataIcons[metric]:undefined;
-		
-		var metricDiv = $('<div/>', {class:'metricLine'}).appendTo(elem);
-		var flotPlaceholder = $('<div/>', {class:'sparkbar', width:((datas.length)*6)+'px'})
-		.appendTo(metricDiv);
-		showFlotChart(flotPlaceholder, datas, [metric], dataQuery, dataLabels, dataColors);
-		var tendanceArrow = lastValue[1] > firstValue[1] ? 'fa fa-arrow-up' : 
-							lastValue[1] < firstValue[1] ? 'fa fa-arrow-down' : 
-							'fa fa-arrow-right';
-		
-		var divTitle = $('<div/>', {class:'title'})		  
-		  .appendTo(metricDiv);
-		
-		var divNumber = $('<div/>', {class:'number'}).appendTo(divTitle);
-		divNumber.append(Math.round(lastValue[1]))
-		  .append($('<i/>', {class:tendanceArrow}));
-		
-		if(icon) {
-			//On ajoute l'icon avant le libellé, il n'y a pas la place avant le nombre
-			divTitle.append($('<i/>', {class:icon}));
-			divTitle.append('&nbsp;');
-		}
-		
-		divTitle.append(dataLabels[metric]);		
-	  }
-}
-
-function showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors) {
-		
-	colors = analyticaTools.getColors(dataColors, datas.length * dataMetrics.length/2 );
-	var colorIndex = 0;
-	for(var i = 0; i < datas.length; i++) {
-		for(var j = 0; j < dataMetrics.length; j+=2) { //Les métrics vont 2 par deux
-		var metricDiv = $('<div/>', {class:'gauge'}).appendTo(elem);
-		var gaugeDiv = $('<div/>').appendTo(metricDiv);
-		var guid = analyticaTools.guid();
-		var processingPlaceholder = $('<canvas/>', {id:guid, 'data-processing-sources':'static/pde/circleGauge.pde'})
-		.appendTo(gaugeDiv);
-		var x = datas[i].category?datas[i].category:dataMetrics[j];
-		var label = dataLabels[x]; //category become x
-		if(!label) {
-			label = datas[i].category;
-		}
-		var icon = dataIcons?dataIcons[x]:undefined;
-		var current = datas[i].values[dataMetrics[j]]; //first metric mean the current value
-		var objective = datas[i].values[dataMetrics[j+1]]; //second metric mean the objective value
-		var percent = current * 100 / objective;
-		
-		Processing.reload();
-		function getSetValueFunction(current, objective, d3color) { return function(processing) {
-			var gap = Math.max(elem.width() % 120, elem.height() % (120+20));
-			var nbRow = Math.ceil(elem.height() / (120+20));
-			var nbChartByRow = Math.ceil(datas.length / nbRow);
-			var chartSize = Math.max(120, Math.min((elem.width() - elem.width() % 120) / nbChartByRow, (elem.height() - elem.height() % (120+20)) / nbRow));
-			processing.size(chartSize, chartSize);
-			processing.initColor(d3color.r, d3color.g, d3color.b);
-			processing.setValue(current, objective);
-		}};
-		analyticaTools.doWhenProcessingReady(guid, getSetValueFunction(current, objective, d3.rgb(colors[colorIndex])));
-		
-		var divTitle = $('<div/>', {class:'title'})		  
-		  .appendTo(gaugeDiv);
-		divTitle.append(label);
-		
-		var divNumber = $('<div/>', {class:'number', style:'color:'+colors[colorIndex]}).appendTo(gaugeDiv);
-		if(icon) {
-			divNumber.append($('<i/>', {class:icon}));
-		}
-		divNumber.append(Math.round(percent)+'&nbsp;% ');
-		colorIndex++;
-		}
-	  }	
-}
-
 analyticaTools = function() {
 	var analyticaTools = {
 			"version" : "1.0.0"
@@ -257,6 +160,7 @@ analyticaTools = function() {
 				if(Processing.getInstanceById(guid)) {
 					callbackFunction(Processing.getInstanceById(guid));
 					clearInterval(timer.key);
+					timer.key = setInterval( getTimer(guid, callbackFunction, timer), 2000);
 				}
 			}
 		}
@@ -312,36 +216,34 @@ analyticaTools = function() {
 			//default on ne fait rien
 			return;
 		} 
-		var resultColors;
+		var mainColors
+		var interpolation = _interpolateHsl; //par défaut interpolation HSL
 		if ("RAINBOW" == colorName || "iRAINBOW" == colorName) {
-			var mainColors = [ "#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FF00", "rgb(75, 0, 130)", "rgb(238, 130, 238)" ];
-			resultColors = _interpolateHsl(mainColors, nbSeries);
+			 mainColors = [ "#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FF00", "rgb(75, 0, 130)", "rgb(238, 130, 238)" ];
 		} else if ("SPECTRUM" == colorName || "iSPECTRUM" == colorName) {
-			var mainColors = [ "rgb(230, 31, 30)", "rgb(230, 230, 30)", "rgb(30, 230, 30)", "rgb(30, 230, 230)", "rgb(30, 30, 230)", "rgb(230, 30, 230)", "rgb(230, 30, 31)" ];
-			resultColors = _interpolateCatmul(mainColors, nbSeries+1); //+1 pour ne pas reprendre la dernière couleur
+			mainColors = [ "rgb(230, 30, 30)", "rgb(230, 230, 30)", "rgb(30, 230, 30)", "rgb(30, 230, 230)", "rgb(30, 30, 230)", "rgb(230, 30, 230)", "rgb(230, 30, 30)" ];
+			interpolation = _interpolateCatmul;
 		} else if ("RED2GREEN" == colorName || "iRED2GREEN" == colorName) {
-			var mainColors = [ "rgb(255, 51, 51)", "rgb(250, 235, 0)", "rgb(51, 200, 51)" ];
-			resultColors = _interpolateHsl(mainColors, nbSeries);
+			mainColors = [ "rgb(255, 51, 51)", "rgb(250, 235, 0)", "rgb(51, 200, 51)" ];
 		} else if ("GREEN2BLUE" == colorName || "iGREEN2BLUE" == colorName) {
-			var mainColors = [ "rgb(51, 153, 51)", "rgb(51, 153, 200)", "rgb(51, 51, 255)" ];
-			resultColors = _interpolateHsl(mainColors, nbSeries);
+			mainColors = [ "rgb(51, 153, 51)", "rgb(51, 153, 200)", "rgb(51, 51, 255)" ];
 		} else if ("HEAT" == colorName || "iHEAT" == colorName) {
-			var mainColors = [ "rgb(255, 51, 51)", "rgb(255, 255, 51)", "rgb(51, 153, 51)", "rgb(51, 153, 255)" ];
-			resultColors = _interpolateHsl(mainColors, nbSeries);
+			mainColors = [ "rgb(255, 51, 51)", "rgb(255, 255, 51)", "rgb(51, 153, 51)", "rgb(51, 153, 255)" ];
 		} else if ("GREEN:INTENSITY" == colorName || "iGREEN:INTENSITY" == colorName) {
-			var mainColors = [ "rgb(51, 153, 51)", "rgb(170, 250, 170)" ];
-			resultColors = _interpolateLinear(mainColors, nbSeries);
+			mainColors = [ "rgb(51, 153, 51)", "rgb(170, 250, 170)" ];
+			interpolation = _interpolateLinear;
 		} else if ("ANDROID" == colorName || "iANDROID" == colorName) {
-			var mainColors = [ "#0099CC", "#9933CC", "#CC0000", "#FF8800", "#669900"  ];
-			//var mainColors = [ "#33B5E5", "#AA66CC", "#ff4444", "#ffbb33", "#99cc00" ];
-			resultColors = _interpolateHsl(mainColors, nbSeries);
+			mainColors = [ "#0099CC", "#9933CC", "#CC0000", "#FF8800", "#669900"  ];
+			//mainColors = [ "#33B5E5", "#AA66CC", "#ff4444", "#ffbb33", "#99cc00" ];
 		} else if ("ANDROID:LIGHT" == colorName || "iANDROID:LIGHT" == colorName) {
-			var mainColors = [ "#33B5E5", "#AA66CC", "#ff4444", "#ffbb33", "#99cc00" ];
-			resultColors = _interpolateHsl(mainColors, nbSeries);
+			mainColors = [ "#33B5E5", "#AA66CC", "#ff4444", "#ffbb33", "#99cc00" ];
 		}  
 		if(colorName.charAt(0) == 'i') { 
-			resultColors = resultColors.reverse(); 
+			mainColors = mainColors.reverse(); 
 		}
+		var resultColors;
+		var isCycle = mainColors[0] == mainColors[mainColors.length-1];
+		var resultColors = interpolation(mainColors, nbSeries + (isCycle ? 1 : 0)); //si les couleurs représente un cycle, on exclue la dernière couleur (qui est aussi la première)
 		return resultColors;
 	}
 	
@@ -373,6 +275,9 @@ analyticaTools = function() {
 	}
 	
 	_point2PointColors = function (mainColors, nbColors, colorInterpolation) {
+		if(nbColors == 1) {
+			return [mainColors[0]];
+		}
 		var startJ = 0;
 		var interpolatedColor = new Array();
 		var nbInterpolatedColor = mainColors.length;
