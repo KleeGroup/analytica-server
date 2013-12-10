@@ -18,16 +18,44 @@
 .objective .gauge  {
 	float:left;
 	position: relative;
-	margin-left:5px;
-	margin-right:5px;	
 	margin-bottom: 5px;
 }
-
+.objective .gauge canvas {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+.objective .gauge.col-1 {
+	width:100%;
+}
+.objective .gauge.col-2 {
+	width:50%;
+}
+.objective .gauge.col-3 {
+	width:33.333333333333%;
+}
+.objective .gauge.col-4 {
+	width:25%;
+}
+.objective .gauge.col-5 {
+	width:20%;
+}
+.objective .gauge.col-6 {
+	width:16.666666666666%;
+}
+.objective .gauge.col-7 {
+	width:14.285714285714%;
+}
+.objective .gauge.col-8 {
+	width:12.5%;
+}
 .objective .title {
+	display:none;
 	position:relative;
 	text-align: center;
 	margin-top: -20px;
-	background: rgba(255, 255, 255, .7);
+	/*border:solid 2px #F00;*/
+	background: rgba(255, 255, 255, .75);
 }
 
 .objective .number i  {
@@ -44,10 +72,10 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	height: 50px;
-	width: 40px;
-	margin-left: -21px;
-	margin-top: -31px;
+	height: 60px;
+	width: 60px;
+	margin-left: -30px;
+	margin-top: -20px;
 	text-align: center;	
 }
 

@@ -21,12 +21,7 @@ function showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 		flotDatas = inverseFlotData(flotDatas, dataLabels);
 		chartOptions = getDonutOptions(dataQuery, datas, timedSeries, dataColors);
 		setColorOptions(chartOptions, flotDatas.length, dataColors);
-	} else if (elem.hasClass ("gauge")) {
-		flotDatas = inverseFlotData(flotDatas);
-		chartOptions = getGaugeOptions(dataQuery, datas, timedSeries, dataColors);
-		setColorOptions(chartOptions, flotDatas.length, dataColors);
 	}
-	
 	var options = $.extend(defaultChartOptions, chartOptions);
 	var plot = $.plot(elem, flotDatas, options);
 	elem.bind("plothover", options.tooltipsFunction(plot));
@@ -80,7 +75,6 @@ function setColorOptions(options, nbSeries, dataColors) {
 
 
 function getDonutOptions(dataQuery, datas, timedSeries, dataColors) {
-	//console.log(datas);
 	var options = {
 		series: {
 			pie: {
@@ -99,26 +93,6 @@ function getDonutOptions(dataQuery, datas, timedSeries, dataColors) {
 	return options;
 }
 
-function getGaugeOptions(dataQuery, datas, timedSeries, dataColors) {
-	//console.log(datas);
-	var options = {
-		series: {
-			pie: {
-				show: true,
-				radius : 1,
-				innerRadius: 0.8,
-				startAngle: -0.5,
-				label: {
-	                show: false,
-	            }
-			}
-		},
-		tooltipsFunction : function(plot) {
-			var previousPoint = null;
-			return showPieTooltipsFunction(previousPoint, plot, false, true);
-		}};
-	return options;
-}
 
 function getBarOptions(dataQuery, datas, timedSeries, dataColors) {
 	var options = {
@@ -151,7 +125,9 @@ function getSparkBarOptions(dataQuery, datas, timedSeries, dataColors) {
 		series: {
 			bars: {
 				show: true,
-				barWidth: analyticaTools.getTimeDimStep(dataQuery.timeDim),
+				fill:1,
+				//barWidth: analyticaTools.getTimeDimStep(dataQuery.timeDim),
+				lineWidth : 4, //on fixe la taille en pt
 				align: "center",
 			}
 		},
@@ -336,32 +312,7 @@ function showTooltipsFunction(previousPoint, plot, showAllValues, showSameValue)
 	}
 	return showTooltips;
 }
-/*function showTooltipsFunction(previousPoint, plot) {
-	// Fonction de tooltip Flot.
-	console.log('showTooltipsFunction');
-	showTooltips = function (event, pos, item) {
-		if (item) {
-			if (previousPoint != item.seriesIndex+':'+item.dataIndex) {
-				previousPoint = item.seriesIndex+':'+item.dataIndex;
-				$("#tooltip").remove();
-				var x = item.datapoint[0];
-				var y = item.datapoint.length>2?item.datapoint[1]-item.datapoint[2]:item.datapoint[1];
-				var serie = item.series;
-				
-				var content = "<span class='xvalue'>" +serie.xaxis.tickFormatter(x,item.series.xaxis) + "</span><br/> ";
-				if(serie.label) {
-					content += "<span class='serie' style='color:"+serie.color+"'>"+serie.label+"</span> : ";
-				}
-				content += "<span class='yvalue'>" + serie.yaxis.tickFormatter(y,serie.yaxis) + "</span>";
-				analyticaTools.showTooltip(item.pageX, item.pageY, content, item.series.color);
-			}
-		} else {
-			$("#tooltip").remove();
-			previousPoint = null;
-		}
-	}
-	return showTooltips;
-}*/
+
 
 /** Conversion de données servers List<date, Map<NomMetric, value>> en données Flot.*/
 function toFlotData(datas, metrics, allMetrics, dataLabels, timedSeries) {
@@ -416,17 +367,4 @@ function inverseFlotData(flotData, dataLabels) {
 	}
 	return newSeries;
 }
-
-
-/*function removeGap(flotDatas) {
-	var newSeries = new Array();
-	for(var i = 0 ; i<flotDatas.length; i++) {
-		var serie = flotDatas[i];
-		for(var j = 0 ; j<serie.data.length; j++) {
-			serie.data.splice(j, 0, [serie.data[j][0]+timeStep, serie.data[j][1]])
-			serie.data[j]=([datas[j].time, datas[j].values[metric]]);
-		}		
-	}
-	return newSeries;
-}*/
 

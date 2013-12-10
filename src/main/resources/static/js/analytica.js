@@ -160,11 +160,21 @@ analyticaTools = function() {
 				if(Processing.getInstanceById(guid)) {
 					callbackFunction(Processing.getInstanceById(guid));
 					clearInterval(timer.key);
-					timer.key = setInterval( getTimer(guid, callbackFunction, timer), 2000);
 				}
 			}
 		}
 	};
+	
+	analyticaTools.toggleVisibilityOnMouseOver = function (triggerElement, showedElement) {
+		triggerElement.on({
+		    mouseover: function() {
+		    	showedElement.fadeIn(100);
+		    },
+		    mouseout: function() {
+		    	showedElement.stop().stop().fadeOut();
+		    }
+		})
+	}
 	
 	analyticaTools.showTooltip = function (x, y, contents, serieColor) {
 		var attrs = {display: "none", top: y + 5, left :  x + 5, "border-color":serieColor};

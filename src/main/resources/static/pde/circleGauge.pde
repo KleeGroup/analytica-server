@@ -15,23 +15,14 @@ void draw() {
 	  int diameter = min(width,height);
 	  strokeCap(SQUARE);
 	  noFill();
-	  stroke(210);
-	  strokeWeight(4);
-	  diameter -= 4;
-	  //ellipse(width/2,height/2,diameter, diameter);
-	  noStroke();
-	  fill(255);
-	  diameter -= 2;
-	  //ellipse(width/2,height/2,diameter,diameter);
-	  noFill();
 	  
 	  stroke(graphColor);
-	  strokeWeight(2);
-	  diameter -= 2;
+	  strokeWeight(diameter*0.015);
+	  diameter -= diameter*0.02;
 	  ellipse(width/2,height/2, diameter, diameter);
 	  
-	  strokeWeight(14);
-	  diameter -= 20;
+	  strokeWeight(diameter*0.13);
+	  diameter -= diameter*0.17;
 	  arc(width/2,height/2, diameter, diameter, -HALF_PI, value* TWO_PI/maxValue -HALF_PI);  
   }
   if(value < finalValue) {
@@ -44,7 +35,6 @@ void draw() {
 void setValue(double newValue, double newMaxValue) {
   finalValue = newValue*maxValue/newMaxValue;
   value = finalValue; //or 0
-  //maxValue = newMaxValue;
   loop();
 }
 
