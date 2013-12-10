@@ -52,7 +52,7 @@ public final class StatsUtil {
 		double weightSum = 0;
 		final double[] weightValues = new double[values.length];
 		for (int i = 0; i < weightValues.length; i++) {
-			weightValues[i] = weightFirst + i / weightValues.length * (weightLast - weightFirst);
+			weightValues[i] = weightFirst + i * (weightLast - weightFirst) / (weightValues.length - 1);
 			weightSum += weightValues[i];
 		}
 		final double rand = RANDOM.nextDouble() * weightSum;
