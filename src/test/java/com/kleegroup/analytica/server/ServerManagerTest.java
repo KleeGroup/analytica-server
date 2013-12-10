@@ -110,6 +110,17 @@ public class ServerManagerTest extends AbstractTestCaseJU4 {
 	}
 
 	@Test
+	public void testRandom2() throws InterruptedException {
+		final SortedMap<Long, Integer> counts = new TreeMap<>();
+		for (int i = 0; i < 10000; i++) {
+			final long result = StatsUtil.randomValue(100, 1, 100, 0);
+			final int count = counts.containsKey(result) ? counts.get(result) : 0;
+			counts.put(result, count + 1);
+		}
+		System.out.println(counts);
+	}
+
+	@Test
 	public void testFormat() throws InterruptedException {
 		final DecimalFormat df = new DecimalFormat("#.00");
 		System.out.println(format(456654.456123));
