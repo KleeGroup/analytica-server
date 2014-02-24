@@ -78,6 +78,17 @@ public class JerseyRestQueryNetApi {
 	}
 
 	@GET
+	@Path("/metricLine/{type}{subcategories:(/.+?)?}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getAggregatedDataByTimeAndCategory(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
+		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, true);
+		final HResult result = serverManager.execute(query);
+		final List<String> dataKeys = Arrays.asList(datas.split(";"));
+		final List<DataSerie> dataSeries = Utils.loadDataSeriesByCategory(result, dataKeys);
+		return gson.toJson(dataSeries);
+	}
+
+	@GET
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCategories() {

@@ -121,6 +121,44 @@ public final class Utils {
 		return dataSeries;
 	}
 
+	public static List<DataSerie> loadDataSeries(final HResult result, final List<String> dataKeys) {
+		Assertion.checkNotNull(result);
+		// ---------------------------------------------------------------------
+		final List<DataSerie> dataSeries = new ArrayList<DataSerie>();
+		for (final HCategory category : result.getAllCategories()) {
+			final HSerie serie = result.getSerie(category);
+			final Map<String, String> values = new HashMap<String, String>();
+			for (final String dataKey : dataKeys) {
+				final String[] metricKey = dataKey.split(":");
+				if (isMetricHistory(metricKey)) {
+					String sep = "";
+					final StringBuilder sb = new StringBuilder();
+					for (final HCube cube : serie.getCubes()) {
+						final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
+						final String val = getMetricValue(metricKey, hMetric, "null");
+						sb.append(sep).append(val);
+						sep = ",";
+					}
+					values.put(dataKey, sb.toString());
+				} else {
+					final HMetric hMetric = serie.getMetric(new HMetricKey(metricKey[0], true));
+					final String val = getMetricValue(metricKey, hMetric, null);
+					if (val != null) {
+						values.put(dataKey, val);
+					} else {
+						//pas de values.put(key, val); on laisse null
+					}
+				}
+			}
+			if (!values.isEmpty()) {
+				final String[] subCategories = category.getValue();
+				final DataSerie dataSerie = new DataSerie(subCategories[subCategories.length - 1], values);
+				dataSeries.add(dataSerie);
+			}
+		}
+		return dataSeries;
+	}
+
 	private static boolean isMetricHistory(final String[] metricKey) {
 		return metricKey.length > 2 && METRIC_KEY_HISTO.equals(metricKey[metricKey.length - 1]);
 	}
