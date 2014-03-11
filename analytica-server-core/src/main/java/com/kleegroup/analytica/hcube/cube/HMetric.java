@@ -17,9 +17,9 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
-import java.util.Map;
+import io.vertigo.kernel.lang.Assertion;
 
-import vertigo.kernel.lang.Assertion;
+import java.util.Map;
 
 /**
  * Metric.

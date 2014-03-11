@@ -17,11 +17,11 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.dimension.HCubeKey;
 

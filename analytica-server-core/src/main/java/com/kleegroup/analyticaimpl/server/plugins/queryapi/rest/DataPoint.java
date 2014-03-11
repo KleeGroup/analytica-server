@@ -1,8 +1,8 @@
 package com.kleegroup.analyticaimpl.server.plugins.queryapi.rest;
 
-import java.util.Date;
+import io.vertigo.kernel.lang.Assertion;
 
-import vertigo.kernel.lang.Assertion;
+import java.util.Date;
 
 /*
  * Couple(date, metrique)

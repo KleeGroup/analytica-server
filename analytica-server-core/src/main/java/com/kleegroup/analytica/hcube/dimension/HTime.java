@@ -17,10 +17,10 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
+import io.vertigo.kernel.lang.DateBuilder;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import vertigo.kernel.lang.DateBuilder;
 
 import com.kleegroup.analytica.hcube.HKey;
 

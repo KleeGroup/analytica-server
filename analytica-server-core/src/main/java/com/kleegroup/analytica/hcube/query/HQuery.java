@@ -1,10 +1,10 @@
 package com.kleegroup.analytica.hcube.query;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.dimension.HCategory;

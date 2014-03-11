@@ -17,11 +17,11 @@
  */
 package com.kleegroup.analytica.hcube.query;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.dimension.HTime;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;

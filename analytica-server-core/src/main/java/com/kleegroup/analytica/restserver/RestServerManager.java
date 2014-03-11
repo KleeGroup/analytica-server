@@ -1,6 +1,6 @@
 package com.kleegroup.analytica.restserver;
 
-import vertigo.kernel.component.Manager;
+import io.vertigo.kernel.component.Manager;
 
 /**
  * Manager serveur HTTP REST.

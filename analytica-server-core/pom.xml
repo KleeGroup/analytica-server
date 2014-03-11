@@ -1,43 +1,40 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.kleegroup.analytica</groupId>
-		<artifactId>analytica</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<parent>
+		<groupId>io.analytica</groupId>
+		<artifactId>analytica-server-parent</artifactId>
+		<version>1.2.0-SNAPSHOT</version>
+		<relativePath>../analytica-server-parent</relativePath>
 	</parent>
-	
-	<groupId>com.kleegroup.analytica</groupId>
-	<artifactId>analytica-server</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+
+	<artifactId>analytica-server-core</artifactId>
 	<packaging>jar</packaging>
-	<name>analytica-server</name>
-	<url>http://analytica.kleegroup.com</url>
+	<name>analytica-server-core</name>
 
 	<properties>
-		<compileSource>1.7</compileSource>
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<maven.test.error.ignore>true</maven.test.error.ignore>
+		<agent.version>1.2.0-SNAPSHOT</agent.version>
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
-			<groupId>com.kleegroup.analytica</groupId>
-			<artifactId>analytica-client-api</artifactId>
-			<version>1.1.0-SNAPSHOT</version>
+			<groupId>io.analytica</groupId>
+			<artifactId>analytica-agent-api</artifactId>
+			<version>${agent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vertigo</groupId>
-			<artifactId>vertigo</artifactId>
-			<version>1.0.0</version>
+			<artifactId>vertigo-starter</artifactId>
+			<version>${vertigo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vertigo</groupId>
-			<artifactId>vertigo</artifactId>
-			<version>1.0.0</version>
+			<artifactId>vertigo-starter</artifactId>
+			<version>${vertigo.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -74,12 +71,6 @@
 			<optional>true</optional><!-- pour H2CubeStorePlugin -->
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.glassfish.grizzly</groupId>
 			<artifactId>grizzly-http-server</artifactId>
 			<version>2.3.6</version><!-- pour RestServerManager -->
@@ -95,6 +86,11 @@
 	      <version>1.17.1</version><!-- pour RestNetApiPlugin -->
 		</dependency>
 		<dependency>
+		  <groupId>com.sun.jersey</groupId>
+	      <artifactId>jersey-grizzly2</artifactId>
+	      <version>1.17.1</version><!-- pour RestServerManagerImpl -->
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
@@ -105,21 +101,21 @@
 			<artifactId>socketio</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/dev/lib/socketio-1.0.0-SNAPSHOT.jar</systemPath>
+			<systemPath>${basedir}/src/dev/extralib/socketio-1.0.0-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json-org</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/dev/lib/json-org-1.0.0-SNAPSHOT.jar</systemPath>
+			<systemPath>${basedir}/src/dev/extralib/json-org-1.0.0-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.java_websocket</groupId>
 			<artifactId>WebSocket</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/dev/lib/WebSocket-1.0.0-SNAPSHOT.jar</systemPath>
+			<systemPath>${basedir}/src/dev/extralib/WebSocket-1.0.0-SNAPSHOT.jar</systemPath>
 		</dependency>
 		<dependency>
 	      <groupId>com.google.code.gson</groupId>

@@ -1,9 +1,9 @@
 package com.kleegroup.analytica.hcube.result;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.Map;
 import java.util.Set;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.query.HQuery;

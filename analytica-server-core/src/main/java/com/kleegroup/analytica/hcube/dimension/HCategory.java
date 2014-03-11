@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
-import vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.HKey;
 

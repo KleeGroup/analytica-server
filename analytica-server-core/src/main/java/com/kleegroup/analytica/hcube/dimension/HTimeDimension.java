@@ -17,10 +17,10 @@
  */
 package com.kleegroup.analytica.hcube.dimension;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.Calendar;
 import java.util.Date;
-
-import vertigo.kernel.lang.Assertion;
 
 /**
  * Niveaux heures, minutes ou secondes de la dimension hiérarchique temps.

@@ -16,7 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package vertigo;
+package com.kleegroup.analytica;
+
+import io.vertigo.kernel.Home;
+import io.vertigo.kernel.component.Container;
+import io.vertigo.kernel.di.injector.Injector;
+import io.vertigo.kernel.lang.Option;
 
 import java.util.Properties;
 
@@ -25,16 +30,11 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import vertigo.kernel.Home;
-import vertigo.kernel.component.Container;
-import vertigo.kernel.di.injector.Injector;
-import vertigo.kernel.lang.Option;
-
 /**
  * Charge l'environnement de test par defaut.
  * @author pchretien
  */
-public abstract class AbstractTestCaseJU4 {
+public abstract class AbstractTestCaseJU4Rule {
 
 	@Rule
 	public ContainerResource resource = new ContainerResource(this);
@@ -60,13 +60,13 @@ public abstract class AbstractTestCaseJU4 {
 	 */
 	static class ContainerResource implements TestRule {
 
-		private final AbstractTestCaseJU4 testCaseInstance;
+		private final AbstractTestCaseJU4Rule testCaseInstance;
 
 		/**
 		 * Constructeur.
 		 * @param testCaseInstance instance du testCase
 		 */
-		ContainerResource(final AbstractTestCaseJU4 testCaseInstance) {
+		ContainerResource(final AbstractTestCaseJU4Rule testCaseInstance) {
 			this.testCaseInstance = testCaseInstance;
 		}
 
@@ -82,7 +82,7 @@ public abstract class AbstractTestCaseJU4 {
 		 * @version $Id: $
 		 */
 		static class ContainerStatement extends Statement {
-			private final AbstractTestCaseJU4 testCaseInstance;
+			private final AbstractTestCaseJU4Rule testCaseInstance;
 			private final Injector injector = new Injector();
 			private Starter starter;
 
@@ -92,7 +92,7 @@ public abstract class AbstractTestCaseJU4 {
 			 * @param base evaluation du test
 			 * @param testCaseInstance instance du testCase
 			 */
-			public ContainerStatement(final Statement base, final AbstractTestCaseJU4 testCaseInstance) {
+			public ContainerStatement(final Statement base, final AbstractTestCaseJU4Rule testCaseInstance) {
 				this.base = base;
 				this.testCaseInstance = testCaseInstance;
 			}

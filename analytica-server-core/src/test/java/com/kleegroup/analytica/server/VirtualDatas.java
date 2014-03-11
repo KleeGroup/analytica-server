@@ -3,11 +3,11 @@
  */
 package com.kleegroup.analytica.server;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;

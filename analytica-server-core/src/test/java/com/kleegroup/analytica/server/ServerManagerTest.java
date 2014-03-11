@@ -18,8 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import vertigo.AbstractTestCaseJU4;
-
+import com.kleegroup.analytica.AbstractTestCaseJU4Rule;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
 import com.kleegroup.analytica.hcube.HCubeManager;
@@ -40,7 +39,7 @@ import com.kleegroup.analytica.museum.StatsUtil;
  * @author Stephane TATCHUM
  *
  */
-public class ServerManagerTest extends AbstractTestCaseJU4 {
+public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
 	private static final String PROCESS_SQL = "SQL";
 

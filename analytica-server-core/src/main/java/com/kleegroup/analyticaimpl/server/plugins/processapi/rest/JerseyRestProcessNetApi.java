@@ -17,6 +17,9 @@
  */
 package com.kleegroup.analyticaimpl.server.plugins.processapi.rest;
 
+import io.vertigo.kernel.Home;
+import io.vertigo.kernel.di.injector.Injector;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,9 +29,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
-
-import vertigo.kernel.Home;
-import vertigo.kernel.di.injector.Injector;
 
 import com.google.gson.Gson;
 import com.kleegroup.analytica.core.KProcess;

@@ -17,14 +17,14 @@
  */
 package com.kleegroup.analyticaimpl.hcube.plugins.store.memory;
 
+import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.DateBuilder;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import vertigo.kernel.lang.Assertion;
-import vertigo.kernel.lang.DateBuilder;
 
 import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.cube.HCube;

@@ -17,6 +17,8 @@
  */
 package com.kleegroup.analyticaimpl.hcube.plugins.memorystack;
 
+import io.vertigo.kernel.lang.Activeable;
+
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -24,8 +26,6 @@ import java.util.List;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-
-import vertigo.kernel.lang.Activeable;
 
 import com.google.gson.Gson;
 import com.kleegroup.analytica.core.KProcess;

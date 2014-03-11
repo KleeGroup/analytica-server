@@ -1,11 +1,11 @@
 package com.kleegroup.analytica.hcube.query;
 
+import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Builder;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import vertigo.kernel.lang.Assertion;
-import vertigo.kernel.lang.Builder;
 
 import com.kleegroup.analytica.hcube.dimension.HCategory;
 import com.kleegroup.analytica.hcube.dimension.HTimeDimension;

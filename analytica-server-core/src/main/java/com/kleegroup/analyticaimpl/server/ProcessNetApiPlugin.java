@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
-import vertigo.kernel.component.Plugin;
+import io.vertigo.kernel.component.Plugin;
 
 /**
  * Plugin gérant l'api reseau de reception des process.

@@ -17,9 +17,9 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
-import java.util.List;
+import io.vertigo.kernel.component.Plugin;
 
-import vertigo.kernel.component.Plugin;
+import java.util.List;
 
 import com.kleegroup.analytica.core.KProcess;
 

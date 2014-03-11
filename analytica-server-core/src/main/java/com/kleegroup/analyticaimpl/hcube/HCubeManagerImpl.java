@@ -17,12 +17,12 @@
  */
 package com.kleegroup.analyticaimpl.hcube;
 
+import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Option;
+
 import java.util.List;
 
 import javax.inject.Inject;
-
-import vertigo.kernel.lang.Assertion;
-import vertigo.kernel.lang.Option;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCategoryDictionary;

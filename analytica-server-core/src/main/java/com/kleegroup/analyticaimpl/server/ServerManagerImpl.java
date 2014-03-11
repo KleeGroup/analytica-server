@@ -17,14 +17,14 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
+import io.vertigo.kernel.lang.Activeable;
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
-
-import vertigo.kernel.lang.Activeable;
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.HCubeManager;

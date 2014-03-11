@@ -18,6 +18,8 @@
 package com.kleegroup.analyticaimpl.hcube.plugins.socketio;
 
 import io.socket.SocketIO;
+import io.vertigo.kernel.lang.Activeable;
+import io.vertigo.kernel.lang.Assertion;
 
 import java.net.MalformedURLException;
 
@@ -26,9 +28,6 @@ import javax.inject.Named;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import vertigo.kernel.lang.Activeable;
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analyticaimpl.hcube.ProcessStatsPlugin;

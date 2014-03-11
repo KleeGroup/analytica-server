@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analytica.hcube;
 
-import vertigo.kernel.component.Manager;
+import io.vertigo.kernel.component.Manager;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.hcube.query.HQuery;

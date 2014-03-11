@@ -1,5 +1,8 @@
 package com.kleegroup.analyticaimpl.server.plugins.queryapi.rest;
 
+import io.vertigo.kernel.Home;
+import io.vertigo.kernel.di.injector.Injector;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,9 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import vertigo.kernel.Home;
-import vertigo.kernel.di.injector.Injector;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

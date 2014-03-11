@@ -17,6 +17,8 @@
  */
 package com.kleegroup.analytica.hcube;
 
+import io.vertigo.kernel.lang.DateBuilder;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,9 +35,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import vertigo.AbstractTestCaseJU4;
-import vertigo.kernel.lang.DateBuilder;
-
+import com.kleegroup.analytica.AbstractTestCaseJU4Rule;
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;
 import com.kleegroup.analytica.hcube.cube.HCounterType;
@@ -56,7 +56,7 @@ import com.kleegroup.analytica.museum.PageListener;
  * @author pchretien, npiedeloup
  * @version $Id: ServerManagerMemoryTest.java,v 1.2 2012/03/22 18:33:04 pchretien Exp $
  */
-public final class HCubeManagerTest extends AbstractTestCaseJU4 {
+public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
 	private static final HMetricKey POIDS = new HMetricKey("POIDS", false);
 	private static final HMetricKey DURATION = new HMetricKey(KProcess.DURATION, true);

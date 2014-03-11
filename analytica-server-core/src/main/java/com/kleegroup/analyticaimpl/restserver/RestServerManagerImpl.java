@@ -17,6 +17,10 @@
  */
 package com.kleegroup.analyticaimpl.restserver;
 
+import io.vertigo.kernel.exception.VRuntimeException;
+import io.vertigo.kernel.lang.Activeable;
+import io.vertigo.kernel.lang.Assertion;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -34,10 +38,6 @@ import org.apache.log4j.Logger;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
-
-import vertigo.kernel.exception.VRuntimeException;
-import vertigo.kernel.lang.Activeable;
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.restserver.RestServerManager;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;

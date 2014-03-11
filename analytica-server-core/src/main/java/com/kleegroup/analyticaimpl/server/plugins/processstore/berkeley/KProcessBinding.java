@@ -17,10 +17,10 @@
  */
 package com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.Date;
 import java.util.Map.Entry;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analytica.core.KProcessBuilder;

@@ -1,8 +1,8 @@
 package com.kleegroup.analytica.museum;
 
-import java.util.Random;
+import io.vertigo.kernel.lang.Assertion;
 
-import vertigo.kernel.lang.Assertion;
+import java.util.Random;
 
 public final class StatsUtil {
 	private static final Random RANDOM = new Random();

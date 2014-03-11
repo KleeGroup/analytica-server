@@ -1,17 +1,17 @@
-package vertigo;
+package com.kleegroup.analytica;
+
+import io.vertigo.kernel.Home;
+import io.vertigo.kernel.di.configurator.ComponentSpaceConfig;
+import io.vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
+import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Option;
+import io.vertigo.xml.XMLModulesLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
-
-import vertigo.kernel.Home;
-import vertigo.kernel.di.configurator.ComponentSpaceConfig;
-import vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
-import vertigo.kernel.lang.Assertion;
-import vertigo.kernel.lang.Option;
-import vertigo.xml.XMLModulesLoader;
 
 /**
  * Charge et démarre un environnement.

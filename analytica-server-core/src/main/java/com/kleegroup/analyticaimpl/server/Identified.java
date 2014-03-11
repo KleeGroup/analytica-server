@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analyticaimpl.server;
 
-import vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Assertion;
 
 /**
  * Objet avec identifiant externalisé.

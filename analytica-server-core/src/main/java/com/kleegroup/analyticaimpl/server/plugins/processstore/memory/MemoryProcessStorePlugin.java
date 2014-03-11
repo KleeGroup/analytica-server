@@ -17,12 +17,12 @@
  */
 package com.kleegroup.analyticaimpl.server.plugins.processstore.memory;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analyticaimpl.server.Identified;

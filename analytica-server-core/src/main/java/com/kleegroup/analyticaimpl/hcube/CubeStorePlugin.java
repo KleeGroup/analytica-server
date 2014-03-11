@@ -17,9 +17,9 @@
  */
 package com.kleegroup.analyticaimpl.hcube;
 
-import java.util.Map;
+import io.vertigo.kernel.component.Plugin;
 
-import vertigo.kernel.component.Plugin;
+import java.util.Map;
 
 import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.cube.HCube;

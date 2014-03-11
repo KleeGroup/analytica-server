@@ -1,5 +1,7 @@
 package com.kleegroup.analytica.hcube.result;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.HCube;
 import com.kleegroup.analytica.hcube.cube.HMetric;

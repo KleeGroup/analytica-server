@@ -17,12 +17,12 @@
  */
 package com.kleegroup.analytica.hcube.cube;
 
+import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Builder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import vertigo.kernel.lang.Assertion;
-import vertigo.kernel.lang.Builder;
 
 /**
  * Builder permettant de contruire une metric.

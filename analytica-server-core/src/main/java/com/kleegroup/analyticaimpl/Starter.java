@@ -1,17 +1,17 @@
 package com.kleegroup.analyticaimpl;
 
+import io.vertigo.kernel.Home;
+import io.vertigo.kernel.di.configurator.ComponentConfigBuilder;
+import io.vertigo.kernel.di.configurator.ComponentSpaceConfig;
+import io.vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
+import io.vertigo.kernel.di.configurator.ModuleConfigBuilder;
+import io.vertigo.kernel.lang.Assertion;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
-
-import vertigo.kernel.Home;
-import vertigo.kernel.di.configurator.ComponentConfigBuilder;
-import vertigo.kernel.di.configurator.ComponentSpaceConfig;
-import vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
-import vertigo.kernel.di.configurator.ModuleConfigBuilder;
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.HCubeManager;
 import com.kleegroup.analytica.restserver.RestServerManager;

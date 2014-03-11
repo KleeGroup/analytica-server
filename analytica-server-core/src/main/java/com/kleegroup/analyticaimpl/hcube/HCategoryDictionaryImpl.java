@@ -3,13 +3,13 @@
  */
 package com.kleegroup.analyticaimpl.hcube;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.HCategoryDictionary;
 import com.kleegroup.analytica.hcube.dimension.HCategory;

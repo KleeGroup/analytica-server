@@ -17,6 +17,8 @@
  */
 package com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley;
 
+import io.vertigo.kernel.lang.Activeable;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +26,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import vertigo.kernel.lang.Activeable;
 
 import com.kleegroup.analytica.core.KProcess;
 import com.kleegroup.analyticaimpl.server.Identified;

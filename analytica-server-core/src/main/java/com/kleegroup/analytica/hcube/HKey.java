@@ -17,7 +17,7 @@
  */
 package com.kleegroup.analytica.hcube;
 
-import vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Assertion;
 
 /**
  * Clé unique d'un objet de HCube.

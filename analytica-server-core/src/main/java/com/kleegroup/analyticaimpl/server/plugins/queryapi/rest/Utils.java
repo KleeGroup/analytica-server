@@ -1,5 +1,7 @@
 package com.kleegroup.analyticaimpl.server.plugins.queryapi.rest;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,8 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.kleegroup.analytica.hcube.cube.HCounterType;
 import com.kleegroup.analytica.hcube.cube.HCube;

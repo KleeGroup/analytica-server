@@ -17,12 +17,12 @@
  */
 package com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import vertigo.kernel.lang.Assertion;
 
 import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
