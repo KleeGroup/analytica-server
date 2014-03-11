@@ -1,0 +1,617 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Analytica - Dashboard</title>
+		<meta name="viewport" content="width=1024">
+		<!--[if lt IE 9]>	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--> 
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/jquery.dataTables.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/bootstrap-analytica.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/chart-analytica.css">
+		
+		<link rel="shortcut icon" href="static/ico/favicon.png">
+	</head>
+	<body>
+	
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="navbar-header">
+  	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="glyphicon-bar"></span>
+      <span class="glyphicon-bar"></span>
+      <span class="glyphicon-bar"></span>
+    </button>
+  	<a class="navbar-brand" href="/" title="Analytica"><img src="../static/img/analytica-logo.png" height="48" alt="Analytica" title="Analytica"></a>        
+  </div>
+      <div class="collapse navbar-collapse navbar-1-collapse">
+         <ul class="nav navbar-nav">
+           <li class="active"><a href="/dashboards.html" title="Dashboards">Dashboards</a></li>
+		   <li><a href="/admin.html" title="Admin">Admin</a></li>
+         </ul>
+      </div><!-- /.navbar-collapse -->  
+</nav>
+<div id="main" class="container">
+<div class="row">
+<div id="sidebar" class="col-md-2 navbar navbar-default navbar-inverse">
+  <!-- Main nav -->
+  <ul class="nav navbar-nav">
+        <!--  TODO a remplir avec les differents Dashboard -->
+        <li class="active">
+          <a href="/dashboards.html?name=main">
+              <i class="glyphicon glyphicon-fullscreen"></i>
+              <span>Main view</span>
+          </a>
+        </li>
+        <li>
+          <a href="/dashboardPerfs.html?name=perf">
+              <i class="fa fa-dashboard"></i>
+              <span>Perfs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/dashboardFocus.html?name=focus">
+              <i class="glyphicon glyphicon-eye-open"></i>
+              <span>Focus</span>
+          </a>
+        </li>
+        <li class="">
+          <a href="/dashboardLists.html?name=lists">
+              <i class="glyphicon glyphicon-list"></i>
+              <span>Listes</span>
+          </a>
+        </li>
+  </ul>
+</div> <!-- sidebar -->
+<div id="panels" class="col-md-10">
+	<div class="row">
+<!-- on rend les panneaux -->
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="logo"><img src="../static/img/logoSpark.png" height="180px"/></div>
+		</div>
+	</div>
+	
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-dashboard"></i> Qualité de Service</h5></div>
+			<div class="panel-body">
+				<div class="chart objective" 
+			    data-url="rest/query/timeLine/QOS" 
+			    data-query='{"timeFrom":"NOW-1h", "timeTo":"NOW", "timeDim":"Hour", "datas":"Activity:mean;ActivityMax:mean;Performance:mean;PerformanceMax:mean;Health:mean;HealthMax:mean"}' 
+			    data-labels='{"Activity:mean":"Activity","Performance:mean":"Performances","Health:mean":"Health"}'
+			    data-icons='{"Activity:mean":"glyphicon glyphicon-fire","Performance:mean":"fa fa-clock-o","Health:mean":"glyphicon glyphicon-heart-empty"}'
+			    data-colors='RED2GREEN'></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1 blue">
+			<div class="panel-body clock"></div>
+		</div>
+	</div>
+	
+	
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution du nombre d'appel</h5></div>
+			<div class="panel-body">
+				<div class="chart bignumber" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SERVICE:count;SQL:count"}' 
+			    data-labels='{"duration:count":"Nb Pages","SQL:count":"Nb Sql", "SERVICE:count":"Nb Services"}'
+			    data-colors='ANDROID'
+			    data-icons='{"duration:count":"fa fa-files-o", "SERVICE:count":"fa fa-cogs","SQL:count":"fa fa-download"}'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Objectifs par modules</h5></div>
+			<div class="panel-body">
+				<div class="chart objective" 
+			    data-url="rest/query/categoryLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-2h", "timeTo":"NOW", "timeDim":"Hour", "datas":"sub-duration:mean;duration:mean"}' 
+			    data-labels='{"sub-duration:mean":"Temps sous-jacent","duration:mean":"Temps",
+			    			 "search":"Recherches",
+			    			 "exposition":"Expositions",
+			    			 "artists":"Artistes",
+			    			 "oeuvres":"Oeuvres",
+			    			 "home":"Accueil",
+			    			 "images":"Images"}'
+			    data-icons='{"search":"fa fa-search",
+			    			 "exposition":"fa fa-group",
+			    			 "artists":"fa fa-user",
+			    			 "oeuvres":"fa fa-picture-o",
+			    			 "home":"fa fa-home",
+			    			 "images":"fa fa-file"}'
+			    data-colors='RED2GREEN'></div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Activit&eacute; : Visites</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart linechart" 
+			    data-url="rest/query/timeLine/PAGE/home" 
+			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count"}'
+			    data-colors='RED2GREEN'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Activit&eacute; : Requètes</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart linechart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count"}'
+			    data-colors='RED2GREEN'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Performance</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart linechart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:mean"}'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Santé</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart linechart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"ERROR:mean"}'
+			    data-colors='GREEN2BLUE'></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Répartition des pages</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart barchart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Day", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
+			    data-colors='iHEAT'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution de la répartition des tps de réponse</h5></div>
+			<div class="panel-body">
+				<div class="chart flotchart stakedareachart" 
+			    data-url="rest/query/timeLine/PAGE" 
+			    data-query='{"timeFrom":"NOW-3h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
+			    data-colors='iHEAT'></div>
+			</div>
+		</div>
+	</div>
+	</div> <!-- /row -->
+	<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-primary panel-h2">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Informations détaillées</h5></div>
+			<div class="panel-body">
+				<div class="datatable" 
+			    data-url="rest/query/categoryLine/PAGE/$subcategory" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
+			    data-columns='[
+			    { "label":"Page", "data":"name", "content":"<a href=\"dashboards.html?subcategory=$name\">$name</a>"},
+			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
+			    { "label":"Temps moyen", "data":"duration:mean"},
+			    { "label":"Temps sous-jacent", "data":"sub-duration:mean"},
+			    { "label":"Nb Service", "data":"SERVICE:count"},
+			    { "label":"Temps Service", "data":"SERVICE:mean"},
+			    { "label":"Nb Recherche", "data":"SEARCH:count"},
+			    { "label":"Temps Recherche", "data":"SEARCH:mean"},
+			    { "label":"Nb Sql", "data":"SQL:count"},
+			    { "label":"Temps Sql", "data":"SQL:mean"},
+			    { "label":"Erreur %", "data":"ERROR:mean"}]'></div>
+			</div>
+		</div>
+	</div>
+	</div> <!-- /row -->
+	<!-- <div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Grand panel</h5></div>
+			<div class="panel-body">
+				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
+				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
+				<div class="title">visits</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h2">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
+			<div class="panel-body">
+				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
+				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
+				<div class="title">visits</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i>  Petit panel</h5></div>
+			<div class="panel-body">
+				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
+				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
+				<div class="title">visits</div>
+			</div>
+		</div>
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Petit panel</h5></div>
+			<div class="panel-body">
+				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
+				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
+				<div class="title">visits</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h2">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Moyen panel</h5></div>
+			<div class="panel-body">
+				<div class="boxchart">5,6,7,2,0,4,2,4,8,2,3,3,2</div>
+				<div class="number">854<i class="glyphicon glyphicon-arrow-up"></i> </div>
+				<div class="title">visits</div>
+			</div>
+		</div>
+	</div>
+	
+			<div class="col-md-3 statbox green">
+								<div class="boxchart">1,2,6,4,0,8,2,4,5,3,1,7,5</div>
+								<div class="number"> 123<i class="glyphicon glyphicon-arrow-up"></i> </div>
+								<div class="title">sales</div>
+								<div class="footer"> <a href="#"> read full report</a> </div>
+							</div>
+							<div class="col-md-3 statbox blue noMargin">
+								<div class="boxchart">5,6,7,2,0,-4,-2,4,8,2,3,3,2</div>
+								<div class="number"> 982<i class="glyphicon glyphicon-arrow-up"></i> </div>
+								<div class="title">orders</div>
+								<div class="footer"> <a href="#"> read full report</a> </div>
+							</div>
+							<div class="col-md-3 statbox yellow">
+								<div class="boxchart">7,2,2,2,1,-4,-2,4,8,,0,3,3,5</div>
+								<div class="number"> 678<i class="glyphicon glyphicon-arrow-down"></i> </div>
+								<div class="title">visits</div>
+								<div class="footer"> <a href="#"> read full report</a> </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-8 widget blue">
+								<div id="stats-chart2" style="height: 282px"></div>
+							</div>
+							<div class="sparkLineStats col-md-4 widget green">
+								<ul class="unstyled">
+									<li><span class="sparkLineStats3"></span> Pageviews: <span class="number">781</span></li>
+									<li><span class="spacol-md-neStats4"></span> Pages / Visit: <span class="number">2,19</span></li>
+									<li><span class="sparkLineStats5"></span> Avg. Visit Duration: <span class="number">00:02:58</span></li>
+									<li><span class="sparkLineStats6"></span> Bounce Rate: <span class="number">59,83%</span></li>
+									<li><span class="sparkLineStats7"></span> % New Visits: <span class="number">70,79%</span></li>
+									<li><span class="sparkLineStats8"></span> % Returning Visitor: <span class="number">29,21%</span></li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							End .sparkStats 
+						</div>
+						<div class="row hideInIE8 circleStats">
+							<div class="col-md-2" onTablet="col-md-4" onDesktop="col-md-2">
+								<div class="circleStatsItemBox yellow">
+									<div class="header">Disk Space Usage</div>
+									<span class="percent">percent</span> 
+									<div class="circleStat"> <input type="text" value="58" class="whiteCircle" /> </div>
+									<div class="footer"> <span class="count"> <span class="number">20000</span> <span class="unit">MB</span> </span> <span class="sep"> / </span> <span class="value"> <span class="number">50000</span> <span class="unit">MB</span> </span> </div>
+								</div>
+							</div>
+							<div class="col-md-2" onTablet="col-md-4" onDesktop="col-md-2">
+								<div class="circleStatsItemBox green">
+									<div class="header">Bandwidth</div>
+									<span class="percent">percent</span> 
+									<div class="circleStat"> <input type="text" value="78" class="whiteCircle" /> </div>
+									<div class="footer"> <span class="count"> <span class="number">5000</span> <span class="unit">GB</span> </span> <span class="sep"> / </span> <span class="value"> <span class="number">5000</span> <span class="unit">GB</span> </span> </div>
+								</div>
+							</div>
+							<div class="col-md-2" onTablet="col-md-4" onDesktop="col-md-2">
+								<div class="circleStatsItemBox greenDark">
+									<div class="header">Memory</div>
+									<span class="percent">percent</span> 
+									<div class="circleStat"> <input type="text" value="100" class="whiteCircle" /> </div>
+									<div class="footer"> <span class="count"> <span class="number">64</span> <span class="unit">GB</span> </span> <span class="sep"> / </span> <span class="value"> <span class="number">64</span> <span class="unit">GB</span> </span> </div>
+								</div>
+							</div>
+							<div class="col-md-2 noMargin" onTablet="col-md-4" onDesktop="col-md-2">
+								<div class="circleStatsItemBox pink">
+									<div class="header">CPU</div>
+									<span class="percent">percent</span> 
+									<div class="circleStat"> <input type="text" value="83" class="whiteCircle" /> </div>
+									<div class="footer"> <span class="count"> <span class="number">64</span> <span class="unit">GHz</span> </span> <span class="sep"> / </span> <span class="value"> <span class="number">3.2</span> <span class="unit">GHz</span> </span> </div>
+								</div>
+							</div>
+							<div class="col-md-2" onTablet="col-md-4" onDesktop="col-md-2">
+								<div class="circleStatsItemBox orange">
+									<div class="header">Memory</div>
+									<span class="percent">percent</span> 
+									<div class="circleStat"> <input type="text" value="100" class="whiteCircle" /> </div>
+									<div class="footer"> <span class="count"> <span class="number">64</span> <span class="unit">GB</span> </span> <span class="sep"> / </span> <span class="value"> <span class="number">64</span> <span class="unit">GB</span> </span> </div>
+								</div>
+							</div>
+							<div class="col-md-2" onTablet="col-md-4" onDesktop="col-md-2">
+								<div class="circleStatsItemBox greenLight">
+									<div class="header">Memory</div>
+									<span class="percent">percent</span> 
+									<div class="circleStat"> <input type="text" value="100" class="whiteCircle" /> </div>
+									<div class="footer"> <span class="count"> <span class="number">64</span> <span class="unit">GB</span> </span> <span class="sep"> / </span> <span class="value"> <span class="number">64</span> <span class="unit">GB</span> </span> </div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="widget blue span5" onTablet="col-md-6" onDesktop="col-md-5">
+								<h2> <span class="glyphicons globe"><i></i></span> Demographics </h2>
+								<hr>
+								<div class="content">
+									<div class="verticalChart">
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>37%</span> </div>
+											</div>
+											<div class="title">US</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>16%</span> </div>
+											</div>
+											<div class="title">PL</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>12%</span> </div>
+											</div>
+											<div class="title">GB</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>9%</span> </div>
+											</div>
+											<div class="title">DE</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>7%</span> </div>
+											</div>
+											<div class="title">NL</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>6%</span> </div>
+											</div>
+											<div class="title">CA</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>5%</span> </div>
+											</div>
+											<div class="title">FI</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>4%</span> </div>
+											</div>
+											<div class="title">RU</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>3%</span> </div>
+											</div>
+											<div class="title">AU</div>
+										</div>
+										<div class="singleBar">
+											<div class="bar">
+												<div class="value"> <span>1%</span> </div>
+											</div>
+											<div class="title">N/A</div>
+										</div>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</div>
+							/span 
+							<div class="widget span3 red" onTablet="col-md-6" onDesktop="col-md-3">
+								<h2> <span class="glyphicons pie_chart"><i></i></span> Browsers </h2>
+								<hr>
+								<div class="content">
+									<div class="browserStat big"> <img src="img/browser-chrome-big.png" alt="Chrome"> <span>34%</span> </div>
+									<div class="browserStat big"> <img src="img/browser-firefox-big.png" alt="Firefox"> <span>34%</span> </div>
+									<div class="browserStat"> <img src="img/browser-ie.png" alt="Internet Explorer"> <span>34%</span> </div>
+									<div class="browserStat"> <img src="img/browser-safari.png" alt="Safari"> <span>34%</span> </div>
+									<div class="browserStat"> <img src="img/browser-opera.png" alt="Opera"> <span>34%</span> </div>
+								</div>
+							</div>
+							<div class="widget yellow span4 noMargin" onTablet="col-md-12" onDesktop="col-md-4">
+								<h2> <span class="glyphicons fire"><i></i></span> Server Load </h2>
+								<hr>
+								<div class="content">
+									<div id="serverLoad2" style="height: 224px;"></div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="box black span4" onTablet="col-md-6" onDesktop="col-md-4">
+								<div class="box-header">
+									<h2> <i class="halflings-icon white list"></i><span class="break"></span>Weekly Stat </h2>
+									<div class="box-icon"> <a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a> <a href="#" class="btn-close"><i class="halflings-icon white remove"></i></a> </div>
+								</div>
+								<div class="box-content">
+									<ul class="dashboard-list metro">
+										<li><a href="#"> <i class="glyphicon glyphicon-arrow-up green"></i> <strong>92</strong> New Comments </a></li>
+										<li><a href="#"> <i class="glyphicon glyphicon-arrow-down red"></i> <strong>15</strong> New Registrations </a></li>
+										<li><a href="#"> <i class="glyphicon glyphicon-minus blue"></i> <strong>36</strong> New Articles </a></li>
+										<li><a href="#"> <i class="glyphicon glyphicon-comment yellow"></i> <strong>45</strong> User reviews </a></li>
+										<li><a href="#"> <i class="glyphicon glyphicon-arrow-up green"></i> <strong>112</strong> New Comments </a></li>
+										<li><a href="#"> <i class="glyphicon glyphicon-arrow-down red"></i> <strong>31</strong> New Registrations </a></li>
+										<li><a href="#"> <i class="glyphicon glyphicon-minus blue"></i> <strong>93</strong> New Articles </a></li>
+										<li><a href="#"> <i class="glyphicon glyphicon-comment yellow"></i> <strong>256</strong> User reviews </a></li>
+									</ul>
+								</div>
+							</div>
+							/span 
+							<div class="box black span4" onTablet="col-md-6" onDesktop="col-md-4">
+								<div class="box-header">
+									<h2> <i class="halflings-icon white user"></i><span class="break"></span>Last Users </h2>
+									<div class="box-icon"> <a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a> <a href="#" class="btn-close"><i class="halflings-icon white remove"></i></a> </div>
+								</div>
+								<div class="box-content">
+									<ul class="dashboard-list metro">
+										<li class="green"><a href="#"> <img class="avatar" alt="Lucas" src="img/avatar.jpg"> </a> <strong>Name:</strong> Lukasz Holeczek<br> <strong>Since:</strong> Jul 25, 2012 11:09<br> <strong>Status:</strong> Approved </li>
+										<li class="yellow"><a href="#"> <img class="avatar" alt="Bill" src="img/avatar9.jpg"> </a> <strong>Name:</strong> Bill Cole<br> <strong>Since:</strong> Jul 25, 2012 11:09<br> <strong>Status:</strong> Pending</li>
+										<li class="red"><a href="#"> <img class="avatar" alt="Jane" src="img/avatar5.jpg"> </a> <strong>Name:</strong> Jane Sanchez<br> <strong>Since:</strong> Jul 25, 2012 11:09<br> <strong>Status:</strong> Banned</li>
+										<li class="blue"><a href="#"> <img class="avatar" alt="Kate" src="img/avatar6.jpg"> </a> <strong>Name:</strong> Kate Presley<br> <strong>Since:</strong> Jul 25, 2012 11:09<br> <strong>Status:</strong> Updated</li>
+									</ul>
+								</div>
+							</div>
+							/span 
+							<div class="box black span4 noMargin" onTablet="col-md-12" onDesktop="col-md-4">
+								<div class="box-header">
+									<h2> <i class="halflings-icon white check"></i><span class="break"></span>To Do List </h2>
+									<div class="box-icon"> <a href="#" class="btn-setting"><i class="halflings-icon white wrench"></i></a> <a href="#" class="btn-minimize"><i class="halflings-icon white chevron-up"></i></a> <a href="#" class="btn-close"><i class="halflings-icon white remove"></i></a> </div>
+								</div>
+								<div class="box-content">
+									<div class="todo metro">
+										<ul class="todo-list">
+											<li class="red"><a class="action glyphicon-check-empty" href="#"></a> Windows Phone 8 App <strong>today</strong></li>
+											<li class="red"><a class="action glyphicon-check-empty" href="#"></a> New frontend layout <strong>today</strong></li>
+											<li class="yellow"><a class="action glyphicon-check-empty" href="#"></a> Hire developers <strong>tommorow</strong></li>
+											<li class="yellow"><a class="action glyphicon-check-empty" href="#"></a> Windows Phone 8 App <strong>tommorow</strong></li>
+											<li class="green"><a class="action glyphicon-check-empty" href="#"></a> New frontend layout <strong>this week</strong> </li>
+											<li class="green"><a class="action glyphicon-check-empty" href="#"></a> Hire developers <strong>this week</strong></li>
+											<li class="blue"><a class="action glyphicon-check-empty" href="#"></a> New frontend layout <strong>this month</strong> </li>
+											<li class="blue"><a class="action glyphicon-check-empty" href="#"></a> Hire developers <strong>this month</strong></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<a class="quick-button metro yellow span2">
+								<i class="glyphicon glyphicon-group"></i> 
+								<p>Users</p>
+								<span class="badge">237</span> 
+							</a>
+							<a class="quick-button metro red span2">
+								<i class="glyphicon glyphicon-comments-alt"></i> 
+								<p>Comments</p>
+								<span class="badge">46</span> 
+							</a>
+							<a class="quick-button metro blue span2">
+								<i class="glyphicon glyphicon-shopping-cart"></i> 
+								<p>Orders</p>
+								<span class="badge">13</span> 
+							</a>
+							<a class="quick-button metro green span2">
+								<i class="glyphicon glyphicon-barcode"></i> 
+								<p>Products</p>
+							</a>
+							<a class="quick-button metro pink span2">
+								<i class="glyphicon glyphicon-envelope"></i> 
+								<p>Messages</p>
+								<span class="badge">88</span> 
+							</a>
+							<a class="quick-button metro black span2">
+								<i class="glyphicon glyphicon-calendar"></i> 
+								<p>Calendar</p>
+							</a>
+							<div class="clearfix"></div>
+						</div>
+						/row  -->
+					</div>
+					<!--/.fluid-container--> <!-- end: Content --> 
+				</div>
+				</div>
+				<!--/#content.span10--> 
+			</div>
+			<!--/fluid-row--> 
+		</div>
+	</div> <!-- rowfluid -->
+	<div id="footer" class="row">
+		<div class="container">
+			<footer>
+				<p> <a href="http://www.kleegroup.com" title="KleeGroup">KleeGroup 2013</a>&nbsp;&nbsp;&nbsp; <a href="mailto:direction.technique@kleegroup.com" title="Contact">Contact</a> <span class="pull-right"> <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/"><img alt="Creative Commons License" style="border-width: 0" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" /></a></span> </p>
+			</footer>
+		</div>
+	</div>
+</div> <!-- container-fluid -->
+		<!-- start: JavaScript--> 
+	<script src="static/js/jquery-1.10.2.min.js"></script>
+	<!-- <script src="js/jquery-migrate-1.0.0.min.js"></script> -->
+	<script src="static/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<!-- <script src="js/jquery.ui.touch-punch.js"></script>
+	<script src="js/modernizr.js"></script> -->
+	<script src="static/js/bootstrap.min.js"></script>
+	<!-- <script src="js/jquery.cookie.js"></script>
+	<script src='js/fullcalendar.min.js'></script>
+	<script src='js/jquery.dataTables.min.js'></script> -->
+	<script src="static/js/jquery.flot.js"></script>
+	<!-- <script src="static/js/jquery.flot.orderBars.js"></script> --> <!-- must be before jquery.flot.stack.js -->
+	<script src="static/js/jquery.flot.pie.js"></script>
+	<script src="static/js/jquery.flot.categories.js"></script>
+	<script src="static/js/jquery.flot.resize.min.js"></script>
+	<script src="static/js/jquery.flot.time.js"></script>
+	<script src="static/js/jquery.flot.stack.js"></script>
+	<script src="static/js/jquery.flot.sidedBars.js"></script>
+	
+	<script src="static/js/jquery.sparkline.js"></script>
+	<script src="static/js/jquery.dataTables.js"></script>
+	<script src="static/js/jquery.knob.js"></script>
+	<!-- <script src="js/jquery.chosen.min.js"></script>
+	<script src="js/jquery.uniform.min.js"></script>
+	<script src="js/jquery.cleditor.min.js"></script>
+	<script src="js/jquery.noty.js"></script>
+	<script src="js/jquery.elfinder.min.js"></script>
+	<script src="js/jquery.raty.min.js"></script>
+	<script src="js/jquery.iphone.toggle.js"></script>
+	<script src="js/jquery.uploadify-3.1.min.js"></script>
+	<script src="js/jquery.gritter.min.js"></script>
+	<script src="js/jquery.imagesloaded.js"></script>
+	<script src="js/jquery.masonry.min.js"></script>
+	<script src="js/jquery.knob.modified.js"></script>
+	<script src="js/jquery.sparkline.min.js"></script>
+	<script src="js/counter.js"></script>
+	<script src="js/retina.js"></script>
+	<script src="js/custom.js"></script>  -->
+	<script src="static/js/d3.v3.js"></script> 
+	<!-- <script src="static/js/analytica.d3.js"></script>  -->
+	<script src="static/js/analytica.datatable.js"></script>
+	<script src="static/js/analytica.flot.js"></script>
+	<script src="static/js/analytica.bignumber.js"></script>
+	<script src="static/js/analytica.objectif.js"></script>
+	<script src="static/js/analytica.js"></script> 
+	<script src="static/js/processing-1.4.1.js"></script>
+	<!-- end: JavaScript-->
+	<script> $(document).ready(function() { 
+		startClock(); 
+		showCharts(); 
+		showTables(); 
+	}); </script>
+	</body>
+</html>

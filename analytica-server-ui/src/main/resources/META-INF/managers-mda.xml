@@ -1,0 +1,17 @@
+<?xml version =	'1.0' encoding = 'ISO-8859-1'?>
+<modules>
+	<module name="kasper-kernel">
+		<manager name="ResourceManager" class="kasperimpl.resource.ResourceManagerImpl">
+			<plugin id="classpath" name="ResourcePlugin" class="kasperimpl.resource.plugins.java.ClassPathResourceResolverPlugin" />
+			<plugin id="url" name="ResourcePlugin" class="kasperimpl.resource.plugins.url.URLResourceResolverPlugin" />
+		</manager>
+	</module>
+			
+	<module name="kasper-commons">
+	  
+	</module>
+	
+	<module name="kasper-mda">
+	    
+	</module>
+</modules>

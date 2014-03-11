@@ -1,0 +1,12 @@
+<?xml version =	'1.0' encoding = 'ISO-8859-1'?>
+<managers>
+	<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
+        <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
+        	<param name="dbPath" value="d:/analytica/db" />
+        </plugin>
+         <plugin name="ProcessEncoderPlugin" class="com.kleegroup.analyticaimpl.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
+        </plugin>
+        <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.cubestore.memory.MemoryCubeStorePlugin">
+        </plugin>
+     </manager>
+</managers>

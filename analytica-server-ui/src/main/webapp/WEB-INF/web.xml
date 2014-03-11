@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	
+	<display-name>Analytica</display-name>
+	
+	<listener>
+		<listener-class>com.kleegroup.analyticaimpl.ui.boot.AnalyticaUIServletContextListener</listener-class>
+	</listener> 
+	
+	<context-param>
+    	<param-name>com.sun.faces.injectionProvider</param-name>
+    	<param-value>kasperimpl.jsf.component.ComponentInjectionProvider</param-value>
+	</context-param>
+
+	<!-- Application configuration -->
+	
+    <context-param>
+        <param-name>applicationConfiguration</param-name>
+        <param-value>/META-INF/managers.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>componentConfiguration</param-name>
+        <param-value>/WEB-INF/components-config.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>default.charset</param-name>
+        <param-value>iso-8859-1</param-value>
+    </context-param>  
+    <context-param>
+        <param-name>analytica.db.path</param-name>
+        <param-value>d:/analytica/db</param-value>
+    </context-param>
+    
+    <!-- JSF configuration -->
+    <context-param>
+      <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+      <param-value>.xhtml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
+    <context-param>
+		<param-name>com.sun.faces.expressionFactory</param-name>
+		<param-value>org.jboss.el.ExpressionFactoryImpl</param-value>
+    </context-param>
+    <context-param>    
+		<param-name>javax.faces.PROJECT_STAGE</param-name>       
+		<param-value>Development</param-value>  
+	</context-param>
+
+	<context-param>    
+		<param-name>javax.faces.CONFIG_FILES</param-name>       
+		<param-value>/WEB-INF/faces-config.xml</param-value>  
+	</context-param>
+	
+	<!--  primefaces configuration -->
+	<context-param>  
+    	<param-name>primefaces.THEME</param-name>  
+     	<param-value>aristo</param-value>  
+ 	</context-param>	
+    <servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	
+	<session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+
+    <mime-mapping>
+        <extension>html</extension>
+        <mime-type>text/html</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>txt</extension>
+        <mime-type>text/plain</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>css</extension>
+        <mime-type>text/css</mime-type>
+    </mime-mapping>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+	   
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/pages/viewExpired.xhtml</location>
+    </error-page>
+    
+    <servlet>
+	  <servlet-name>Jersey REST Service</servlet-name>
+	<servlet-class>
+	  com.sun.jersey.spi.container.servlet.ServletContainer
+	</servlet-class>
+	  <init-param>
+	    <param-name>com.sun.jersey.config.property.packages</param-name>
+	    <param-value>com.kleegroup.analyticaimpl.server.plugins.api.rest;kasperimpl.spaces.spaces.kraft</param-value>
+	  </init-param>
+	  <init-param>
+         <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+         <param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
+     </init-param>
+     <init-param>
+         <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+         <param-value>com.sun.jersey.api.container.filter.GZIPContentEncodingFilter</param-value>
+     </init-param>
+	  <load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>Jersey REST Service</servlet-name>
+	  <url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+	
+    <!-- =======================================================
+       A ajouter pour supprimer l'accès direct au document xhtml
+       =========================================================
+    	<security-constraint> 
+    	<web-resource-collection> 
+        	<web-resource-name>Protect XHTML Templates</web-resource-name> 
+        	<url-pattern>*.xhtml</url-pattern>     
+		</web-resource-collection> 
+		<auth-constraint/> 
+	</security-constraint>  
+		======================================================= -->
+</web-app>

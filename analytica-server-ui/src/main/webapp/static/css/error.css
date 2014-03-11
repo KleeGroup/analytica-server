@@ -1,0 +1,68 @@
+.errorPage {
+	margin: 0px;
+	padding: 0px; 
+	height: 100%;
+	font-size: 16px;
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+}
+
+.errorPanelAjax .errorPage div#bandeau {
+	display:none;
+}
+
+.errorPage div#content {
+	padding: 8px;
+	background: #f0f0f0;
+	font-size: 0.7em;
+}
+
+.errorPage div#bandeau {
+	height: 80px;
+	padding: 0px;	
+	font-size: 0.7em;
+}
+
+.errorPage h1 , .errorPanelAjax h1{
+	margin: 0px;
+	padding : 0px;
+	font-size: 1.2em;
+	padding-left: 20px;
+	background: url(../images/icon/m_error.gif) no-repeat left center;
+	white-space: nowrap;
+	margin-top: 10px;
+}
+
+.errorPage h2 {
+	font-size: 1.1em;
+	background: #e0e0e0;
+	margin: 0px;
+	margin-top: 8px;
+	margin-bottom: 8px;	
+	padding: 2px;
+}
+
+.errorPage h3 {
+	display:inline;
+	font-size: 1.0em;
+	color:#D86f7D;
+}
+
+.errorPage a {
+	color: #0520FF;
+}
+
+.errorPage p {
+	margin-left: 20%;
+	margin-right: 15%;	
+}
+
+.errorPage .code {
+	padding: 8px;
+	color: #7f7f7f;
+	font-size: 0.8em;
+}
+
+.errorPage #showerrorlink {
+	color: #7f7f7f;
+	font-size: 0.8em;
+}

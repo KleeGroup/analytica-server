@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.prime.com.tr/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+<head>
+<title>Graph lineChart</title>
+</head>
+<body>
+
+<cc:interface>	
+	<cc:attribute name="var" />
+	<cc:attribute name="panel" />
+</cc:interface>
+
+<cc:implementation >
+	<div id="#{cc.attrs.var}_container" class="chart_container"></div>
+	<script type="text/javascript">
+      (function () {
+        var
+          container = document.getElementById('#{cc.attrs.var}_container'),
+          datas = <h:outputText escape="false" value="#{cc.attrs.panel}">
+  			<f:converter converterId="flotrLineChartConverter"/>
+  			<f:attribute name="datas" value="#{analyticaDashboardController.data[cc.attrs.panel]}"/>
+  			</h:outputText>, 
+          start = (new Date).getTime(),
+          options,
+          graph, 
+          i, x, o;
+
+  	    function ticksFn (n) { return datas.labels[n]; }
+  	    
+        options = {
+        		colors: datas.colors,
+        		xaxis : {
+         	    	ticks : datas.labels
+         	    },
+         	   	legend : {
+      	        	position : 'ne'
+      	        },
+        		bars : {
+        	        show : true,
+        	        horizontal : false,
+        	        shadowSize : 0,
+        	        barWidth : 0.5
+        	      },
+        	      mouse : {
+        	        track : true
+        	      },
+        	      yaxis : {
+        	        min : 0,
+        	        autoscaleMargin : 1
+        	      },
+        	      HtmlText : false
+        	  };
+        
+        
+     // Draw graph with default options, overwriting with passed options
+        function drawGraph (opts) {
+
+          // Clone the options, so the 'options' variable always keeps intact.
+          o = Flotr._.extend(Flotr._.clone(options), opts || {});
+
+          // Return a new graph.
+          return Flotr.draw(
+            container,
+            datas.datas,
+            o
+          );
+        }
+        graph = drawGraph();
+               
+      
+        Flotr.EventAdapter.observe(container, 'flotr:select', function(area){
+            // Draw selected area
+            graph = drawGraph({
+              xaxis : { min : area.x1, max : area.x2, mode : 'time', labelsAngle : 45 },
+              yaxis : { min : area.y1, max : area.y2 }
+            }); });
+     // When graph is clicked, draw the graph with default area.
+        Flotr.EventAdapter.observe(container, 'flotr:click', function () { graph = drawGraph(); });
+   	})(document.getElementById("#{cc.attrs.var}_container"));
+    </script>
+</cc:implementation>
+
+</body>
+</html> 

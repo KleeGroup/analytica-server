@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:analytica="http://java.sun.com/jsf/composite/components/analytica"
+	xmlns:k="http://java.sun.com/jsf/composite/components/kasper"
+	template="template.xhtml">
+	
+	<ui:define name="head">
+		<title>Analytica - Home</title>
+	</ui:define>		
+	<ui:define name="header">
+		<ui:include src="header.xhtml"/>
+	</ui:define>
+	<ui:define name="content">
+		<h:form >
+		<h:panelGrid columns="2" columnClasses="facetPanel,resultPanel">
+			<h:column>
+				<p:fieldset legend="Affiner votre recherche">
+					<h3><h:outputText value="Composante Temps"/></h3>
+					<h:outputText value="Aggregation :" />  <h:selectBooleanCheckbox value="#{analyticaController.ctx.aggregateTime}"/>
+					<br/>
+					<h:commandLink action="#{analyticaController.zoomOutTime}" ajax="false" rendered="#{analyticaController.ctx.superTimeSelection != null}">
+							<h:outputText value="#{analyticaController.ctx.superTimeSelection.minValue}"/> -
+							<h:outputText value="#{analyticaController.ctx.superTimeSelection.maxValue}"/>
+							(<h:outputText value="#{analyticaController.ctx.superTimeSelection.dimension.label}"/>)
+					</h:commandLink>
+					<div>
+					<h:outputText value="#{analyticaController.ctx.timeSelection.minValue}"/> -
+					<h:outputText value="#{analyticaController.ctx.timeSelection.maxValue}"/>
+					(<h:outputText value="#{analyticaController.ctx.timeSelection.dimension.label}"/>)
+					</div>
+					<ui:repeat value="#{analyticaController.subTimeSelections}" var="timeSelection">							
+								<h:panelGrid columns="3">
+								<p:spacer width="10"/>
+								<h:outputText styleClass="ui-icon ui-icon-plus" />
+								<h:commandLink action="#{analyticaController.zoomInTime}" ajax="false">
+									<f:param name="timeMin" value="#{timeSelection.minValue.time}"/>
+									<f:param name="timeMax" value="#{timeSelection.maxValue.time}"/>
+									<f:param name="dimension" value="#{timeSelection.dimension}"/>
+									<h:outputText value="#{timeSelection.minValue}"/> -
+									<h:outputText value="#{timeSelection.maxValue}"/>
+									(<h:outputText value="#{timeSelection.dimension.label}"/>)
+								</h:commandLink>
+								</h:panelGrid>
+					</ui:repeat>
+					<hr/><h3><h:outputText value="Composante fonctionnelle"/></h3>
+					<h:outputText value="Aggregation :" />  <h:selectBooleanCheckbox value="#{analyticaController.ctx.aggregateWhat}"/>
+					<br/>
+					<h:commandLink action="#{analyticaController.zoomOutWhat}" ajax="false" rendered="#{analyticaController.ctx.superWhatSelection != null}">
+						<h:outputText value="#{analyticaController.ctx.superWhatSelection.whatValues[0]}"/>
+						(<h:outputText value="#{analyticaController.ctx.superWhatSelection.dimension.label}"/>)
+					</h:commandLink>
+					<div>
+					<h:outputText value="#{analyticaController.ctx.whatSelection.whatValues[0]}"/>
+					(<h:outputText value="#{analyticaController.ctx.whatSelection.dimension.label}"/>)
+					</div>
+					<ui:repeat value="#{analyticaController.subWhatSelections}" var="whatSelection">							
+								<h:panelGrid columns="3">
+							
+								<p:spacer width="10"/>
+								<h:outputText styleClass="ui-icon ui-icon-plus" />
+								<h:commandLink action="#{analyticaController.zoomInWhat}" ajax="false">
+									<f:param name="whatSelection" value="#{whatSelection.whatValues[0]}"/>
+									<f:param name="dimension" value="#{whatSelection.dimension}"/>
+									<h:outputText value="#{whatSelection.whatValues[0]}"/>
+									(<h:outputText value="#{whatSelection.dimension.label}"/>)
+								</h:commandLink>
+								</h:panelGrid>
+					</ui:repeat>
+					<hr/>
+					<h3><h:outputText value="Indicateurs"/></h3>
+					<p:selectManyCheckbox value="#{analyticaController.ctx.dataKeysAdapter.selected}" layout="pageDirection">  
+			            <f:selectItems value="#{analyticaController.ctx.dataKeysAdapter.list}"  var="dataKeyAdapter" itemLabel="#{dataKeyAdapter.data.name}" /> 
+			        </p:selectManyCheckbox>
+					
+		</p:fieldset>
+			</h:column>
+			<h:column>
+				<ui:insert name ="accueil-content">
+					<p:panel style="font-size:12px" header="Données">                          
+						<h:form>
+		<br/>
+			<p:dataTable var="data" value="#{analyticaController.ctx.datas}"
+				paginator="true" rows="50" rowKey="key"
+				emptyMessage="Pas de données">
+
+				<p:column headerText="Identifiant" sortBy="#{data.key}">					
+					<h:outputText value="#{data.key.name}"/> (<h:outputText value="#{data.key.type}"/>)
+				</p:column>							
+				<p:column headerText="Value" sortBy="#{data}">
+					<h:outputText value="#{data}"/>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+					</p:panel>
+				</ui:insert>
+			</h:column>
+		</h:panelGrid>
+		</h:form>
+  	</ui:define>
+
+  	<ui:define name="footer">
+  		<h:panelGroup styleClass="#{resultpage?'version':'fullpageversion'}">
+  			v1.0 du 05/03/2012
+	  	</h:panelGroup>
+	  	<h:panelGroup styleClass="contact">
+  			Pour toutes remarques ou suggestions, merci de nous envoyer un email à <a href="mailto:npiedeloup@kleegroup.com">npiedeloup@kleegroup.com</a>
+	  	</h:panelGroup>
+	</ui:define>
+  </ui:composition>

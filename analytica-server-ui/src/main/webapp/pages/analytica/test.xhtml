@@ -1,0 +1,34 @@
+
+  <html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:analytica="http://java.sun.com/jsf/composite/components/analytica"
+	xmlns:k="http://java.sun.com/jsf/composite/components/kasper">
+		<f:view contentType="text/html">
+		<h:head>
+				<title>Analytica - Test</title>
+		</h:head>
+		<h:body>
+			<div></div>
+			datas = <h:outputText escape="false" value="#{analyticaDashboardService.loadTestDataAsJson}">
+  			<f:converter converterId="simpleConverter"/>
+  			<f:attribute name="datas" value="#{analyticaDashboardController.data[cc.attrs.panel]}"/>
+  			</h:outputText>
+  			
+  			
+  			
+			<h:form >
+			
+			<!-- datas = <h:outputText value="#{analyticaDashboardService.loadTestDataAsJson}">
+        	</h:outputText> -->
+        	
+						
+			</h:form>
+		</h:body>
+		</f:view>
+	</html>
+	
+	
+	

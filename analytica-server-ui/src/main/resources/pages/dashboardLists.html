@@ -1,0 +1,259 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Analytica - Dashboard</title>
+		<meta name="viewport" content="width=1024">
+		<!--[if lt IE 9]>	<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]--> 
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/jquery.dataTables.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/bootstrap-analytica.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/chart-analytica.css">
+		
+		<link rel="shortcut icon" href="static/ico/favicon.png">
+	</head>
+	<body>
+	
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="navbar-header">
+  	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="glyphicon-bar"></span>
+      <span class="glyphicon-bar"></span>
+      <span class="glyphicon-bar"></span>
+    </button>
+  	<a class="navbar-brand" href="/" title="Analytica"><img src="../static/img/analytica-logo.png" height="48" alt="Analytica" title="Analytica"></a>        
+  </div>
+      <div class="collapse navbar-collapse navbar-1-collapse">
+         <ul class="nav navbar-nav">
+           <li class="active"><a href="/dashboards.html" title="Dashboards">Dashboards</a></li>
+		   <li><a href="/admin.html" title="Admin">Admin</a></li>
+         </ul>
+      </div><!-- /.navbar-collapse -->  
+</nav>
+<div id="main" class="container">
+<div class="row">
+<div id="sidebar" class="col-md-2 navbar navbar-default navbar-inverse">
+  <!-- Main nav -->
+  <ul class="nav navbar-nav">
+        <!--  TODO a remplir avec les differents Dashboard -->
+        <li>
+          <a href="/dashboards.html?name=main">
+              <i class="glyphicon glyphicon-fullscreen"></i>
+              <span>Main view</span>
+          </a>
+        </li>
+        <li>
+          <a href="/dashboardPerfs.html?name=perf">
+              <i class="fa fa-dashboard"></i>
+              <span>Perfs</span>
+          </a>
+        </li>
+        <li>
+          <a href="/dashboardFocus.html?name=focus">
+              <i class="glyphicon glyphicon-eye-open"></i>
+              <span>Focus</span>
+          </a>
+        </li>
+        <li  class="active">
+          <a href="/dashboardLists.html?name=lists">
+              <i class="glyphicon glyphicon-list"></i>
+              <span>Listes</span>
+          </a>
+        </li>
+  </ul>
+</div> <!-- sidebar -->
+<div id="panels" class="col-md-10">
+	<div class="row">
+<!-- on rend les panneaux -->
+	<div class="col-md-3">
+		<div class="panel panel-primary panel-h1">
+			<div class="logo"><img src="../static/img/logoSpark.png" height="180px"/></div>
+		</div>
+		</div>
+		<div class="col-md-3">
+	<div class="panel panel-primary panel-h1 blue">
+			<div class="panel-body clock"></div>
+		</div>
+	</div>	
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h1">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-dashboard"></i> Qualité de Service</h5></div>
+			<div class="panel-body">
+				<div class="chart objective" 
+			    data-url="rest/query/timeLine/QOS" 
+			    data-query='{"timeFrom":"NOW-1h", "timeTo":"NOW", "timeDim":"Hour", "datas":"Activity:mean;ActivityMax:mean;Performance:mean;PerformanceMax:mean;Health:mean;HealthMax:mean"}' 
+			    data-labels='{"Activity:mean":"Activity","Performance:mean":"Performances","Health:mean":"Health"}'
+			    data-icons='{"Activity:mean":"glyphicon glyphicon-fire","Performance:mean":"fa fa-clock-o","Health:mean":"glyphicon glyphicon-heart-empty"}'
+			    data-colors='RED2GREEN'></div>
+			</div>
+		</div>
+	</div>
+		
+	</div> <!-- /row -->
+	<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-primary panel-h2">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Informations détaillées</h5></div>
+			<div class="panel-body">
+				<div class="datatable" 
+			    data-url="rest/query/categoryLine/PAGE/$subcategory" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
+			    data-columns='[
+			    { "label":"Page", "data":"name", "content":"<a href=\"dashboardLists.html?subcategory=$name\">$name</a>"},
+			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
+			    { "label":"Tps moyen", "data":"duration:mean"},
+			    { "label":"Tps sous-jacent", "data":"sub-duration:mean"},
+			    { "label":"Nb Service", "data":"SERVICE:count"},
+			    { "label":"Tps Service", "data":"SERVICE:mean"},			   
+			    { "label":"Nb Sql", "data":"SQL:count"},
+			    { "label":"Tps Sql", "data":"SQL:mean"}]'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h4">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Oeuvre : Informations détaillées</h5></div>
+			<div class="panel-body">
+				<div class="datatable" 
+			    data-url="rest/query/categoryLine/PAGE/oeuvres/$suboeuvre" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
+			    data-columns='[
+			    { "label":"Page", "data":"name", "content":"<a href=\"dashboardLists.html?suboeuvre=$name\">$name</a>"},
+			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
+			    { "label":"Tps moyen", "data":"duration:mean"},
+			    { "label":"Tps Service", "data":"SERVICE:mean"},			    
+			    { "label":"Tps Sql", "data":"SQL:mean"}]'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h2">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Artiste : Informations détaillées</h5></div>
+			<div class="panel-body">
+				<div class="datatable" 
+			    data-url="rest/query/categoryLine/PAGE/artists/$subartist" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
+			    data-columns='[
+			    { "label":"Page", "data":"name", "content":"<a href=\"dashboardLists.html?subartist=$name\">$name</a>"},
+			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
+			    { "label":"Tps moyen", "data":"duration:mean"},
+			    { "label":"Tps Service", "data":"SERVICE:mean"},			   
+			    { "label":"Tps Sql", "data":"SQL:mean"}]'></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-primary panel-h2">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Exposition : Informations détaillées</h5></div>
+			<div class="panel-body">
+				<div class="datatable" 
+			    data-url="rest/query/categoryLine/PAGE/exposition/$subexposition" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
+			    data-columns='[
+			    { "label":"Page", "data":"name", "content":"<a href=\"dashboardLists.html?subexposition=$name\">$name</a>"},
+			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
+			    { "label":"Tps moyen", "data":"duration:mean"},
+			    { "label":"Tps Service", "data":"SERVICE:mean"},			    
+			    { "label":"Tps Sql", "data":"SQL:mean"}]'></div>
+			</div>
+		</div>
+	</div>
+	</div> <!-- /row -->
+	<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-primary panel-h2">
+			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Recherche : Informations détaillées</h5></div>
+			<div class="panel-body">
+				<div class="datatable" 
+			    data-url="rest/query/categoryLine/PAGE/search/$subsearch" 
+			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
+			    data-columns='[
+			    { "label":"Page", "data":"name", "content":"<a href=\"dashboardLists.html?subsearch=$name\">$name</a>"},
+			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
+			    { "label":"Tps moyen", "data":"duration:mean"},
+			    { "label":"Tps sous-jacent", "data":"sub-duration:mean"},
+			    { "label":"Nb Service", "data":"SERVICE:count"},
+			    { "label":"Tps Service", "data":"SERVICE:mean"},
+			    { "label":"Nb Recherche", "data":"SEARCH:count"},
+			    { "label":"Tps Recherche", "data":"SEARCH:mean"},
+			    { "label":"Nb Sql", "data":"SQL:count"},
+			    { "label":"Tps Sql", "data":"SQL:mean"}]'></div>
+			</div>
+		</div>
+	</div>
+	</div> <!-- /row -->
+	
+					</div>
+					<!--/.fluid-container--> <!-- end: Content --> 
+				</div>
+				</div>
+				<!--/#content.span10--> 
+			</div>
+			<!--/fluid-row--> 
+		</div>
+	</div> <!-- rowfluid -->
+	<div id="footer" class="row">
+		<div class="container">
+			<footer>
+				<p> <a href="http://www.kleegroup.com" title="KleeGroup">KleeGroup 2013</a>&nbsp;&nbsp;&nbsp; <a href="mailto:direction.technique@kleegroup.com" title="Contact">Contact</a> <span class="pull-right"> <a rel="license" href="http://creativecommons.org/licenses/by-nc/3.0/"><img alt="Creative Commons License" style="border-width: 0" src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" /></a></span> </p>
+			</footer>
+		</div>
+	</div>
+</div> <!-- container-fluid -->
+		<!-- start: JavaScript--> 
+	<script src="static/js/jquery-1.10.2.min.js"></script>
+	<!-- <script src="js/jquery-migrate-1.0.0.min.js"></script> -->
+	<script src="static/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<!-- <script src="js/jquery.ui.touch-punch.js"></script>
+	<script src="js/modernizr.js"></script> -->
+	<script src="static/js/bootstrap.min.js"></script>
+	<!-- <script src="js/jquery.cookie.js"></script>
+	<script src='js/fullcalendar.min.js'></script>
+	<script src='js/jquery.dataTables.min.js'></script> -->
+	<script src="static/js/jquery.flot.js"></script>
+	<!-- <script src="static/js/jquery.flot.orderBars.js"></script> --> <!-- must be before jquery.flot.stack.js -->
+	<script src="static/js/jquery.flot.pie.js"></script>
+	<script src="static/js/jquery.flot.categories.js"></script>
+	<script src="static/js/jquery.flot.resize.min.js"></script>
+	<script src="static/js/jquery.flot.time.js"></script>
+	<script src="static/js/jquery.flot.stack.js"></script>
+	<script src="static/js/jquery.flot.sidedBars.js"></script>
+	
+	<script src="static/js/jquery.sparkline.js"></script>
+	<script src="static/js/jquery.dataTables.js"></script>
+	<script src="static/js/jquery.knob.js"></script>
+	<!-- <script src="js/jquery.chosen.min.js"></script>
+	<script src="js/jquery.uniform.min.js"></script>
+	<script src="js/jquery.cleditor.min.js"></script>
+	<script src="js/jquery.noty.js"></script>
+	<script src="js/jquery.elfinder.min.js"></script>
+	<script src="js/jquery.raty.min.js"></script>
+	<script src="js/jquery.iphone.toggle.js"></script>
+	<script src="js/jquery.uploadify-3.1.min.js"></script>
+	<script src="js/jquery.gritter.min.js"></script>
+	<script src="js/jquery.imagesloaded.js"></script>
+	<script src="js/jquery.masonry.min.js"></script>
+	<script src="js/jquery.knob.modified.js"></script>
+	<script src="js/jquery.sparkline.min.js"></script>
+	<script src="js/counter.js"></script>
+	<script src="js/retina.js"></script>
+	<script src="js/custom.js"></script>  -->
+	<script src="static/js/d3.v3.js"></script> 
+	<!-- <script src="static/js/analytica.d3.js"></script>  -->
+	<script src="static/js/analytica.datatable.js"></script>
+	<script src="static/js/analytica.flot.js"></script>
+	<script src="static/js/analytica.bignumber.js"></script>
+	<script src="static/js/analytica.objectif.js"></script>
+	<script src="static/js/analytica.js"></script> 
+	<script src="static/js/processing-1.4.1.js"></script>
+	<!-- end: JavaScript-->
+	<script> $(document).ready(function() { 
+		startClock(); 
+		showCharts(); 
+		showTables(); 
+	}); </script>
+	</body>
+</html>

@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util"
+	xmlns:analytica="http://java.sun.com/jsf/composite/components/analytica"
+	xmlns:k="http://java.sun.com/jsf/composite/components/kasper"
+	xmlns:p="http://primefaces.prime.com.tr/ui">
+	
+	<h:panelGroup id="header">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+	      <div class="navbar-inner">
+	        <div class="container-fluid">	          
+	          	<a class="brand" href="#"><img src="#{request.contextPath}/static/img/analytica-logo.png" width="120px" height="40px" alt="Analytica logo"/></a>
+	            <ul class="nav">
+	             <ui:repeat value="#{analyticaDashboardController.ctx.dashboards}" var="dashboard">	
+					<ui:fragment rendered="#{dashboard.dashboardName != analyticaDashboardController.ctx.currentDashboard}">
+				  		<li>
+					  		<h:link value="#{dashboard.dashboardTitle}" action="#{analyticaDashboardController.changeDashboard}" ajax="false">  
+						        <f:param name="dashboardName" value="#{dashboard.dashboardName}" />
+						    </h:link>  
+						</li>
+					</ui:fragment>
+					<ui:fragment rendered="#{dashboard.dashboardName == analyticaDashboardController.ctx.currentDashboard}">
+				  		<li class="active">
+					  		<h:link value="#{dashboard.dashboardTitle}" action="#{analyticaDashboardController.changeDashboard}" ajax="false">  
+						        <f:param name="dashboardName" value="#{dashboard.dashboardName}" />
+						    </h:link>  
+						</li>
+					</ui:fragment>
+				</ui:repeat>
+	            </ul>
+	        </div>
+	      </div>
+	    </div>
+	</h:panelGroup>
+</ui:composition>
+
