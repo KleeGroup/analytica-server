@@ -1,0 +1,454 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Analytica.io : Superviser la performance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Analytica : Outil de supervision applicative destin&eacute; aux responsables fonctionnel">
+    <meta name="author" content="KleeGroup">
+
+    <!-- Le styles -->
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/font-awesome.css" rel="stylesheet">
+    <link href="./css/tldrlegal.css" rel="stylesheet">
+    <link href="./css/analytica.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="./css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="./js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="./ico/favicon.png">
+  </head>
+
+  <body data-spy="scroll" data-target=".bs-docs-sidebar" data-twttr-rendered="true">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+
+          <a class="brand" href="index.html"><img src="./img/analytica-icon-logo.png"/></a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+
+              <li><a href="downloads.html"><i class="fa fa-download"></i> T&eacute;l&eacute;chargements</a></li>
+              <li class="active"><a href="documentation.html"><i class="fa fa-book"></i> Documentation</a></li>
+
+              <li><a href="documentation.html#licence">&copy; Licence</a></li>
+              <li><a href="mailto:analytica@kleegroup.com" title="Contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+          <a class="btn btn-primary pull-right" href="https://github.com/analytica-io/"><i class="fa fa-github"></i> Sources sur GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+    	<div class="row">
+    	<div class="span3 bs-docs-sidebar">
+        <ul class="nav nav-list bs-docs-sidenav affix">
+          <li><a href="#presentation"><i class="icon-chevron-right"></i> Pr&eacute;sentation</a></li>
+          <li><a href="#principalesfonctions"><i class="icon-chevron-right"></i> Principales fonctions</a></li>
+          <li><a href="#indicateurs"><i class="icon-chevron-right"></i> Indicateurs</a></li>
+          <li><a href="#licence"><i class="icon-chevron-right"></i> Licence</a></li>
+          <li><a href="#installation"><i class="icon-chevron-right"></i> Installation</a></li>
+          <li><a href="#miseenoeuvre"><i class="icon-chevron-right"></i> Mise en oeuvre</a></li>
+          <li><a href="#roadmap"><i class="icon-chevron-right"></i> Roadmap produit</a></li>
+        </ul>
+      </div>
+      <div class="span9">
+      	
+      	<section id="presentation">
+      		<div class="alert alert-info">
+			      <strong>Ebauche.</strong> Analytica est en cours de d&eacute;veloppement, cette page sera compl&eacute;t&eacute;e prochainement.<br/>
+			    </div>
+		    
+          <div class="page-header">
+            <h2>1. Pr&eacute;sentation</h2>
+          </div>
+
+          <p>Destin&eacute; &agrave; des utilisateurs non techniques : Responsable fonctionnel, Chef de projet.</p>
+          <p>Con&ccedil;u avec une volont&eacute; de :
+					 <ul>
+					 		<li><h3>Simplicit&eacute;</h3>
+					 			<ul>
+						 			<li>prise en main rapide</li>
+									<li>ergonomie adapt&eacute;e</li>
+								</ul>
+							</li>
+					 		<li><h3>Lisibilit&eacute;</h3>
+					 			<ul>
+						 			<li>tr&egrave;s visuel</li>
+									<li>diff&eacute;rents niveaux de lecture</li>
+								</ul>
+							</li>
+					 		<li><h3>Souplesse</h3>
+					 			<ul>
+						 			<li>rapide &agrave; mettre en place, faible co&ucirc;t d'int&eacute;gration</li>
+									<li>adaptable aux sp&eacute;cificit&eacute;s projets</li>
+								</ul>
+							</li>
+					</ul>
+					</p>
+          </section>
+          
+          <section id="principalesfonctions">
+          <div class="page-header">
+            <h2>2. Principales Fonctions</h2>
+          </div>
+
+          <h3><i class="fa fa-sitemap"></i> Monitoring centralis&eacute;</h3>
+          <p>Suivre et controler l'&eacute;volution d'indicateurs
+          	<ul>
+          		<li>Activit&eacute;</li>
+          		<li>Temps de r&eacute;ponse</li>
+          		<li>Taux d'erreurs</li>
+          		<li>&#8230;</li>
+          	</ul>
+          </p>
+					<p>Consulter les &eacute;v&egrave;nements de l'application
+          	<ul>
+          		<li>Actions utilisateurs</li>
+          		<li>Agents programm&eacute;s</li>
+          	</ul>
+          </p>
+					<h3><i class="fa fa-bell"></i> Alertes</h3>
+          <p>D&eacute;clench&eacute;es sur
+          	<ul>
+          		<li>D&eacute;passement de sueil</li>
+          		<li>Hyst&eacute;r&eacute;sis</li>
+          		<li>Ev&egrave;nement particulier</li>
+          	</ul>
+          </p>
+          <p>Notifi&eacute;es sur
+          	<ul>
+          		<li>Tableaux de bord</li>
+          		<li>Envoi de mails</li>
+          	</ul>
+          </p>
+          <h3><i class="fa fa-medkit"></i> Diagnostic</h3>
+          <p>Consulter les caract&eacute;ristiques du syst&egrave;me
+          	<ul>
+          		<li>Caract&eacute;ristiques physiques</li>
+          		<li>Param&egrave;tres et configurations</li>
+          	</ul>
+          </p>
+          <p>Lancer des fonctions de contr&ocirc;le sur
+          	<ul>
+          		<li>La disponibilit&eacute; de composant tiers (LDAP, services web, &#8230;)</li>
+          		<li>Les coh&eacute;rences de donn&eacute;es</li>
+          	</ul>
+          </p>
+          <h3><i class="fa fa-list-alt"></i> Rapport d'activit&eacute;</h3>
+          <p>Orient&eacute;
+          	<ul>
+          		<li>qualit&eacute; de service</li>
+          		<li>statistiques d'usages</li>
+          	</ul>
+          </p>
+          <p>Fabriqu&eacute;
+          	<ul>
+          		<li>&agrave; la demande</li>
+          		<li>r&eacute;guli&egrave;rement</li>
+          	</ul>
+          </p>
+          </section>
+					<section id="indicateurs">
+          <div class="page-header">
+            <h2>3. Indicateurs</h2>
+          </div>
+
+          <h3>Choix des indicateurs</h3>
+          <ul>
+			 			<li>D&eacute;terminer des objectifs du suivi applicatif (QOS, activit&eacute;, arbitrage, &#8230;)</li>
+						<li>D&eacute;river les objectifs en indicateurs et seuils associ&eacute;s</li>
+						<li>Proposer une repr&eacute;sentation adapt&eacute;e</li>
+					</ul>
+					<h3>Exemples</h3>
+					<p>Etat de l'application
+	          <ul>
+				 			<li><b>Activit&eacute;</b> : nb d'utilisateurs, nb objets m&eacute;tiers, pages vues, traitements r&eacute;alis&eacute;s, &#8230;</li>
+							<li><b>Performances</b> : nb de page respectant les objectifs de performance</li>
+							<li><b>Sant&eacute;</b> : taux d'erreurs technique, &eacute;tat des sous syst&egrave;mes, charge CPU/M&eacute;moire</li>
+						</ul>
+					</p>
+          </section>          
+      
+      <section id="licence">
+          <div class="page-header">
+            <h2>&copy; Licence</h2>
+          </div>
+          <p>Analytica est diffus&eacute; sous licence AGPLv3.</p>
+          <p>Voir le texte de la licence <a href="http://www.gnu.org/licenses/agpl.html">ici</a></p>
+          <p>Certaines briques d'Analytica ont vocation &agrave; &ecirc;tre li&eacute;es &agrave; une application (client-api, client-embedded). 
+          	La licence de ses briques pr&eacute;voit une exception de ''liaison'' autorisant l'utilisation de ces librairies clientes d'Analytica dans votre application quel que soit son mode de licence.
+          </p>
+          <p>Pour information voici une traduction des possibilit&eacute;s et limitations offerte par la licence. Sur la base du site <a href="http://www.tldrlegal.com/l/AGPL3">TL;DR Legal</a> (TL;DR : Too Long; Didn't Read)
+          <div id="infolist-wrapper">
+          	<ul id="Canlist" class="info-list upshadow">
+          		<li class="list_header">Autorisations</li>
+          		<li title="Ce programme peut &ecirc;tre utilis&eacute; dans un cadre commercial dans travaux d&eacute;riv&eacute;s sous certains limitations.">
+          			<a class="toggleCollapse"></a><img src="./ico/coins.png"> <span>Usage commercial limit&eacute;</span>
+          			<div class="attr-desc">Ce programme peut &ecirc;tre utilis&eacute; dans un cadre commercial dans travaux d&eacute;riv&eacute;s sous certains limitations.</div>
+         			</li>
+          		<li class="list-alt" title="Ce programme peut &ecirc;tre modifi&eacute;.">
+          			<a class="toggleCollapse"></a><img src="./ico/modify.png"> <span>Modification</span>
+          			<div class="attr-desc">Ce programme peut &ecirc;tre modifi&eacute;.</div>
+          		</li>
+          		<li title="Ce programme peut &ecirc;tre distribu&eacute;.">
+          			<a class="toggleCollapse"></a><img src="./ico/send.png"> <span>Distribution </span>
+          			<div class="attr-desc">Ce programme peut &ecirc;tre distribu&eacute;.</div>
+          		</li>
+          		<li class="list-alt" title="Vous pouvez garantir ce programme.">
+          			<a class="toggleCollapse"></a><img src="./ico/warranty.png"> <span>Garantie</span>
+          			<div class="attr-desc">Vous pouvez garantir ce programme.</div>
+          		</li>
+          	</ul>
+          	<ul id="Cannotlist" class="info-list upshadow">
+          		<li class="list_header">Interdictions</li>
+          		<li title="Vous devez conserver la licence d'origine.">
+          			<a class="toggleCollapse"></a><img src="./ico/script.png"> <span>Changement de licence</span>
+          			<div class="attr-desc">Vous devez conserver la licence d'origine.</div>
+          		</li>
+          		<li class="list-alt" title="Ce programme est diffus&eacute; sans aucune garantie et le propri&eacute;taire de ce programme ne peut &ecirc;tre tenu responssable d'aucun dommages.">
+          			<a class="toggleCollapse"></a><img src="./ico/error.png"> <span>Reporter la responssabilit&eacute;</span>
+          			<div class="attr-desc">Ce programme est diffus&eacute; sans aucune garantie et le propri&eacute;taire de ce programme ne peut &ecirc;tre tenu responssable d'aucun dommages.</div>
+          		</li>
+          	</ul>
+          	<ul id="Mustlist" class="info-list upshadow last">
+          		<li class="list_header">Obligations</li>
+          		<li title="Vous devez inclure le copyright d'origine.">
+          			<a class="toggleCollapse"></a><img src="./ico/copyright.png"> <span>Inclure le Copyright</span>
+                <div class="attr-desc">Vous devez inclure le copyright d'origine.</div>
+              </li>
+              <li class="list-alt" title="Vous devez inclure le texte complet de la licence dans le programme modifi&eacute;.">
+              	<a class="toggleCollapse"></a><img src="./ico/script.png"> <span>Inclure la license</span>
+                <div class="attr-desc">Vous devez inclure le texte complet de la licence dans le programme modifi&eacute;.</div>
+              </li>
+          		<li class="list-alt" title="Vous devez lister les modifications majeurs apport&eacute;es au programme.">
+          			<a class="toggleCollapse"></a><img src="./ico/modify.png"> <span>Lister les changements</span>
+          			<div class="attr-desc" style="display: none;">Vous devez lister les modifications majeurs apport&eacute;es au programme.</div>
+          		</li>
+          		<li title="Vous devez rendre les sources accessibles lorsque vous distribuez le programme.">
+          			<a class="toggleCollapse"></a><img src="./ico/code.png"> <span>Diffuser les sources</span>
+         				<div class="attr-desc" style="display: none;">Vous devez rendre les sources accessibles lorsque vous distribuez le programme.</div>
+         			</li>
+         		</ul>
+         	</div>
+         	</p>
+      </section>
+      <section id="installation">
+          <div class="page-header">
+            <h2>4. Installation</h2>
+          </div>
+					<h3>Installation serveur Analytica</h3>
+					<p>
+						Le serveur Analytica est un composant central de votre SI, il est install&eacute; sur un serveur d&eacute;di&eacute; ou non.<br/>
+						Pr&eacute;requis: Java 1.7 install&eacute;, 2 Go de RAM disponible.
+						<ol>
+							<li>T&eacute;l&eacute;charger l'&eacute;x&eacute;cutable <a href="files/AnalyticaServer-v1.0.jar">AnalyticaServer-v1.0.jar</a></li>
+							<li>T&eacute;l&eacute;charger la configuration <a href="files/analyticaConf.properties">analyticaConf.properties</a></li>
+							<li>D&eacute;poser ces deux fichiers dans un m&ecirc;me r&eacute;pertoire</li>
+							<li>Sous Linux v&eacute;rifier les droits d'acc&egrave;s et d'ex&eacute;cution</li>
+							<li>Cr&eacute;er un r&eacute;pertoire de stockage de la base de donn&eacute;es des indicateurs r&eacute;colt&eacute;s</li>
+							<li>Editer le fichier "analyticaConf.properties" et modifier le chemin de stockage des process</li>
+							<li>Lancer le serveur analytica :<br/>
+                  <code>java -jar -Xmx2048m AnalyticaServer-v1.0.jar analyticaConf.properties 1&gt; analytica.log 2&gt;&amp;1 &amp;</code><br/>
+                  Celle-ci, permettra le lancement du serveur et rassemblera les &eacute;ventuelles erreurs rencontr&eacute;es dans le fichier de log analytica.log.
+              </li>
+              </ol>
+            </p>
+          <h3>Installation de l'agent Analytica</h3>
+					<p>
+						L'agent Analytica est le composant int&eacute;gr&eacute; &agrave; l'application qui r&eacute;colte les indicateurs.<br/>
+						Analytica propose diff&eacute;rent agents afin de s'adapter au maximum de cas.<br/>
+						<ul>
+							<li>Int&eacute;gration automatique dans votre application</li>
+							<li>Librairie cliente &agrave; int&eacute;grer dans votre application</li>
+							<li>Analyse des logs en asynchrone</li>
+						</ul>
+					</p>
+					<p>
+						<h4>Int&eacute;gration automatique</h4>
+						<ol>
+							<li>T&eacute;l&eacute;charger l'&eacute;x&eacute;cutable <a href="files/AnalyticaAgent-1.4.2.jar">AnalyticaAgent-1.4.2.jar</a></li>
+							<li>T&eacute;l&eacute;charger la configuration <a href="files/analyticaAgentConf.json">analyticaAgentConf.json</a></li>
+							<li>D&eacute;poser ces deux fichiers dans un m&ecirc;me r&eacute;pertoire</li>
+							<li>Sous Linux v&eacute;rifier les droits d'acc&egrave;s et d'ex&eacute;cution</li>
+							<li>Modifier le fichier "run.conf" situ&eacute; dans le r&eacute;pertoire bin de jboss (<code>$JBOSSHOME/bin</code>)<br/>
+								Ajouter &agrave; la fin du fichier :<br/>
+								<code>#Run AnalyticaSpyAgent<br/>
+									JAVA_OPTS="$JAVA_OPTS -javaagent:analyticaAgent-1.4.2.jar=analyticaAgentConf.json"</code></li>							
+              </ol>
+					</p>
+					<p>
+						<h4>Librairie cliente</h4>
+						<ol>
+							<li>R&eacute;cup&eacute;rer le bundle <a href="files/analytica-client-1.1.0-SNAPSHOT.zip">analytica-client-1.1.0-SNAPSHOT.zip</a></li>							
+           </ol>
+					</p>
+					<p>
+						<h4>Analyse des logs en asynchrone</h4>
+						<ol>
+							<li>T&eacute;l&eacute;charger l'&eacute;x&eacute;cutable <a href="files/analyticaLogParser-1.3.1.jar">analyticaLogParser-1.3.1.jar</a></li>
+							<li>T&eacute;l&eacute;charger la configuration <a href="files/analyticaLogParserConf.json">analyticaLogParserConf.json</a></li>
+							<li>D&eacute;poser ces deux fichiers dans un m&ecirc;me r&eacute;pertoire</li>
+							<li>Sous Linux v&eacute;rifier les droits d'acc&egrave;s et d'ex&eacute;cution</li>
+							<li>V&eacute;rifier la configuration du parseur "analyticaLogParserConf.json"</li>
+							<li>Lancer le parseur de log :<br/>
+                  <code>java -jar analyticaLogParser-1.3.1.jar "&lt;&lt;URL_ANALYTICA&gt;&gt;/analytica/rest/process" analyticaLogParserConf.json &lt;&lt;LOGFILE_PATH&gt;&gt;</code><br/>
+              </li>
+           </ol>
+          </p>
+      </section>
+      <section id="miseenoeuvre">
+          <div class="page-header">
+            <h2>5. Mise en oeuvre</h2>
+          </div>
+
+      </section>
+      <section id="roadmap">
+          <div class="page-header">
+            <h2>6. Roadmap produit</h2>
+          </div>
+            <p>Analytica est en cours de d&eacute;veloppement.<br/>
+            Voici les milestones pr&eacute;vues :<br/>
+            <ul>
+	            <li><h3>v0.8</h3>
+	            	<p>Finitions techniques<br/>
+	            		<ul><li>Param&eacute;trage des tableaux de bord</li>
+									<li>Enrichissement des composants graphiques</li>
+									<li>Param&eacute;trage par d&eacute;faut des sondes automatiques</li></ul>
+								</p>
+							</li>
+							<li><h3>v0.9</h3>
+	            	<p>Production d'indicateurs &agrave; partir des m&eacute;triques</p>
+							</li>
+							<li><h3>v1.0</h3>
+	            	<p>Persistance des cubes</p>
+							</li>
+							<li><h3>v2</h3>
+	            	<ul><li>M&eacute;canismes d'alertes</li>
+									<li>Sondes .Net</li>
+									<li>Sondes PHP</li></ul>
+							</li>
+							<li><h3>v3</h3>
+	            	<ul><li>Production de rapports</li>
+									<li>Restitution d'informations temps r&eacute;el</li>
+									<li>Sondes SNMP</li></ul>
+							</li>
+						</ul>
+						</p>
+						<p>
+						En parall&egrave;lle d'autres composants graphiques pourrait &ecirc;tre ajout&eacute;es :<br/>
+						<div id="myCarousel" class="carousel slide">
+						  <ol class="carousel-indicators">
+						    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+						    <li data-target="#myCarousel" data-slide-to="1"></li>
+						    <li data-target="#myCarousel" data-slide-to="2"></li>
+						    <li data-target="#myCarousel" data-slide-to="3"></li>
+						    <li data-target="#myCarousel" data-slide-to="4"></li>
+						    <li data-target="#myCarousel" data-slide-to="5"></li>
+						    <li data-target="#myCarousel" data-slide-to="6"></li>
+						    <li data-target="#myCarousel" data-slide-to="7"></li>
+						    <li data-target="#myCarousel" data-slide-to="8"></li>
+						    <li data-target="#myCarousel" data-slide-to="9"></li>
+						  </ol>
+						  <!-- Carousel items -->
+						  <div class="carousel-inner">
+						    <div class="active item"><img src="./img/graph1.png"/></div>
+						    <div class="item"><img src="./img/graph2.png" /></div>
+						    <div class="item"><img src="./img/graph3.png" /></div>
+						    <div class="item"><img src="./img/graph4.png" /></div>
+						    <div class="item"><img src="./img/graph5.png" /></div>
+						    <div class="item"><img src="./img/graph6.png" /></div>
+						    <div class="item"><img src="./img/graph7.png" /></div>
+						    <div class="item"><img src="./img/graph8.png" /></div>
+						    <div class="item"><img src="./img/graph9.png" /></div>
+						  </div>
+						  <!-- Carousel nav -->
+						  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+						  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+						</div>
+          </p>
+          <p>
+          	D'autres indicateurs &agrave; &eacute;tudier :<br/>
+        		<ul>
+        			<li>Corr&eacute;lation de d&eacute;gradation de performance</li>
+							<li>Comparaisons entre deux p&eacute;riodes</li>
+							<li>Suivi des configurations applicatives</li>
+							<li>Analyse automatique des tunnels de normalit&eacute;</li>
+							<li>D&eacute;tection des saturations (notion de retard cumul&eacute;) </li>
+						</ul>
+					</p>
+          </div>
+
+      </section>
+	    </div>
+	    </div>
+	    </div>
+      <footer>
+        <div class="container">
+ 				<div class="row">
+ 					<div class="span1"><img src="./img/klee-logo.png"/></div>
+ 					<div class="span6">&copy; KleeGroup 2013 - Analytica est diffus&eacute; sous licence AGPLv3</div>
+        	<div class='span5'>
+        		
+        		<ul class='quick-links  pull-right'>
+        			<li style="width: 92px; height: 25px;">
+              <iframe src="./github-btn.html?user=vertigo-io&repo=vertigo&type=watch&count=true" 
+        			allowtransparency="true" frameborder="0" scrolling="0" width="92" height="20"></iframe>
+						 </li>
+           	 <li style="width: 220px; height: 25px;">
+              <a href="https://twitter.com/Teknics_Klee" class="twitter-follow-button" data-show-count="false" data-dnt="true">Follow @Teknics_Klee</a>
+						 </li>
+            <li style="width: 107px; height: 25px;">
+              <a href="https://twitter.com/share" class="twitter-share-button" 
+              	 data-url="http://analytica.io" data-text="Analytica.io - Supervision des performances destin&eacute; aux fonctionnels #APM #OpenSource" data-via="Teknics_Klee" data-hashtags="Analytica">Tweet</a>
+						</li>
+							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+          </ul></div>
+        </div>
+      </div>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./js/jquery-1.10.2.js"></script>
+    <script src="./js/bootstrap-transition.js"></script>
+    <script src="./js/bootstrap-dropdown.js"></script>
+    <script src="./js/bootstrap-scrollspy.js"></script>
+    <script src="./js/bootstrap-tooltip.js"></script>
+    <script src="./js/bootstrap-popover.js"></script>
+    <script src="./js/bootstrap-collapse.js"></script>
+    <script src="./js/bootstrap-carousel.js"></script>
+    <script src="./js/tldrlegal.js"></script> 
+    <script src="./js/application.js"></script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9582182-8']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </body>
+</html>
