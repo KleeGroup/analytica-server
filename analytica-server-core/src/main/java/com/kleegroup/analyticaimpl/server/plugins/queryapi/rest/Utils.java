@@ -21,7 +21,7 @@ import com.kleegroup.analytica.hcube.result.HResult;
 import com.kleegroup.analytica.hcube.result.HSerie;
 
 /**
- * @author statchum
+ * @author statchum, npiedeloup
  * @version $Id: codetemplates.xml,v 1.2 2011/06/21 14:33:16 npiedeloup Exp $
  */
 public final class Utils {

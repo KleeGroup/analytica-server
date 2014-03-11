@@ -1,5 +1,9 @@
 package com.kleegroup.analyticaimpl.uiswing.patterns;
 
+import io.vertigo.kernel.exception.VRuntimeException;
+import io.vertigo.kernel.exception.VUserException;
+import io.vertigo.kernel.lang.MessageText;
+
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Window;
@@ -19,9 +23,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.exception.KUserException;
-import kasper.kernel.lang.MessageText;
 import mswing.MDialog;
 import mswing.MImageIconCache;
 import mswing.MUtilities;
@@ -57,7 +58,7 @@ public class SUtilities {
 	 * @param throwable java.lang.Throwable
 	 */
 	public static void handleException(final Throwable throwable) {
-		if (throwable instanceof OutOfMemoryError || throwable instanceof KRuntimeException || throwable instanceof Error || throwable instanceof UnmarshalException || throwable instanceof ConnectException) {
+		if (throwable instanceof OutOfMemoryError || throwable instanceof VRuntimeException || throwable instanceof Error || throwable instanceof UnmarshalException || throwable instanceof ConnectException) {
 			// note : SAssertion hérite de Error et est donc considérée aussi comme erreur système
 			handleError(throwable);
 
@@ -68,10 +69,10 @@ public class SUtilities {
 				// c'est une erreur fonctionnelle lancée dans une procédure stockée Oracle
 				// le message d'erreur à afficher à l'utilisateur est taggé par <text>message</text>
 				message = extractOracleUserExceptionMessage(throwable);
-				handleThrowable(new KUserException(new MessageText(message, null)), false);
+				handleThrowable(new VUserException(new MessageText(message, null)), false);
 			} else if (throwable instanceof RemoteException && exceptionContains(throwable, "Transaction timed out")) {
 				message = "Le délai maximum pour effectuer l'opération a expiré.\nVeuillez relancer votre opération s'il y a lieu.";
-				handleThrowable(new KUserException(new MessageText(message, null)), false);
+				handleThrowable(new VUserException(new MessageText(message, null)), false);
 			} else {
 				handleThrowable(throwable, false);
 			}
@@ -85,11 +86,11 @@ public class SUtilities {
 	public static void handleError(final Throwable throwable) {
 		throwable.printStackTrace();
 		// l'affichage des erreurs systèmes aux utilisateurs est encapsulée avec le message "Veuillez contacter..."
-		if (throwable instanceof KRuntimeException && exceptionContains(throwable, "[Erreur SQL]")) {
+		if (throwable instanceof VRuntimeException && exceptionContains(throwable, "[Erreur SQL]")) {
 			if (exceptionContains(throwable, "ORA-01089")) {
 				// gestion erreurs oracle "ORA-01089: immediate shutdown in progess - no operations are permitted"
 				// pour afficher un message plus lisible
-				handleThrowable(new KRuntimeException("Veuillez contacter un administrateur.\n(" + "La base de données SAE est en train de s'arrêter.)", throwable.getCause()), true);
+				handleThrowable(new VRuntimeException("Veuillez contacter un administrateur.\n(" + "La base de données SAE est en train de s'arrêter.)", throwable.getCause()), true);
 			} else {
 				// dans kasper.model.ServiceProviderSQL.handleException, kasper masque la sqlexception
 				// par une KSystemException et remplace le message oracle par la requête sql à l'origine de l'erreur
@@ -99,13 +100,13 @@ public class SUtilities {
 				while (t != null && t.getCause() != null && t.getCause() != t && !(t instanceof SQLException)) {
 					t = t.getCause();
 				}
-				handleThrowable(new KRuntimeException("Veuillez contacter un administrateur.\n(" + t.toString() + ')', throwable), true);
+				handleThrowable(new VRuntimeException("Veuillez contacter un administrateur.\n(" + t.toString() + ')', throwable), true);
 			}
 		} else if (throwable instanceof OutOfMemoryError) {
 			handleThrowable(new Exception("L'application ne dispose pas de suffisamment de mémoire pour fonctionner, elle va s'arrêter", throwable), true);
 			System.exit(2);
 		} else {
-			handleThrowable(new KRuntimeException("Veuillez contacter un administrateur.\n(" + throwable.toString() + ')', throwable), true);
+			handleThrowable(new VRuntimeException("Veuillez contacter un administrateur.\n(" + throwable.toString() + ')', throwable), true);
 		}
 	}
 
@@ -117,7 +118,7 @@ public class SUtilities {
 	 */
 	public static boolean isOracleUserException(final Throwable throwable) {
 		final String message = throwable.getMessage();
-		return throwable instanceof KUserException && message != null && message.indexOf("<text>") != -1 && message.indexOf("</text>") != -1;
+		return throwable instanceof VUserException && message != null && message.indexOf("<text>") != -1 && message.indexOf("</text>") != -1;
 	}
 
 	/**

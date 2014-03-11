@@ -1,9 +1,9 @@
 package com.kleegroup.analyticaimpl.uiswing.collector;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import kasper.kernel.util.Assertion;
 
 public class ProcessStatsMap implements ProcessStatsCollection<ProcessStats> {
 
@@ -25,8 +25,8 @@ public class ProcessStatsMap implements ProcessStatsCollection<ProcessStats> {
 	}
 
 	public void merge(final ProcessStatsCollection<ProcessStats> other) {
-		Assertion.notNull(other);
-		Assertion.precondition(other instanceof ProcessStatsMap, "On ne peut merger que des ProcessStatsCollection de même type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
+		Assertion.checkNotNull(other);
+		Assertion.checkArgument(other instanceof ProcessStatsMap, "On ne peut merger que des ProcessStatsCollection de même type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
 		final Map<String, ProcessStats> otherResults = other.getResults();
 		ProcessStats otherProcessStats;
 		ProcessStats currentProcessStats;

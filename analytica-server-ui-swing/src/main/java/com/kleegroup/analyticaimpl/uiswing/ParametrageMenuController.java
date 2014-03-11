@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ import mswing.table.MUtilitiesTable;
 
 import com.google.gson.Gson;
 import com.kleegroup.analytica.core.KProcess;
-import com.kleegroup.analyticaimpl.server.plugins.processencoder.stack.LastProcessMXBean;
+import com.kleegroup.analyticaimpl.hcube.plugins.memorystack.LastProcessMXBean;
 import com.kleegroup.analyticaimpl.uiswing.collector.PerfCallStackCollector;
 import com.kleegroup.analyticaimpl.uiswing.collector.PerfCollector;
 import com.kleegroup.analyticaimpl.uiswing.collector.ProcessStats;
@@ -149,11 +150,11 @@ public class ParametrageMenuController {
 	}
 
 	private void storeToPerfCollector(final KProcess process, final PerfCollector perfCollector) {
-		perfCollector.onProcessStart(process.getType(), process.getName(), null, null);
+		perfCollector.onProcessStart(process.getType(), Arrays.asList(process.getSubTypes()).toString(), null, null);
 		for (final KProcess subprocess : process.getSubProcesses()) {
 			storeToPerfCollector(subprocess, perfCollector);
 		}
-		perfCollector.onProcessFinish(process.getType(), process.getName(), null, null, null, Math.round(process.getMeasures().get(KProcess.DURATION)), true);
+		perfCollector.onProcessFinish(process.getType(), Arrays.asList(process.getSubTypes()).toString(), null, null, null, Math.round(process.getMeasures().get(KProcess.DURATION)), true);
 	}
 
 	private String getModuleLibelleByModuleName(final String moduleName) {

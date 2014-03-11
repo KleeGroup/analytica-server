@@ -1,65 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.kleegroup.analytica</groupId>
-	<artifactId>kasper-analytica-ui-swing</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>kasper-analytica-ui-swing</name>
-	<url>http://analytica.kleegroup.com</url>
+	<parent>
+		<groupId>io.analytica</groupId>
+		<artifactId>analytica-server-parent</artifactId>
+		<version>1.2.0-SNAPSHOT</version>
+		<relativePath>../analytica-server-parent</relativePath>
+	</parent>
 
-	<properties>
-		<compileSource>1.6</compileSource>
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<maven.test.error.ignore>true</maven.test.error.ignore>
-	</properties>
+	<artifactId>analytica-server-ui-swing</artifactId>
+	<packaging>jar</packaging>
+	<name>analytica-server-ui-swing</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.kleegroup.analytica</groupId>
-			<artifactId>kasper-analytica-server</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.kleegroup.kasper</groupId>
-			<artifactId>kasper-kernel</artifactId>
-			<version>6.1.17</version>
-		</dependency>
-		<dependency>
-			<groupId>com.kleegroup.kasper</groupId>
-			<artifactId>kasper-kernel</artifactId>
-			<version>6.1.17</version>
-			<type>test-jar</type>
-			<scope>test</scope>
+			<groupId>io.analytica</groupId>
+			<artifactId>analytica-server-core</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-			<exclusions>
-					<exclusion>
-						<groupId>com.sun.jmx</groupId>
-						<artifactId>jmxri</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>com.sun.jdmk</groupId>
-						<artifactId>jmxtools</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>javax.jms</groupId>
-						<artifactId>jms</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>javax.mail</groupId>
-						<artifactId>mail</artifactId>
-					</exclusion>
-				</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.4</version>
-			<scope>test</scope>
 		</dependency>
     <dependency>
 			<groupId>com.kleegroup</groupId>
@@ -71,59 +32,9 @@
 		<dependency>
 	      <groupId>com.google.code.gson</groupId>
 	      <artifactId>gson</artifactId>
-	      <version>2.2.2</version>
-	      <scope>compile</scope>
 	  </dependency>
 	</dependencies>
 	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>./src/dev/lib/</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<skipTests>true</skipTests>
-				</configuration>
-			</plugin>
-			<plugin>
-	            <groupId>com.mycila.maven-license-plugin</groupId>
-	            <artifactId>maven-license-plugin</artifactId>
-	            <configuration>
-	                <header>license.txt</header>
-	            </configuration>
-	        </plugin>
-		</plugins>
+		<!-- see parent -->
 	</build>
 </project>

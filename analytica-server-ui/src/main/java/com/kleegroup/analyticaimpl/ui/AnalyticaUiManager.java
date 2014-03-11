@@ -3,7 +3,7 @@
  */
 package com.kleegroup.analyticaimpl.ui;
 
-import vertigo.kernel.component.Manager;
+import io.vertigo.kernel.component.Manager;
 
 /**
  * @author statchum

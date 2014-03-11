@@ -1,12 +1,12 @@
 package com.kleegroup.analyticaimpl.uiswing.collector;
 
+import io.vertigo.kernel.exception.VRuntimeException;
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.util.Assertion;
 
 public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode> {
 	private static final long serialVersionUID = -5994766764834518173L;
@@ -41,8 +41,8 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 	}
 
 	ProcessStats getProcessStatsByProcesseQueue(final String[] methods) {
-		Assertion.notNull(methods);
-		Assertion.precondition(methods.length >= 1, "La liste des méthodes ne doit pas être vide");
+		Assertion.checkNotNull(methods);
+		Assertion.checkArgument(methods.length >= 1, "La liste des méthodes ne doit pas être vide");
 		Map<String, ProcessStatsNode> mapNextProcessStats = methodStatsRoot;
 		ProcessStatsNode methodStatsNode = null;
 		ProcessStatsNode upperProcessStatsNode;
@@ -66,14 +66,14 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 			}
 		}
 		if (methodStatsNode == null) {
-			throw new KRuntimeException("methodStatsNode ne doit pas être null");
+			throw new VRuntimeException("methodStatsNode ne doit pas être null");
 		}
 		return methodStatsNode.getProcessStats();
 	}
 
 	public void merge(final ProcessStatsCollection other) {
-		Assertion.notNull(other);
-		Assertion.invariant(other instanceof ProcessStatsTree, "On ne peut merger que des ProcessStatsCollection de même type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
+		Assertion.checkNotNull(other);
+		Assertion.checkArgument(other instanceof ProcessStatsTree, "On ne peut merger que des ProcessStatsCollection de même type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
 		final Map otherProcessStatsRoot = other.getResults();
 		ProcessStatsNode otherProcessStatsNode;
 		ProcessStatsNode currentProcessStatsNode;

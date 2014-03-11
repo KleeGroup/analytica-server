@@ -1,5 +1,7 @@
 package com.kleegroup.analyticaimpl.uiswing.collector;
 
+import io.vertigo.kernel.exception.VRuntimeException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +9,6 @@ import java.util.Map;
 
 import javax.management.NotCompliantMBeanException;
 import javax.management.StandardMBean;
-
-import kasper.kernel.exception.KRuntimeException;
 
 public abstract class MultiPerfCollector extends StandardMBean implements PerfCollector {
 
@@ -58,7 +58,7 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 					} else if (collectorResults instanceof ProcessStatsTree) {
 						results = new ProcessStatsTree();
 					} else {
-						throw new KRuntimeException("Type de ProcessStatsCollection inconnu : " + collectorResults.getClass().getName());
+						throw new VRuntimeException("Type de ProcessStatsCollection inconnu : " + collectorResults.getClass().getName());
 					}
 				}
 				results.merge(collectorResults);

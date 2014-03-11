@@ -1,8 +1,8 @@
 package com.kleegroup.analyticaimpl.uiswing.collector;
 
-import java.io.Serializable;
+import io.vertigo.kernel.lang.Assertion;
 
-import kasper.kernel.util.Assertion;
+import java.io.Serializable;
 
 public class ProcessStats implements Serializable {
 	private static final long serialVersionUID = 7617530768482922402L;
@@ -86,7 +86,7 @@ public class ProcessStats implements Serializable {
 		if (other == null) {
 			return;
 		}
-		Assertion.invariant(processId.equals(other.processId), "On ne peut pas fusionner deux MethodStats qui ne portent pas sur la même méthode: can''t merge {0} in {1}", other.processId, processId);
+		Assertion.checkState(processId.equals(other.processId), "On ne peut pas fusionner deux MethodStats qui ne portent pas sur la même méthode: can''t merge {0} in {1}", other.processId, processId);
 		hits += other.hits;
 		durationsMin = Math.min(durationsMin, other.durationsMin);
 		durationsMax = Math.max(durationsMax, other.durationsMax);

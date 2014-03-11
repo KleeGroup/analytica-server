@@ -17,11 +17,11 @@
  */
 package com.kleegroup.analyticaimpl.ui.colors;
 
+import io.vertigo.kernel.lang.Assertion;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-
-import vertigo.kernel.lang.Assertion;
 
 /**
  * Classe abstraire d'interpolation de couleur.

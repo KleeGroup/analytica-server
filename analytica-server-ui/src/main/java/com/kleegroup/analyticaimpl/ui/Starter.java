@@ -1,10 +1,10 @@
 package com.kleegroup.analyticaimpl.ui;
 
-import java.util.Properties;
+import io.vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
+import io.vertigo.kernel.di.configurator.ModuleConfigBuilder;
+import io.vertigo.kernel.lang.Assertion;
 
-import vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
-import vertigo.kernel.di.configurator.ModuleConfigBuilder;
-import vertigo.kernel.lang.Assertion;
+import java.util.Properties;
 
 /**
  * Charge et démarre un environnement.

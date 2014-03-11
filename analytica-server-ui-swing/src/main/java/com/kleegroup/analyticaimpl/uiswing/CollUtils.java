@@ -1,5 +1,8 @@
 package com.kleegroup.analyticaimpl.uiswing;
 
+import io.vertigo.kernel.exception.VRuntimeException;
+import io.vertigo.kernel.lang.Assertion;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -14,9 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.RandomAccess;
 import java.util.logging.Logger;
-
-import kasper.kernel.exception.KRuntimeException;
-import kasper.kernel.util.Assertion;
 
 /**
  * Méthodes utilitaires pour manipuler et filtrer des collections.
@@ -64,8 +64,8 @@ public class CollUtils {
 	 */
 	public static Object findInList(final Collection list, final String propertyName, final Object value) {
 		final List result = filterList(list, propertyName, value);
-		Assertion.postcondition(!result.isEmpty(), "Aucune valeur trouvée");
-		Assertion.postcondition(result.size() == 1, "Plus d'une valeur trouvée");
+		Assertion.checkState(!result.isEmpty(), "Aucune valeur trouvée");
+		Assertion.checkState(result.size() == 1, "Plus d'une valeur trouvée");
 		return result.get(0);
 	}
 
@@ -263,7 +263,7 @@ public class CollUtils {
 		try {
 			return BeanUtils.getValue(object, propertyName);
 		} catch (final Throwable throwable) {
-			throw new KRuntimeException(throwable.toString(), throwable);
+			throw new VRuntimeException(throwable.toString(), throwable);
 		}
 	}
 }
