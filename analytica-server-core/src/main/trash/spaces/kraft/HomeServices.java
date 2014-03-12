@@ -17,10 +17,10 @@ import kasper.kernel.di.injector.Injector;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kleegroup.analytica.hcube.HCubeManager;
-import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.result.HResult;
-import com.kleegroup.analytica.server.ServerManager;
+import io.analytica.hcube.HCubeManager;
+import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.result.HResult;
+import io.analytica.server.ServerManager;
 
 @Path("/home")
 public class HomeServices {

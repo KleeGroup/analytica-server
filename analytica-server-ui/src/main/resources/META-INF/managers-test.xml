@@ -16,12 +16,12 @@
 
 
 	<module name="analytica">
-		<manager name="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
-		        <plugin name="CubeStorePlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin"/>
-		   	    <plugin name="ProcessStatsPlugin" class="com.kleegroup.analyticaimpl.hcube.plugins.memorystack.MemoryStackProcessStatsPlugin"/>
+		<manager name="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
+		        <plugin name="CubeStorePlugin" class="io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin"/>
+		   	    <plugin name="ProcessStatsPlugin" class="io.analytica.hcube.plugins.memorystack.MemoryStackProcessStatsPlugin"/>
         </manager>
-		<manager name="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
-	        <plugin name="ProcessStorePlugin" class="com.kleegroup.analyticaimpl.server.plugins.processstore.memory.MemoryProcessStorePlugin"/>
+		<manager name="ServerManager" class="io.analytica.server.impl.ServerManagerImpl" >
+	        <plugin name="ProcessStorePlugin" class="io.analytica.server.plugins.processstore.memory.MemoryProcessStorePlugin"/>
 	     </manager>
      </module>
 </modules>

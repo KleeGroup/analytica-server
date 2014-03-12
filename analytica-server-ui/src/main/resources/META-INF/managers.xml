@@ -3,20 +3,20 @@
 <modules>
 	<module name="analytica">
 		<component api="ServerManager"
-			class="com.kleegroup.analyticaimpl.server.ServerManagerImpl">
+			class="io.analytica.server.impl.ServerManagerImpl">
 			<plugin
-				class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
+				class="io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
 				<param name="dbPath" value="{analytica.db.path}" />
 			</plugin>
 		</component>
 		<component api="HCubeManager"
-			class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
+			class="io.analytica.hcube.impl.HCubeManagerImpl">
 			<plugin
-				class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin" />
+				class="io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin" />
 			<plugin
-				class="com.kleegroup.analyticaimpl.hcube.plugins.processstore.memorystack.MemoryStackProcessStatsPlugin" />
+				class="io.analytica.hcube.plugins.processstore.memorystack.MemoryStackProcessStatsPlugin" />
 			<plugin
-				class="com.kleegroup.analyticaimpl.hcube.plugins.socketio.SocketIoProcessStatsPlugin">
+				class="io.analytica.hcube.plugins.socketio.SocketIoProcessStatsPlugin">
 				<param name="socketIoUrl" value="http://npiedeloup1:8090" />
 			</plugin>
 		</component>

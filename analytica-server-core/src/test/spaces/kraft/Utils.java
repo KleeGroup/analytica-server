@@ -13,14 +13,14 @@ import anomalies.performance.BollingerBand;
 import anomalies.performance.PerformanceManager;
 import anomalies.signal.Signal;
 
-import com.kleegroup.analytica.hcube.cube.HCounterType;
-import com.kleegroup.analytica.hcube.cube.HCube;
-import com.kleegroup.analytica.hcube.cube.HMetric;
-import com.kleegroup.analytica.hcube.cube.HMetricKey;
-import com.kleegroup.analytica.hcube.dimension.HCategory;
-import com.kleegroup.analytica.hcube.query.HQuery;
-import com.kleegroup.analytica.hcube.query.HQueryBuilder;
-import com.kleegroup.analytica.hcube.result.HResult;
+import io.analytica.hcube.cube.HCounterType;
+import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.cube.HMetric;
+import io.analytica.hcube.cube.HMetricKey;
+import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HQueryBuilder;
+import io.analytica.hcube.result.HResult;
 
 /**
  * @author statchum
