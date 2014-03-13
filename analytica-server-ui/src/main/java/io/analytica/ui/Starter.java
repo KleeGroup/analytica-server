@@ -25,7 +25,7 @@ public class Starter extends io.analytica.server.Starter {
 	 * @param args "Usage: java kasper.kernel.Starter managers.xml <conf.properties>"
 	 */
 	public static void main(final String[] args) {
-		final String usageMsg = "Usage: java com.kleegroup.analytica.Starter <conf.properties>";
+		final String usageMsg = "Usage: java io.analytica.ui.Starter <conf.properties>";
 		Assertion.checkArgument(args.length == 1, usageMsg + " ( conf attendue : " + args.length + ")");
 		Assertion.checkArgument(args[0].endsWith(".properties"), usageMsg + " ( .properties attendu : " + args[0] + ")");
 		//---------------------------------------------------------------------

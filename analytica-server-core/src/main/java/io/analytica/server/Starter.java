@@ -63,7 +63,7 @@ public class Starter implements Runnable {
 	 * @param args "Usage: java kasper.kernel.Starter managers.xml <conf.properties>"
 	 */
 	public static void main(final String[] args) {
-		final String usageMsg = "Usage: java com.kleegroup.analytica.Starter <conf.properties>";
+		final String usageMsg = "Usage: java io.analytica.server.Starter <conf.properties>";
 		Assertion.checkArgument(args.length == 1, usageMsg + " ( conf attendue : " + args.length + ")");
 		Assertion.checkArgument(args[0].endsWith(".properties"), usageMsg + " ( .properties attendu : " + args[0] + ")");
 		//---------------------------------------------------------------------
@@ -104,21 +104,6 @@ public class Starter implements Runnable {
 		Home.start(componentSpaceConfig);
 		started = true;
 	}
-
-	/* Conf équivalente à :
-	 * <module name="analytica">
-	<component api="ServerManager" class="com.kleegroup.analyticaimpl.server.ServerManagerImpl" >
-	   <plugin class="com.kleegroup.analyticaimpl.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
-	    	<param name="dbPath" value="d:/analytica/db-test" />
-	    </plugin>
-	 </component>
-	 <component api="HCubeManager" class="com.kleegroup.analyticaimpl.hcube.HCubeManagerImpl">
-			<plugin class="com.kleegroup.analyticaimpl.hcube.plugins.store.memory.MemoryCubeStorePlugin"/>
-			<plugin class="com.kleegroup.analyticaimpl.hcube.plugins.socketio.SocketIoProcessStatsPlugin">
-				<param name="socketIoUrl" value="http://npiedeloup1:8090" />
-			</plugin>
-		</component>
-	</module>*/
 
 	/**
 	 * @param properties Propriétés de l'environnement.
