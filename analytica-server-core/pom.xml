@@ -24,12 +24,12 @@
 		</dependency>
 		<dependency>
 			<groupId>io.vertigo</groupId>
-			<artifactId>vertigo-starter</artifactId>
+			<artifactId>vertigo-core</artifactId>
 			<version>${vertigo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vertigo</groupId>
-			<artifactId>vertigo-starter</artifactId>
+			<artifactId>vertigo-core</artifactId>
 			<version>${vertigo.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
