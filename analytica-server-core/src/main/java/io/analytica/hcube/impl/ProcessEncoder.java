@@ -55,7 +55,7 @@ final class ProcessEncoder {
 		final List<HCubeBuilder> resultBuilder = new ArrayList<>();
 		doEncode(process, Collections.unmodifiableList(new ArrayList<HCubeBuilder>()), resultBuilder);
 		//---
-		final List<HCube> result = new ArrayList<HCube>();
+		final List<HCube> result = new ArrayList<>();
 		for (final HCubeBuilder cubeBuilder : resultBuilder) {
 			result.add(cubeBuilder.build());
 		}

@@ -71,7 +71,7 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 	/** {@inheritDoc} */
 	public List<Identified<KProcess>> getProcess(final String lastKeyString, final Integer maxRow) {
 		final DatabaseEntry lastKey = lastKeyString != null ? writer.writeKey(Long.parseLong(lastKeyString)) : new DatabaseEntry();
-		final List<Identified<KProcess>> processes = new ArrayList<Identified<KProcess>>();
+		final List<Identified<KProcess>> processes = new ArrayList<>();
 		final Map<DatabaseEntry, DatabaseEntry> entries = database.next(lastKey, maxRow);
 		for (final Map.Entry<DatabaseEntry, DatabaseEntry> entry : entries.entrySet()) {
 			final long key = writer.readKey(entry.getKey());

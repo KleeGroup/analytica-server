@@ -81,7 +81,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 
 	/** {@inheritDoc} */
 	public String getLastProcessesJson() {
-		final List<KProcess> processes = new ArrayList<KProcess>(processQueue);
+		final List<KProcess> processes = new ArrayList<>(processQueue);
 		return new Gson().toJson(processes);
 	}
 

@@ -38,8 +38,8 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 	private final Map<HCategory, Set<HCategory>> categories;
 
 	HCategoryDictionaryImpl() {
-		rootCategories = new HashSet<HCategory>();
-		categories = new HashMap<HCategory, Set<HCategory>>();
+		rootCategories = new HashSet<>();
+		categories = new HashMap<>();
 	}
 
 	/** {@inheritDoc} */
@@ -79,14 +79,13 @@ final class HCategoryDictionaryImpl implements HCategoryDictionary {
 			//category est une catégorie racine
 			rootCategories.add(category);
 			return false;
-		} else {
-			//category n'est pas une catégorie racine
-			Set<HCategory> set = categories.get(parentCategory);
-			if (set == null) {
-				set = new HashSet<HCategory>();
-				categories.put(parentCategory, set);
-			}
-			return set.add(category);
 		}
+		//category n'est pas une catégorie racine
+		Set<HCategory> set = categories.get(parentCategory);
+		if (set == null) {
+			set = new HashSet<>();
+			categories.put(parentCategory, set);
+		}
+		return set.add(category);
 	}
 }

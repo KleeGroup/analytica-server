@@ -23,7 +23,6 @@ package io.analytica.server;
 import io.analytica.AbstractTestCaseJU4Rule;
 import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
-import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
@@ -36,9 +35,7 @@ import io.analytica.hcube.result.HResult;
 import io.analytica.museum.Museum;
 import io.analytica.museum.PageListener;
 import io.analytica.museum.StatsUtil;
-import io.analytica.server.ServerManager;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,8 +60,6 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Inject
 	private ServerManager serverManager;
-	@Inject
-	private HCubeManager cubeManager;
 
 	private Date date;
 	private final int price = 8;
@@ -116,7 +111,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testRandom() throws InterruptedException {
+	public void testRandom() {
 		final SortedMap<Long, Integer> counts = new TreeMap<>();
 		for (int i = 0; i < 10000; i++) {
 			final long result = StatsUtil.random(5, 1);
@@ -127,7 +122,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testRandom2() throws InterruptedException {
+	public void testRandom2() {
 		final SortedMap<Long, Integer> counts = new TreeMap<>();
 		for (int i = 0; i < 10000; i++) {
 			final long result = StatsUtil.randomValue(100, 1, 100, 0);
@@ -138,8 +133,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testFormat() throws InterruptedException {
-		final DecimalFormat df = new DecimalFormat("#.00");
+	public void testFormat() {
 		System.out.println(format(456654.456123));
 		System.out.println(format(456654.45));
 		System.out.println(format(456654.456));
@@ -162,7 +156,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	//On charge 10 jours à 50 visites par jourDURATION
-	public void testMuseum() throws InterruptedException {
+	public void testMuseum() {
 		final int days = 15;
 		final int visitsByDay = 200;
 		new Museum(new PageListener() {

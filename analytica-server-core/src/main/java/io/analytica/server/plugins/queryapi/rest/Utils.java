@@ -55,7 +55,7 @@ public final class Utils {
 		// ---------------------------------------------------------------------
 		final HMetricKey metricKey = new HMetricKey("duration", true);
 		final HCounterType counterType = HCounterType.mean;
-		final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
+		final List<DataPoint> dataPoints = new ArrayList<>();
 
 		for (final HCategory category : result.getAllCategories()) {
 			for (final HCube cube : result.getSerie(category).getCubes()) {
@@ -78,10 +78,10 @@ public final class Utils {
 	public static List<TimedDataSerie> loadDataSeriesByTime(final HResult result, final List<String> dataKeys) {
 		Assertion.checkNotNull(result);
 		// ---------------------------------------------------------------------
-		final List<TimedDataSerie> dataSeries = new ArrayList<TimedDataSerie>();
+		final List<TimedDataSerie> dataSeries = new ArrayList<>();
 		for (final HCategory category : result.getAllCategories()) { //Normalement une seule categorie
 			for (final HCube cube : result.getSerie(category).getCubes()) {
-				final Map<String, String> values = new HashMap<String, String>();
+				final Map<String, String> values = new HashMap<>();
 				for (final String dataKey : dataKeys) {
 					final String[] metricKey = dataKey.split(":");
 					final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
@@ -102,10 +102,10 @@ public final class Utils {
 	public static List<DataSerie> loadDataSeriesByCategory(final HResult result, final List<String> dataKeys) {
 		Assertion.checkNotNull(result);
 		// ---------------------------------------------------------------------
-		final List<DataSerie> dataSeries = new ArrayList<DataSerie>();
+		final List<DataSerie> dataSeries = new ArrayList<>();
 		for (final HCategory category : result.getAllCategories()) {
 			final HSerie serie = result.getSerie(category);
-			final Map<String, String> values = new HashMap<String, String>();
+			final Map<String, String> values = new HashMap<>();
 			for (final String dataKey : dataKeys) {
 				final String[] metricKey = dataKey.split(":");
 				if (isMetricHistory(metricKey)) {
@@ -140,10 +140,10 @@ public final class Utils {
 	public static List<DataSerie> loadDataSeries(final HResult result, final List<String> dataKeys) {
 		Assertion.checkNotNull(result);
 		// ---------------------------------------------------------------------
-		final List<DataSerie> dataSeries = new ArrayList<DataSerie>();
+		final List<DataSerie> dataSeries = new ArrayList<>();
 		for (final HCategory category : result.getAllCategories()) {
 			final HSerie serie = result.getSerie(category);
-			final Map<String, String> values = new HashMap<String, String>();
+			final Map<String, String> values = new HashMap<>();
 			for (final String dataKey : dataKeys) {
 				final String[] metricKey = dataKey.split(":");
 				if (isMetricHistory(metricKey)) {
@@ -210,10 +210,10 @@ public final class Utils {
 		Assertion.checkNotNull(result);
 		// ---------------------------------------------------------------------
 		List<DataPoint> dataPoints;
-		final Map<String, List<DataPoint>> pointsMap = new LinkedHashMap<String, List<DataPoint>>();
+		final Map<String, List<DataPoint>> pointsMap = new LinkedHashMap<>();
 
 		for (final String dataKey : dataKeys) {
-			dataPoints = new ArrayList<DataPoint>();
+			dataPoints = new ArrayList<>();
 			final String[] metricKey = dataKey.split(":");
 			for (final HCategory category : result.getAllCategories()) { //Normalement une seule categorie
 				for (final HCube cube : result.getSerie(category).getCubes()) {
@@ -290,11 +290,11 @@ public final class Utils {
 		final HQuery query = result.getQuery();
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
 		List<DataPoint> dataPoints;
-		final Map<String, List<DataPoint>> pointsMap = new HashMap<String, List<DataPoint>>();
+		final Map<String, List<DataPoint>> pointsMap = new HashMap<>();
 
 		final String dataKey = datas;
 		for (final HCategory category : result.getAllCategories()) {
-			dataPoints = new ArrayList<DataPoint>();
+			dataPoints = new ArrayList<>();
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final String[] metricKey = dataKey.split(":");
 				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
@@ -326,7 +326,7 @@ public final class Utils {
 	 */
 	public static Map<String, Collection<Object>> getSparklinesTableDatas(final HResult result, final String datas) {
 
-		final Map<String, Collection<Object>> tableMap = new HashMap<String, Collection<Object>>();
+		final Map<String, Collection<Object>> tableMap = new HashMap<>();
 
 		for (final HCategory category : result.getAllCategories()) {
 			final Collection<Object> tableCollection = new ArrayList<>();

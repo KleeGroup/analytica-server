@@ -55,8 +55,8 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	private final int httpPort;
 	private HttpServer httpServer;
 
-	private final List<Class<?>> handlers = new ArrayList<Class<?>>();
-	private final Map<String, List<String>> pathsPerContext = new HashMap<String, List<String>>();
+	private final List<Class<?>> handlers = new ArrayList<>();
+	private final Map<String, List<String>> pathsPerContext = new HashMap<>();
 	private final Timer delayedStarter = new Timer("RestServerDelayedStarter", true);
 	private RestartServerTask startServerTask;
 
@@ -90,7 +90,7 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	private List<String> obtainPathsPerContext(final String context) {
 		List<String> paths = pathsPerContext.get(context);
 		if (paths == null) {
-			paths = new ArrayList<String>();
+			paths = new ArrayList<>();
 			pathsPerContext.put(context, paths);
 		}
 		return paths;

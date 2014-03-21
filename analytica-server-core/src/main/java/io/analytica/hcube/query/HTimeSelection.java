@@ -49,7 +49,7 @@ final class HTimeSelection {
 	}
 
 	List<HTime> getAllTimes() {
-		final List<HTime> times = new ArrayList<HTime>();
+		final List<HTime> times = new ArrayList<>();
 		//On prépare les bornes de temps
 		int loops = 0;
 		HTime currentTime = minTime;

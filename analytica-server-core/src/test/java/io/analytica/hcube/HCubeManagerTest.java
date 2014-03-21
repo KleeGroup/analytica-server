@@ -20,7 +20,6 @@ package io.analytica.hcube;
 import io.analytica.AbstractTestCaseJU4Rule;
 import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
-import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
@@ -254,7 +253,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	 *  - Prix des articles 10€
 	 */
 	@Test
-	public void testCompositeProcess() throws ParseException {
+	public void testCompositeProcess() {
 		//for (int i = 0; i < 60 * 24; i++) {
 
 		final int nbSelect = 12;
@@ -330,7 +329,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	 *  - Prix des articles 10€
 	 */
 	@Test
-	public void testDeepCompositeProcess() throws ParseException {
+	public void testDeepCompositeProcess() {
 		//for (int i = 0; i < 60 * 24; i++) {
 
 		final int nbService = 5;

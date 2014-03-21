@@ -128,12 +128,12 @@ public class JerseyRestQueryNetApi {
 		final HQuery query = Utils.createQuery("NOW-1m", "NOW", "Month", type, subCategories, false);
 		final HResult result = serverManager.execute(query);
 		final Collection<HMetric> metrics = result.getSerie(hCategory).getMetrics();
-		final List<Map<String, Object>> metricsName = new ArrayList<Map<String, Object>>();
+		final List<Map<String, Object>> metricsName = new ArrayList<>();
 		for (final HMetric metric : metrics) {
-			final Map<String, Object> metricName = new HashMap<String, Object>();
+			final Map<String, Object> metricName = new HashMap<>();
 			metricsName.add(metricName);
 			metricName.put("name", metric.getKey().id());
-			final List<String> values = new ArrayList<String>();
+			final List<String> values = new ArrayList<>();
 			metricName.put("type", values);
 			values.add("count");
 			values.add("mean");

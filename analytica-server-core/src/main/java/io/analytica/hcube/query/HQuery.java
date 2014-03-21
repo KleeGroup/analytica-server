@@ -54,10 +54,8 @@ public final class HQuery {
 		// ---------------------------------------------------------------------
 		if (categorySelection.hasChildren()) {
 			return categoryDictionary.getAllSubCategories(categorySelection.getCategory());
-		} else {
-			return Collections.singleton(categorySelection.getCategory());
 		}
-
+		return Collections.singleton(categorySelection.getCategory());
 	}
 
 	//-----------------------When----------------------------------------------

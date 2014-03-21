@@ -251,8 +251,7 @@ final class Pages {
 		final int h = calendar.get(Calendar.HOUR_OF_DAY);
 		if (h <= 5 || h >= 21) {
 			return 0.6;
-		} else {
-			return 1 + 0.5 * (0.35 * Math.sin((h - 7) * Math.PI / 4d) + 0.15 * Math.sin((h - 7 - 2 / 3d) * Math.PI / 8d)); //varie de 0.6 à 1.5 (entre 6h et 20h)
 		}
+		return 1 + 0.5 * (0.35 * Math.sin((h - 7) * Math.PI / 4d) + 0.15 * Math.sin((h - 7 - 2 / 3d) * Math.PI / 8d)); //varie de 0.6 à 1.5 (entre 6h et 20h)
 	}
 }

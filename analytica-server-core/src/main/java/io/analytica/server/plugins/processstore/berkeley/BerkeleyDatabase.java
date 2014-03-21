@@ -48,7 +48,7 @@ final class BerkeleyDatabase {
 	private Environment myEnv;
 	private Database db;
 	private static final boolean USE_INDEXES = false;
-	private final Map<Indexes, SecondaryDatabase> indexMap = new HashMap<Indexes, SecondaryDatabase>();
+	private final Map<Indexes, SecondaryDatabase> indexMap = new HashMap<>();
 	private Database sequenceDb;
 	private Sequence sequence;
 
@@ -116,7 +116,7 @@ final class BerkeleyDatabase {
 		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
 		//---------------------------------------------------------------------
 		try {
-			final Map<DatabaseEntry, DatabaseEntry> result = new LinkedHashMap<DatabaseEntry, DatabaseEntry>(maxRow);
+			final Map<DatabaseEntry, DatabaseEntry> result = new LinkedHashMap<>(maxRow);
 			// Open a cursor using a database handle
 			final Cursor cursor = db.openCursor(null, null); //pas de TX=readOnly et cursorConfig default
 			try {

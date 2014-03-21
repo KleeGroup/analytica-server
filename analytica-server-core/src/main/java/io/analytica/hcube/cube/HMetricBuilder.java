@@ -48,7 +48,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
 		if (metricKey.isClustered()) {
-			clusteredValues = new HashMap<Double, Long>();
+			clusteredValues = new HashMap<>();
 		} else {
 			clusteredValues = null;
 		}
@@ -119,8 +119,8 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	private final Map<Double, Long> clusteredValues;
 
 	private void incTreshold(final double treshold, final long incBy) {
-		final Long count = clusteredValues.get(treshold);
-		clusteredValues.put(treshold, incBy + (count == null ? 0 : count));
+		final Long hcount = clusteredValues.get(treshold);
+		clusteredValues.put(treshold, incBy + (hcount == null ? 0 : hcount));
 		//---
 	}
 

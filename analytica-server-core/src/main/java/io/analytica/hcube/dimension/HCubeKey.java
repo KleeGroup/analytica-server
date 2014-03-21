@@ -56,18 +56,18 @@ public final class HCubeKey extends HKey {
 	 * @return Liste de tous les cubes auxquels le présent cube appartient
 	 */
 	public List<HCubeKey> drillUp() {
-		List<HCubeKey> upperCubeKeys = new ArrayList<HCubeKey>();
+		List<HCubeKey> upperCubeKeys = new ArrayList<>();
 		//on remonte les axes, le premier sera le plus bas niveau
-		HTime time = getTime();
-		while (time != null) {
-			HCategory category = getCategory();
-			while (category != null) {
-				upperCubeKeys.add(new HCubeKey(time, category));
+		HTime htime = getTime();
+		while (htime != null) {
+			HCategory hcategory = getCategory();
+			while (hcategory != null) {
+				upperCubeKeys.add(new HCubeKey(htime, hcategory));
 				//On remonte l'arbre des categories
-				category = category.drillUp();
+				hcategory = hcategory.drillUp();
 			}
 			//On remonte time
-			time = time.drillUp();
+			htime = htime.drillUp();
 		}
 		return upperCubeKeys;
 	}

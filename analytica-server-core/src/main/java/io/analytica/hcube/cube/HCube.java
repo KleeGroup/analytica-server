@@ -46,7 +46,7 @@ public final class HCube implements HVirtualCube {
 		Assertion.checkNotNull(metrics);
 		//---------------------------------------------------------------------
 		this.cubeKey = cubeKey;
-		this.metrics = new LinkedHashMap<HMetricKey, HMetric>(metrics.size());
+		this.metrics = new LinkedHashMap<>(metrics.size());
 		for (final HMetric metric : metrics) {
 			final Object old = this.metrics.put(metric.getKey(), metric);
 			Assertion.checkState(old == null, "La liste de Metric ne doit pas contenir de doublon");

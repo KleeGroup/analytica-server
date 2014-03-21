@@ -89,7 +89,7 @@ public final class HSerie implements HVirtualCube {
 					metricBuilder.withMetric(metric);
 				}
 			}
-			metrics = new HashMap<HMetricKey, HMetric>();
+			metrics = new HashMap<>();
 			for (final Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
 				metrics.put(entry.getKey(), entry.getValue().build());
 			}

@@ -173,10 +173,10 @@ public class Starter implements Runnable {
 		final ComponentConfigBuilder hCubeConfigBuilder = moduleConfigBuilder.beginComponent(HCubeManager.class, HCubeManagerImpl.class);
 		if (properties.containsKey(CUBE_STORE_PATH)) {
 			throw new UnsupportedOperationException("Cube persistent store not yet supported");
-		} else {
-			hCubeConfigBuilder.beginPlugin(MemoryCubeStorePlugin.class) //
-					.endPlugin();
 		}
+
+		hCubeConfigBuilder.beginPlugin(MemoryCubeStorePlugin.class) //
+				.endPlugin();
 		if (properties.containsKey(SOCKET_IO_URL)) {
 			hCubeConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class) //
 					.withParam("socketIoUrl", properties.getProperty(SOCKET_IO_URL)) //

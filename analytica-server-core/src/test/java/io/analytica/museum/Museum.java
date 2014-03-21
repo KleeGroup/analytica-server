@@ -82,8 +82,9 @@ public final class Museum {
 				return 1.6;
 			case Calendar.SUNDAY:
 				return 1.4;
+			default:
+				return 1;
 		}
-		return 1;
 	}
 
 	private double getCoefPerHour(final int hourOfDay) {

@@ -22,7 +22,6 @@ package io.analytica.server;
 
 import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
-import io.analytica.server.ServerManager;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Calendar;
@@ -151,21 +150,21 @@ public class VirtualDatas {
 		}
 	}
 
-	private void addContriutorScenario(final Date startVisite, final double coef) throws InterruptedException {
-		final long waitTime = 30 * 1000;
-		addHomePage(startVisite, coef);
-		Thread.sleep(10);
-		addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
-		Thread.sleep(10);
-		for (int i = 0; i < 10; i++) {
+	/*	private void addContriutorScenario(final Date startVisite, final double coef) throws InterruptedException {
+			final long waitTime = 30 * 1000;
+			addHomePage(startVisite, coef);
+			Thread.sleep(10);
 			addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
 			Thread.sleep(10);
-			addUpdatePage(new Date(startVisite.getTime() + waitTime + waitTime * i), coef);
-			Thread.sleep(10);
+			for (int i = 0; i < 10; i++) {
+				addSearchPage(new Date(startVisite.getTime() + waitTime), coef);
+				Thread.sleep(10);
+				addUpdatePage(new Date(startVisite.getTime() + waitTime + waitTime * i), coef);
+				Thread.sleep(10);
+			}
+
 		}
-
-	}
-
+	*/
 	private void addHomePage(final Date dateVisite, final double processDuration) {
 		//		final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
@@ -197,15 +196,15 @@ public class VirtualDatas {
 
 	}
 
-	private void addUpdatePage(final Date dateVisite, final double processDuration) {
-		//final double processDuration = Math.random() * 50 + 150d;
+	/*	private void addUpdatePage(final Date dateVisite, final double processDuration) {
+			//final double processDuration = Math.random() * 50 + 150d;
 
-		final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "update 1 from oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/oeuvre").addSubProcess(updateProcess).build();
-		serverManager.push(pageProcess);
-		//System.out.println("Modification " + dateVisite);
+			final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "update 1 from oeuvres").build();
+			final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/oeuvre").addSubProcess(updateProcess).build();
+			serverManager.push(pageProcess);
+			//System.out.println("Modification " + dateVisite);
 
-	}
+		}*/
 
 	/**
 	 * Calcul la prochaine valeur aléatoire gaussienne entre X +/- 20% + X*(coef-1).

@@ -44,7 +44,7 @@ public class RGBBezierSpline implements RGBInterpolation {
 
 	/** {@inheritDoc} */
 	public List<Color> getColors(final int nbColors) {
-		final List<Color> result = new ArrayList<Color>(nbColors);
+		final List<Color> result = new ArrayList<>(nbColors);
 		for (float i = 0; i < nbColors; i++) {
 			result.add(getColor(i / nbColors));
 		}

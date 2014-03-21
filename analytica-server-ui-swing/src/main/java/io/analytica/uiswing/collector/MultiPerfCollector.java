@@ -33,7 +33,7 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 		super(mbeanInterface);
 	}
 
-	private final List<PerfCollector> listPerfCollector = new ArrayList<PerfCollector>();
+	private final List<PerfCollector> listPerfCollector = new ArrayList<>();
 
 	public void clearResults() {
 		for (final PerfCollector perfCollector : listPerfCollector) {
@@ -42,7 +42,7 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 	}
 
 	public Map<String, ProcessStatsCollection> getResults() {
-		final Map<String, ProcessStatsCollection> results = new HashMap<String, ProcessStatsCollection>();
+		final Map<String, ProcessStatsCollection> results = new HashMap<>();
 		Map<String, ProcessStatsCollection> collectorResults;
 		for (final PerfCollector perfCollector : listPerfCollector) {
 			collectorResults = perfCollector.getResults();

@@ -42,7 +42,7 @@ import java.util.Map;
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class MemoryCubeStorePlugin implements CubeStorePlugin {
-	private final Map<HCubeKey, HCube> store = new HashMap<HCubeKey, HCube>();
+	private final Map<HCubeKey, HCube> store = new HashMap<>();
 
 	/**
 	 * Constructeur.
@@ -113,10 +113,10 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		Assertion.checkNotNull(categoryDictionary);
 		//---------------------------------------------------------------------
 		//On itère sur les séries indexées par les catégories de la sélection.
-		final Map<HCategory, HSerie> cubeSeries = new HashMap<HCategory, HSerie>();
+		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
 		for (final HCategory category : query.getAllCategories(categoryDictionary)) {
-			final List<HCube> cubes = new ArrayList<HCube>();
+			final List<HCube> cubes = new ArrayList<>();
 			for (HTime currentTime : query.getAllTimes()) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category);
 				final HCube cube = store.get(cubeKey);

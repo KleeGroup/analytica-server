@@ -43,7 +43,7 @@ abstract class AbstractRGBPointToPointInterpolation implements RGBInterpolation 
 		Assertion.checkNotNull(mainColors, "Les couleurs principales n'ont pas été settées.");
 		//---------------------------------------------------------------------
 		int startJ = 0;
-		final List<Color> interpolatedColor = new ArrayList<Color>();
+		final List<Color> interpolatedColor = new ArrayList<>();
 		int nbInterpolatedColor = mainColors.length;
 		int nbInterpolatedColorDegree = 0;
 		while ((nbInterpolatedColor - 1) % (nbColors - 1) != 0) {
@@ -62,7 +62,7 @@ abstract class AbstractRGBPointToPointInterpolation implements RGBInterpolation 
 			}
 			startJ = 1; //on ne refait pas le premier point (dejà atteint)
 		}
-		final List<Color> result = new ArrayList<Color>();
+		final List<Color> result = new ArrayList<>();
 		for (int i = 0; i < nbColors; i++) {
 			final int index = (interpolatedColor.size() - 1) / (nbColors - 1) * i;
 			result.add(interpolatedColor.get(index));

@@ -26,7 +26,7 @@ public class ProcessStatsMap implements ProcessStatsCollection<ProcessStats> {
 
 	private static final long serialVersionUID = 2967543630766127354L;
 
-	private final Map<String, ProcessStats> processStatsMap = new HashMap<String, ProcessStats>(); //Map key:nom de process  value:ProcessStats
+	private final Map<String, ProcessStats> processStatsMap = new HashMap<>(); //Map key:nom de process  value:ProcessStats
 
 	public Map<String, ProcessStats> getResults() {
 		return processStatsMap;

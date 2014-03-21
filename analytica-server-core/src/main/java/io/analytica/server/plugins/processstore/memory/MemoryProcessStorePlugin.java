@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @version $Id: MemoryProcessStorePlugin.java,v 1.4 2012/04/06 16:09:35 npiedeloup Exp $
  */
 public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
-	private final Queue<Identified<KProcess>> processQueue = new ConcurrentLinkedQueue<Identified<KProcess>>();
+	private final Queue<Identified<KProcess>> processQueue = new ConcurrentLinkedQueue<>();
 	private long sequence = 0;
 
 	/**
@@ -45,7 +45,7 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 
 	/** {@inheritDoc} */
 	public void add(final KProcess process) {
-		processQueue.add(new Identified<KProcess>(String.valueOf(sequence++), process));
+		processQueue.add(new Identified<>(String.valueOf(sequence++), process));
 	}
 
 	/** {@inheritDoc} */
@@ -53,7 +53,7 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 		Assertion.checkNotNull(maxRow);
 		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
 		//---------------------------------------------------------------------
-		final List<Identified<KProcess>> processes = new ArrayList<Identified<KProcess>>();
+		final List<Identified<KProcess>> processes = new ArrayList<>();
 		Identified<KProcess> process = processQueue.poll();
 		while (process != null) {
 			processes.add(process);
