@@ -35,13 +35,16 @@ import java.util.Set;
 public final class HQuery {
 	private final HTimeSelection timeSelection;
 	private final HCategorySelection categorySelection;
+	private final HLocationSelection locationSelection;
 
-	HQuery(final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
+	HQuery(final HTimeSelection timeSelection, final HCategorySelection categorySelection, final HLocationSelection locationSelection) {
 		Assertion.checkNotNull(timeSelection);
 		Assertion.checkNotNull(categorySelection);
+		Assertion.checkNotNull(locationSelection);
 		//---------------------------------------------------------------------
 		this.timeSelection = timeSelection;
 		this.categorySelection = categorySelection;
+		this.locationSelection = locationSelection;
 	}
 
 	//-----------------------What----------------------------------------------
@@ -66,6 +69,6 @@ public final class HQuery {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "query : {" + timeSelection + " with:" + categorySelection + "}";
+		return "query : {" + timeSelection + " with:" + categorySelection + " at:" + locationSelection + "}";
 	}
 }

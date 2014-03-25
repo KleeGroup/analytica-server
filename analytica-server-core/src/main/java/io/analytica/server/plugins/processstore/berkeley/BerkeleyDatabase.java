@@ -246,7 +246,6 @@ final class BerkeleyDatabase {
 				myEnv.close();
 			} catch (final DatabaseException dbe) {
 				System.err.println("Error closing MyDbEnv: " + dbe.toString());
-				System.exit(-1);
 			}
 		}
 	}

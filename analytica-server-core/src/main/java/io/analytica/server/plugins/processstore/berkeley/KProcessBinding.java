@@ -39,6 +39,7 @@ final class KProcessBinding extends TupleBinding {
 	private static final String PROCESS_BINDING_PREFIX = "ProcessBinding";
 	private static final String PROCESS_BINDING_V1 = PROCESS_BINDING_PREFIX + "V1";
 	private static final String PROCESS_BINDING_V2 = PROCESS_BINDING_PREFIX + "V2";
+	private static final String PROCESS_BINDING_V3 = PROCESS_BINDING_PREFIX + "V3";
 
 	/** {@inheritDoc} */
 	@Override
@@ -51,6 +52,8 @@ final class KProcessBinding extends TupleBinding {
 				return doEntryToProcessV1(ti);
 			} else if (PROCESS_BINDING_V2.equals(version)) {
 				return doEntryToProcessV2(ti);
+			} else if (PROCESS_BINDING_V3.equals(version)) {
+				return doEntryToProcessV3(ti);
 			} else {
 				throw new java.lang.IllegalArgumentException("Version d'encodage de process non reconnu : " + version);
 			}
@@ -80,6 +83,87 @@ final class KProcessBinding extends TupleBinding {
 		}
 	}
 
+	private KProcess doEntryToProcessV3(final TupleInput ti) throws Exception {
+		final String version = ti.readString();
+		Assertion.checkArgument(PROCESS_BINDING_V3.equals(version), "Version de l'encodage du process incompatible. lu: {0}, attendu : {1}", version, PROCESS_BINDING_V3);
+		//---------------------------------------------------------------------
+		final String type = ti.readString();
+		final int nbNames = ti.readInt();
+		final String[] names = new String[nbNames];
+		for (int i = 0; i < nbNames; i++) {
+			names[i] = ti.readString();
+		}
+		final String systemName = ti.readString();
+		final int nbLocations = ti.readInt();
+		final String[] systemLocation = new String[nbLocations];
+		for (int i = 0; i < nbLocations; i++) {
+			systemLocation[i] = ti.readString();
+		}
+		final Date startDate = new Date(ti.readLong());
+		final Double duration = ti.readDouble();
+		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, systemName, systemLocation, type, names);
+		while (ti.available() > 0) {
+			final String subInfoType = ti.readString();
+			if ("Measure".equals(subInfoType)) {
+				final String mName = ti.readString();
+				final double mValue = ti.readDouble();
+				//Passer par un NS
+				if (mName != KProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead 
+					processBuilder.setMeasure(mName, mValue);
+				}
+			} else if ("MetaData".equals(subInfoType)) {
+				final String mdName = ti.readString();
+				final String mdValue = ti.readString();
+				//Passer par un NS
+				processBuilder.setMetaData(mdName, mdValue);
+			} else if ("SubProcess".equals(subInfoType)) {
+				final KProcess subProcess = doEntryToProcessV3(ti);
+				processBuilder.addSubProcess(subProcess);
+			} else if ("P-END".equals(subInfoType)) {
+				break; //on a terminé
+			} else {
+				//On laisse tomber.
+			}
+		}
+		return processBuilder.build();
+	}
+
+	private void doProcessToEntry(final KProcess process, final TupleOutput to) {
+		to.writeString(PROCESS_BINDING_V3);//Marqueur de version
+		to.writeString(process.getType());
+
+		to.writeInt(process.getSubTypes().length);
+		for (final String namePart : process.getSubTypes()) {
+			to.writeString(namePart);
+		}
+
+		to.writeString(process.getSystemName());
+		to.writeInt(process.getSystemLocation().length);
+		for (final String locationPart : process.getSystemLocation()) {
+			to.writeString(locationPart);
+		}
+
+		to.writeLong(process.getStartDate().getTime());
+		to.writeDouble(process.getMeasures().get(KProcess.DURATION));
+		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
+			if (measure.getKey() != KProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead 				
+				to.writeString("Measure");
+				to.writeString(measure.getKey());
+				to.writeDouble(measure.getValue());
+			}
+		}
+		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
+			to.writeString("MetaData");
+			to.writeString(metaData.getKey());
+			to.writeString(metaData.getValue());
+		}
+		for (final KProcess subProcess : process.getSubProcesses()) {
+			to.writeString("SubProcess");
+			doProcessToEntry(subProcess, to);
+		}
+		to.writeString("P-END"); //On place un marqueur de fin (pour la lecture des sous process)
+	}
+
 	private KProcess doEntryToProcessV2(final TupleInput ti) throws Exception {
 		final String version = ti.readString();
 		Assertion.checkArgument(PROCESS_BINDING_V2.equals(version), "Version de l'encodage du process incompatible. lu: {0}, attendu : {1}", version, PROCESS_BINDING_V2);
@@ -90,9 +174,11 @@ final class KProcessBinding extends TupleBinding {
 		for (int i = 0; i < nbNames; i++) {
 			names[i] = ti.readString();
 		}
+		final String systemName = "mainSystem"; //pas de systemName et systemLocation en v2
+		final String[] systemLocation = {};
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, type, names);
+		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, systemName, systemLocation, type, names);
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {
@@ -119,41 +205,14 @@ final class KProcessBinding extends TupleBinding {
 		return processBuilder.build();
 	}
 
-	private void doProcessToEntry(final KProcess process, final TupleOutput to) {
-		to.writeString(PROCESS_BINDING_V2);//Marqueur de version
-		to.writeString(process.getType());
-
-		to.writeInt(process.getSubTypes().length);
-		for (final String namePart : process.getSubTypes()) {
-			to.writeString(namePart);
-		}
-		to.writeLong(process.getStartDate().getTime());
-		to.writeDouble(process.getMeasures().get(KProcess.DURATION));
-		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
-			if (measure.getKey() != KProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead 				
-				to.writeString("Measure");
-				to.writeString(measure.getKey());
-				to.writeDouble(measure.getValue());
-			}
-		}
-		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
-			to.writeString("MetaData");
-			to.writeString(metaData.getKey());
-			to.writeString(metaData.getValue());
-		}
-		for (final KProcess subProcess : process.getSubProcesses()) {
-			to.writeString("SubProcess");
-			doProcessToEntry(subProcess, to);
-		}
-		to.writeString("P-END"); //On place un marqueur de fin (pour la lecture des sous process)
-	}
-
 	private KProcess doEntryToProcessV1(final TupleInput ti) throws Exception {
 		final String type = ti.readString();
 		final String name = ti.readString();
+		final String systemName = "mainSystem"; //pas de systemName et systemLocation en v1
+		final String[] systemLocation = {};
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, type, name.split("/"));
+		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, systemName, systemLocation, type, name.split("/"));
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {

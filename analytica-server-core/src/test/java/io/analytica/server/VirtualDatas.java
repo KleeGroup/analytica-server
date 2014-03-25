@@ -24,17 +24,27 @@ import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
 import io.vertigo.kernel.lang.Assertion;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
 /**
- * @author statchum
- * @version $Id: codetemplates.xml,v 1.2 2011/06/21 14:33:16 npiedeloup Exp $
+ * @author npiedeloup
  */
 public class VirtualDatas {
 	private final ServerManager serverManager;
 
+	private static final String SYSTEM_NAME = "Server-Test";
+	private static final String[] SYSTEM_LOCATION = { "test", "UnknownHost" };
+	static {
+		try {
+			SYSTEM_LOCATION[1] = InetAddress.getLocalHost().getHostAddress();
+		} catch (final UnknownHostException e) {
+			//nothing, we keep UnknownHost
+		}
+	}
 	private static final String PAGE_PROCESS = "PAGE";
 	private static final String SQL_PROCESS = "SQL";
 	private static final String SEARCH_PROCESS = "SEARCH";
@@ -169,8 +179,8 @@ public class VirtualDatas {
 		//		final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess sqlProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select*from news").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "home", "homePage").addSubProcess(sqlProcess).build();
+		final KProcess sqlProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SQL_PROCESS, "select*from news").build();
+		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "home", "homePage").addSubProcess(sqlProcess).build();
 		serverManager.push(pageProcess);
 	}
 
@@ -178,8 +188,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SEARCH_PROCESS, "find oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "search").addSubProcess(searchProcess).build();
+		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SEARCH_PROCESS, "find oeuvres").build();
+		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "search").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Recherche " + dateVisite);
 
@@ -189,8 +199,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "select 1 from oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "oeuvre").addSubProcess(searchProcess).build();
+		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SQL_PROCESS, "select 1 from oeuvres").build();
+		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "oeuvre").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Consultation " + dateVisite);
 
@@ -199,11 +209,10 @@ public class VirtualDatas {
 	/*	private void addUpdatePage(final Date dateVisite, final double processDuration) {
 			//final double processDuration = Math.random() * 50 + 150d;
 
-			final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SQL_PROCESS, "update 1 from oeuvres").build();
-			final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/oeuvre").addSubProcess(updateProcess).build();
-			serverManager.push(pageProcess);
-			//System.out.println("Modification " + dateVisite);
-
+		final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SQL_PROCESS, "update 1 from oeuvres").build();
+		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "/oeuvre").addSubProcess(updateProcess).build();
+		serverManager.push(pageProcess);
+		//System.out.println("Modification " + dateVisite);
 		}*/
 
 	/**

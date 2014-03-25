@@ -34,12 +34,14 @@ import java.util.List;
 public final class HCubeKey extends HKey {
 	private final HTime time;
 	private final HCategory category;
+	private final HLocation location;
 
-	public HCubeKey(final HTime time, final HCategory category) {
-		super("cube:" + time.id() + "; " + category.id());
+	public HCubeKey(final HTime time, final HCategory category, final HLocation location) {
+		super("cube:" + time.id() + "; " + category.id() + "; " + location.id());
 		//---------------------------------------------------------------------
 		this.time = time;
 		this.category = category;
+		this.location = location;
 	}
 
 	public HTime getTime() {
@@ -50,24 +52,33 @@ public final class HCubeKey extends HKey {
 		return category;
 	}
 
+	public HLocation getLocation() {
+		return location;
+	}
+
 	/**
 	 * Calcule la liste de tous les cubes auxquels le présent cube appartient
 	 * Cette méthode permet de préparer toutes les agrégations.
 	 * @return Liste de tous les cubes auxquels le présent cube appartient
 	 */
 	public List<HCubeKey> drillUp() {
-		List<HCubeKey> upperCubeKeys = new ArrayList<>();
+		final List<HCubeKey> upperCubeKeys = new ArrayList<>();
 		//on remonte les axes, le premier sera le plus bas niveau
-		HTime htime = getTime();
-		while (htime != null) {
-			HCategory hcategory = getCategory();
-			while (hcategory != null) {
-				upperCubeKeys.add(new HCubeKey(htime, hcategory));
-				//On remonte l'arbre des categories
-				hcategory = hcategory.drillUp();
+		HTime hTime = getTime();
+		while (hTime != null) {
+			HLocation hLocation = getLocation();
+			while (hLocation != null) {
+				HCategory hCategory = getCategory();
+				while (hCategory != null) {
+					upperCubeKeys.add(new HCubeKey(hTime, hCategory, hLocation));
+					//On remonte l'arbre des categories
+					hCategory = hCategory.drillUp();
+				}
+				//On remonte l'arbre des Location
+				hLocation = hLocation.drillUp();
 			}
 			//On remonte time
-			htime = htime.drillUp();
+			hTime = hTime.drillUp();
 		}
 		return upperCubeKeys;
 	}
@@ -78,10 +89,10 @@ public final class HCubeKey extends HKey {
 	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
 	 */
 	public boolean contains(final HCubeKey cubeKey) {
-		if (this.equals(cubeKey)) {
+		if (equals(cubeKey)) {
 			return true;
 		}
-		return contains(time, cubeKey.time) && contains(category, cubeKey.category);
+		return contains(time, cubeKey.time) && contains(category, cubeKey.category) && contains(location, cubeKey.location);
 	}
 
 	/**
@@ -90,7 +101,7 @@ public final class HCubeKey extends HKey {
 	 * Si A = B
 	 * Si B peut être obtenu par drillUp successifs sur A.
 	 * @param otherPosition
-	 * @return
+	 * @return si la position est contenue dans la otherPosition
 	 */
 	private static <P extends HPosition<P>> boolean contains(final P position, final P otherPosition) {
 		//On vérifie que l'autre position est contenue dans la première

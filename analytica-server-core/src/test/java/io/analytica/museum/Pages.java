@@ -20,6 +20,8 @@ package io.analytica.museum;
 import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -34,6 +36,15 @@ final class Pages {
 	public final static PageBuilder IMAGE_ARTIST = new ImageArtistPage();
 	public final static PageBuilder IMAGE_OEUVRE = new ImageOeuvrePage();
 
+	static final String SYSTEM_NAME = "Server-Test";
+	static final String[] SYSTEM_LOCATION = { "test", "UnknownHost" };
+	static {
+		try {
+			SYSTEM_LOCATION[1] = InetAddress.getLocalHost().getHostAddress();
+		} catch (final UnknownHostException e) {
+			//nothing, we keep UnknownHost
+		}
+	}
 	private static final String ERROR_MEASURE = "ERROR";
 	private static final String PAGE_PROCESS = "PAGE";
 	private static final String SERVICE_PROCESS = "SERVICE";
@@ -44,7 +55,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 40, 5, 40, 5, 40, 5, 40);
 
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8), PAGE_PROCESS, "home")//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "home")//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1, 2), SERVICE_PROCESS, "CommunicationServices", "loadNews")//
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 2), SQL_PROCESS, "select * from news").endSubProcess()//
@@ -64,7 +75,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 50, 150, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10);
 
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20), PAGE_PROCESS, "search", "artists")//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "search", "artists")//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1, 2), SERVICE_PROCESS, "ArtistServices", "search")//
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 2), SEARCH_PROCESS, "find artists").endSubProcess()//
@@ -104,7 +115,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 50, 250, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10);
 
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20), PAGE_PROCESS, "search", "oeuvres")//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "search", "oeuvres")//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1, 2), SERVICE_PROCESS, "OeuvreServices", "search")//
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 2), SEARCH_PROCESS, "find oeuvres").endSubProcess()//
@@ -144,7 +155,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 5, 15);
 
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1), PAGE_PROCESS, "images", "oeuvres", String.valueOf(StatsUtil.random(200, 1)))//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "images", "oeuvres", String.valueOf(StatsUtil.random(200, 1)))//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1), SQL_PROCESS, "select data from blob where id = #id#").endSubProcess()//
 					.build();
@@ -155,7 +166,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 5, 10);
 
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1), PAGE_PROCESS, "images", "artists", String.valueOf(StatsUtil.random(100, 1)))//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "images", "artists", String.valueOf(StatsUtil.random(100, 1)))//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1), SQL_PROCESS, "select data from blob where id = #id#").endSubProcess()//
 					.build();
@@ -170,7 +181,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 20, 5, 20);
 			final String artist = getArtist();
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4), PAGE_PROCESS, "artists", artist)//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "artists", artist)//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1, 2), SERVICE_PROCESS, "ArtistServices", "loadArtist")//
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 2), SQL_PROCESS, "select * from artists where art_id = #art_id#").endSubProcess()//
@@ -197,7 +208,7 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 50, 5, 20);
 			final String oeuvre = getOeuvre();
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4), PAGE_PROCESS, "oeuvres", oeuvre)//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "oeuvres", oeuvre)//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1, 2), SERVICE_PROCESS, "OeuvreServices", "loadOeuvre")//
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 2), SQL_PROCESS, "select * from oeuvres where oeu_id = #oeu_id#").endSubProcess()//
@@ -222,7 +233,7 @@ final class Pages {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 20, 5, 50, 5, 40);
 			final String[] expositionInfos = getExposition().split(",");// [Musée,Ville,Année]
 
-			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6), PAGE_PROCESS, "exposition", expositionInfos[0], expositionInfos[1], expositionInfos[2])//
+			return new KProcessBuilder(dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6), SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "exposition", expositionInfos[0], expositionInfos[1], expositionInfos[2])//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 1, 2), SERVICE_PROCESS, "ExpositionServices", "loadExposition")//
 					.beginSubProcess(dateVisite, StatsUtil.sum(randomDurations, 2), SQL_PROCESS, "select * from expositions where exp_id = #exp_id#").endSubProcess()//
@@ -245,6 +256,11 @@ final class Pages {
 		}
 	}
 
+	/**
+	 * Fournit le coef de charge 
+	 * @param date Date
+	 * @return charge coef at this hour
+	 */
 	static double getCoef(final Date date) {
 		final Calendar calendar = new GregorianCalendar();
 		calendar.setTime(date);

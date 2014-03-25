@@ -24,6 +24,7 @@ import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 
@@ -88,7 +89,8 @@ final class ProcessEncoder {
 	private static HCubeBuilder createCubeBuilder(final KProcess process) {
 		final HTime time = new HTime(process.getStartDate(), HTimeDimension.Minute);
 		final HCategory category = new HCategory(process.getType(), process.getSubTypes() != null ? process.getSubTypes() : new String[0]);
-		final HCubeKey cubeKey = new HCubeKey(time, category);
+		final HLocation location = new HLocation(process.getSystemName(), process.getSystemLocation() != null ? process.getSystemLocation() : new String[0]);
+		final HCubeKey cubeKey = new HCubeKey(time, category, location);
 		return new HCubeBuilder(cubeKey);
 	}
 

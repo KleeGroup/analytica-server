@@ -18,6 +18,7 @@
 package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
@@ -36,7 +37,10 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	private Date to;
 	//----
 	private HCategory category;
-	private boolean children;
+	private boolean categoryChildren;
+	//----
+	private HLocation location;
+	private boolean locationChildren;
 
 	public HQueryBuilder on(final String timeDimension) {
 		Assertion.checkNotNull(timeDimension);
@@ -95,7 +99,24 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		Assertion.checkState(category == null, "category already set");
 		//---------------------------------------------------------------------
 		category = new HCategory(type, subTypes);
-		this.children = children;
+		categoryChildren = children;
+		return this;
+	}
+
+	public HQueryBuilder whereChildren(final String systemName, final String... systemLocation) {
+		return doWith(systemName, systemLocation, true);
+	}
+
+	public HQueryBuilder where(final String systemName, final String... systemLocation) {
+		return doWith(systemName, systemLocation, false);
+	}
+
+	private HQueryBuilder doWhere(final String systemName, final String[] systemLocation, final boolean children) {
+		Assertion.checkNotNull(systemName);
+		Assertion.checkState(location == null, "location already set");
+		//---------------------------------------------------------------------
+		location = new HLocation(systemName, systemLocation);
+		locationChildren = children;
 		return this;
 	}
 
@@ -160,6 +181,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/** {@inheritDoc} */
 	public HQuery build() {
-		return new HQuery(new HTimeSelection(timeDimension, from, to), new HCategorySelection(category, children));
+		return new HQuery(new HTimeSelection(timeDimension, from, to), new HCategorySelection(category, categoryChildren), new HLocationSelection(location, locationChildren));
 	}
 }

@@ -36,6 +36,7 @@ public interface ProcessStorePlugin extends Plugin {
 
 	/**
 	 * Liste des process suivant.
+	 * @param systemName Nom du system
 	 * @param lastId Dernier id de process chargé (exclus du resultat)
 	 * @param maxRow Nombre de ligne max
 	 * @return Liste des process suivant

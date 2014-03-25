@@ -33,6 +33,8 @@ import io.analytica.museum.Museum;
 import io.analytica.museum.PageListener;
 import io.vertigo.kernel.lang.DateBuilder;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,6 +62,15 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	private static final HMetricKey POIDS = new HMetricKey("POIDS", false);
 	private static final HMetricKey DURATION = new HMetricKey(KProcess.DURATION, true);
 
+	private static final String SYSTEM_NAME = "Server-Test";
+	private static final String[] SYSTEM_LOCATION = { "test", "UnknownHost" };
+	static {
+		try {
+			SYSTEM_LOCATION[1] = InetAddress.getLocalHost().getHostAddress();
+		} catch (final UnknownHostException e) {
+			//nothing, we keep UnknownHost
+		}
+	}
 	private static final String PROCESS_REQUEST = "REQUEST";
 	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
@@ -92,18 +103,18 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	//-------------------------------------------------------------------------
 	@Test
 	public void testDictionnary() {
-		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select * from article")//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select * from article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess1);
 
 		//On crée un processs identique (même catégorie)
-		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "select * from article")//
+		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select * from article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess2);
 
-		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select * from user")//
+		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select * from user")//
 				.build();
 		hcubeManager.push(selectProcess3);
 
@@ -119,12 +130,12 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testSimpleProcess() {
-		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "insert article")//
+		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "insert article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess2);
@@ -153,20 +164,20 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testSimpleProcessMultiSubCategrories() {
-		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article", "id=12")//
+		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article", "id=12")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess3);
-		final KProcess selectProcess4 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article", "id=13")//
+		final KProcess selectProcess4 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article", "id=13")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess4);
-		final KProcess selectProcess5 = new KProcessBuilder(date, 100, PROCESS_SQL, "insert article", "id=12")//
+		final KProcess selectProcess5 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "insert article", "id=12")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess5);
 
-		final KProcess selectProcess6 = new KProcessBuilder(date, 100, PROCESS_SQL, "insert article", "id=13")//
+		final KProcess selectProcess6 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "insert article", "id=13")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess6);
@@ -197,7 +208,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testSimpleProcessWithAllTimeDimensions() {
-		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess1);
@@ -258,7 +269,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final int nbSelect = 12;
 
-		final KProcessBuilder kProcessBuilder = new KProcessBuilder(date, 2000, PROCESS_SERVICES, "get articles");
+		final KProcessBuilder kProcessBuilder = new KProcessBuilder(date, 2000, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SERVICES, "get articles");
 		Date selectDate = date;
 		for (int i = 0; i < nbSelect; i++) {
 			selectDate = new DateBuilder(selectDate).addHours(1).toDateTime();
@@ -338,7 +349,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final int dureeService = 150 + nbSelect * dureeSelect;
 		final int dureeRequete = 75 + nbService * dureeService;
 
-		final KProcessBuilder kProcessBuilder = new KProcessBuilder(date, dureeRequete, PROCESS_REQUEST, "articles.html");
+		final KProcessBuilder kProcessBuilder = new KProcessBuilder(date, dureeRequete, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_REQUEST, "articles.html");
 		Date selectDate = date;
 		for (int i = 0; i < nbService; i++) {
 			selectDate = new DateBuilder(selectDate).addHours(1).toDateTime();
@@ -407,7 +418,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testSimpleProcessWithMultiIncMeasure() {
-		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.incMeasure(MONTANT.id(), price)//
 				.incMeasure(MONTANT.id(), price)//
@@ -432,17 +443,17 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testMultiProcesses() {
-		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#1")//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#1")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#2")//
+		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#2")//
 				//.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess2);
 
-		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#3")//
+		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#3")//
 				.incMeasure(MONTANT.id(), price * 3)//
 				.build();
 		hcubeManager.push(selectProcess3);
@@ -484,7 +495,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 			workersPool.execute(new Runnable() {
 				@Override
 				public void run() {
-					final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article")//
+					final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 							.incMeasure(MONTANT.id(), price)//
 							.build();
 					hcubeManager.push(selectProcess1);
@@ -512,18 +523,18 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testHCube() {
-		final KProcess selectProcess1 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#1")//
+		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#1")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 		hcubeManager.push(selectProcess1);
 
-		final KProcess selectProcess2 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#2")//
+		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#2")//
 				.incMeasure(MONTANT.id(), price * 3)//
 				.incMeasure(POIDS.id(), 50)//
 				.build();
 		hcubeManager.push(selectProcess2);
 
-		final KProcess selectProcess3 = new KProcessBuilder(date, 100, PROCESS_SQL, "select article#3")//
+		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#3")//
 				.incMeasure(POIDS.id(), 70)//
 				.build();
 		hcubeManager.push(selectProcess3);
@@ -543,7 +554,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	private KProcess createSqlProcess(final int duration) {
-		return new KProcessBuilder(date, duration, PROCESS_SQL, "select article")//
+		return new KProcessBuilder(date, duration, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
 	}
