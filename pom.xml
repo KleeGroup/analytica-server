@@ -20,6 +20,7 @@
 
 
 	<modules>
+		<module>analytica-server-hcube</module>
 		<module>analytica-server-core</module>
 		<module>analytica-server-ui</module>
 		<module>analytica-server-ui-swing</module>
