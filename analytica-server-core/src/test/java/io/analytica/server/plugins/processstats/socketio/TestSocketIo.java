@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package io.analytica.hcube.plugins.socketio;
+package io.analytica.server.plugins.processstats.socketio;
 
-import io.analytica.hcube.plugins.socketio.EmptyIOCallback;
 import io.socket.SocketIO;
 
 import org.json.JSONArray;

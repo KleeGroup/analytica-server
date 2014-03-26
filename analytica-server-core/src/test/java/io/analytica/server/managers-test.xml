@@ -27,7 +27,7 @@
         </plugin>  -->       
      </component>
      <component api="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
-			<plugin class="io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin">
+			<plugin class="io.analytica.server.plugins.processstats.store.memory.MemoryCubeStorePlugin">
 			</plugin>
 		</component>
 	</module>

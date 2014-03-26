@@ -17,16 +17,12 @@
  */
 package io.analytica.hcube.impl;
 
-import io.analytica.api.KProcess;
 import io.analytica.hcube.HCategoryDictionary;
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.Option;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -35,10 +31,8 @@ import javax.inject.Inject;
  * @version $Id: ServerManagerImpl.java,v 1.22 2013/01/14 16:35:19 npiedeloup Exp $
  */
 public final class HCubeManagerImpl implements HCubeManager {
-	private final ProcessEncoder processEncoder;
 	private final CubeStorePlugin cubeStorePlugin;
 	private final HCategoryDictionary categoryDictionary = new HCategoryDictionaryImpl();
-	private final Option<ProcessStatsPlugin> processStatsPlugin;
 
 	/**
 	 * Constructeur.
@@ -46,27 +40,18 @@ public final class HCubeManagerImpl implements HCubeManager {
 	 * @param processStatsPlugin Plugin de statistique des process
 	 */
 	@Inject
-	public HCubeManagerImpl(final CubeStorePlugin cubeStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin) {
+	public HCubeManagerImpl(final CubeStorePlugin cubeStorePlugin) {
 		Assertion.checkNotNull(cubeStorePlugin);
-		Assertion.checkNotNull(processStatsPlugin);
 		//-----------------------------------------------------------------
-		processEncoder = new ProcessEncoder();
 		this.cubeStorePlugin = cubeStorePlugin;
 		//this.processStatsPlugin = Option.option(processStatsPlugin);
-		this.processStatsPlugin = processStatsPlugin;
 	}
 
 	/** {@inheritDoc} */
-	public void push(final KProcess process) {
-		final List<HCube> cubes = processEncoder.encode(process);
-		if (processStatsPlugin.isDefined()) {
-			processStatsPlugin.get().merge(process);
-		}
+	public void push(final HCube cube) {
 		//---Alimentation du dictionnaire des catégories puis des cubes
-		for (final HCube cube : cubes) {
-			categoryDictionary.add(cube.getKey().getCategory());
-			cubeStorePlugin.merge(cube);
-		}
+		categoryDictionary.add(cube.getKey().getCategory());
+		cubeStorePlugin.merge(cube);
 	}
 
 	/** {@inheritDoc} */

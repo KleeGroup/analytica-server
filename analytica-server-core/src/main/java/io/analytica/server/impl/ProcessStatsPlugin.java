@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package io.analytica.hcube.impl;
+package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
 import io.vertigo.kernel.component.Plugin;

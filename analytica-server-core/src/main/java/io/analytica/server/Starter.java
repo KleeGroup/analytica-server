@@ -19,13 +19,13 @@ package io.analytica.server;
 
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.memorystack.MemoryStackProcessStatsPlugin;
-import io.analytica.hcube.plugins.socketio.SocketIoProcessStatsPlugin;
 import io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin;
 import io.analytica.restserver.RestServerManager;
 import io.analytica.restserver.impl.RestServerManagerImpl;
 import io.analytica.server.impl.ServerManagerImpl;
 import io.analytica.server.plugins.processapi.rest.RestProcessNetApiPlugin;
+import io.analytica.server.plugins.processstats.memorystack.MemoryStackProcessStatsPlugin;
+import io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlugin;
 import io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin;
 import io.analytica.server.plugins.processstore.memory.MemoryProcessStorePlugin;
 import io.analytica.server.plugins.queryapi.rest.RestQueryNetApiPlugin;

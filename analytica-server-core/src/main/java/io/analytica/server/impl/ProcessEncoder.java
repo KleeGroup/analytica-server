@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package io.analytica.hcube.impl;
+package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
 import io.analytica.hcube.cube.HCube;
@@ -45,14 +45,14 @@ import java.util.Map.Entry;
  * @author npiedeloup
  * @version $Id: StandardProcessEncoderPlugin.java,v 1.16 2012/10/16 17:27:12 pchretien Exp $
  */
-final class ProcessEncoder {
+public final class ProcessEncoder {
 
 	/**
 	 * Transforme un KProcess et ses sous process en cubes.
 	 * @param process Process à convertir
 	 * @return Liste des Cubes associés
 	 */
-	List<HCube> encode(final KProcess process) {
+	public List<HCube> encode(final KProcess process) {
 		final List<HCubeBuilder> resultBuilder = new ArrayList<>();
 		doEncode(process, Collections.unmodifiableList(new ArrayList<HCubeBuilder>()), resultBuilder);
 		//---

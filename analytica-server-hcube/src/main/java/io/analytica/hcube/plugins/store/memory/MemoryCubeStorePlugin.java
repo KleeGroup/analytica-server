@@ -118,7 +118,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		for (final HCategory category : query.getAllCategories(categoryDictionary)) {
 			final List<HCube> cubes = new ArrayList<>();
 			for (HTime currentTime : query.getAllTimes()) {
-				final HCubeKey cubeKey = new HCubeKey(currentTime, category);
+				final HCubeKey cubeKey = new HCubeKey(currentTime, category, null);
 				final HCube cube = store.get(cubeKey);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données

@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package io.analytica.hcube.plugins.memorystack;
+package io.analytica.server.plugins.processstats.memorystack;
 
 import io.analytica.api.KProcess;
-import io.analytica.hcube.impl.ProcessStatsPlugin;
+import io.analytica.server.impl.ProcessStatsPlugin;
 import io.vertigo.kernel.lang.Activeable;
 
 import java.lang.management.ManagementFactory;

@@ -18,7 +18,7 @@
 package io.analytica.uiswing;
 
 import io.analytica.api.KProcess;
-import io.analytica.hcube.plugins.memorystack.LastProcessMXBean;
+import io.analytica.server.plugins.processstats.memorystack.LastProcessMXBean;
 import io.analytica.uiswing.collector.PerfCallStackCollector;
 import io.analytica.uiswing.collector.PerfCollector;
 import io.analytica.uiswing.collector.ProcessStats;

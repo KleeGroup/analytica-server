@@ -31,10 +31,14 @@ import io.vertigo.kernel.component.Manager;
  */
 public interface ServerManager extends Manager {
 	/**
-	 * Ajout d'un process.
-	 * @param process Process à ajouter 
+	 * Add a process.
+	 * @param appName Application's name
+	 * @param serverLocation Server location
+	 * @param process Process to push
 	 */
-	void push(KProcess process);
+	void push(String appName, String[] serverLocation, KProcess process);
+
+	//void push(String appName, String serverName, Observation process);
 
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  

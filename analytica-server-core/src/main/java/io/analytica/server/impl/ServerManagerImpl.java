@@ -19,11 +19,13 @@ package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
 import io.analytica.hcube.HCubeManager;
+import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.analytica.server.ServerManager;
 import io.vertigo.kernel.lang.Activeable;
 import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Option;
 
 import java.util.List;
 import java.util.Timer;
@@ -40,6 +42,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private final HCubeManager hcubeManager;
 	private final ProcessStorePlugin processStorePlugin;
 	private Timer asyncCubeStoreTimer = null;
+	private final ProcessEncoder processEncoder;
+	private final Option<ProcessStatsPlugin> processStatsPlugin;
 
 	/**
 	 * Constructeur.
@@ -47,17 +51,20 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	 * @param hcubeManager Manager de stockage des Cubes
 	 */
 	@Inject
-	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin) {
+	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin) {
 		super();
 		Assertion.checkNotNull(hcubeManager);
 		Assertion.checkNotNull(processStorePlugin);
+		Assertion.checkNotNull(processStatsPlugin);
 		//-----------------------------------------------------------------
 		this.hcubeManager = hcubeManager;
 		this.processStorePlugin = processStorePlugin;
+		processEncoder = new ProcessEncoder();
+		this.processStatsPlugin = processStatsPlugin;
 	}
 
 	/** {@inheritDoc} */
-	public void push(final KProcess process) {
+	public void push(final String appName, final String[] serverLocation, final KProcess process) {
 		processStorePlugin.add(process);
 		//hcubeManager.push(process);
 	}
@@ -94,7 +101,13 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private int storeNextProcessesAsCube() {
 		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 500);
 		for (final Identified<KProcess> process : nextProcesses) {
-			hcubeManager.push(process.getData());
+			final List<HCube> cubes = processEncoder.encode(process.getData());
+			if (processStatsPlugin.isDefined()) {
+				processStatsPlugin.get().merge(process.getData());
+			}
+			for (final HCube cube : cubes) {
+				hcubeManager.push(cube);
+			}
 			lastProcessIdStored = process.getKey();
 		}
 		return nextProcesses.size();

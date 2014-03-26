@@ -96,7 +96,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		serverManager.push(selectProcess1);
+		serverManager.push(selectProcess1.getSystemName(), selectProcess1.getSystemLocation(), selectProcess1);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -173,7 +173,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 		new Museum(new PageListener() {
 			@Override
 			public void onPage(final KProcess process) {
-				serverManager.push(process);
+				serverManager.push(process.getSystemName(), process.getSystemLocation(), process);
 			}
 		}).load(days, visitsByDay);
 		//Thread.sleep(1000000000);

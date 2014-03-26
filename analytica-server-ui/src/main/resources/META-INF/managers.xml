@@ -12,11 +12,11 @@
 		<component api="HCubeManager"
 			class="io.analytica.hcube.impl.HCubeManagerImpl">
 			<plugin
-				class="io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin" />
+				class="io.analytica.server.plugins.processstats.store.memory.MemoryCubeStorePlugin" />
 			<plugin
-				class="io.analytica.hcube.plugins.processstore.memorystack.MemoryStackProcessStatsPlugin" />
+				class="io.analytica.server.plugins.processstats.processstore.memorystack.MemoryStackProcessStatsPlugin" />
 			<plugin
-				class="io.analytica.hcube.plugins.socketio.SocketIoProcessStatsPlugin">
+				class="io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlugin">
 				<param name="socketIoUrl" value="http://npiedeloup1:8090" />
 			</plugin>
 		</component>

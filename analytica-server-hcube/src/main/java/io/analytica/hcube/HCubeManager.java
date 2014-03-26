@@ -17,7 +17,7 @@
  */
 package io.analytica.hcube;
 
-import io.analytica.api.KProcess;
+import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.component.Manager;
@@ -35,10 +35,10 @@ public interface HCubeManager extends Manager {
 	HCategoryDictionary getCategoryDictionary();
 
 	/**
-	 * Ajout d'un process.
-	 * @param process Process à ajouter 
+	 * Ajout d'un cube.
+	 * @param cube HCube à ajouter 
 	 */
-	void push(KProcess process);
+	void push(HCube cube);
 
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  

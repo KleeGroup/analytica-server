@@ -31,6 +31,7 @@ import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
 import io.analytica.museum.Museum;
 import io.analytica.museum.PageListener;
+import io.analytica.server.impl.ProcessEncoder;
 import io.vertigo.kernel.lang.DateBuilder;
 
 import java.net.InetAddress;
@@ -75,6 +76,8 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	private static final String PROCESS_SERVICES = "SERVICES";
 	private static final String PROCESS_SQL = "SQL";
 
+	private ProcessEncoder processEncoder;
+
 	@Inject
 	private HCubeManager hcubeManager;
 
@@ -85,6 +88,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	public void init() throws ParseException {
 		//On se place au 10-10-2010  a 10h10
 		date = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRANCE).parse("10/10/2010 10:10");
+		processEncoder = new ProcessEncoder();
 	}
 
 	//-------------------------------------------------------------------------
@@ -106,17 +110,17 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select * from article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess1);
+		pushProcess(selectProcess1);
 
 		//On crée un processs identique (même catégorie)
 		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select * from article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess2);
+		pushProcess(selectProcess2);
 
 		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select * from user")//
 				.build();
-		hcubeManager.push(selectProcess3);
+		pushProcess(selectProcess3);
 
 		final Set<HCategory> rootCategories = hcubeManager.getCategoryDictionary().getAllRootCategories();
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
@@ -133,12 +137,12 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess1);
+		pushProcess(selectProcess1);
 
 		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "insert article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess2);
+		pushProcess(selectProcess2);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -167,20 +171,20 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article", "id=12")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess3);
+		pushProcess(selectProcess3);
 		final KProcess selectProcess4 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article", "id=13")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess4);
+		pushProcess(selectProcess4);
 		final KProcess selectProcess5 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "insert article", "id=12")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess5);
+		pushProcess(selectProcess5);
 
 		final KProcess selectProcess6 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "insert article", "id=13")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess6);
+		pushProcess(selectProcess6);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -211,7 +215,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess1);
+		pushProcess(selectProcess1);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -281,7 +285,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		}
 		final KProcess process = kProcessBuilder.build();
 
-		hcubeManager.push(process);
+		pushProcess(process);
 		//---------------------------------------------------------------------
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -367,7 +371,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final KProcess process = kProcessBuilder.build();
 
-		hcubeManager.push(process);
+		pushProcess(process);
 		//---------------------------------------------------------------------
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -424,7 +428,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.incMeasure(MONTANT.id(), price)//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess1);
+		pushProcess(selectProcess1);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -446,17 +450,17 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#1")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess1);
+		pushProcess(selectProcess1);
 
 		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#2")//
 				//.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess2);
+		pushProcess(selectProcess2);
 
 		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#3")//
 				.incMeasure(MONTANT.id(), price * 3)//
 				.build();
-		hcubeManager.push(selectProcess3);
+		pushProcess(selectProcess3);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -498,7 +502,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 					final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
 							.incMeasure(MONTANT.id(), price)//
 							.build();
-					hcubeManager.push(selectProcess1);
+					pushProcess(selectProcess1);
 				}
 			});
 		}
@@ -526,18 +530,18 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#1")//
 				.incMeasure(MONTANT.id(), price)//
 				.build();
-		hcubeManager.push(selectProcess1);
+		pushProcess(selectProcess1);
 
 		final KProcess selectProcess2 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#2")//
 				.incMeasure(MONTANT.id(), price * 3)//
 				.incMeasure(POIDS.id(), 50)//
 				.build();
-		hcubeManager.push(selectProcess2);
+		pushProcess(selectProcess2);
 
 		final KProcess selectProcess3 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article#3")//
 				.incMeasure(POIDS.id(), 70)//
 				.build();
-		hcubeManager.push(selectProcess3);
+		pushProcess(selectProcess3);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -561,24 +565,24 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testClusteredValuesProcess() {
-		hcubeManager.push(createSqlProcess(0)); //<=0
-		hcubeManager.push(createSqlProcess(1)); //<=1
-		hcubeManager.push(createSqlProcess(2)); //<=2
-		hcubeManager.push(createSqlProcess(3)); //<=5
-		hcubeManager.push(createSqlProcess(4)); //<=5
-		hcubeManager.push(createSqlProcess(5)); //<=5
-		hcubeManager.push(createSqlProcess(8)); //<=10
-		hcubeManager.push(createSqlProcess(9)); //<=10
-		hcubeManager.push(createSqlProcess(17)); //<=20
-		hcubeManager.push(createSqlProcess(18)); //<=20
-		hcubeManager.push(createSqlProcess(26)); //<=50
-		hcubeManager.push(createSqlProcess(63)); //<=100
-		hcubeManager.push(createSqlProcess(73)); //<=100
-		hcubeManager.push(createSqlProcess(83)); //<=100
-		hcubeManager.push(createSqlProcess(100)); //<=100
-		hcubeManager.push(createSqlProcess(99)); //<=100
-		hcubeManager.push(createSqlProcess(486)); //<=500
-		hcubeManager.push(createSqlProcess(15623)); //<=20000
+		pushProcess(createSqlProcess(0)); //<=0
+		pushProcess(createSqlProcess(1)); //<=1
+		pushProcess(createSqlProcess(2)); //<=2
+		pushProcess(createSqlProcess(3)); //<=5
+		pushProcess(createSqlProcess(4)); //<=5
+		pushProcess(createSqlProcess(5)); //<=5
+		pushProcess(createSqlProcess(8)); //<=10
+		pushProcess(createSqlProcess(9)); //<=10
+		pushProcess(createSqlProcess(17)); //<=20
+		pushProcess(createSqlProcess(18)); //<=20
+		pushProcess(createSqlProcess(26)); //<=50
+		pushProcess(createSqlProcess(63)); //<=100
+		pushProcess(createSqlProcess(73)); //<=100
+		pushProcess(createSqlProcess(83)); //<=100
+		pushProcess(createSqlProcess(100)); //<=100
+		pushProcess(createSqlProcess(99)); //<=100
+		pushProcess(createSqlProcess(486)); //<=500
+		pushProcess(createSqlProcess(15623)); //<=20000
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -613,12 +617,17 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final int days = 10;
 		final int visitsByDay = 200;
 		new Museum(new PageListener() {
-
 			@Override
 			public void onPage(final KProcess process) {
-				hcubeManager.push(process);
+				pushProcess(process);
 			}
 		}).load(days, visitsByDay);
+	}
 
+	private void pushProcess(final KProcess process) {
+		final List<HCube> cubes = processEncoder.encode(process);
+		for (final HCube cube : cubes) {
+			hcubeManager.push(cube);
+		}
 	}
 }

@@ -181,7 +181,7 @@ public class VirtualDatas {
 
 		final KProcess sqlProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SQL_PROCESS, "select*from news").build();
 		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "home", "homePage").addSubProcess(sqlProcess).build();
-		serverManager.push(pageProcess);
+		serverManager.push(pageProcess.getSystemName(), pageProcess.getSystemLocation(), pageProcess);
 	}
 
 	private void addSearchPage(final Date dateVisite, final double processDuration) {
@@ -190,7 +190,7 @@ public class VirtualDatas {
 
 		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SEARCH_PROCESS, "find oeuvres").build();
 		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "search").addSubProcess(searchProcess).build();
-		serverManager.push(pageProcess);
+		serverManager.push(pageProcess.getSystemName(), pageProcess.getSystemLocation(), pageProcess);
 		//System.out.println("Recherche " + dateVisite);
 
 	}
@@ -201,7 +201,7 @@ public class VirtualDatas {
 
 		final KProcess searchProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SQL_PROCESS, "select 1 from oeuvres").build();
 		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "oeuvre").addSubProcess(searchProcess).build();
-		serverManager.push(pageProcess);
+		serverManager.push(pageProcess.getSystemName(), pageProcess.getSystemLocation(), pageProcess);
 		//System.out.println("Consultation " + dateVisite);
 
 	}
