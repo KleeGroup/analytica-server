@@ -18,7 +18,6 @@
 package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
@@ -32,36 +31,37 @@ import java.util.Date;
  * @author npiedeloup, pchretien
  */
 public final class HQueryBuilder implements Builder<HQuery> {
-	private HTimeDimension timeDimension;
+	private HTimeDimension hTimeDimension;
 	private Date from;
 	private Date to;
 	//----
 	private HCategory category;
 	private boolean categoryChildren;
+
 	//----
-	private HLocation location;
-	private boolean locationChildren;
+	//	private HLocation location;
+	//	private boolean locationChildren;
 
 	public HQueryBuilder on(final String timeDimension) {
 		Assertion.checkNotNull(timeDimension);
-		Assertion.checkState(this.timeDimension == null, "timeDimension already set");
+		Assertion.checkState(this.hTimeDimension == null, "timeDimension already set");
 		//---------------------------------------------------------------------
-		this.timeDimension = HTimeDimension.valueOf(timeDimension);
+		this.hTimeDimension = HTimeDimension.valueOf(timeDimension);
 		return this;
 	}
 
 	public HQueryBuilder on(final HTimeDimension timeDimension) {
 		Assertion.checkNotNull(timeDimension);
-		Assertion.checkState(this.timeDimension == null, "timeDimension already set");
+		Assertion.checkState(this.hTimeDimension == null, "timeDimension already set");
 		//---------------------------------------------------------------------
-		this.timeDimension = timeDimension;
+		this.hTimeDimension = timeDimension;
 		return this;
 	}
 
 	public HQueryBuilder from(final String date) {
-		Assertion.checkNotNull(timeDimension);
+		Assertion.checkNotNull(hTimeDimension);
 		//---------------------------------------------------------------------
-		return from(readDate(date, timeDimension));
+		return from(readDate(date, hTimeDimension));
 	}
 
 	public HQueryBuilder from(final Date date) {
@@ -81,9 +81,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	}
 
 	public HQueryBuilder to(final String date) {
-		Assertion.checkNotNull(timeDimension);
+		Assertion.checkNotNull(hTimeDimension);
 		//---------------------------------------------------------------------
-		return to(readDate(date, timeDimension));
+		return to(readDate(date, hTimeDimension));
 	}
 
 	public HQueryBuilder withChildren(final String type, final String... subCategories) {
@@ -107,8 +107,8 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return doWith(systemName, systemLocation, true);
 	}
 
-	public HQueryBuilder where(final String systemName, final String... systemLocation) {
-		return doWith(systemName, systemLocation, false);
+	/*public HQueryBuilder where(final String systemName, final String... systemLocation) {
+		return doWhere(systemName, systemLocation, false);
 	}
 
 	private HQueryBuilder doWhere(final String systemName, final String[] systemLocation, final boolean children) {
@@ -118,7 +118,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		location = new HLocation(systemName, systemLocation);
 		locationChildren = children;
 		return this;
-	}
+	}*/
 
 	/**
 	 *
@@ -181,6 +181,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/** {@inheritDoc} */
 	public HQuery build() {
-		return new HQuery(new HTimeSelection(timeDimension, from, to), new HCategorySelection(category, categoryChildren), new HLocationSelection(location, locationChildren));
+		return new HQuery(new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren)/*, new HLocationSelection(location, locationChildren)*/);
 	}
 }

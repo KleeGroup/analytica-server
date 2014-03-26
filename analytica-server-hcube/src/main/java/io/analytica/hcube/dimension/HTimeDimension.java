@@ -152,11 +152,11 @@ public enum HTimeDimension {
 				//$FALL-THROUGH$				
 			case Minute:
 				calendar.set(Calendar.SECOND, 0);
-				//$FALL-THROUGH$
-				//case Second:
 				calendar.set(Calendar.MILLISECOND, 0);
+				//$FALL-THROUGH$
+			default:
+				return calendar.getTime();
 		}
-		return calendar.getTime();
 	}
 
 	public String getPattern() {

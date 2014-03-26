@@ -27,10 +27,8 @@ import io.analytica.hcube.impl.CubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.DateBuilder;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,14 +42,16 @@ import java.util.Map;
 public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	private final Map<HCubeKey, HCube> store = new HashMap<>();
 
+	//	private final boolean ejectTooOld;
+
 	/**
 	 * Constructeur.
 	 */
-	public MemoryCubeStorePlugin() {
-		//
-	}
+	//	public MemoryCubeStorePlugin(@Named("ejectTooOld") boolean ejectTooOld) {
+	//		this.ejectTooOld = ejectTooOld;
+	//	}
 
-	private int call = 0;
+	//private int call = 0;
 
 	/** {@inheritDoc} */
 	public synchronized void merge(final HCube lowLevelCube) {
@@ -59,38 +59,39 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		//---------------------------------------------------------------------
 		for (final HCubeKey upCubeKeys : lowLevelCube.getKey().drillUp()) {
 			final HCube cube = merge(lowLevelCube, upCubeKeys);
-			if (tooOld(cube.getKey())) {
-				store.remove(cube.getKey());
-			} else {
-				store.put(cube.getKey(), cube);
-			}
+			//if  (ejectTooOld)
+			//	if (tooOld(cube.getKey())) {
+			//				store.remove(cube.getKey());
+			//			} else {
+			store.put(cube.getKey(), cube);
+			//			}
 		}
 		printStats();
 
 	}
 
-	private boolean tooOld(final HCubeKey key) {
-		final Date maxDate;
-		switch (key.getTime().getDimension()) {
-			case Minute:
-				maxDate = new DateBuilder(new Date()).addDays(-3).build(); //précision minute : 3 jours 
-				break;
-			case SixMinutes:
-				maxDate = new DateBuilder(new Date()).addMonths(-2).build(); //précision six minutes : 2 mois 
-				break;
-			default:
-				maxDate = null;
-		}
-		if (maxDate != null) {
-			return key.getTime().getValue().before(maxDate);
-		}
-		return false;
-	}
+	//	private boolean tooOld(final HCubeKey key) {
+	//		final Date maxDate;
+	//		switch (key.getTime().getDimension()) {
+	//			case Minute:
+	//				maxDate = new DateBuilder(new Date()).addDays(-3).build(); //précision minute : 3 jours 
+	//				break;
+	//			case SixMinutes:
+	//				maxDate = new DateBuilder(new Date()).addMonths(-2).build(); //précision six minutes : 2 mois 
+	//				break;
+	//			default:
+	//				maxDate = null;
+	//		}
+	//		if (maxDate != null) {
+	//			return key.getTime().getValue().before(maxDate);
+	//		}
+	//		return false;
+	//	}
 
 	private void printStats() {
-		if (call++ % 5000 == 0) {
-			//System.out.println("memStore : " + store.size() + "cubes");
-		}
+		//if (call++ % 5000 == 0) {
+		System.out.println("memStore : " + store.size() + "cubes");
+		//}
 
 	}
 
@@ -118,7 +119,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		for (final HCategory category : query.getAllCategories(categoryDictionary)) {
 			final List<HCube> cubes = new ArrayList<>();
 			for (HTime currentTime : query.getAllTimes()) {
-				final HCubeKey cubeKey = new HCubeKey(currentTime, category, null);
+				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
 				final HCube cube = store.get(cubeKey);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données

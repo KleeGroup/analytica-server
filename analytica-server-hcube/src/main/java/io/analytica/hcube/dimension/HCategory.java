@@ -38,7 +38,7 @@ public final class HCategory extends HKey implements HPosition<HCategory> {
 		this(type, new String[0]);
 	}
 
-	public HCategory(final String type, final String[] subTypes) {
+	public HCategory(final String type, final String... subTypes) {
 		super(buildKey(type, subTypes));
 		Assertion.checkArgNotEmpty(type);
 		//---------------------------------------------------------------------
@@ -63,7 +63,7 @@ public final class HCategory extends HKey implements HPosition<HCategory> {
 	}
 
 	private static String buildKey(final String type, final String[] subCategory) {
-		final StringBuilder sb = new StringBuilder("subCategory::").append(type);
+		final StringBuilder sb = new StringBuilder("category::").append(type);
 		for (final String element : subCategory) {
 			sb.append("/").append(element);
 		}
