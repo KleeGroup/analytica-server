@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>io.analytica</groupId>
 			<artifactId>analytica-server-hcube</artifactId>
-			<version>${vertigo.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.vertigo</groupId>
