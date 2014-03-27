@@ -60,27 +60,29 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void simpleTest() throws ParseException {
-		final DateFormat dateFormat = new SimpleDateFormat("yyyy/mm/dd");
-		Date start = dateFormat.parse("2012/12/12");
-		Date end = dateFormat.parse("2012/12/13");
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+		final Date start = dateFormat.parse("2012/12/12");
+		final Date end = dateFormat.parse("2012/12/13");
+
+		System.out.println("start = " + start);
 
 		for (int h = 0; h < 24; h++) {
 			for (int min = 0; min < 60; min++) {
-				Date current = new DateBuilder(start).addHours(h).addMinutes(min).toDateTime();
-				HTime time = new HTime(current, HTimeDimension.SixMinutes);
-				HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
+				final Date current = new DateBuilder(start).addHours(h).addMinutes(min).toDateTime();
+				final HTime time = new HTime(current, HTimeDimension.SixMinutes);
+				final HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
 				//HLocation location = new HLocation("IBIZA");
 				//--------		
+				//System.out.println(">>> h=" + h + ", min=" + min + " >> " + time);
+				final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
 
-				HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
-
-				HMetricKey duration = new HMetricKey("DURATION", true);
-				HMetricBuilder metricBuilder = new HMetricBuilder(duration);
+				final HMetricKey duration = new HMetricKey("DURATION", true);
+				final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
 				for (int i = 0; i < 100; i++) {
 					metricBuilder.withValue(100);
 				}
 
-				HCube cube = new HCubeBuilder(cubeKey)//
+				final HCube cube = new HCubeBuilder(cubeKey)//
 						.withMetric(metricBuilder.build())//
 						.build();
 
