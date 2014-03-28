@@ -51,7 +51,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//		this.ejectTooOld = ejectTooOld;
 	//	}
 
-	//private int call = 0;
+	private int call;
 
 	/** {@inheritDoc} */
 	public synchronized void merge(final HCube lowLevelCube) {
@@ -89,10 +89,9 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//	}
 
 	private void printStats() {
-		//if (call++ % 5000 == 0) {
-		System.out.println("memStore : " + store.size() + "cubes");
-		//}
-
+		if (call++ % 5000 == 0) {
+			System.out.println("memStore : " + store.size() + " cubes");
+		}
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.

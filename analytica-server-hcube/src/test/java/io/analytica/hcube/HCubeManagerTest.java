@@ -66,27 +66,29 @@ public final class HCubeManagerTest {
 
 		System.out.println("start = " + start);
 
-		for (int h = 0; h < 24; h++) {
-			for (int min = 0; min < 60; min++) {
-				final Date current = new DateBuilder(start).addHours(h).addMinutes(min).toDateTime();
-				final HTime time = new HTime(current, HTimeDimension.SixMinutes);
-				final HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
-				//HLocation location = new HLocation("IBIZA");
-				//--------		
-				//System.out.println(">>> h=" + h + ", min=" + min + " >> " + time);
-				final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
+		for (int days = 0; days < 100; days++) {
+			for (int h = 0; h < 24; h++) {
+				for (int min = 0; min < 60; min++) {
+					final Date current = new DateBuilder(start).addDays(days).addHours(h).addMinutes(min).toDateTime();
+					final HTime time = new HTime(current, HTimeDimension.SixMinutes);
+					final HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
+					//HLocation location = new HLocation("IBIZA");
+					//--------		
+					//System.out.println(">>> h=" + h + ", min=" + min + " >> " + time);
+					final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
 
-				final HMetricKey duration = new HMetricKey("DURATION", true);
-				final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
-				for (int i = 0; i < 100; i++) {
-					metricBuilder.withValue(100);
+					final HMetricKey duration = new HMetricKey("DURATION", true);
+					final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
+					for (int i = 0; i < 100; i++) {
+						metricBuilder.withValue(100);
+					}
+
+					final HCube cube = new HCubeBuilder(cubeKey)//
+							.withMetric(metricBuilder.build())//
+							.build();
+
+					cubeManager.push(cube);
 				}
-
-				final HCube cube = new HCubeBuilder(cubeKey)//
-						.withMetric(metricBuilder.build())//
-						.build();
-
-				cubeManager.push(cube);
 			}
 		}
 		HQuery query = new HQueryBuilder()//
