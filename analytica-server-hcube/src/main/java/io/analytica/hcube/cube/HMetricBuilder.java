@@ -106,11 +106,13 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	}
 
 	private static double max(final double d1, final double d2) {
-		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : Math.max(d1, d2);
+		//Math.max has low perfs
+		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : d1 > d2 ? d1 : d2;
 	}
 
 	private static double min(final double d1, final double d2) {
-		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : Math.min(d1, d2);
+		//Math.max has low perfs
+		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : d1 < d2 ? d1 : d2;
 	}
 
 	//-----------------------------------------------------------------------------------
