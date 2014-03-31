@@ -30,7 +30,7 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class HCategory extends HKey implements HPosition<HCategory> {
+public final class HCategory extends HKey<String> implements HPosition<HCategory> {
 	private final String type;
 	private final String[] subTypes;
 

@@ -20,28 +20,25 @@ package io.analytica.hcube.dimension;
 import io.analytica.hcube.HKey;
 import io.vertigo.kernel.lang.DateBuilder;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * @author npiedeloup
  * @version $Id: TimePosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class HTime extends HKey implements HPosition<HTime> {
+public final class HTime extends HKey<Date> implements HPosition<HTime> {
 	private final HTimeDimension dimension;
-	private final Date date;
 
 	public HTime(final Date date, final HTimeDimension timeDimension) {
-		super("time:[" + timeDimension.name() + "]" + new SimpleDateFormat(timeDimension.getPattern()).format(timeDimension.reduce(date)));
+		super(timeDimension.reduce(date));
 		//---------------------------------------------------------------------
 		dimension = timeDimension;
-		this.date = timeDimension.reduce(date);
 	}
 
 	/** {@inheritDoc} */
 	public HTime drillUp() {
 		final HTimeDimension upTimeDimension = dimension.drillUp();
-		return upTimeDimension != null ? new HTime(date, upTimeDimension) : null;
+		return upTimeDimension != null ? new HTime(this.id(), upTimeDimension) : null;
 	}
 
 	/** {@inheritDoc} */
@@ -50,29 +47,29 @@ public final class HTime extends HKey implements HPosition<HTime> {
 	}
 
 	public Date getValue() {
-		return date;
+		return id();
 	}
 
 	public HTime next() {
 		final Date nextDate;
 		switch (dimension) {
 			case Year:
-				nextDate = new DateBuilder(date).addYears(1).toDateTime();
+				nextDate = new DateBuilder(id()).addYears(1).toDateTime();
 				break;
 			case Month:
-				nextDate = new DateBuilder(date).addMonths(1).toDateTime();
+				nextDate = new DateBuilder(id()).addMonths(1).toDateTime();
 				break;
 			case Day:
-				nextDate = new DateBuilder(date).addDays(1).toDateTime();
+				nextDate = new DateBuilder(id()).addDays(1).toDateTime();
 				break;
 			case Hour:
-				nextDate = new DateBuilder(date).addHours(1).toDateTime();
+				nextDate = new DateBuilder(id()).addHours(1).toDateTime();
 				break;
 			case SixMinutes:
-				nextDate = new DateBuilder(date).addMinutes(6).toDateTime();
+				nextDate = new DateBuilder(id()).addMinutes(6).toDateTime();
 				break;
 			case Minute:
-				nextDate = new DateBuilder(date).addMinutes(1).toDateTime();
+				nextDate = new DateBuilder(id()).addMinutes(1).toDateTime();
 				break;
 			default:
 				throw new RuntimeException("TimeDimension inconnu : " + dimension.name());

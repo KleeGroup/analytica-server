@@ -24,16 +24,16 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: Identity.java,v 1.3 2012/10/16 13:52:38 pchretien Exp $
  */
-public abstract class HKey {
-	private final String id;
+public abstract class HKey<O> {
+	private final O id;
 
-	public HKey(final String id) {
-		Assertion.checkArgNotEmpty(id);
+	public HKey(final O id) {
+		Assertion.checkNotNull(id);
 		//---------------------------------------------------------------------
 		this.id = id;
 	}
 
-	public final String id() {
+	public final O id() {
 		return id;
 	}
 
@@ -52,6 +52,6 @@ public abstract class HKey {
 
 	@Override
 	public final String toString() {
-		return id;
+		return id.toString();
 	}
 }

@@ -31,7 +31,7 @@ import java.util.List;
  * @author npiedeloup, pchretien
  * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class HCubeKey extends HKey {
+public final class HCubeKey extends HKey<String> {
 	private final HTime time;
 	private final HCategory category;
 
