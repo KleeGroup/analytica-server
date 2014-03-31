@@ -40,6 +40,7 @@ import java.util.Map;
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class MemoryCubeStorePlugin implements CubeStorePlugin {
+	private final Map<HCubeKey, HCube> queue = new HashMap<>();
 	private final Map<HCubeKey, HCube> store = new HashMap<>();
 
 	//	private final boolean ejectTooOld;
@@ -54,18 +55,24 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	private int call;
 
 	/** {@inheritDoc} */
-	public synchronized void merge(final HCube lowLevelCube) {
-		Assertion.checkNotNull(lowLevelCube);
+	public synchronized void merge(final HCube cube) {
+		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
-		for (final HCubeKey upCubeKeys : lowLevelCube.getKey().drillUp()) {
-			final HCube cube = merge(lowLevelCube, upCubeKeys);
-			//if  (ejectTooOld)
-			//	if (tooOld(cube.getKey())) {
-			//				store.remove(cube.getKey());
-			//			} else {
-			store.put(cube.getKey(), cube);
-			//			}
+		//populate a queue
+		merge(cube, cube.getKey(), queue);
+		if (queue.size() > 10000) {
+			flushQueue();
 		}
+	}
+
+	//flushing queue into store
+	private void flushQueue() {
+		for (HCube cube : queue.values()) {
+			for (final HCubeKey upCubeKeys : cube.getKey().drillUp()) {
+				merge(cube, upCubeKeys, store);
+			}
+		}
+		queue.clear();
 		printStats();
 
 	}
@@ -95,15 +102,15 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
-	private final HCube merge(final HCube cube, final HCubeKey cubeKey) {
+	private static final void merge(final HCube cube, final HCubeKey cubeKey, Map<HCubeKey, HCube> cubes) {
 		final HCubeBuilder cubeBuilder = new HCubeBuilder(cubeKey)//
 				.withCube(cube);
 
-		final HCube oldCube = store.get(cubeKey);
+		final HCube oldCube = cubes.get(cubeKey);
 		if (oldCube != null) {
 			cubeBuilder.withCube(oldCube);
 		}
-		return cubeBuilder.build();
+		cubes.put(cubeKey, cubeBuilder.build());
 	}
 
 	/** {@inheritDoc} */
@@ -112,6 +119,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categoryDictionary);
 		//---------------------------------------------------------------------
+		flushQueue();
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
