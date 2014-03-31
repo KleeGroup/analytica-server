@@ -121,7 +121,6 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	private void incTreshold(final double treshold, final long incBy) {
 		final Long hcount = clusteredValues.get(treshold);
 		clusteredValues.put(treshold, incBy + (hcount == null ? 0 : hcount));
-		//---
 	}
 
 	private void clusterValue(final double value) {

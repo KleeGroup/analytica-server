@@ -66,7 +66,7 @@ public final class HCubeManagerTest {
 
 		System.out.println("start = " + start);
 
-		for (int days = 0; days < 100; days++) {
+		for (int days = 0; days < 500; days++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {
 					final Date current = new DateBuilder(start).addDays(days).addHours(h).addMinutes(min).toDateTime();

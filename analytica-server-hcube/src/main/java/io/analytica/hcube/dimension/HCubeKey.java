@@ -17,7 +17,7 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.analytica.hcube.HKey;
+import io.vertigo.kernel.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,18 +31,16 @@ import java.util.List;
  * @author npiedeloup, pchretien
  * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class HCubeKey extends HKey<String> {
+public final class HCubeKey {
 	private final HTime time;
 	private final HCategory category;
 
-	//	private final HLocation location;
-
-	public HCubeKey(final HTime time, final HCategory category/* final HLocation location*/) {
-		super("cube:" + time.id() + "; " + category.id() /*+ "; " + location.id()*/);
+	public HCubeKey(final HTime time, final HCategory category) {
+		Assertion.checkNotNull(time);
+		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
 		this.time = time;
 		this.category = category;
-		//	this.location = location;
 	}
 
 	public HTime getTime() {
@@ -117,5 +115,26 @@ public final class HCubeKey extends HKey<String> {
 			upperPosition = upperPosition.drillUp();
 		}
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return time.hashCode() + category.hashCode() * 31;
+	}
+
+	@Override
+	public final boolean equals(final Object object) {
+		if (object == this) {
+			return true;
+		} else if (object instanceof HCubeKey) {
+			HCubeKey other = HCubeKey.class.cast(object);
+			return time.equals(other.time) && category.equals(other.category);
+		}
+		return false;
+	}
+
+	@Override
+	public final String toString() {
+		return "cube:" + time.id() + "; " + category.id();
 	}
 }
