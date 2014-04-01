@@ -22,8 +22,6 @@ import io.analytica.api.KProcessBuilder;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.DateBuilder;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -32,15 +30,6 @@ import java.util.GregorianCalendar;
  * @author statchum
  */
 public final class Museum {
-	private static final String SYSTEM_NAME = "Server-Test";
-	private static final String[] SYSTEM_LOCATION = { "test", "UnknownHost" };
-	static {
-		try {
-			SYSTEM_LOCATION[1] = InetAddress.getLocalHost().getHostAddress();
-		} catch (final UnknownHostException e) {
-			//nothing, we keep UnknownHost
-		}
-	}
 	private static final String QOS = "QOS";
 	private static final String HEALTH = "HEALTH";
 	private final PageListener pageListener;
@@ -143,7 +132,7 @@ public final class Museum {
 	private void addVisitorScenario(final Date startVisit) {
 		//System.out.println("scenario [" + startVisit.getDay() + ", " + startVisit.getHours() + "] >>" + startVisit);
 		//On ne CODE pas un scenario, on le déclare.
-		final KProcess visiteur = new KProcessBuilder(startVisit, 0, SYSTEM_NAME, SYSTEM_LOCATION, "SESSION")//
+		final KProcess visiteur = new KProcessBuilder(startVisit, 0, /*SYSTEM_NAME, SYSTEM_LOCATION,*/"SESSION")//
 				.setMeasure("SESSION HTTP", 1) //1 session
 				.build();
 		//On notifie le listener
@@ -228,7 +217,7 @@ public final class Museum {
 	}
 
 	private void loadQOS(final Date dateHour, final double nbVisitsHour) {
-		final KProcessBuilder healthProcess = new KProcessBuilder(dateHour, 0, SYSTEM_NAME, SYSTEM_LOCATION, QOS);
+		final KProcessBuilder healthProcess = new KProcessBuilder(dateHour, 0, /*SYSTEM_NAME, SYSTEM_LOCATION,*/QOS);
 		final double activity = Math.min(100, StatsUtil.random(100, nbVisitsHour / 50));
 		final double perfs = Math.min(100, StatsUtil.random(100, 1.4 - nbVisitsHour / 50));
 		final double health = Math.min(100, StatsUtil.random(100, 1.5 - nbVisitsHour / 50));
@@ -244,7 +233,7 @@ public final class Museum {
 	private void loadHealthInfos(final Date dateHour, final double nbVisitsHour) {
 		for (int m = 0; m < 60; m += 6) {
 			final Date dateMinute = new DateBuilder(dateHour).addMinutes(m).toDateTime();
-			final KProcessBuilder healthProcess = new KProcessBuilder(dateMinute, 0, SYSTEM_NAME, SYSTEM_LOCATION, HEALTH, "physical");
+			final KProcessBuilder healthProcess = new KProcessBuilder(dateMinute, 0, /*SYSTEM_NAME, SYSTEM_LOCATION,*/HEALTH, "physical");
 			healthProcess.setMeasure("CPU", Math.min(100, 5 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 1) : 0)));
 			healthProcess.setMeasure("RAM", Math.min(3096, 250 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 10) : 0)));
 			healthProcess.setMeasure("IO", 10 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 5) : 0));

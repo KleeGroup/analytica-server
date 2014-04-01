@@ -26,7 +26,6 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
-import io.analytica.hcube.impl.CubeStorePlugin;
 import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
@@ -47,31 +46,33 @@ import org.junit.Test;
  * 
  *  - a request ==> page, duration, status 
  * 
- * 
- * 
- * 
  * @author pchretien
  */
 public final class HCubeManagerTest {
-	private final CubeStorePlugin cubeStorePlugin = new MemoryCubeStorePlugin();
-	private final HCubeManager cubeManager = new HCubeManagerImpl(cubeStorePlugin);
-
-	//private static String[] PAGES = new String[] { "WELCOME", "SEARCH", "DETAIL", "RESULTS", "CREDITS", "PRICES", "BUY", "ACCOUNT" };
+	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryCubeStorePlugin());
 
 	@Test
 	public void simpleTest() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
+		final int days = 10000;
 		final Date end = dateFormat.parse("2012/12/13");
 
-		System.out.println("start = " + start);
+		//----	
+		populateData(start, days);
+		//----	
+		queryData(start, end);
+	}
 
-		for (int days = 0; days < 500; days++) {
+	private void populateData(final Date startDate, int days) {
+		long start = System.currentTimeMillis();
+		System.out.println("start = " + startDate);
+		final HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
+		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {
-					final Date current = new DateBuilder(start).addDays(days).addHours(h).addMinutes(min).toDateTime();
+					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.SixMinutes);
-					final HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
 					//HLocation location = new HLocation("IBIZA");
 					//--------		
 					//System.out.println(">>> h=" + h + ", min=" + min + " >> " + time);
@@ -90,7 +91,13 @@ public final class HCubeManagerTest {
 					cubeManager.push(cube);
 				}
 			}
+			if (day % 100 == 0) {
+				System.out.println(">>> day = " + day + " in " + (System.currentTimeMillis() - start) + " ms");
+			}
 		}
+	}
+
+	private void queryData(final Date start, final Date end) {
 		HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.SixMinutes)//
 				.from(start)//
@@ -109,9 +116,9 @@ public final class HCubeManagerTest {
 				System.out.println("  - metric [ " + metric.getKey().id() + " ] = " + metric.getMean());
 
 			}
-
 		}
 	}
+
 	//	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
 	//	private static final HMetricKey POIDS = new HMetricKey("POIDS", false);
 	//	private static final HMetricKey DURATION = new HMetricKey(KProcess.DURATION, true);
@@ -683,4 +690,5 @@ public final class HCubeManagerTest {
 	//			hcubeManager.push(cube);
 	//		}
 	//	}
+
 }
