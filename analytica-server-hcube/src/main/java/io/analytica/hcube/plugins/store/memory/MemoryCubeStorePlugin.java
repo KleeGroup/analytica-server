@@ -67,7 +67,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	//flushing queue into store
 	private void flushQueue() {
-		for (HCube cube : queue.values()) {
+		for (final HCube cube : queue.values()) {
 			for (final HCubeKey upCubeKeys : cube.getKey().drillUp()) {
 				merge(cube, upCubeKeys, store);
 			}
@@ -96,21 +96,23 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	//	}
 
 	private void printStats() {
-		if (call++ % 5000 == 0) {
-			System.out.println("memStore : " + store.size() + " cubes");
-		}
+		//if (call++ % 5000 == 0) {
+		System.out.println("memStore : " + store.size() + " cubes");
+		//}
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
-	private static final void merge(final HCube cube, final HCubeKey cubeKey, Map<HCubeKey, HCube> cubes) {
-		final HCubeBuilder cubeBuilder = new HCubeBuilder(cubeKey)//
-				.withCube(cube);
+	private static final void merge(final HCube cube, final HCubeKey cubeKey, final Map<HCubeKey, HCube> cubes) {
 
 		final HCube oldCube = cubes.get(cubeKey);
+		final HCube newCube;
 		if (oldCube != null) {
-			cubeBuilder.withCube(oldCube);
+			newCube = new HCubeBuilder(cubeKey).withCube(cube).withCube(oldCube).build();
+		} else {
+			//newCube = new HCubeBuilder(cubeKey).withCube(cube).build();
+			newCube = cube;
 		}
-		cubes.put(cubeKey, cubeBuilder.build());
+		cubes.put(cubeKey, newCube);
 	}
 
 	/** {@inheritDoc} */

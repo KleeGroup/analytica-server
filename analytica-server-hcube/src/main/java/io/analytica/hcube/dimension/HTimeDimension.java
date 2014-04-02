@@ -71,58 +71,6 @@ public enum HTimeDimension {
 		return up;
 	}
 
-	//	/**
-	//	 * @return Niveau inférieur ou null.
-	//	 */
-	//	public TimeDimension drillDown() {
-	//		switch (this) {
-	//			case Year:
-	//				return Month;
-	//			case Month:
-	//				return Day;
-	//			case Day:
-	//				return Hour;
-	//			case Hour:
-	//				return Minute;
-	//			case Minute:
-	//				return null;
-	//			default:
-	//				throw new KRuntimeException("TimeDimension inconnu");
-	//		}
-	//	}
-	//
-	//	/**
-	//	 * Retourne la date maximum pour cette dimenssion.
-	//	 * @param date Date de départ
-	//	 * @return Date maximum
-	//	 */
-	//	public Date getMaxDate(final Date date) {
-	//		Assertion.checkNotNull(date);
-	//		final Date reduceDate = reduce(date);
-	//		Assertion.checkArgument(reduceDate.equals(date), "La date de début doit déjà être réduite à cette dimenssion, et correspondre au point de début de cette dimenssion");
-	//		//---------------------------------------------------------------------
-	//		final Calendar calendar = Calendar.getInstance();
-	//		calendar.setTime(reduceDate);
-	//		switch (this) {
-	//			case Year:
-	//				calendar.add(Calendar.YEAR, 1);
-	//				break;
-	//			case Month:
-	//				calendar.add(Calendar.MONTH, 1);
-	//				break;
-	//			case Day:
-	//				calendar.add(Calendar.DAY_OF_YEAR, 1);
-	//				break;
-	//			case Hour:
-	//				calendar.add(Calendar.HOUR_OF_DAY, 1);
-	//				break;
-	//			case Minute:
-	//				calendar.add(Calendar.MINUTE, 1);
-	//				break;
-	//		}
-	//		return calendar.getTime();
-	//	}
-
 	/**
 	 * Normalise la valeur pour correspondre au niveau d'agregation de cette dimension.
 	 * @param date Valeur
@@ -131,9 +79,30 @@ public enum HTimeDimension {
 	public Date reduce(final Date date) {
 		Assertion.checkNotNull(date);
 		//---------------------------------------------------------------------
+		if (this == Hour || this == SixMinutes || this == Minute) {
+			final long divide;
+			switch (this) {
+				case Hour:
+					divide = 3600000; //60*60*1000
+					break;
+				case SixMinutes:
+					divide = 360000; //6*60*1000
+					break;
+				case Minute:
+					divide = 60000; //60*1000
+					break;
+				case Day:
+				case Month:
+				case Year:
+				default:
+					throw new IllegalArgumentException("Invalid dimension :" + this);
+			}
+			final long reducedTime = ((date.getTime() / divide) * divide); //we truncate time for this dimension
+			return new Date(reducedTime);
+		}
+
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		final int minute = calendar.get(Calendar.MINUTE);
 		switch (this) {
 			case Year:
 				calendar.set(Calendar.MONTH, 0);
@@ -143,20 +112,18 @@ public enum HTimeDimension {
 				//$FALL-THROUGH$
 			case Day:
 				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				//$FALL-THROUGH$
-			case Hour:
 				calendar.set(Calendar.MINUTE, 0);
-				//$FALL-THROUGH$
-			case SixMinutes:
-				calendar.set(Calendar.MINUTE, minute - minute % 6);
-				//$FALL-THROUGH$				
-			case Minute:
 				calendar.set(Calendar.SECOND, 0);
 				calendar.set(Calendar.MILLISECOND, 0);
-				//$FALL-THROUGH$
+				break;
+			case Hour:
+			case Minute:
+			case SixMinutes:
 			default:
-				return calendar.getTime();
+				throw new IllegalArgumentException("Invalid dimension :" + this);
 		}
+
+		return calendar.getTime();
 	}
 
 	public String getPattern() {
