@@ -17,7 +17,7 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.DateBuilder;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -54,21 +54,14 @@ public enum HTimeDimension {
 	 */
 	Minute(SixMinutes);
 
-	private final HTimeDimension up;
+	private final HTimeDimension upTimeDimension;
 
 	/**
 	 * Constructeur.
 	 * @param up Niveau supérieur
 	 */
-	HTimeDimension(final HTimeDimension up) {
-		this.up = up;
-	}
-
-	/**
-	 * @return Niveau supérieur ou null.
-	 */
-	public HTimeDimension drillUp() {
-		return up;
+	HTimeDimension(final HTimeDimension upTimeDimension) {
+		this.upTimeDimension = upTimeDimension;
 	}
 
 	/**
@@ -76,9 +69,7 @@ public enum HTimeDimension {
 	 * @param date Valeur
 	 * @return Valeur normalisée
 	 */
-	public Date reduce(final Date date) {
-		Assertion.checkNotNull(date);
-		//---------------------------------------------------------------------
+	public long reduce(final long time) {
 		if (this == Hour || this == SixMinutes || this == Minute) {
 			final long divide;
 			switch (this) {
@@ -97,12 +88,11 @@ public enum HTimeDimension {
 				default:
 					throw new IllegalArgumentException("Invalid dimension :" + this);
 			}
-			final long reducedTime = ((date.getTime() / divide) * divide); //we truncate time for this dimension
-			return new Date(reducedTime);
+			return (time / divide) * divide; //we truncate time for this dimension
 		}
 
 		final Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+		calendar.setTimeInMillis(time);
 		switch (this) {
 			case Year:
 				calendar.set(Calendar.MONTH, 0);
@@ -123,7 +113,7 @@ public enum HTimeDimension {
 				throw new IllegalArgumentException("Invalid dimension :" + this);
 		}
 
-		return calendar.getTime();
+		return calendar.getTimeInMillis();
 	}
 
 	public String getPattern() {
@@ -142,5 +132,36 @@ public enum HTimeDimension {
 			default:
 				throw new RuntimeException("TimeDimension inconnu : " + name());
 		}
+	}
+
+	public HTime drillUp(long time) {
+		return upTimeDimension != null ? new HTime(time, upTimeDimension) : null;
+	}
+
+	public HTime next(long time) {
+		final Date nextDate;
+		switch (this) {
+			case Year:
+				nextDate = new DateBuilder(time).addYears(1).toDateTime();
+				break;
+			case Month:
+				nextDate = new DateBuilder(time).addMonths(1).toDateTime();
+				break;
+			case Day:
+				nextDate = new DateBuilder(time).addDays(1).toDateTime();
+				break;
+			case Hour:
+				nextDate = new DateBuilder(time).addHours(1).toDateTime();
+				break;
+			case SixMinutes:
+				nextDate = new DateBuilder(time).addMinutes(6).toDateTime();
+				break;
+			case Minute:
+				nextDate = new DateBuilder(time).addMinutes(1).toDateTime();
+				break;
+			default:
+				throw new RuntimeException("unknown TimeDimension : " + name());
+		}
+		return new HTime(nextDate, this);
 	}
 }

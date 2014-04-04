@@ -135,6 +135,6 @@ public final class HCubeKey {
 
 	@Override
 	public final String toString() {
-		return "cube:" + time.id() + "; " + category.id();
+		return "cube:" + time + "; " + category.id();
 	}
 }

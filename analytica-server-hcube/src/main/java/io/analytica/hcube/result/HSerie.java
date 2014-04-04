@@ -120,7 +120,7 @@ public final class HSerie implements HVirtualCube {
 
 				/** {@inheritDoc} */
 				public Date getDate() {
-					return cube.getKey().getTime().getValue();
+					return new Date(cube.getKey().getTime().inMillis());
 				}
 			});
 		}

@@ -59,9 +59,9 @@ final class HTimeSelection {
 			currentTime = currentTime.next();
 			loops++;
 			if (loops > 1000) {
-				throw new RuntimeException("Segment temporel trop grand : plus de 1000 positions");
+				throw new RuntimeException("time range is too large : more than 1000 positions");
 			}
-		} while (currentTime.getValue().before(maxTime.getValue()));
+		} while (currentTime.inMillis() < maxTime.inMillis());
 
 		return times;
 	}

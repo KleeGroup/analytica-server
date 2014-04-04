@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ¨re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -17,63 +17,71 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.analytica.hcube.HKey;
-import io.vertigo.kernel.lang.DateBuilder;
+import io.vertigo.kernel.lang.Assertion;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author npiedeloup
- * @version $Id: TimePosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
+ * HTime represents the time axis.
+ * Time is a continuous value, htime is a discrete value ; this allows to aggregate all the values in the same time range.
+ * 
+ * htime is defined by 
+ *  - a date (inMillis)
+ *  - a timeDimension (minute, hour, .... or year) 
+ * 
+ * @author npiedeloup, pchretien
  */
-public final class HTime extends HKey<Date> implements HPosition<HTime> {
-	private final HTimeDimension dimension;
+public final class HTime implements HPosition<HTime> {
+	private final HTimeDimension timeDimension;
+	private final long time;
 
 	public HTime(final Date date, final HTimeDimension timeDimension) {
-		super(timeDimension.reduce(date));
-		//---------------------------------------------------------------------
-		dimension = timeDimension;
+		this(date.getTime(), timeDimension);
 	}
 
-	/** {@inheritDoc} */
-	public HTime drillUp() {
-		final HTimeDimension upTimeDimension = dimension.drillUp();
-		return upTimeDimension != null ? new HTime(this.id(), upTimeDimension) : null;
+	HTime(final long time, final HTimeDimension timeDimension) {
+		Assertion.checkNotNull(timeDimension);
+		//---------------------------------------------------------------------
+		this.time = timeDimension.reduce(time);
+		this.timeDimension = timeDimension;
 	}
 
 	/** {@inheritDoc} */
 	public HTimeDimension getDimension() {
-		return dimension;
+		return timeDimension;
 	}
 
-	public Date getValue() {
-		return id();
+	public long inMillis() {
+		return time;
 	}
 
-	public HTime next() {
-		final Date nextDate;
-		switch (dimension) {
-			case Year:
-				nextDate = new DateBuilder(id()).addYears(1).toDateTime();
-				break;
-			case Month:
-				nextDate = new DateBuilder(id()).addMonths(1).toDateTime();
-				break;
-			case Day:
-				nextDate = new DateBuilder(id()).addDays(1).toDateTime();
-				break;
-			case Hour:
-				nextDate = new DateBuilder(id()).addHours(1).toDateTime();
-				break;
-			case SixMinutes:
-				nextDate = new DateBuilder(id()).addMinutes(6).toDateTime();
-				break;
-			case Minute:
-				nextDate = new DateBuilder(id()).addMinutes(1).toDateTime();
-				break;
-			default:
-				throw new RuntimeException("TimeDimension inconnu : " + dimension.name());
+	@Override
+	public final int hashCode() {
+		return Long.valueOf(time).hashCode();
+	}
+
+	@Override
+	public final boolean equals(final Object object) {
+		if (object instanceof HTime) {
+			HTime other = (HTime) object;
+			return time == other.time && timeDimension.equals(other.timeDimension);
 		}
-		return new HTime(nextDate, dimension);
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "htime:: " + new SimpleDateFormat(timeDimension.getPattern()).format(new Date(time));
+	}
+
+	/** {@inheritDoc} */
+	public HTime drillUp() {
+		return timeDimension.drillUp(time);
+	}
+
+	/** {@inheritDoc} */
+	public HTime next() {
+		return timeDimension.next(time);
 	}
 }

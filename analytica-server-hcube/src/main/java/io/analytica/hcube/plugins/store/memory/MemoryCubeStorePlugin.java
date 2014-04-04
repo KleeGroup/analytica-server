@@ -43,17 +43,6 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 	private final Map<HCubeKey, HCube> queue = new HashMap<>();
 	private final Map<HCubeKey, HCube> store = new HashMap<>();
 
-	//	private final boolean ejectTooOld;
-
-	/**
-	 * Constructeur.
-	 */
-	//	public MemoryCubeStorePlugin(@Named("ejectTooOld") boolean ejectTooOld) {
-	//		this.ejectTooOld = ejectTooOld;
-	//	}
-
-	private int call;
-
 	/** {@inheritDoc} */
 	public synchronized void merge(final HCube cube) {
 		Assertion.checkNotNull(cube);
@@ -77,28 +66,8 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 	}
 
-	//	private boolean tooOld(final HCubeKey key) {
-	//		final Date maxDate;
-	//		switch (key.getTime().getDimension()) {
-	//			case Minute:
-	//				maxDate = new DateBuilder(new Date()).addDays(-3).build(); //précision minute : 3 jours 
-	//				break;
-	//			case SixMinutes:
-	//				maxDate = new DateBuilder(new Date()).addMonths(-2).build(); //précision six minutes : 2 mois 
-	//				break;
-	//			default:
-	//				maxDate = null;
-	//		}
-	//		if (maxDate != null) {
-	//			return key.getTime().getValue().before(maxDate);
-	//		}
-	//		return false;
-	//	}
-
 	private void printStats() {
-		//if (call++ % 5000 == 0) {
 		System.out.println("memStore : " + store.size() + " cubes");
-		//}
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
@@ -109,7 +78,6 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		if (oldCube != null) {
 			newCube = new HCubeBuilder(cubeKey).withCube(cube).withCube(oldCube).build();
 		} else {
-			//newCube = new HCubeBuilder(cubeKey).withCube(cube).build();
 			newCube = cube;
 		}
 		cubes.put(cubeKey, newCube);
@@ -127,6 +95,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 
 		for (final HCategory category : query.getAllCategories(categoryDictionary)) {
 			final List<HCube> cubes = new ArrayList<>();
+
 			for (HTime currentTime : query.getAllTimes()) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
 				final HCube cube = store.get(cubeKey);
@@ -137,7 +106,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 					cubes.add(new HCubeBuilder(cubeKey).build());
 				}*/
 				//---
-				currentTime = currentTime.next();
+				currentTime = currentTime.getDimension().next(currentTime.inMillis());
 			}
 			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données 
 			//if (!cubes.isEmpty()) {
