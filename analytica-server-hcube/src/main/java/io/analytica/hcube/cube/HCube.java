@@ -21,7 +21,6 @@ import io.analytica.hcube.dimension.HCubeKey;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -41,16 +40,12 @@ public final class HCube implements HVirtualCube {
 	private final HCubeKey cubeKey;
 	private final Map<HMetricKey, HMetric> metrics;
 
-	HCube(final HCubeKey cubeKey, final Collection<HMetric> metrics) {
+	HCube(final HCubeKey cubeKey, final Map<HMetricKey, HMetric> metrics) {
 		Assertion.checkNotNull(cubeKey);
 		Assertion.checkNotNull(metrics);
 		//---------------------------------------------------------------------
 		this.cubeKey = cubeKey;
-		this.metrics = new LinkedHashMap<>(metrics.size());
-		for (final HMetric metric : metrics) {
-			final Object old = this.metrics.put(metric.getKey(), metric);
-			Assertion.checkState(old == null, "La liste de Metric ne doit pas contenir de doublon");
-		}
+		this.metrics = metrics;
 	}
 
 	public HCubeKey getKey() {

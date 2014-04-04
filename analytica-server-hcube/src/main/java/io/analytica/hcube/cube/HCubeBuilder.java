@@ -21,9 +21,8 @@ import io.analytica.hcube.dimension.HCubeKey;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,7 +33,7 @@ import java.util.Map;
  */
 public final class HCubeBuilder implements Builder<HCube> {
 	private final HCubeKey cubeKey;
-	private final Map<HMetricKey, HMetricBuilder> metrics = new HashMap<>();
+	private final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
 
 	/**
 	 * Constructeur.
@@ -53,10 +52,10 @@ public final class HCubeBuilder implements Builder<HCube> {
 	public HCubeBuilder withMetric(final HMetric metric) {
 		Assertion.checkNotNull(metric);
 		//---------------------------------------------------------------------
-		HMetricBuilder metricBuilder = metrics.get(metric.getKey());
+		HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
 		if (metricBuilder == null) {
 			metricBuilder = new HMetricBuilder(metric.getKey());
-			metrics.put(metric.getKey(), metricBuilder);
+			metricBuilders.put(metric.getKey(), metricBuilder);
 		}
 		//On ajoute metric
 		metricBuilder.withMetric(metric);
@@ -84,10 +83,11 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 */
 	public HCube build() {
 		//---------------------------------------------------------------------
-		final List<HMetric> list = new ArrayList<>(metrics.size());
-		for (final HMetricBuilder metricBuilder : metrics.values()) {
-			list.add(metricBuilder.build());
+		final Map<HMetricKey, HMetric> metrics = new LinkedHashMap<>(metricBuilders.size());
+		for (final HMetricBuilder metricBuilder : metricBuilders.values()) {
+			HMetric metric = metricBuilder.build();
+			metrics.put(metric.getKey(), metric);
 		}
-		return new HCube(cubeKey, list);
+		return new HCube(cubeKey, metrics);
 	}
 }
