@@ -51,10 +51,6 @@ public final class HCubeKey {
 		return category;
 	}
 
-	/*	public HLocation getLocation() {
-			return location;
-		}*/
-
 	/**
 	 * Calcule la liste de tous les cubes auxquels le présent cube appartient
 	 * Cette méthode permet de préparer toutes les agrégations.
@@ -65,17 +61,12 @@ public final class HCubeKey {
 		//on remonte les axes, le premier sera le plus bas niveau
 		HTime hTime = getTime();
 		while (hTime != null) {
-			//	HLocation hLocation = getLocation();
-			//	while (hLocation != null) {
 			HCategory hCategory = getCategory();
 			while (hCategory != null) {
 				upperCubeKeys.add(new HCubeKey(hTime, hCategory/*, hLocation*/));
 				//On remonte l'arbre des categories
 				hCategory = hCategory.drillUp();
 			}
-			//On remonte l'arbre des Location
-			//	hLocation = hLocation.drillUp();
-			//	}
 			//On remonte time
 			hTime = hTime.drillUp();
 		}
@@ -135,6 +126,6 @@ public final class HCubeKey {
 
 	@Override
 	public final String toString() {
-		return "cube:" + time + "; " + category.id();
+		return "cube:" + time + "; category:" + category;
 	}
 }

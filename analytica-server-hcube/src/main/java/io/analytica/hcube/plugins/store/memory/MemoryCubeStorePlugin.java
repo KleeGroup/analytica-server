@@ -80,7 +80,7 @@ public final class MemoryCubeStorePlugin implements CubeStorePlugin {
 		} else {
 			newCube = cube;
 		}
-		cubes.put(cubeKey, newCube);
+		cubes.put(newCube.getKey(), newCube);
 	}
 
 	/** {@inheritDoc} */

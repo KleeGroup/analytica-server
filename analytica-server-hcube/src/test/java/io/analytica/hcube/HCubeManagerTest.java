@@ -55,7 +55,7 @@ public final class HCubeManagerTest {
 	public void simpleTest() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
-		final int days = 10000;
+		final int days = 1000;
 		final Date end = dateFormat.parse("2012/12/13");
 
 		//----	
@@ -111,9 +111,9 @@ public final class HCubeManagerTest {
 
 		for (HCategory category2 : result.getAllCategories()) {
 			HSerie serie = result.getSerie(category2);
-			System.out.println("category = " + category2.id() + " metrics.size = " + serie.getMetrics().size());
+			System.out.println("category = " + category2 + " metrics.size = " + serie.getMetrics().size());
 			for (HMetric metric : serie.getMetrics()) {
-				System.out.println("  - metric [ " + metric.getKey().id() + " ] = " + metric.getMean());
+				System.out.println("  - metric [ " + metric.getKey() + " ] = " + metric.getMean());
 
 			}
 		}

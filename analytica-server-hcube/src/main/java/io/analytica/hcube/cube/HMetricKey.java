@@ -17,18 +17,21 @@
  */
 package io.analytica.hcube.cube;
 
-import io.analytica.hcube.HKey;
+import io.vertigo.kernel.lang.Assertion;
 
 /** 
  * Clé de la métrique.
  * @author npiedeloup, pchretien
  * @version $Id: Metric.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
-public final class HMetricKey extends HKey<String> {
+public final class HMetricKey {
 	private final boolean clustered;
+	private final String name;
 
 	public HMetricKey(String name, boolean clustered) {
-		super(name);
+		Assertion.checkArgNotEmpty(name);
+		//---------------------------------------------------------------------
+		this.name = name;
 		this.clustered = clustered;
 	}
 
@@ -36,4 +39,21 @@ public final class HMetricKey extends HKey<String> {
 		return clustered;
 	}
 
+	@Override
+	public final int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public final boolean equals(final Object object) {
+		if (object instanceof HMetricKey) {
+			return name.equals(((HMetricKey) object).name);
+		}
+		return false;
+	}
+
+	@Override
+	public final String toString() {
+		return "metricKey::" + name.toString();
+	}
 }

@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.analytica.hcube.HKey;
 import io.vertigo.kernel.lang.Assertion;
 
 /**
@@ -30,18 +29,19 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class HCategory extends HKey<String> implements HPosition<HCategory> {
+public final class HCategory implements HPosition<HCategory> {
 	private final String type;
 	private final String[] subTypes;
+	private final String id;
 
 	public HCategory(final String type) {
 		this(type, new String[0]);
 	}
 
 	public HCategory(final String type, final String... subTypes) {
-		super(buildKey(type, subTypes));
 		Assertion.checkArgNotEmpty(type);
 		//---------------------------------------------------------------------
+		this.id = buildKey(type, subTypes);
 		this.subTypes = subTypes;
 		this.type = type;
 	}
@@ -69,4 +69,23 @@ public final class HCategory extends HKey<String> implements HPosition<HCategory
 		}
 		return sb.toString();
 	}
+
+	@Override
+	public final int hashCode() {
+		return id.hashCode();
+	}
+
+	@Override
+	public final boolean equals(final Object object) {
+		if (object instanceof HCategory) {
+			return id.equals(((HCategory) object).id);
+		}
+		return false;
+	}
+
+	@Override
+	public final String toString() {
+		return "category::" + id.toString();
+	}
+
 }
