@@ -66,7 +66,8 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 			//nothing, we keep UnknownHost
 		}
 	}
-	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
+	private static final String MONTANT = "MONTANT";
+	private static final HMetricKey MONTANT_KEY = new HMetricKey(MONTANT, false);
 	private static final String PROCESS_SQL = "SQL";
 
 	@Inject
@@ -94,7 +95,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testSimpleProcess() {
 		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
-				.incMeasure(MONTANT.id(), price)//
+				.incMeasure(MONTANT, price)//
 				.build();
 		serverManager.push(selectProcess1.getSystemName(), selectProcess1.getSystemLocation(), selectProcess1);
 
@@ -111,7 +112,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 		final List<HCube> cubes = result.getSerie(processSQLCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
-		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT);
+		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
 		assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
 	}
 

@@ -30,6 +30,7 @@ import io.vertigo.kernel.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -64,7 +65,7 @@ public final class Utils {
 				if (metric != null) {
 					final double val = metric.get(counterType);
 					final String value = Double.isNaN(val) ? null : String.valueOf(val);
-					final DataPoint dataPoint = new DataPoint(cube.getKey().getTime().getValue(), value);
+					final DataPoint dataPoint = new DataPoint(cube.getKey().getTime().inMillis(), value);
 
 					if (dataPoint.getValue() != null) {
 						dataPoints.add(dataPoint);
@@ -92,7 +93,7 @@ public final class Utils {
 						//pas de values.put(key, val); on laisse null
 					}
 				}
-				final TimedDataSerie dataSerie = new TimedDataSerie(cube.getKey().getTime().getValue(), values);
+				final TimedDataSerie dataSerie = new TimedDataSerie(cube.getKey().getTime().inMillis(), values);
 				dataSeries.add(dataSerie);
 			}
 		}
@@ -219,7 +220,7 @@ public final class Utils {
 				for (final HCube cube : result.getSerie(category).getCubes()) {
 					final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
 					final String val = getMetricValue(metricKey, hMetric, null);
-					final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), val);
+					final DataPoint dPoint = new DataPoint(cube.getKey().getTime().inMillis(), val);
 					if (dPoint.getValue() != null) {
 						dataPoints.add(dPoint);
 					}
@@ -282,7 +283,7 @@ public final class Utils {
 
 	}
 
-	public static Map<String, List<DataPoint>> loadDataPointsStackedByCategory(final HResult result, final String datas) {
+	public static Map<HCategory, List<DataPoint>> loadDataPointsStackedByCategory(final HResult result, final String datas) {
 		Assertion.checkNotNull(result);
 
 		// ---------------------------------------------------------------------
@@ -290,7 +291,7 @@ public final class Utils {
 		final HQuery query = result.getQuery();
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
 		List<DataPoint> dataPoints;
-		final Map<String, List<DataPoint>> pointsMap = new HashMap<>();
+		final Map<HCategory, List<DataPoint>> pointsMap = new HashMap<>();
 
 		final String dataKey = datas;
 		for (final HCategory category : result.getAllCategories()) {
@@ -306,14 +307,14 @@ public final class Utils {
 				} else {
 					val = hMetric != null ? hMetric.get(HCounterType.mean) : Double.NaN;
 				}
-				final DataPoint dPoint = new DataPoint(cube.getKey().getTime().getValue(), Double.isNaN(val) ? null : String.valueOf(val));
+				final DataPoint dPoint = new DataPoint(cube.getKey().getTime().inMillis(), Double.isNaN(val) ? null : String.valueOf(val));
 				if (dPoint.getValue() != null) {
 					dataPoints.add(dPoint);
 				} else {
 					dataPoints.add(dPoint);
 				}
 			}
-			pointsMap.put(category.id(), dataPoints);
+			pointsMap.put(category, dataPoints);
 		}
 		return pointsMap;
 	}
@@ -333,7 +334,7 @@ public final class Utils {
 			tableCollection.add(result.getSerie(category).getMetrics());
 			tableCollection.add(getStringList(category, result, "duration:mean"));
 			tableCollection.add(getStringList(category, result, "duration:count"));
-			tableMap.put(category.id(), tableCollection);
+			tableMap.put(category.getId(), tableCollection);
 		}
 		return tableMap;
 	}
@@ -430,8 +431,10 @@ public final class Utils {
 		for (final HCategory category : result.getAllCategories()) {
 			for (final HCube cube : result.getSerie(category).getCubes()) {
 				final HMetric hMetric = cube.getMetric(new HMetricKey(metricKey[0], true));
-				final int h = cube.getKey().getTime().getValue().getHours();
-				final int d = cube.getKey().getTime().getValue().getDay();
+				final Calendar date = Calendar.getInstance();
+				date.setTimeInMillis(cube.getKey().getTime().inMillis());
+				final int h = date.get(Calendar.HOUR_OF_DAY);
+				final int d = date.get(Calendar.DAY_OF_WEEK);
 				punchcard.data[d][h] = hMetric == null ? 0d : hMetric.getCount();
 			}
 		}

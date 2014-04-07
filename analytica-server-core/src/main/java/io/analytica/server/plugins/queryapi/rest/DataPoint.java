@@ -19,31 +19,20 @@ package io.analytica.server.plugins.queryapi.rest;
 
 import io.vertigo.kernel.lang.Assertion;
 
-import java.util.Date;
-
 /*
  * Couple(date, metrique)
  * @author pchretien, npiedeloup
  * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
 public final class DataPoint {
-	private final Date date;
 	private final long x;
 	private final String y;
 
-	public DataPoint(final Date date, final String value) {
-		Assertion.checkNotNull(date);
+	public DataPoint(final long timeInMs, final String value) {
+		Assertion.checkNotNull(timeInMs);
 		//---------------------------------------------------------------------
-		this.date = date;
-		x = date.getTime();
+		x = timeInMs;
 		y = value;
-	}
-
-	/**
-	 * @return Date
-	 */
-	public Date getDate() {
-		return date;
 	}
 
 	/**

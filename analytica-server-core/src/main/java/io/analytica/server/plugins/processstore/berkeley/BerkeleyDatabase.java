@@ -63,6 +63,7 @@ final class BerkeleyDatabase {
 		Assertion.checkNotNull(myDbEnvPath);
 		//----------------------------------------------------------------------
 		this.myDbEnvPath = myDbEnvPath;
+		myDbEnvPath.mkdirs();
 	}
 
 	long count() {

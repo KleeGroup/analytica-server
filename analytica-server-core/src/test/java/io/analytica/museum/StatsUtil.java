@@ -22,7 +22,7 @@ import io.vertigo.kernel.lang.Assertion;
 import java.util.Random;
 
 public final class StatsUtil {
-	private static final Random RANDOM = new Random();
+	private static final Random RANDOM = new Random(0);
 
 	private StatsUtil() {
 		//

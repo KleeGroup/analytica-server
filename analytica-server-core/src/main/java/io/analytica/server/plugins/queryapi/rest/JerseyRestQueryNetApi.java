@@ -132,7 +132,7 @@ public class JerseyRestQueryNetApi {
 		for (final HMetric metric : metrics) {
 			final Map<String, Object> metricName = new HashMap<>();
 			metricsName.add(metricName);
-			metricName.put("name", metric.getKey().id());
+			metricName.put("name", metric.getKey().getName());
 			final List<String> values = new ArrayList<>();
 			metricName.put("type", values);
 			values.add("count");
