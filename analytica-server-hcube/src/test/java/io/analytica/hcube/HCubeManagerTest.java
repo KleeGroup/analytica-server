@@ -68,6 +68,7 @@ public final class HCubeManagerTest {
 		long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
 		final HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
+
 		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {

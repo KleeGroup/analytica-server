@@ -31,7 +31,7 @@ import javax.inject.Inject;
  * @version $Id: ServerManagerImpl.java,v 1.22 2013/01/14 16:35:19 npiedeloup Exp $
  */
 public final class HCubeManagerImpl implements HCubeManager {
-	private final CubeStorePlugin cubeStorePlugin;
+	private final HCubeStorePlugin cubeStorePlugin;
 	private final HCategoryDictionary categoryDictionary = new HCategoryDictionaryImpl();
 
 	/**
@@ -40,7 +40,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 	 * @param processStatsPlugin Plugin de statistique des process
 	 */
 	@Inject
-	public HCubeManagerImpl(final CubeStorePlugin cubeStorePlugin) {
+	public HCubeManagerImpl(final HCubeStorePlugin cubeStorePlugin) {
 		Assertion.checkNotNull(cubeStorePlugin);
 		//-----------------------------------------------------------------
 		this.cubeStorePlugin = cubeStorePlugin;
@@ -62,7 +62,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 	/**
 	 * @return the cubeStorePlugin
 	 */
-	public CubeStorePlugin getCubeStorePlugin() {
+	public HCubeStorePlugin getCubeStorePlugin() {
 		return cubeStorePlugin;
 	}
 

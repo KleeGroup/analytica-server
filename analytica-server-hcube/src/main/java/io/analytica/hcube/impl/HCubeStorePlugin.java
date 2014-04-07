@@ -31,7 +31,7 @@ import java.util.Map;
  * @author npiedeloup
  * @version $Id: CubeStorePlugin.java,v 1.1 2012/03/22 09:16:40 npiedeloup Exp $
  */
-public interface CubeStorePlugin extends Plugin {
+public interface HCubeStorePlugin extends Plugin {
 	/**
 	 * Enregistre un cube.
 	 * Celui-ci sera mergé avec les autres cubes déjà enregistrés.

@@ -23,7 +23,7 @@ import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
-import io.analytica.hcube.impl.CubeStorePlugin;
+import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
@@ -39,7 +39,7 @@ import java.util.Map;
  * @author npiedeloup, pchretien
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
-public final class MemoryCubeStorePlugin implements CubeStorePlugin {
+public final class MemoryCubeStorePlugin implements HCubeStorePlugin {
 	private final Map<HCubeKey, HCube> queue = new HashMap<>();
 	private final Map<HCubeKey, HCube> store = new HashMap<>();
 

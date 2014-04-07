@@ -152,14 +152,11 @@ public enum HTimeDimension {
 				nextDate = new DateBuilder(currentDate).addDays(1).toDateTime();
 				break;
 			case Hour:
-				nextDate = new DateBuilder(currentDate).addHours(1).toDateTime();
-				break;
+				return new HTime(time + 3600000, this);
 			case SixMinutes:
-				nextDate = new DateBuilder(currentDate).addMinutes(6).toDateTime();
-				break;
+				return new HTime(time + 360000, this);
 			case Minute:
-				nextDate = new DateBuilder(currentDate).addMinutes(1).toDateTime();
-				break;
+				return new HTime(time + 60000, this);
 			default:
 				throw new RuntimeException("unknown TimeDimension : " + name());
 		}
