@@ -19,7 +19,6 @@ package io.analytica.hcube.dimension;
 
 import io.vertigo.kernel.lang.Assertion;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -82,6 +81,6 @@ public final class HTime implements HPosition<HTime> {
 
 	@Override
 	public String toString() {
-		return new SimpleDateFormat(timeDimension.getPattern()).format(new Date(time));
+		return new Date(time).toString();
 	}
 }

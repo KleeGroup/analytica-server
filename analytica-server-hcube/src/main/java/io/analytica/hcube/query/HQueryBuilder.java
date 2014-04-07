@@ -19,11 +19,10 @@ package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTimeDimension;
+import io.vertigo.kernel.exception.VRuntimeException;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -41,14 +40,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	//----
 	//	private HLocation location;
 	//	private boolean locationChildren;
-
-	public HQueryBuilder on(final String timeDimension) {
-		Assertion.checkNotNull(timeDimension);
-		Assertion.checkState(this.hTimeDimension == null, "timeDimension already set");
-		//---------------------------------------------------------------------
-		this.hTimeDimension = HTimeDimension.valueOf(timeDimension);
-		return this;
-	}
 
 	public HQueryBuilder on(final HTimeDimension timeDimension) {
 		Assertion.checkNotNull(timeDimension);
@@ -138,14 +129,15 @@ public final class HQueryBuilder implements Builder<HQuery> {
 			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW+".length()));
 			return new Date(System.currentTimeMillis() + deltaMs);
 		}
+		throw new VRuntimeException("time must be NOW or NOW+999f or NOW-999f where f is h|d|m");
 
-		final SimpleDateFormat sdf = new SimpleDateFormat(dimension.getPattern());
-
-		try {
-			return sdf.parse(timeStr);
-		} catch (final ParseException e) {
-			throw new RuntimeException("Erreur de format de date (" + timeStr + "). Format attendu :" + sdf.toPattern());
-		}
+		//		final SimpleDateFormat sdf = new SimpleDateFormat(dimension.getPattern());
+		//
+		//		try {
+		//			return sdf.parse(timeStr);
+		//		} catch (final ParseException e) {
+		//			throw new RuntimeException("Erreur de format de date (" + timeStr + "). Format attendu :" + sdf.toPattern());
+		//		}
 	}
 
 	/**

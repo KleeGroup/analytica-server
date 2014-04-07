@@ -69,6 +69,6 @@ final class HTimeSelection {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "from:" + minTime + " to:" + maxTime;
+		return "{ from:" + minTime + ", to:" + maxTime + " }";
 	}
 }

@@ -101,7 +101,6 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		Assert.assertEquals(count, metric.get(HCounterType.count), 0);
 		Assert.assertEquals(count, metric.getCount(), 0); //test accesseur rapide
 		Assert.assertEquals(sum, metric.get(HCounterType.sum), 0);//test accesseur rapide 0);
-		Assert.assertEquals(sum, metric.getSum(), 0);
 		Assert.assertEquals(mean, metric.get(HCounterType.mean), 0);
 		Assert.assertEquals(mean, metric.getMean(), 0);//test accesseur rapide
 		Assert.assertEquals(min, metric.get(HCounterType.min), 0);

@@ -70,6 +70,6 @@ public final class HQuery {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "query : {" + timeSelection + " with:" + categorySelection /*+ " at:" + locationSelection*/+ "}";
+		return "{timeSelection :" + timeSelection + ", categorySelection :" + categorySelection /*+ " at:" + locationSelection*/+ "}";
 	}
 }

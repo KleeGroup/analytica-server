@@ -104,10 +104,6 @@ public final class HMetric {
 		return count;
 	}
 
-	public double getSum() {
-		return sum;
-	}
-
 	/**
 	 * @return Moyenne
 	 */
@@ -124,7 +120,7 @@ public final class HMetric {
 
 	@Override
 	public String toString() {
-		return metricKey + "= {count:" + count + ", mean:" + getMean() + (clusteredValues == null ? " " : ", clustered:" + clusteredValues) + "}";
+		return "{key: " + metricKey + ", count:" + count + ", mean:" + getMean() + (clusteredValues == null ? " " : ", clustered:" + clusteredValues) + "}";
 	}
 
 }

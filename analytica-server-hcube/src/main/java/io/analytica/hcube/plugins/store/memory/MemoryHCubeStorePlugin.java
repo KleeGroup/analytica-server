@@ -120,7 +120,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	@Override
+	/*@Override
 	public synchronized String toString() {
 		final StringBuilder sb = new StringBuilder();
 		for (final HCube cube : store.values()) {
@@ -128,5 +128,5 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 			sb.append("\r\n");
 		}
 		return sb.toString();
-	}
+	}*/
 }

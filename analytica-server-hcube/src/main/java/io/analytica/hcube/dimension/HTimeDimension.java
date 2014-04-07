@@ -116,24 +116,6 @@ public enum HTimeDimension {
 		return calendar.getTimeInMillis();
 	}
 
-	public String getPattern() {
-		switch (this) {
-			case Minute:
-			case SixMinutes:
-				return "yyyy/MM/dd HH:mm";
-			case Hour:
-				return "yyyy/MM/dd HH";
-			case Day:
-				return "yyyy/MM/dd";
-			case Month:
-				return "yyyy/MM";
-			case Year:
-				return "yyyy";
-			default:
-				throw new RuntimeException("TimeDimension inconnu : " + name());
-		}
-	}
-
 	public HTime drillUp(final long time) {
 		return upTimeDimension != null ? new HTime(time, upTimeDimension) : null;
 	}
@@ -158,7 +140,7 @@ public enum HTimeDimension {
 			case Minute:
 				return new HTime(time + 60000, this);
 			default:
-				throw new RuntimeException("unknown TimeDimension : " + name());
+				throw new IllegalArgumentException("Invalid dimension :" + this);
 		}
 		return new HTime(nextDate, this);
 	}

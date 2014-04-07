@@ -52,6 +52,6 @@ final class HCategorySelection {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "categories = " + (children ? "children of " : "") + selectedCategory;
+		return "{ selectedCategory:" + selectedCategory + ", children :" + children + " }";
 	}
 }
