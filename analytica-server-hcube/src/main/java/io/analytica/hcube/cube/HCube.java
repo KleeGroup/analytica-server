@@ -67,9 +67,9 @@ public final class HCube implements HVirtualCube {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
-				.append(cubeKey).append("\n\tmetrics:{");
+				.append("{ cubekey:").append(cubeKey).append(",\n\tmetrics:{");
 		for (final HMetric metric : getMetrics()) {
-			sb.append("\n\t\t ").append(metric);
+			sb.append("\n\t\t ").append(metric).append(",");
 		}
 		if (!getMetrics().isEmpty()) {
 			sb.append("\n\t");
