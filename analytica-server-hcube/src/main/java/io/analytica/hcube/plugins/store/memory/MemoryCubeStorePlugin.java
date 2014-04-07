@@ -77,8 +77,10 @@ public final class MemoryCubeStorePlugin implements HCubeStorePlugin {
 		final HCube newCube;
 		if (oldCube != null) {
 			newCube = new HCubeBuilder(cubeKey).withCube(cube).withCube(oldCube).build();
-		} else {
+		} else if (cube.getKey().equals(cubeKey)) {
 			newCube = cube;
+		} else {
+			newCube = new HCubeBuilder(cubeKey).withCube(cube).build();
 		}
 		cubes.put(newCube.getKey(), newCube);
 	}
