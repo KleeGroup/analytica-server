@@ -19,7 +19,6 @@ package io.analytica.hcube;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
-import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
@@ -27,11 +26,10 @@ import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin;
+import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
-import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.DateBuilder;
 
 import java.text.DateFormat;
@@ -39,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -49,25 +48,61 @@ import org.junit.Test;
  * @author pchretien
  */
 public final class HCubeManagerTest {
-	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryCubeStorePlugin());
+	private static final String PAGES = "PAGES";
+	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 
 	@Test
 	public void simpleTest() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
-		final int days = 1000;
+		final int days = 100;
 		final Date end = dateFormat.parse("2012/12/13");
 
 		//----	
 		populateData(start, days);
 		//----	
-		queryData(start, end);
+		HQuery query = new HQueryBuilder()//
+				.on(HTimeDimension.Hour)//
+				.from(start)//
+				.to(end)//
+				.with(PAGES)//
+				.build();
+
+		HResult result = cubeManager.execute(query);
+
+		//Check : 1 category
+		Assert.assertEquals(1, result.getAllCategories().size());
+
+		//Check : 24 cubes(per hour) by day
+		Assert.assertEquals(24, result.getSerie(new HCategory(PAGES)).getCubes().size());
+
+		//Check : serie contains 1 metric (DURATION)
+		Assert.assertEquals(1, result.getSerie(new HCategory(PAGES)).getMetrics().size());
+
+		for (HCube cube : result.getSerie(new HCategory(PAGES)).getCubes()) {
+			Assert.assertEquals(1, cube.getMetrics().size());
+			Assert.assertEquals(50, cube.getMetric(new HMetricKey("DURATION", true)).getMean());
+		}
+		Assert.assertEquals(24, result.getSerie(new HCategory(PAGES)).getCubes().size());
+		//---
+
+		//		System.out.println("result.categories = " + result.getAllCategories());
+		//
+		//		for (HCategory category : result.getAllCategories()) {
+		//			HSerie serie = result.getSerie(category);
+		//			System.out.println("category = " + category + " metrics.size = " + serie.getMetrics().size());
+		//			for (HMetric metric : serie.getMetrics()) {
+		//				System.out.println("  - metric [ " + metric.getKey() + " ] = " + metric.getMean());
+		//
+		//			}
+		//		}
+
 	}
 
 	private void populateData(final Date startDate, int days) {
 		long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
-		final HCategory category = new HCategory("PAGES"); //, new String[] { PAGES[0] });
+		final HCategory category = new HCategory(PAGES);
 
 		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
@@ -81,9 +116,11 @@ public final class HCubeManagerTest {
 
 					final HMetricKey duration = new HMetricKey("DURATION", true);
 					final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
-					for (int i = 0; i < 100; i++) {
-						metricBuilder.withValue(100);
-					}
+					//for (int i = 0; i < 100; i++) {
+					metricBuilder.withValue(45 - h);
+					metricBuilder.withValue(50);
+					metricBuilder.withValue(55 + h);
+					//}
 
 					final HCube cube = new HCubeBuilder(cubeKey)//
 							.withMetric(metricBuilder.build())//
@@ -98,27 +135,29 @@ public final class HCubeManagerTest {
 		}
 	}
 
-	private void queryData(final Date start, final Date end) {
-		HQuery query = new HQueryBuilder()//
-				.on(HTimeDimension.SixMinutes)//
-				.from(start)//
-				.to(end)//
-				//	.where("IBIZA")//
-				.with("PAGES")//
-				.build();
-
-		HResult result = cubeManager.execute(query);
-		System.out.println("result.categories = " + result.getAllCategories());
-
-		for (HCategory category2 : result.getAllCategories()) {
-			HSerie serie = result.getSerie(category2);
-			System.out.println("category = " + category2 + " metrics.size = " + serie.getMetrics().size());
-			for (HMetric metric : serie.getMetrics()) {
-				System.out.println("  - metric [ " + metric.getKey() + " ] = " + metric.getMean());
-
-			}
-		}
-	}
+	//	private HResult queryData(final Date start, final Date end, HTimeDimension) {
+	//		HQuery query = new HQueryBuilder()//
+	//				.on(HTimeDimension.SixMinutes)//
+	//				.from(start)//
+	//				.to(end)//
+	//				//	.where("IBIZA")//
+	//				.with("PAGES")//
+	//				.build();
+	//
+	//		HResult result = cubeManager.execute(query);
+	//		return result;
+	//		
+	//		System.out.println("result.categories = " + result.getAllCategories());
+	//
+	//		for (HCategory category : result.getAllCategories()) {
+	//			HSerie serie = result.getSerie(category);
+	//			System.out.println("category = " + category + " metrics.size = " + serie.getMetrics().size());
+	//			for (HMetric metric : serie.getMetrics()) {
+	//				System.out.println("  - metric [ " + metric.getKey() + " ] = " + metric.getMean());
+	//
+	//			}
+	//		}
+	//}
 
 	//	private static final HMetricKey MONTANT = new HMetricKey("MONTANT", false);
 	//	private static final HMetricKey POIDS = new HMetricKey("POIDS", false);

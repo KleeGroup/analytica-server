@@ -19,7 +19,7 @@ package io.analytica.server;
 
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.store.memory.MemoryCubeStorePlugin;
+import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.restserver.RestServerManager;
 import io.analytica.restserver.impl.RestServerManagerImpl;
 import io.analytica.server.impl.ServerManagerImpl;
@@ -175,7 +175,7 @@ public class Starter implements Runnable {
 			throw new UnsupportedOperationException("Cube persistent store not yet supported");
 		}
 
-		hCubeConfigBuilder.beginPlugin(MemoryCubeStorePlugin.class) //
+		hCubeConfigBuilder.beginPlugin(MemoryHCubeStorePlugin.class) //
 				.endPlugin();
 		if (properties.containsKey(SOCKET_IO_URL)) {
 			hCubeConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class) //

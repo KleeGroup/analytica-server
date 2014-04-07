@@ -39,7 +39,7 @@ import java.util.Map;
  * @author npiedeloup, pchretien
  * @version $Id: MemoryCubeStorePlugin.java,v 1.11 2013/01/14 16:35:20 npiedeloup Exp $
  */
-public final class MemoryCubeStorePlugin implements HCubeStorePlugin {
+public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private final Map<HCubeKey, HCube> queue = new HashMap<>();
 	private final Map<HCubeKey, HCube> store = new HashMap<>();
 
