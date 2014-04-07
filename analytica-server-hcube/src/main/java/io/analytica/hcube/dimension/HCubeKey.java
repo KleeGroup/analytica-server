@@ -118,7 +118,7 @@ public final class HCubeKey {
 		if (object == this) {
 			return true;
 		} else if (object instanceof HCubeKey) {
-			HCubeKey other = HCubeKey.class.cast(object);
+			final HCubeKey other = HCubeKey.class.cast(object);
 			return time.equals(other.time) && category.equals(other.category);
 		}
 		return false;
@@ -126,6 +126,6 @@ public final class HCubeKey {
 
 	@Override
 	public final String toString() {
-		return "cube:" + time + "; category:" + category;
+		return " { time:" + time + ", category:" + category + " }";
 	}
 }

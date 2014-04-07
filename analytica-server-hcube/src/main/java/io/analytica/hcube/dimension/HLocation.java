@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.analytica.hcube.HKey;
 import io.vertigo.kernel.lang.Assertion;
 
 /**
@@ -29,18 +28,19 @@ import io.vertigo.kernel.lang.Assertion;
  * Il doit ncessairement y avoir une localisation parente représentant l'application (MyApp dans notre exemple). 
  * @author npiedeloup, pchretien
  */
-public final class HLocation extends HKey<String> implements HPosition<HLocation> {
+public final class HLocation implements HPosition<HLocation> {
 	private final String systemName;
 	private final String[] systemLocation;
+	private final String id;
 
 	public HLocation(final String systemName) {
 		this(systemName, new String[0]);
 	}
 
 	public HLocation(final String systemName, final String[] systemLocation) {
-		super(buildKey(systemName, systemLocation));
 		Assertion.checkArgNotEmpty(systemName);
 		//---------------------------------------------------------------------
+		id = buildKey(systemName, systemLocation);
 		this.systemLocation = systemLocation;
 		this.systemName = systemName;
 	}
@@ -62,10 +62,28 @@ public final class HLocation extends HKey<String> implements HPosition<HLocation
 	}
 
 	private static String buildKey(final String systemName, final String[] systemLocation) {
-		final StringBuilder sb = new StringBuilder("systemLocation::").append(systemName);
+		final StringBuilder sb = new StringBuilder(systemName);
 		for (final String element : systemLocation) {
 			sb.append("/").append(element);
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public final int hashCode() {
+		return id.hashCode();
+	}
+
+	@Override
+	public final boolean equals(final Object object) {
+		if (object instanceof HLocation) {
+			return id.equals(((HLocation) object).id);
+		}
+		return false;
+	}
+
+	@Override
+	public final String toString() {
+		return id;
 	}
 }

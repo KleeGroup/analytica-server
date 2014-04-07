@@ -134,30 +134,31 @@ public enum HTimeDimension {
 		}
 	}
 
-	public HTime drillUp(long time) {
+	public HTime drillUp(final long time) {
 		return upTimeDimension != null ? new HTime(time, upTimeDimension) : null;
 	}
 
-	public HTime next(long time) {
+	public HTime next(final long time) {
+		final Date currentDate = new Date(time); //could be optimized with vertigo 0.3.1 when released
 		final Date nextDate;
 		switch (this) {
 			case Year:
-				nextDate = new DateBuilder(time).addYears(1).toDateTime();
+				nextDate = new DateBuilder(currentDate).addYears(1).toDateTime();
 				break;
 			case Month:
-				nextDate = new DateBuilder(time).addMonths(1).toDateTime();
+				nextDate = new DateBuilder(currentDate).addMonths(1).toDateTime();
 				break;
 			case Day:
-				nextDate = new DateBuilder(time).addDays(1).toDateTime();
+				nextDate = new DateBuilder(currentDate).addDays(1).toDateTime();
 				break;
 			case Hour:
-				nextDate = new DateBuilder(time).addHours(1).toDateTime();
+				nextDate = new DateBuilder(currentDate).addHours(1).toDateTime();
 				break;
 			case SixMinutes:
-				nextDate = new DateBuilder(time).addMinutes(6).toDateTime();
+				nextDate = new DateBuilder(currentDate).addMinutes(6).toDateTime();
 				break;
 			case Minute:
-				nextDate = new DateBuilder(time).addMinutes(1).toDateTime();
+				nextDate = new DateBuilder(currentDate).addMinutes(1).toDateTime();
 				break;
 			default:
 				throw new RuntimeException("unknown TimeDimension : " + name());

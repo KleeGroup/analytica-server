@@ -28,7 +28,7 @@ public final class HMetricKey {
 	private final boolean clustered;
 	private final String name;
 
-	public HMetricKey(String name, boolean clustered) {
+	public HMetricKey(final String name, final boolean clustered) {
 		Assertion.checkArgNotEmpty(name);
 		//---------------------------------------------------------------------
 		this.name = name;
@@ -39,13 +39,17 @@ public final class HMetricKey {
 		return clustered;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		return name.hashCode();
 	}
 
 	@Override
-	public final boolean equals(final Object object) {
+	public boolean equals(final Object object) {
 		if (object instanceof HMetricKey) {
 			return name.equals(((HMetricKey) object).name);
 		}
@@ -53,7 +57,7 @@ public final class HMetricKey {
 	}
 
 	@Override
-	public final String toString() {
-		return "metricKey::" + name.toString();
+	public String toString() {
+		return name;
 	}
 }

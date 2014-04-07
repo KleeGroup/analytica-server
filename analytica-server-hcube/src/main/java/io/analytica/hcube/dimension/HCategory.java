@@ -41,7 +41,7 @@ public final class HCategory implements HPosition<HCategory> {
 	public HCategory(final String type, final String... subTypes) {
 		Assertion.checkArgNotEmpty(type);
 		//---------------------------------------------------------------------
-		this.id = buildKey(type, subTypes);
+		id = buildKey(type, subTypes);
 		this.subTypes = subTypes;
 		this.type = type;
 	}
@@ -58,12 +58,16 @@ public final class HCategory implements HPosition<HCategory> {
 		return new HCategory(type, redux);
 	}
 
+	public final String getId() {
+		return id;
+	}
+
 	public String[] getValue() {
 		return subTypes;
 	}
 
 	private static String buildKey(final String type, final String[] subCategory) {
-		final StringBuilder sb = new StringBuilder("category::").append(type);
+		final StringBuilder sb = new StringBuilder(type);
 		for (final String element : subCategory) {
 			sb.append("/").append(element);
 		}
@@ -85,7 +89,7 @@ public final class HCategory implements HPosition<HCategory> {
 
 	@Override
 	public final String toString() {
-		return "category::" + id.toString();
+		return id;
 	}
 
 }

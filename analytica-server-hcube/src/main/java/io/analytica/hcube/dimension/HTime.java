@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiÃ¨re - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidère - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -64,15 +64,10 @@ public final class HTime implements HPosition<HTime> {
 	@Override
 	public final boolean equals(final Object object) {
 		if (object instanceof HTime) {
-			HTime other = (HTime) object;
+			final HTime other = (HTime) object;
 			return time == other.time && timeDimension.equals(other.timeDimension);
 		}
 		return false;
-	}
-
-	@Override
-	public String toString() {
-		return "htime:: " + new SimpleDateFormat(timeDimension.getPattern()).format(new Date(time));
 	}
 
 	/** {@inheritDoc} */
@@ -83,5 +78,10 @@ public final class HTime implements HPosition<HTime> {
 	/** {@inheritDoc} */
 	public HTime next() {
 		return timeDimension.next(time);
+	}
+
+	@Override
+	public String toString() {
+		return new SimpleDateFormat(timeDimension.getPattern()).format(new Date(time));
 	}
 }
