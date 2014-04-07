@@ -29,11 +29,11 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
-public class LuceneCubeStorePlugin implements HCubeStorePlugin {
+public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	//	private final Directory directory;
 	private final IndexWriter indexWriter;
 
-	public LuceneCubeStorePlugin() {
+	public LuceneHCubeStorePlugin() {
 		Directory directory = new RAMDirectory();
 		indexWriter = createIndexWriter(directory);
 	}

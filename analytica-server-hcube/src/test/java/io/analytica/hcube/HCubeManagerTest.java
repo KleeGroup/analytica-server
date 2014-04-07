@@ -17,6 +17,7 @@
  */
 package io.analytica.hcube;
 
+import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetricBuilder;
@@ -30,6 +31,7 @@ import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
+import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.DateBuilder;
 
 import java.text.DateFormat;
@@ -55,7 +57,7 @@ public final class HCubeManagerTest {
 	public void simpleTest() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
-		final int days = 100;
+		final int days = 10;
 		final Date end = dateFormat.parse("2012/12/13");
 
 		//----	
@@ -70,6 +72,8 @@ public final class HCubeManagerTest {
 
 		HResult result = cubeManager.execute(query);
 
+		Assert.assertEquals(query, result.getQuery());
+
 		//Check : 1 category
 		Assert.assertEquals(1, result.getAllCategories().size());
 
@@ -79,13 +83,20 @@ public final class HCubeManagerTest {
 		//Check : serie contains 1 metric (DURATION)
 		Assert.assertEquals(1, result.getSerie(new HCategory(PAGES)).getMetrics().size());
 
-		for (HCube cube : result.getSerie(new HCategory(PAGES)).getCubes()) {
+		//
+		HSerie serie = result.getSerie(new HCategory(PAGES));
+		for (HCube cube : serie.getCubes()) {
 			Assert.assertEquals(1, cube.getMetrics().size());
-			Assert.assertEquals(50, cube.getMetric(new HMetricKey("DURATION", true)).getMean());
+			Assert.assertEquals(100 * 60 * 2, cube.getMetric(new HMetricKey("DURATION", true)).getCount(), 0);
+			Assert.assertEquals(100, cube.getMetric(new HMetricKey("DURATION", true)).getMean(), 0);
+			Assert.assertEquals(1, cube.getMetric(new HMetricKey("DURATION", true)).get(HCounterType.min), 0);
 		}
-		Assert.assertEquals(24, result.getSerie(new HCategory(PAGES)).getCubes().size());
+		Assert.assertEquals(100 * 60 * 2 * 24, serie.getMetric(new HMetricKey("DURATION", true)).getCount(), 0);
+		Assert.assertEquals(100, serie.getMetric(new HMetricKey("DURATION", true)).getMean(), 0);
+		Assert.assertEquals(1, serie.getMetric(new HMetricKey("DURATION", true)).get(HCounterType.min), 0);
 		//---
 
+		Assert.assertEquals(1, cubeManager.getCategoryDictionary().getAllRootCategories().size());
 		//		System.out.println("result.categories = " + result.getAllCategories());
 		//
 		//		for (HCategory category : result.getAllCategories()) {
@@ -102,25 +113,22 @@ public final class HCubeManagerTest {
 	private void populateData(final Date startDate, int days) {
 		long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
-		final HCategory category = new HCategory(PAGES);
+		final HCategory category = new HCategory(PAGES, "WELCOME");
 
 		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.SixMinutes);
-					//HLocation location = new HLocation("IBIZA");
 					//--------		
-					//System.out.println(">>> h=" + h + ", min=" + min + " >> " + time);
 					final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
 
 					final HMetricKey duration = new HMetricKey("DURATION", true);
 					final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
-					//for (int i = 0; i < 100; i++) {
-					metricBuilder.withValue(45 - h);
-					metricBuilder.withValue(50);
-					metricBuilder.withValue(55 + h);
-					//}
+					for (int i = 0; i < 100; i++) {
+						metricBuilder.withValue(100 - i);
+						metricBuilder.withValue(100 + i);
+					}
 
 					final HCube cube = new HCubeBuilder(cubeKey)//
 							.withMetric(metricBuilder.build())//

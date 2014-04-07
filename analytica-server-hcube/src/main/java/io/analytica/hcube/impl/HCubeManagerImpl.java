@@ -59,13 +59,6 @@ public final class HCubeManagerImpl implements HCubeManager {
 		return new HResult(query, query.getAllCategories(categoryDictionary), cubeStorePlugin.findAll(query, categoryDictionary));
 	}
 
-	/**
-	 * @return the cubeStorePlugin
-	 */
-	public HCubeStorePlugin getCubeStorePlugin() {
-		return cubeStorePlugin;
-	}
-
 	/** {@inheritDoc} */
 	public HCategoryDictionary getCategoryDictionary() {
 		return categoryDictionary;
