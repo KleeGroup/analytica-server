@@ -29,6 +29,13 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>4.7.0</version>
+			<optional>true</optional> <!-- for LuceneHCubeStorePlugin -->
+		</dependency>
 	</dependencies>
 
 	<build>
