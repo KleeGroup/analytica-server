@@ -29,7 +29,7 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
-public final class HCategory implements HPosition<HCategory> {
+public final class HCategory {
 	private final String type;
 	private final String[] subTypes;
 	private final String id;
@@ -46,7 +46,9 @@ public final class HCategory implements HPosition<HCategory> {
 		this.type = type;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * @return Upper HCategory  or null.
+	 */
 	public HCategory drillUp() {
 		if (subTypes.length == 0) {
 			return null;

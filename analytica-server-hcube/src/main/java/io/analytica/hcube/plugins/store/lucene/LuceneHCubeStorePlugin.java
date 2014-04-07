@@ -60,7 +60,7 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 				for (HMetric metric : cube.getMetrics()) {
 					document.add(new StringField("metric", metric.getKey().getName(), Field.Store.YES));
 					document.add(new LongField(metric.getKey().getName() + ":count", metric.getCount(), Field.Store.YES));
-					document.add(new DoubleField(metric.getKey().getName() + ":sum", metric.getSum(), Field.Store.YES));
+					//document.add(new DoubleField(metric.getKey().getName() + ":sum", metric.getSum(), Field.Store.YES));
 					document.add(new DoubleField(metric.getKey().getName() + ":min", metric.get(HCounterType.min), Field.Store.YES));
 					document.add(new DoubleField(metric.getKey().getName() + ":max", metric.get(HCounterType.max), Field.Store.YES));
 					document.add(new DoubleField(metric.getKey().getName() + ":sqrSum", metric.get(HCounterType.sqrSum), Field.Store.YES));

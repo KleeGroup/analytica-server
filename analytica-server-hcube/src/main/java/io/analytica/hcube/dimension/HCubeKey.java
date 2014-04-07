@@ -73,41 +73,6 @@ public final class HCubeKey {
 		return upperCubeKeys;
 	}
 
-	/**
-	 * Vérifie l'inclusion de clé, util pour controller le merge de Cube.
-	 * @param cubeKey Clé dont on veut vérifier l'inclusion
-	 * @return Si la CubeKey courante est DANS la CubeKey en paramètre
-	 */
-	public boolean contains(final HCubeKey cubeKey) {
-		if (equals(cubeKey)) {
-			return true;
-		}
-		return contains(time, cubeKey.time) && contains(category, cubeKey.category); //&& contains(location, cubeKey.location);
-	}
-
-	/**
-	 * Vérifie si la position est contenue dans une autre autre.
-	 * Une position A est contenue dans une position B  
-	 * Si A = B
-	 * Si B peut être obtenu par drillUp successifs sur A.
-	 * @param otherPosition
-	 * @return si la position est contenue dans la otherPosition
-	 */
-	private static <P extends HPosition<P>> boolean contains(final P position, final P otherPosition) {
-		//On vérifie que l'autre position est contenue dans la première
-		//========[----position-----]====
-		//=============[other]===========
-		//pour ce faire on remonte les positions jusqu'à les faire coincider.
-		P upperPosition = otherPosition;
-		while (upperPosition != null) {
-			if (position.equals(upperPosition)) {
-				return true;
-			}
-			upperPosition = upperPosition.drillUp();
-		}
-		return false;
-	}
-
 	@Override
 	public int hashCode() {
 		return time.hashCode() + category.hashCode() * 31;

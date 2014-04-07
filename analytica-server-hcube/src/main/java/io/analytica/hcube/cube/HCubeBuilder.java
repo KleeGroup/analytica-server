@@ -21,6 +21,7 @@ import io.analytica.hcube.dimension.HCubeKey;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -63,15 +64,13 @@ public final class HCubeBuilder implements Builder<HCube> {
 	}
 
 	/**
-	 * Ajout d'un cube. 
-	 * @param cube Cube
+	 * Ajout de ttes les Metrics. 
+	 * @param Metrics  
 	 */
-	public HCubeBuilder withCube(final HCube cube) {
-		Assertion.checkNotNull(cube);
-		//Assertion util mais 50% des perfs !!
-		Assertion.checkArgument(cubeKey.contains(cube.getKey()), "On ne peut merger que des cubes sur la même clée (builder:{0} != cube:{1}) ou d'une dimension inférieur au builder", cubeKey, cube.getKey());
+	public HCubeBuilder withMetrics(final Collection<HMetric> metrics) {
+		Assertion.checkNotNull(metrics);
 		//---------------------------------------------------------------------
-		for (final HMetric metric : cube.getMetrics()) {
+		for (final HMetric metric : metrics) {
 			withMetric(metric);
 		}
 		return this;
