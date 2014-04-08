@@ -32,7 +32,6 @@ import java.util.Map;
  * que si elles concernent la même entité c'est à dire possède un même nom.
  * 
  * @author npiedeloup, pchretien
- * @version $Id: Metric.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class HMetric {
 	private final HMetricKey metricKey;

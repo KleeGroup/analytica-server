@@ -22,7 +22,6 @@ import io.vertigo.kernel.lang.Assertion;
 /**
  * Objet avec identifiant externalisé.
  * @author npiedeloup
- * @version $Id: Identified.java,v 1.1 2012/03/22 09:16:40 npiedeloup Exp $
  * @param <T> Type de la data
  */
 public final class Identified<T> {

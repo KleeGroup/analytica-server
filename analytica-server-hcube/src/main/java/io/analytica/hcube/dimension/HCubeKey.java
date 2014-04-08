@@ -29,7 +29,6 @@ import java.util.List;
  * Inversement il est possible de savoir si une poition est contenue dans une autre.
  *  
  * @author npiedeloup, pchretien
- * @version $Id: CubeKey.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
 public final class HCubeKey {
 	private final HTime time;

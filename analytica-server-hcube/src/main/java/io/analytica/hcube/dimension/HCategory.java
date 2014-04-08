@@ -27,7 +27,6 @@ import io.vertigo.kernel.lang.Assertion;
  * 
  * Il doit ncessairement y avoir une catégorie parente (sql) dans notre exemple. 
  * @author npiedeloup, pchretien
- * @version $Id: WhatPosition.java,v 1.2 2012/04/17 09:11:15 pchretien Exp $
  */
 public final class HCategory {
 	private final String type;

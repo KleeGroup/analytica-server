@@ -29,7 +29,6 @@ import java.util.Map;
 /**
  * Plugin gérant le stockage des cubes.
  * @author npiedeloup
- * @version $Id: CubeStorePlugin.java,v 1.1 2012/03/22 09:16:40 npiedeloup Exp $
  */
 public interface HCubeStorePlugin extends Plugin {
 	/**

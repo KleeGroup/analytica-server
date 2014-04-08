@@ -47,7 +47,6 @@ import com.sun.jersey.api.core.ResourceConfig;
 /**
  * Plugin gérant l'api reseau en REST avec jersey.
  * @author npiedeloup
- * @version $Id: RestNetApiPlugin.java,v 1.3 2012/10/16 12:39:27 npiedeloup Exp $
  */
 public final class RestServerManagerImpl implements RestServerManager, Activeable {
 	private static final Logger LOG = Logger.getLogger(RestServerManagerImpl.class);

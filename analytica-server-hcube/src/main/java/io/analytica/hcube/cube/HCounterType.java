@@ -19,7 +19,6 @@ package io.analytica.hcube.cube;
 
 /**
  * @author npiedeloup
- * @version $Id: DataType.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public enum HCounterType {
 	count, //

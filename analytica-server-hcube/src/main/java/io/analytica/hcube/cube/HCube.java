@@ -31,7 +31,6 @@ import java.util.Map;
  *  	exemple : tags, users
  *  
  * @author npiedeloup, pchretien
- * @version $Id: Cube.java,v 1.6 2012/10/16 13:34:49 pchretien Exp $
  */
 public final class HCube implements HVirtualCube {
 	/**

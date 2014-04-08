@@ -28,7 +28,6 @@ import javax.inject.Inject;
 
 /**
  * @author pchretien, npiedeloup
- * @version $Id: ServerManagerImpl.java,v 1.22 2013/01/14 16:35:19 npiedeloup Exp $
  */
 public final class HCubeManagerImpl implements HCubeManager {
 	private final HCubeStorePlugin cubeStorePlugin;

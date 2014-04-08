@@ -29,7 +29,6 @@ import java.util.Map.Entry;
  * Une métric est une mesure agrégée.
  * 
  * @author npiedeloup
- * @version $Id: MetricBuilder.java,v 1.3 2012/10/16 12:53:40 pchretien Exp $
  */
 public final class HMetricBuilder implements Builder<HMetric> {
 	private final HMetricKey metricKey;

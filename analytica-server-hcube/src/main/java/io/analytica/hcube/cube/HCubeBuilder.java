@@ -30,7 +30,6 @@ import java.util.Map;
  * Builder permettant de contruire un cube.
  *
  * @author npiedeloup, pchretien
- * @version $Id: CubeBuilder.java,v 1.6 2012/11/08 17:06:41 pchretien Exp $
  */
 public final class HCubeBuilder implements Builder<HCube> {
 	private final HCubeKey cubeKey;

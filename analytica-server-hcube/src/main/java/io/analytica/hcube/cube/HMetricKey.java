@@ -22,7 +22,6 @@ import io.vertigo.kernel.lang.Assertion;
 /** 
  * Clé de la métrique.
  * @author npiedeloup, pchretien
- * @version $Id: Metric.java,v 1.5 2013/01/14 16:35:20 npiedeloup Exp $
  */
 public final class HMetricKey {
 	private final boolean clustered;

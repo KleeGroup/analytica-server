@@ -39,7 +39,6 @@ import java.util.Map.Entry;
  * Une série est un parallélépipède continu pour une catégorie donnée, qui peut se voir comme autant un cube virtuel.
  * 
  * @author pchretien, npiedeloup
- * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
 public final class HSerie implements HVirtualCube {
 	private final HCategory category;

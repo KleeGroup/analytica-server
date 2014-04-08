@@ -26,7 +26,6 @@ import java.util.Date;
  * Niveaux heures, minutes ou secondes de la dimension hiérarchique temps.
  *
  * @author npiedeloup, pchretien
- * @version $Id: TimeDimension.java,v 1.3 2012/10/16 16:25:22 pchretien Exp $
  */
 public enum HTimeDimension {
 	/** 
