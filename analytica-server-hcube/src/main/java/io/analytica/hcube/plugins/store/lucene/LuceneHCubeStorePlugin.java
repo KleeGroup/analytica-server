@@ -34,33 +34,33 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	private final IndexWriter indexWriter;
 
 	public LuceneHCubeStorePlugin() {
-		Directory directory = new RAMDirectory();
+		final Directory directory = new RAMDirectory();
 		indexWriter = createIndexWriter(directory);
 	}
 
-	private static IndexWriter createIndexWriter(Directory directory) {
+	private static IndexWriter createIndexWriter(final Directory directory) {
 		try {
-			Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_46);
+			final Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_46);
 			final IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_46, analyzer);
 			return new IndexWriter(directory, config);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new VRuntimeException(e);
 		}
 	}
 
-	public void merge(HCube cube) {
+	public void merge(final HCube cube) {
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		try {
-			for (HCubeKey cubeKey : cube.getKey().drillUp()) {
-				Document document = new Document();
+			for (final HCubeKey cubeKey : cube.getKey().drillUp()) {
+				final Document document = new Document();
 				document.add(new LongField("time", cubeKey.getTime().inMillis(), Field.Store.YES));
 				document.add(new TextField("category", cubeKey.getCategory().getId(), Field.Store.YES));
 
-				for (HMetric metric : cube.getMetrics()) {
+				for (final HMetric metric : cube.getMetrics()) {
 					document.add(new StringField("metric", metric.getKey().getName(), Field.Store.YES));
 					document.add(new LongField(metric.getKey().getName() + ":count", metric.getCount(), Field.Store.YES));
-					document.add(new DoubleField(metric.getKey().getName() + ":sum", metric.getSum(), Field.Store.YES));
+					document.add(new DoubleField(metric.getKey().getName() + ":sum", metric.get(HCounterType.sum), Field.Store.YES));
 					document.add(new DoubleField(metric.getKey().getName() + ":min", metric.get(HCounterType.min), Field.Store.YES));
 					document.add(new DoubleField(metric.getKey().getName() + ":max", metric.get(HCounterType.max), Field.Store.YES));
 					document.add(new DoubleField(metric.getKey().getName() + ":sqrSum", metric.get(HCounterType.sqrSum), Field.Store.YES));
@@ -72,13 +72,13 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 				}
 				indexWriter.addDocument(document);
 			}
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new VRuntimeException(e);
 		}
 
 	}
 
-	public Map<HCategory, HSerie> findAll(HQuery query, HCategoryDictionary categoryDictionary) {
+	public Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -22,6 +22,7 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
@@ -182,7 +183,7 @@ public final class Utils {
 
 	public static HQuery createQuery(final String from, final String to, final String timeDimension, final String type, final String subCategories, final boolean children) {
 		final HQueryBuilder queryBuilder = new HQueryBuilder()//
-				.on(timeDimension)//
+				.on(HTimeDimension.valueOf(timeDimension))//
 				.from(from)//
 				.to(to);
 		final String[] subCategoriesArray;
