@@ -28,7 +28,7 @@ import io.vertigo.kernel.lang.Assertion;
  * Il doit ncessairement y avoir une localisation parente représentant l'application (MyApp dans notre exemple). 
  * @author npiedeloup, pchretien
  */
-public final class HLocation implements HPosition<HLocation> {
+public final class HLocation {
 	private final String systemName;
 	private final String[] systemLocation;
 	private final String id;
@@ -45,7 +45,6 @@ public final class HLocation implements HPosition<HLocation> {
 		this.systemName = systemName;
 	}
 
-	/** {@inheritDoc} */
 	public HLocation drillUp() {
 		if (systemLocation.length == 0) {
 			return null;
