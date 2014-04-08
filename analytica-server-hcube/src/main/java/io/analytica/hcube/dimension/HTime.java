@@ -31,7 +31,7 @@ import java.util.Date;
  * 
  * @author npiedeloup, pchretien
  */
-public final class HTime implements HPosition<HTime> {
+public final class HTime {
 	private final HTimeDimension timeDimension;
 	private final long time;
 
@@ -69,7 +69,9 @@ public final class HTime implements HPosition<HTime> {
 		return false;
 	}
 
-	/** {@inheritDoc} */
+	/**
+	 * @return Upper HTime  or null.
+	 */
 	public HTime drillUp() {
 		return timeDimension.drillUp(time);
 	}

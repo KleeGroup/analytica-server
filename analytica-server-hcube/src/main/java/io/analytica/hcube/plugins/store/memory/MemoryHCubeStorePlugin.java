@@ -76,18 +76,17 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		final HCube oldCube = cubes.get(cubeKey);
 		final HCube newCube;
 		if (oldCube != null) {
-			newCube = new HCubeBuilder(cubeKey).withCube(cube).withCube(oldCube).build();
+			newCube = new HCubeBuilder(cubeKey).withMetrics(cube.getMetrics()).withMetrics(oldCube.getMetrics()).build();
 		} else if (cube.getKey().equals(cubeKey)) {
 			newCube = cube;
 		} else {
-			newCube = new HCubeBuilder(cubeKey).withCube(cube).build();
+			newCube = new HCubeBuilder(cubeKey).withMetrics(cube.getMetrics()).build();
 		}
 		cubes.put(newCube.getKey(), newCube);
 	}
 
 	/** {@inheritDoc} */
 	public synchronized Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
-
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categoryDictionary);
 		//---------------------------------------------------------------------

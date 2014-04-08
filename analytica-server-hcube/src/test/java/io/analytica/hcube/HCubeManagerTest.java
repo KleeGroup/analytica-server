@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -255,6 +256,62 @@ public final class HCubeManagerTest {
 				System.out.println(">>> day = " + day + " in " + (System.currentTimeMillis() - start) + " ms");
 			}
 		}
+	}
+
+	@Test
+	public void testMetrics() {
+		HMetricKey metricKey = new HMetricKey("TEST", true);
+		//---
+		HMetricBuilder metricBuilder = new HMetricBuilder(metricKey);
+		double sqrSum = 0;
+		for (int i = 0; i < 100; i++) {
+			metricBuilder.withValue(1000 - i);
+			metricBuilder.withValue(1000 + i);
+			sqrSum += (1000 - i) * (1000 - i) + (1000 + i) * (1000 + i);
+		}
+		HMetric metric = metricBuilder.build();
+		Assert.assertEquals(200, metric.getCount());
+		Assert.assertEquals(1000, metric.getMean(), 0);
+		Assert.assertEquals(100 * 2000, metric.get(HCounterType.sum), 0);
+		Assert.assertEquals(1000 - 99, metric.get(HCounterType.min), 0);
+		Assert.assertEquals(1000 + 99, metric.get(HCounterType.max), 0);
+		Assert.assertEquals(sqrSum, metric.get(HCounterType.sqrSum), 0);
+	}
+
+	@Test
+	public void testHistogram() {
+		HMetricKey metricKey = new HMetricKey("TEST", true);
+		//---
+		HMetricBuilder metricBuilder = new HMetricBuilder(metricKey);
+		metricBuilder.withValue(0);//<0
+		metricBuilder.withValue(1);//<1
+		metricBuilder.withValue(2);//<2
+		metricBuilder.withValue(3);//<5
+		metricBuilder.withValue(4);//<5
+		metricBuilder.withValue(5);//<5
+		metricBuilder.withValue(6);//<10
+		metricBuilder.withValue(7);//<10
+		metricBuilder.withValue(8);//<10
+		metricBuilder.withValue(9);//<10
+		metricBuilder.withValue(10);//<10
+		metricBuilder.withValue(11);//<20
+		metricBuilder.withValue(35);//<50
+		metricBuilder.withValue(455);//<500
+		metricBuilder.withValue(355);//<500
+		metricBuilder.withValue(111222333);//<200000000
+
+		HMetric metric = metricBuilder.build();
+		Map<Double, Long> histogram = metric.getClusteredValues();
+
+		Assert.assertEquals(1, histogram.get(0d), 0);
+		Assert.assertEquals(1, histogram.get(1d), 0);
+		Assert.assertEquals(1, histogram.get(2d), 0);
+		Assert.assertEquals(3, histogram.get(5d), 0);
+		Assert.assertEquals(5, histogram.get(10d), 0);
+		Assert.assertEquals(1, histogram.get(20d), 0);
+		Assert.assertEquals(1, histogram.get(50d), 0);
+		Assert.assertEquals(2, histogram.get(500d), 0);
+		Assert.assertEquals(1, histogram.get(200000000d), 0);
 	}
 
 	@Test
