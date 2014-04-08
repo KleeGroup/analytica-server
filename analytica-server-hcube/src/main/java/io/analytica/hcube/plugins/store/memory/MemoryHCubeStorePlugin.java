@@ -39,7 +39,7 @@ import java.util.Map;
  * @author npiedeloup, pchretien
  */
 public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
-	private final Map<HCubeKey, HCube> queue = new HashMap<>();
+	private final List<HCube> queue = new ArrayList<>();
 	private final Map<HCubeKey, HCube> store = new HashMap<>();
 
 	/** {@inheritDoc} */
@@ -47,17 +47,17 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		//populate a queue
-		merge(cube, cube.getKey(), queue);
-		if (queue.size() > 10000) {
+		queue.add(cube);
+		if (queue.size() > 5000) {
 			flushQueue();
 		}
 	}
 
 	//flushing queue into store
 	private void flushQueue() {
-		for (final HCube cube : queue.values()) {
+		for (final HCube cube : queue) {
 			for (final HCubeKey upCubeKeys : cube.getKey().drillUp()) {
-				merge(cube, upCubeKeys, store);
+				merge(cube, upCubeKeys);
 			}
 		}
 		queue.clear();
@@ -70,9 +70,9 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
-	private static final void merge(final HCube cube, final HCubeKey cubeKey, final Map<HCubeKey, HCube> cubes) {
+	private final void merge(final HCube cube, final HCubeKey cubeKey) {
 
-		final HCube oldCube = cubes.get(cubeKey);
+		final HCube oldCube = store.get(cubeKey);
 		final HCube newCube;
 		if (oldCube != null) {
 			newCube = new HCubeBuilder(cubeKey).withMetrics(cube.getMetrics()).withMetrics(oldCube.getMetrics()).build();
@@ -81,7 +81,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		} else {
 			newCube = new HCubeBuilder(cubeKey).withMetrics(cube.getMetrics()).build();
 		}
-		cubes.put(newCube.getKey(), newCube);
+		store.put(newCube.getKey(), newCube);
 	}
 
 	/** {@inheritDoc} */
