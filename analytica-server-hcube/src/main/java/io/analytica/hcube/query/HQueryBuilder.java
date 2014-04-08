@@ -43,18 +43,26 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	public HQueryBuilder on(final HTimeDimension timeDimension) {
 		Assertion.checkNotNull(timeDimension);
-		Assertion.checkState(this.hTimeDimension == null, "timeDimension already set");
+		Assertion.checkState(hTimeDimension == null, "timeDimension already set");
 		//---------------------------------------------------------------------
-		this.hTimeDimension = timeDimension;
+		hTimeDimension = timeDimension;
 		return this;
 	}
 
+	/**
+	 * @param date lower selection (INCLUDED)
+	 * @return HQueryBuilder
+	 */
 	public HQueryBuilder from(final String date) {
 		Assertion.checkNotNull(hTimeDimension);
 		//---------------------------------------------------------------------
 		return from(readDate(date, hTimeDimension));
 	}
 
+	/**
+	 * @param date lower selection (INCLUDED)
+	 * @return HQueryBuilder
+	 */
 	public HQueryBuilder from(final Date date) {
 		Assertion.checkNotNull(date);
 		Assertion.checkState(from == null, "Date From already set");
@@ -63,6 +71,10 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return this;
 	}
 
+	/**
+	 * @param date upper selection (EXCLUDED)
+	 * @return HQueryBuilder
+	 */
 	public HQueryBuilder to(final Date date) {
 		Assertion.checkNotNull(date);
 		Assertion.checkState(to == null, "Date To already set");
@@ -71,6 +83,10 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return this;
 	}
 
+	/**
+	 * @param date date upper selection (EXCLUDED)
+	 * @return
+	 */
 	public HQueryBuilder to(final String date) {
 		Assertion.checkNotNull(hTimeDimension);
 		//---------------------------------------------------------------------
