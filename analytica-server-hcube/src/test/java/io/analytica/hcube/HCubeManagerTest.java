@@ -386,7 +386,7 @@ public final class HCubeManagerTest {
 		addCube(new DateBuilder(current).addMinutes(2 * 6).toDateTime(), 1024, durationKey, weightKey);
 		addCube(new DateBuilder(current).addHours(2).toDateTime(), 4096, durationKey, weightKey);
 		addCube(new DateBuilder(current).addDays(2).toDateTime(), 16384, durationKey, weightKey);
-		addCube(new DateBuilder(current).addMonths(2).toDateTime(), 65536, durationKey, weightKey);
+		addCube(new DateBuilder(current).addMonths(-2).toDateTime(), 65536, durationKey, weightKey); //remove 2 months in order to stay the same year
 		addCube(new DateBuilder(current).addYears(2).toDateTime(), 262144, durationKey, weightKey);
 
 		//----	
