@@ -60,14 +60,14 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery() {
 		final Date start = new Date();
-		HQuery query1 = new HQueryBuilder()//
+		final HQuery query1 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from(new DateBuilder(start).addHours(-3).toDateTime())//
 				.to(start)//
 				.with(PAGES)//
 				.build();
 
-		HQuery query2 = new HQueryBuilder()//
+		final HQuery query2 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from("NOW-3h")//
 				.to("NOW")//
@@ -84,7 +84,7 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testQuery2() {
-		HQuery query = new HQueryBuilder()//
+		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from("NOW")//
 				.to("NOW+3d")//
@@ -132,14 +132,14 @@ public final class HCubeManagerTest {
 		//----	
 		populateData(cubeManager, start, days);
 		//----	
-		HQuery query = new HQueryBuilder()//
+		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from(start)//
 				.to(end)//
 				.with(PAGES)//
 				.build();
 
-		HResult result = cubeManager.execute(query);
+		final HResult result = cubeManager.execute(query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -153,19 +153,19 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(2, result.getSerie(new HCategory(PAGES)).getMetrics().size());
 
 		//
-		HSerie serie = result.getSerie(new HCategory(PAGES));
+		final HSerie serie = result.getSerie(new HCategory(PAGES));
 		Assert.assertEquals(new HCategory(PAGES), serie.getCategory());
 
-		for (HCube cube : serie.getCubes()) {
+		for (final HCube cube : serie.getCubes()) {
 			Assert.assertTrue(cube.toString().startsWith("{"));
 			Assert.assertTrue(cube.toString().endsWith("}"));
 			Assert.assertEquals(2, cube.getMetrics().size());
-			HMetric metric = cube.getMetric(new HMetricKey("DURATION", true));
+			final HMetric metric = cube.getMetric(new HMetricKey("DURATION", true));
 			Assert.assertEquals(100 * 60 * 2, metric.getCount(), 0);
 			Assert.assertEquals(100, metric.getMean(), 0);
 			Assert.assertEquals(1, metric.get(HCounterType.min), 0);
 		}
-		HMetric metric = serie.getMetric(new HMetricKey("DURATION", true));
+		final HMetric metric = serie.getMetric(new HMetricKey("DURATION", true));
 		Assert.assertTrue(metric.toString().startsWith("{"));
 		Assert.assertTrue(metric.toString().endsWith("}"));
 
@@ -177,10 +177,10 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(1, metric.get(HCounterType.min), 0);
 		//---
 
-		List<HPoint> points = serie.getPoints(new HMetricKey("DURATION", true));
+		final List<HPoint> points = serie.getPoints(new HMetricKey("DURATION", true));
 		Assert.assertEquals(24, points.size());
 		int h = 0;
-		for (HPoint point : serie.getPoints(new HMetricKey("DURATION", true))) {
+		for (final HPoint point : serie.getPoints(new HMetricKey("DURATION", true))) {
 			Assert.assertEquals(h, point.getDate().getHours());
 			h++;
 			Assert.assertEquals(100 * 60 * 2, point.getMetric().getCount(), 0);
@@ -203,14 +203,14 @@ public final class HCubeManagerTest {
 		//----	
 		populateData(cubeManager, start, days);
 		//----	
-		HQuery query = new HQueryBuilder()//
+		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.SixMinutes)//
 				.from(start)//
 				.to(end)//
 				.with(PAGES)//
 				.build();
 
-		HResult result = cubeManager.execute(query);
+		final HResult result = cubeManager.execute(query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -221,8 +221,8 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(240, result.getSerie(new HCategory(PAGES)).getCubes().size());
 	}
 
-	private static void populateData(final HCubeManager cubeManager, final Date startDate, int days) {
-		long start = System.currentTimeMillis();
+	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
+		final long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
 		final HCategory category = new HCategory(PAGES, "WELCOME");
 
@@ -260,16 +260,16 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testMetrics() {
-		HMetricKey metricKey = new HMetricKey("TEST", true);
+		final HMetricKey metricKey = new HMetricKey("TEST", true);
 		//---
-		HMetricBuilder metricBuilder = new HMetricBuilder(metricKey);
+		final HMetricBuilder metricBuilder = new HMetricBuilder(metricKey);
 		double sqrSum = 0;
 		for (int i = 0; i < 100; i++) {
 			metricBuilder.withValue(1000 - i);
 			metricBuilder.withValue(1000 + i);
 			sqrSum += (1000 - i) * (1000 - i) + (1000 + i) * (1000 + i);
 		}
-		HMetric metric = metricBuilder.build();
+		final HMetric metric = metricBuilder.build();
 		Assert.assertEquals(200, metric.getCount());
 		Assert.assertEquals(1000, metric.getMean(), 0);
 		Assert.assertEquals(100 * 2000, metric.get(HCounterType.sum), 0);
@@ -280,9 +280,9 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testHistogram() {
-		HMetricKey metricKey = new HMetricKey("TEST", true);
+		final HMetricKey metricKey = new HMetricKey("TEST", true);
 		//---
-		HMetricBuilder metricBuilder = new HMetricBuilder(metricKey);
+		final HMetricBuilder metricBuilder = new HMetricBuilder(metricKey);
 		metricBuilder.withValue(0);//<0
 		metricBuilder.withValue(1);//<1
 		metricBuilder.withValue(2);//<2
@@ -300,8 +300,8 @@ public final class HCubeManagerTest {
 		metricBuilder.withValue(355);//<500
 		metricBuilder.withValue(111222333);//<200000000
 
-		HMetric metric = metricBuilder.build();
-		Map<Double, Long> histogram = metric.getClusteredValues();
+		final HMetric metric = metricBuilder.build();
+		final Map<Double, Long> histogram = metric.getClusteredValues();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
 		Assert.assertEquals(1, histogram.get(1d), 0);
@@ -316,7 +316,7 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testTimeDimension() {
-		Date start = new Date();
+		final Date start = new Date();
 		HTime now;
 		//---
 		now = new HTime(start, HTimeDimension.Minute);
@@ -333,5 +333,148 @@ public final class HCubeManagerTest {
 		//---
 		now = new HTime(start, HTimeDimension.Year);
 		Assert.assertEquals((start.getYear() + 1), new Date(now.next().inMillis()).getYear());
+	}
+
+	/**
+	 * data are collected during 10 days from 2012/12/12.
+	 * @throws ParseException Date parsing error 
+	 */
+	@Test
+	public void testMergeOnHTime() throws ParseException {
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		final Date current = dateFormat.parse("2012/12/12 12:12:12");
+		final HMetricKey durationKey = new HMetricKey("DURATION", true);
+		final HMetricKey weightKey = new HMetricKey("WEIGHT", false);
+		//----	
+		addCube(current, 64, durationKey, weightKey);
+		//----	
+		checkMergedMetric(HTimeDimension.Minute, //
+				new DateBuilder(current).addMinutes(-1).toDateTime(), //
+				new DateBuilder(current).addMinutes(2).toDateTime(), //
+				weightKey, 1, 64, 64, 64);
+		checkMergedMetric(HTimeDimension.SixMinutes, //
+				new DateBuilder(current).addMinutes(-6).toDateTime(), //
+				new DateBuilder(current).addMinutes(12).toDateTime(), //
+				weightKey, 1, 64, 64, 64);
+		checkMergedMetric(HTimeDimension.Hour, //
+				new DateBuilder(current).addHours(-1).toDateTime(), //
+				new DateBuilder(current).addHours(2).toDateTime(), //
+				weightKey, 1, 64, 64, 64);
+		checkMergedMetric(HTimeDimension.Day, //
+				new DateBuilder(current).addDays(-1).toDateTime(), //
+				new DateBuilder(current).addDays(2).toDateTime(), //
+				weightKey, 1, 64, 64, 64);
+		checkMergedMetric(HTimeDimension.Month, //
+				new DateBuilder(current).addMonths(-1).toDateTime(), //
+				new DateBuilder(current).addMonths(2).toDateTime(), //
+				weightKey, 1, 64, 64, 64);
+		checkMergedMetric(HTimeDimension.Year, //
+				new DateBuilder(current).addYears(-1).toDateTime(), //
+				new DateBuilder(current).addYears(2).toDateTime(), //
+				weightKey, 1, 64, 64, 64);
+	}
+
+	@Test
+	public void testMergeOnHTime2() throws ParseException {
+		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		final Date current = dateFormat.parse("2012/12/12 12:12:12");
+		final HMetricKey durationKey = new HMetricKey("DURATION", true);
+		final HMetricKey weightKey = new HMetricKey("WEIGHT", false);
+		//----	
+		addCube(current, 64, durationKey, weightKey);
+		addCube(new DateBuilder(current).addMinutes(2).toDateTime(), 256, durationKey, weightKey);
+		addCube(new DateBuilder(current).addMinutes(2 * 6).toDateTime(), 1024, durationKey, weightKey);
+		addCube(new DateBuilder(current).addHours(2).toDateTime(), 4096, durationKey, weightKey);
+		addCube(new DateBuilder(current).addDays(2).toDateTime(), 16384, durationKey, weightKey);
+		addCube(new DateBuilder(current).addMonths(2).toDateTime(), 65536, durationKey, weightKey);
+		addCube(new DateBuilder(current).addYears(2).toDateTime(), 262144, durationKey, weightKey);
+
+		//----	
+		checkMergedMetric(HTimeDimension.Minute, //
+				new DateBuilder(current).addMinutes(-1).toDateTime(), //
+				new DateBuilder(current).addMinutes(2).toDateTime(), //
+				weightKey, 1, 64, 64, 64);
+		checkMergedMetric(HTimeDimension.SixMinutes, //
+				new DateBuilder(current).addMinutes(-1 * 6).toDateTime(), //
+				new DateBuilder(current).addMinutes(2 * 6).toDateTime(), //
+				weightKey, 2, 64 + 256, 64, 256);
+		checkMergedMetric(HTimeDimension.Hour, //
+				new DateBuilder(current).addHours(-1).toDateTime(), //
+				new DateBuilder(current).addHours(2).toDateTime(), //
+				weightKey, 3, 64 + 256 + 1024, 64, 1024);
+		checkMergedMetric(HTimeDimension.Day, //
+				new DateBuilder(current).addDays(-1).toDateTime(), //
+				new DateBuilder(current).addDays(2).toDateTime(), //
+				weightKey, 4, 64 + 256 + 1024 + 4096, 64, 4096);
+		checkMergedMetric(HTimeDimension.Month, //
+				new DateBuilder(current).addMonths(-1).toDateTime(), //
+				new DateBuilder(current).addMonths(2).toDateTime(), //
+				weightKey, 5, 64 + 256 + 1024 + 4096 + 16384, 64, 16384);
+		checkMergedMetric(HTimeDimension.Year, //
+				new DateBuilder(current).addYears(-1).toDateTime(), //
+				new DateBuilder(current).addYears(2).toDateTime(), //
+				weightKey, 6, 64 + 256 + 1024 + 4096 + 16384 + 65536, 64, 65536);
+	}
+
+	private void addCube(final Date current, final int weightValue, final HMetricKey duration, final HMetricKey weight) {
+		final HCategory category = new HCategory(PAGES, "WELCOME");
+		final HTime time = new HTime(current, HTimeDimension.Minute);
+		final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
+		final HMetric metricMetric = new HMetricBuilder(duration)//
+				.withValue(100)//
+				.build();
+		final HMetric weightMetric = new HMetricBuilder(weight)//
+				.withValue(weightValue)//
+				.build();
+		final HCube cube = new HCubeBuilder(cubeKey)//
+				.withMetric(metricMetric)//
+				.withMetric(weightMetric)//
+				.build();
+		cubeManager.push(cube);
+	}
+
+	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final HMetricKey weight, final int espectedCount, final double espectedSum, final double espectedMin, final double espectedMax) {
+		//----	
+		final HQuery query = new HQueryBuilder()//
+				.on(timeDimension)//
+				.from(start)//
+				.to(end)//
+				.with(PAGES)//
+				.build();
+
+		final HResult result = cubeManager.execute(query);
+		Assert.assertEquals(query, result.getQuery());
+		//Check : 1 category
+		Assert.assertEquals(1, result.getAllCategories().size());
+		//Check : 10*24 cubes per minute
+		final List<HCube> cubes = result.getSerie(new HCategory(PAGES)).getCubes();
+		Assert.assertEquals(3, cubes.size());
+		assertMetricEquals(cubes.get(0), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
+		assertMetricEquals(cubes.get(1), weight, espectedCount, espectedSum, espectedSum / espectedCount, espectedMin, espectedMax);
+		assertMetricEquals(cubes.get(2), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
+	}
+
+	//-------------------------------------------------------------------------
+
+	private void assertMetricEquals(final HCube hCube, final HMetricKey metricKey, final double count, final double sum, final double mean, final double min, final double max) {
+		assertMetricEquals(hCube.getMetric(metricKey), count, sum, mean, min, max);
+	}
+
+	private static void assertMetricEquals(final HMetric metric, final double count, final double sum, final double mean, final double min, final double max) {
+		if (metric != null) {
+			Assert.assertEquals(count, metric.get(HCounterType.count), 0);
+			Assert.assertEquals(count, metric.getCount(), 0); //test accesseur rapide
+			Assert.assertEquals(sum, metric.get(HCounterType.sum), 0);//test accesseur rapide 0);
+			Assert.assertEquals(mean, metric.get(HCounterType.mean), 0);
+			Assert.assertEquals(mean, metric.getMean(), 0);//test accesseur rapide
+			Assert.assertEquals(min, metric.get(HCounterType.min), 0);
+			Assert.assertEquals(max, metric.get(HCounterType.max), 0);
+		} else {
+			Assert.assertEquals(count, 0, 0);
+			Assert.assertEquals(sum, 0, 0);
+			Assert.assertTrue(Double.isNaN(mean));
+			Assert.assertTrue(Double.isNaN(min));
+			Assert.assertTrue(Double.isNaN(max));
+		}
 	}
 }
