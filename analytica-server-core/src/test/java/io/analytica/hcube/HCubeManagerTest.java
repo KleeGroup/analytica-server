@@ -61,6 +61,7 @@ import org.junit.Test;
  * @version $Id: ServerManagerMemoryTest.java,v 1.2 2012/03/22 18:33:04 pchretien Exp $
  */
 public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
+	private static final String APP_NAME = "myApp";
 	private static final String MONTANT = "MONTANT";
 	private static final String POIDS = "POIDS";
 	private static final HMetricKey MONTANT_KEY = new HMetricKey(MONTANT, false);
@@ -155,7 +156,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.build();
 
 		//final HCategory sqlCategory = new HCategory(PROCESS_SQL);
-		final HResult result = hcubeManager.execute(daySqlQuery);
+		final HResult result = hcubeManager.execute(APP_NAME, daySqlQuery);
 
 		final Set<HCategory> sqlCategories = result.getAllCategories();
 		Assert.assertEquals(2, sqlCategories.size());
@@ -199,7 +200,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		System.out.println(daySqlQuery + "Requete");
 		final String[] sub = { "select article" };
 		final HCategory sqlCategory = new HCategory(PROCESS_SQL, sub);
-		final HResult result = hcubeManager.execute(daySqlQuery);
+		final HResult result = hcubeManager.execute(APP_NAME, daySqlQuery);
 
 		final Set<HCategory> sqlCategories = result.getAllCategories();
 		System.out.println(sqlCategory + "-----------");
@@ -229,7 +230,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HCategory sqlCategory = new HCategory("SQL");
 
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -242,7 +243,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.with("SQL")//
 				.build();
 
-		cubes = hcubeManager.execute(monthSqlQuery).getSerie(sqlCategory).getCubes();
+		cubes = hcubeManager.execute(APP_NAME, monthSqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -255,7 +256,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.with("SQL")//
 				.build();
 
-		cubes = hcubeManager.execute(yearSqlQuery).getSerie(sqlCategory).getCubes();
+		cubes = hcubeManager.execute(APP_NAME, yearSqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -297,7 +298,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.with("SQL")//
 				.build();
 		final HCategory sqlCategory = new HCategory("SQL");
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -312,7 +313,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.to(new DateBuilder(date).addDays(1).build())//
 				.with("SQL")//
 				.build();
-		cubes = hcubeManager.execute(hourQuery).getSerie(sqlCategory).getCubes();
+		cubes = hcubeManager.execute(APP_NAME, hourQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(14, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		montantMetric = cubes.get(5).getMetric(MONTANT_KEY);
@@ -327,7 +328,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HCategory servicesCategory = new HCategory("SERVICES", new String[0]);
 
-		cubes = hcubeManager.execute(dayServiceslQuery).getSerie(servicesCategory).getCubes();
+		cubes = hcubeManager.execute(APP_NAME, dayServiceslQuery).getSerie(servicesCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//Vérification de la durée du process principal
 		durationMetric = cubes.get(0).getMetric(DURATION_KEY);
@@ -383,7 +384,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.with("SQL")//
 				.build();
 		final HCategory sqlCategory = new HCategory("SQL");
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -398,7 +399,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.to(new DateBuilder(date).addDays(1).build())//
 				.with("SQL")//
 				.build();
-		cubes = hcubeManager.execute(hourQuery).getSerie(sqlCategory).getCubes();
+		cubes = hcubeManager.execute(APP_NAME, hourQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(14, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		montantMetric = cubes.get(5).getMetric(MONTANT_KEY);
@@ -413,7 +414,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HCategory servicesCategory = new HCategory("SERVICES", new String[0]);
 
-		cubes = hcubeManager.execute(dayServiceslQuery).getSerie(servicesCategory).getCubes();
+		cubes = hcubeManager.execute(APP_NAME, dayServiceslQuery).getSerie(servicesCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//Vérification de la durée du process principal
 		durationMetric = cubes.get(0).getMetric(DURATION_KEY);
@@ -441,7 +442,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.build();
 
 		final HCategory sqlCategory = new HCategory("SQL");
-		final List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		final List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -473,7 +474,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.build();
 
 		final HCategory sqlCategory = new HCategory("SQL");
-		List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -488,7 +489,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HCategory selectArticle3Category = new HCategory("SQL", new String[] { "select article#3" });
 
-		cubes = hcubeManager.execute(daySelectQuery).getSerie(selectArticle3Category).getCubes();
+		cubes = hcubeManager.execute(APP_NAME, daySelectQuery).getSerie(selectArticle3Category).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -521,7 +522,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.build();
 		final HCategory sqlCategory = new HCategory("SQL");
 
-		final List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		final List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -553,7 +554,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.with("SQL")//
 				.build();
 
-		final HResult hresult = hcubeManager.execute(daySqlQuery);
+		final HResult hresult = hcubeManager.execute(APP_NAME, daySqlQuery);
 
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 		assertMetricEquals(hresult.getSerie(processSQLCategory).getMetric(POIDS_KEY), 2, 120, 60, 50, 70);
@@ -595,7 +596,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.build();
 		final HCategory sqlCategory = new HCategory("SQL");
 
-		final List<HCube> cubes = hcubeManager.execute(daySqlQuery).getSerie(sqlCategory).getCubes();
+		final List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -639,7 +640,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.to(new DateBuilder(today.getTime()).addDays(1).build())//
 				.with("PAGE")//
 				.build();
-		final List<HCube> cubes = hcubeManager.execute(hourQuery).getSerie(pageCategory).getCubes();
+		final List<HCube> cubes = hcubeManager.execute(APP_NAME, hourQuery).getSerie(pageCategory).getCubes();
 		Assert.assertEquals(24, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		//final HMetric montantMetric = cubes.get(5).getMetric(DURATION);
@@ -650,7 +651,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	private void pushProcess(final KProcess process) {
 		final List<HCube> cubes = processEncoder.encode(process);
 		for (final HCube cube : cubes) {
-			hcubeManager.push(cube);
+			hcubeManager.push(APP_NAME, cube);
 		}
 	}
 }

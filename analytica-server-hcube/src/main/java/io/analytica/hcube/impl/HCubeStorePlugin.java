@@ -31,17 +31,20 @@ import java.util.Map;
  * @author npiedeloup
  */
 public interface HCubeStorePlugin extends Plugin {
+
+	//	Collection<String> getAppNames();
+
 	/**
 	 * Enregistre un cube.
 	 * Celui-ci sera mergé avec les autres cubes déjà enregistrés.
 	 * @param cube Cube.
 	 */
-	void merge(HCube cube);
+	void merge(String appName, HCube cube);
 
 	/**
 	 * Liste des cubes, regroupés par série indexée par ma catégorie correspondant à une requête.
 	 * @param query Requête
 	 * @return Séries des cubes 
 	 */
-	Map<HCategory, HSerie> findAll(HQuery query, final HCategoryDictionary categoryDictionary);
+	Map<HCategory, HSerie> findAll(String appName, HQuery query, final HCategoryDictionary categoryDictionary);
 }

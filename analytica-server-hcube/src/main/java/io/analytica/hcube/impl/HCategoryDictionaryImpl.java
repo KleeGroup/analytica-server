@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author statchum 
+ * @author pchretien, npiedeloup 
  */
 final class HCategoryDictionaryImpl implements HCategoryDictionary {
 	private final Set<HCategory> rootCategories;

@@ -47,15 +47,15 @@ public final class HCubeManagerImpl implements HCubeManager {
 	}
 
 	/** {@inheritDoc} */
-	public void push(final HCube cube) {
+	public void push(String appName, final HCube cube) {
 		//---Alimentation du dictionnaire des catégories puis des cubes
 		categoryDictionary.add(cube.getKey().getCategory());
-		cubeStorePlugin.merge(cube);
+		cubeStorePlugin.merge(appName, cube);
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(final HQuery query) {
-		return new HResult(query, query.getAllCategories(categoryDictionary), cubeStorePlugin.findAll(query, categoryDictionary));
+	public HResult execute(String appName, final HQuery query) {
+		return new HResult(query, query.getAllCategories(categoryDictionary), cubeStorePlugin.findAll(appName, query, categoryDictionary));
 	}
 
 	/** {@inheritDoc} */

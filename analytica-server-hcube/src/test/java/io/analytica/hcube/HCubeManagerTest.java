@@ -54,6 +54,7 @@ import org.junit.Test;
  * @author pchretien
  */
 public final class HCubeManagerTest {
+	private static final String APP_NAME = "MY_APP";
 	private static final String PAGES = "PAGES";
 	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 
@@ -139,7 +140,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.execute(query);
+		final HResult result = cubeManager.execute(APP_NAME, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -210,7 +211,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.execute(query);
+		final HResult result = cubeManager.execute(APP_NAME, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -249,7 +250,7 @@ public final class HCubeManagerTest {
 							.withMetric(weightMetric)//
 							.build();
 
-					cubeManager.push(cube);
+					cubeManager.push(APP_NAME, cube);
 				}
 			}
 			if (day % 100 == 0) {
@@ -430,7 +431,7 @@ public final class HCubeManagerTest {
 				.withMetric(metricMetric)//
 				.withMetric(weightMetric)//
 				.build();
-		cubeManager.push(cube);
+		cubeManager.push(APP_NAME, cube);
 	}
 
 	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final HMetricKey weight, final int espectedCount, final double espectedSum, final double espectedMin, final double espectedMax) {
@@ -442,7 +443,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.execute(query);
+		final HResult result = cubeManager.execute(APP_NAME, query);
 		Assert.assertEquals(query, result.getQuery());
 		//Check : 1 category
 		Assert.assertEquals(1, result.getAllCategories().size());
