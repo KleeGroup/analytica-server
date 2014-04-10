@@ -63,10 +63,6 @@ public final class HCategory {
 		return id;
 	}
 
-	public String[] getValue() {
-		return subTypes;
-	}
-
 	private static String buildKey(final String type, final String[] subCategory) {
 		final StringBuilder sb = new StringBuilder(type);
 		for (final String element : subCategory) {
@@ -82,7 +78,9 @@ public final class HCategory {
 
 	@Override
 	public final boolean equals(final Object object) {
-		if (object instanceof HCategory) {
+		if (object == this) {
+			return true;
+		} else if (object instanceof HCategory) {
 			return id.equals(((HCategory) object).id);
 		}
 		return false;

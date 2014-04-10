@@ -24,7 +24,7 @@ final class AppCubeStore {
 		store = new HashMap<>();
 	}
 
-	synchronized void merge(final HCube cube) {
+	void merge(final HCube cube) {
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		//populate a queue
@@ -64,7 +64,7 @@ final class AppCubeStore {
 		System.out.println("memStore : " + store.size() + " cubes");
 	}
 
-	synchronized Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
+	Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categoryDictionary);
 		//---------------------------------------------------------------------

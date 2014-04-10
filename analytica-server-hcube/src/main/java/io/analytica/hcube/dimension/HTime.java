@@ -62,7 +62,9 @@ public final class HTime {
 
 	@Override
 	public final boolean equals(final Object object) {
-		if (object instanceof HTime) {
+		if (object == this) {
+			return true;
+		} else if (object instanceof HTime) {
 			final HTime other = (HTime) object;
 			return time == other.time && timeDimension.equals(other.timeDimension);
 		}

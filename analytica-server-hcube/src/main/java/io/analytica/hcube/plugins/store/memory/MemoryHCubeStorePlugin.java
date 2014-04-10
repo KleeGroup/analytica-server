@@ -38,21 +38,19 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private final ConcurrentHashMap<String, AppCubeStore> appCubeStores = new ConcurrentHashMap<>();
 
 	/** {@inheritDoc} */
-	public void merge(String appName, final HCube cube) {
+	public synchronized void merge(String appName, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
-		synchronized (appCubeStores) {
-			AppCubeStore appCubeStore = appCubeStores.get(appName);
-			if (appCubeStore == null) {
-				appCubeStore = new AppCubeStore();
-				appCubeStores.put(appName, appCubeStore);
-			}
-			appCubeStore.merge(cube);
+		AppCubeStore appCubeStore = appCubeStores.get(appName);
+		if (appCubeStore == null) {
+			appCubeStore = new AppCubeStore();
+			appCubeStores.put(appName, appCubeStore);
 		}
+		appCubeStore.merge(cube);
 	}
 
 	/** {@inheritDoc} */
-	public Map<HCategory, HSerie> findAll(final String appName, final HQuery query, final HCategoryDictionary categoryDictionary) {
+	public synchronized Map<HCategory, HSerie> findAll(final String appName, final HQuery query, final HCategoryDictionary categoryDictionary) {
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
 			return EMPTY.findAll(query, categoryDictionary);
