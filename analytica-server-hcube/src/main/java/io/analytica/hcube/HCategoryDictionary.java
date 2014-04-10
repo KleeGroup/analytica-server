@@ -34,11 +34,6 @@ import java.util.Set;
  */
 public interface HCategoryDictionary {
 	/**
-	 * Ajout d'une catégorie.
-	 */
-	void add(HCategory category);
-
-	/**
 	 * @return Set des catégories racines
 	 */
 	Set<HCategory> getAllRootCategories();

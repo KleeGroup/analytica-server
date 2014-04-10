@@ -46,7 +46,7 @@ final class AppCubeStore {
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
-	private final void merge(final HCube cube, final HCubeKey cubeKey) {
+	private void merge(final HCube cube, final HCubeKey cubeKey) {
 
 		final HCube oldCube = store.get(cubeKey);
 		final HCube newCube;

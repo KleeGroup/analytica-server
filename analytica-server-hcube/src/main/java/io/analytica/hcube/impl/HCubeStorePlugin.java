@@ -30,7 +30,7 @@ import java.util.Map;
  * Plugin gérant le stockage des cubes.
  * @author npiedeloup
  */
-public interface HCubeStorePlugin extends Plugin {
+public interface HCubeStorePlugin extends Plugin, HCategoryDictionary {
 
 	//	Collection<String> getAppNames();
 

@@ -31,7 +31,6 @@ import javax.inject.Inject;
  */
 public final class HCubeManagerImpl implements HCubeManager {
 	private final HCubeStorePlugin cubeStorePlugin;
-	private final HCategoryDictionary categoryDictionary = new HCategoryDictionaryImpl();
 
 	/**
 	 * Constructeur.
@@ -49,17 +48,16 @@ public final class HCubeManagerImpl implements HCubeManager {
 	/** {@inheritDoc} */
 	public void push(String appName, final HCube cube) {
 		//---Alimentation du dictionnaire des catégories puis des cubes
-		categoryDictionary.add(cube.getKey().getCategory());
 		cubeStorePlugin.merge(appName, cube);
 	}
 
 	/** {@inheritDoc} */
 	public HResult execute(String appName, final HQuery query) {
-		return new HResult(query, query.getAllCategories(categoryDictionary), cubeStorePlugin.findAll(appName, query, categoryDictionary));
+		return new HResult(query, query.getAllCategories(getCategoryDictionary()), cubeStorePlugin.findAll(appName, query, getCategoryDictionary()));
 	}
 
 	/** {@inheritDoc} */
 	public HCategoryDictionary getCategoryDictionary() {
-		return categoryDictionary;
+		return cubeStorePlugin;
 	}
 }
