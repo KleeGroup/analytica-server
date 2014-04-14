@@ -27,7 +27,6 @@ import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,25 +38,17 @@ import java.util.Set;
 public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private static final AppCubeStore EMPTY = new AppCubeStore();
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
-	//===
-	private final Set<HCategory> rootCategories;
-	private final Map<HCategory, Set<HCategory>> categories;
-
-	public MemoryHCubeStorePlugin() {
-		rootCategories = new HashSet<>();
-		categories = new HashMap<>();
-	}
 
 	/** {@inheritDoc} */
 	public synchronized void merge(String appName, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
-		addCategory(cube.getKey().getCategory());
 		AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
 			appCubeStore = new AppCubeStore();
 			appCubeStores.put(appName, appCubeStore);
 		}
+		appCubeStore.addCategory(cube.getKey().getCategory());
 		appCubeStore.merge(cube);
 	}
 
@@ -71,50 +62,26 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategory> getAllRootCategories() {
-		return Collections.unmodifiableSet(rootCategories);
-
+	public synchronized Set<HCategory> getAllRootCategories(String appName) {
+		Assertion.checkArgNotEmpty(appName);
+		//---------------------------------------------------------------------
+		final AppCubeStore appCubeStore = appCubeStores.get(appName);
+		if (appCubeStore == null) {
+			return Collections.emptySet();
+		}
+		return appCubeStore.getAllRootCategories();
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategory> getAllSubCategories(HCategory category) {
+	public synchronized Set<HCategory> getAllSubCategories(String appName, HCategory category) {
+		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
-		Set<HCategory> set = categories.get(category);
-		return set == null ? Collections.<HCategory> emptySet() : Collections.unmodifiableSet(set);
-	}
-
-	/** {@inheritDoc} */
-	private void addCategory(HCategory category) {
-		Assertion.checkNotNull(category);
-		//---------------------------------------------------------------------
-		HCategory currentCategory = category;
-		HCategory parentCategory;
-		boolean drillUp;
-		do {
-			parentCategory = currentCategory.drillUp();
-			//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
-			//On dispose donc d'une info pour savoir si il faut remonter 
-			drillUp = doPut(parentCategory, currentCategory);
-			currentCategory = parentCategory;
-		} while (drillUp);
-	}
-
-	private boolean doPut(HCategory parentCategory, HCategory category) {
-		Assertion.checkNotNull(category);
-		//---------------------------------------------------------------------
-		if (parentCategory == null) {
-			//category est une catégorie racine
-			rootCategories.add(category);
-			return false;
+		final AppCubeStore appCubeStore = appCubeStores.get(appName);
+		if (appCubeStore == null) {
+			return Collections.emptySet();
 		}
-		//category n'est pas une catégorie racine
-		Set<HCategory> set = categories.get(parentCategory);
-		if (set == null) {
-			set = new HashSet<>();
-			categories.put(parentCategory, set);
-		}
-		return set.add(category);
+		return appCubeStore.getAllSubCategories(category);
 	}
 
 }

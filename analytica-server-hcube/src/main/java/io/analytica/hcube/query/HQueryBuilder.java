@@ -30,12 +30,19 @@ import java.util.Date;
  * @author npiedeloup, pchretien
  */
 public final class HQueryBuilder implements Builder<HQuery> {
+	private final String appName;
 	private HTimeDimension hTimeDimension;
 	private Date from;
 	private Date to;
 	//----
 	private HCategory category;
 	private boolean categoryChildren;
+
+	public HQueryBuilder(String appName) {
+		Assertion.checkArgNotEmpty(appName);
+		//---------------------------------------------------------------------
+		this.appName = appName;
+	}
 
 	//----
 	//	private HLocation location;
@@ -189,6 +196,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/** {@inheritDoc} */
 	public HQuery build() {
-		return new HQuery(new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren)/*, new HLocationSelection(location, locationChildren)*/);
+		return new HQuery(appName, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren)/*, new HLocationSelection(location, locationChildren)*/);
 	}
 }

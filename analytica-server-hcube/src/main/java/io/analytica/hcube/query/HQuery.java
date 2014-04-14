@@ -33,16 +33,19 @@ import java.util.Set;
  * @author npiedeloup, pchretien
  */
 public final class HQuery {
+	private final String appName;
 	private final HTimeSelection timeSelection;
 	private final HCategorySelection categorySelection;
 
 	//private final HLocationSelection locationSelection;
 
-	HQuery(final HTimeSelection timeSelection, final HCategorySelection categorySelection/*, final HLocationSelection locationSelection*/) {
+	HQuery(final String appName, final HTimeSelection timeSelection, final HCategorySelection categorySelection/*, final HLocationSelection locationSelection*/) {
+		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(timeSelection);
 		Assertion.checkNotNull(categorySelection);
 		//Assertion.checkNotNull(locationSelection);
 		//---------------------------------------------------------------------
+		this.appName = appName;
 		this.timeSelection = timeSelection;
 		this.categorySelection = categorySelection;
 		//	this.locationSelection = locationSelection;
@@ -57,7 +60,7 @@ public final class HQuery {
 		Assertion.checkNotNull(categoryDictionary);
 		// ---------------------------------------------------------------------
 		if (categorySelection.hasChildren()) {
-			return categoryDictionary.getAllSubCategories(categorySelection.getCategory());
+			return categoryDictionary.getAllSubCategories(appName, categorySelection.getCategory());
 		}
 		return Collections.singleton(categorySelection.getCategory());
 	}

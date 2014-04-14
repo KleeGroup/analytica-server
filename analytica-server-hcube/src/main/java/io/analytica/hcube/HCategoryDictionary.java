@@ -36,10 +36,10 @@ public interface HCategoryDictionary {
 	/**
 	 * @return Set des catégories racines
 	 */
-	Set<HCategory> getAllRootCategories();
+	Set<HCategory> getAllRootCategories(String appName);
 
 	/**
 	 * @return Liste des catégories filles
 	 */
-	Set<HCategory> getAllSubCategories(HCategory category);
+	Set<HCategory> getAllSubCategories(String appName, HCategory category);
 }
