@@ -25,8 +25,12 @@ final class AppCubeStore {
 	//---------------------------------------------------------------------
 	private final Set<HCategory> rootCategories;
 	private final Map<HCategory, Set<HCategory>> categories;
+	private final String appName;
 
-	AppCubeStore() {
+	AppCubeStore(final String appName) {
+		Assertion.checkArgNotEmpty(appName);
+		//---------------------------------------------------------------------
+		this.appName = appName;
 		queue = new ArrayList<>();
 		store = new HashMap<>();
 		//---------------------------------------------------------------------
@@ -82,7 +86,7 @@ final class AppCubeStore {
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
-		for (final HCategory category : query.getAllCategories(categoryDictionary)) {
+		for (final HCategory category : query.getAllCategories(appName, categoryDictionary)) {
 			final List<HCube> cubes = new ArrayList<>();
 
 			for (HTime currentTime : query.getAllTimes()) {

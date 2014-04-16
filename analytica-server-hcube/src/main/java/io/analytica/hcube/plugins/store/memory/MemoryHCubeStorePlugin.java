@@ -36,7 +36,7 @@ import java.util.Set;
  * @author npiedeloup, pchretien
  */
 public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
-	private static final AppCubeStore EMPTY = new AppCubeStore();
+	private static final AppCubeStore EMPTY = new AppCubeStore("EMPTY");
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 
 	/** {@inheritDoc} */
@@ -45,7 +45,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		//---------------------------------------------------------------------
 		AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
-			appCubeStore = new AppCubeStore();
+			appCubeStore = new AppCubeStore(appName);
 			appCubeStores.put(appName, appCubeStore);
 		}
 		appCubeStore.addCategory(cube.getKey().getCategory());

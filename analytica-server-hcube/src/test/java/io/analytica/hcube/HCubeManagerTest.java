@@ -61,14 +61,14 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery() {
 		final Date start = new Date();
-		final HQuery query1 = new HQueryBuilder(APP_NAME)//
+		final HQuery query1 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from(new DateBuilder(start).addHours(-3).toDateTime())//
 				.to(start)//
 				.with(PAGES)//
 				.build();
 
-		final HQuery query2 = new HQueryBuilder(APP_NAME)//
+		final HQuery query2 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from("NOW-3h")//
 				.to("NOW")//
@@ -85,7 +85,7 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testQuery2() {
-		final HQuery query = new HQueryBuilder(APP_NAME)//
+		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from("NOW")//
 				.to("NOW+3d")//
@@ -100,7 +100,7 @@ public final class HCubeManagerTest {
 	 */
 	@Test(expected = Exception.class)
 	public void testQueryFail() {
-		new HQueryBuilder(APP_NAME)//
+		new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from("NOW")//
 				.to("NOW-3m")//
@@ -139,7 +139,7 @@ public final class HCubeManagerTest {
 		//----	
 		populateData(cubeManager, start, days);
 		//----	
-		final HQuery query = new HQueryBuilder(APP_NAME)//
+		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.from(start)//
 				.to(end)//
@@ -210,7 +210,7 @@ public final class HCubeManagerTest {
 		//----	
 		populateData(cubeManager, start, days);
 		//----	
-		final HQuery query = new HQueryBuilder(APP_NAME)//
+		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.SixMinutes)//
 				.from(start)//
 				.to(end)//
@@ -445,7 +445,7 @@ public final class HCubeManagerTest {
 
 	private static void checkMergedMetric(final HCubeManager cubeManager, final HTimeDimension timeDimension, final Date start, final Date end, final HMetricKey weight, final int espectedCount, final double espectedSum, final double espectedMin, final double espectedMax) {
 		//----	
-		final HQuery query = new HQueryBuilder(APP_NAME)//
+		final HQuery query = new HQueryBuilder()//
 				.on(timeDimension)//
 				.from(start)//
 				.to(end)//

@@ -33,22 +33,15 @@ import java.util.Set;
  * @author npiedeloup, pchretien
  */
 public final class HQuery {
-	private final String appName;
 	private final HTimeSelection timeSelection;
 	private final HCategorySelection categorySelection;
 
-	//private final HLocationSelection locationSelection;
-
-	HQuery(final String appName, final HTimeSelection timeSelection, final HCategorySelection categorySelection/*, final HLocationSelection locationSelection*/) {
-		Assertion.checkArgNotEmpty(appName);
+	HQuery(final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
 		Assertion.checkNotNull(timeSelection);
 		Assertion.checkNotNull(categorySelection);
-		//Assertion.checkNotNull(locationSelection);
 		//---------------------------------------------------------------------
-		this.appName = appName;
 		this.timeSelection = timeSelection;
 		this.categorySelection = categorySelection;
-		//	this.locationSelection = locationSelection;
 	}
 
 	//-----------------------What----------------------------------------------
@@ -56,7 +49,7 @@ public final class HQuery {
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 * @return
 	 */
-	public Set<HCategory> getAllCategories(final HCategoryDictionary categoryDictionary) {
+	public Set<HCategory> getAllCategories(final String appName, final HCategoryDictionary categoryDictionary) {
 		Assertion.checkNotNull(categoryDictionary);
 		// ---------------------------------------------------------------------
 		if (categorySelection.hasChildren()) {
@@ -73,6 +66,6 @@ public final class HQuery {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "{timeSelection :" + timeSelection + ", categorySelection :" + categorySelection /*+ " at:" + locationSelection*/+ "}";
+		return "{timeSelection :" + timeSelection + ", categorySelection :" + categorySelection + "}";
 	}
 }
