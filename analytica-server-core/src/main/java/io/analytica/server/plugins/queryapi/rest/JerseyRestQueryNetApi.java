@@ -142,7 +142,7 @@ public class JerseyRestQueryNetApi {
 			values.add("sum");
 			values.add("sqrSum");
 			values.add("stdDev");
-			if (metric.getKey().isClustered()) {
+			if (metric.getKey().hasDistribution()) {
 				values.add("clustered");
 			}
 		}

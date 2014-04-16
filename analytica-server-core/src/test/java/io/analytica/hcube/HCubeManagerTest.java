@@ -568,7 +568,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testClusteredValuesProcess() {
+	public void testDistributionProcess() {
 		pushProcess(createSqlProcess(0)); //<=0
 		pushProcess(createSqlProcess(1)); //<=1
 		pushProcess(createSqlProcess(2)); //<=2
@@ -603,16 +603,16 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		assertMetricEquals(montantMetric, 18, price * 18, price, price, price);
 
 		final HMetric durationMetric = cubes.get(0).getMetric(DURATION_KEY);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(0d), 0);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(1d), 1);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(2d), 1);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(5d), 3);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(10d), 2);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(20d), 3);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(50d), 1);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(100d), 5);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(500d), 1);
-		Assert.assertEquals(1, durationMetric.getClusteredValues().get(20000d), 1);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(0d), 0);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(1d), 1);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(2d), 1);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(5d), 3);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(10d), 2);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(20d), 3);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(50d), 1);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(100d), 5);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(500d), 1);
+		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(20000d), 1);
 	}
 
 	@Test

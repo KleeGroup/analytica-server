@@ -24,18 +24,18 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HMetricKey {
-	private final boolean clustered;
+	private final boolean distribution;
 	private final String name;
 
-	public HMetricKey(final String name, final boolean clustered) {
+	public HMetricKey(final String name, final boolean distribution) {
 		Assertion.checkArgNotEmpty(name);
 		//---------------------------------------------------------------------
 		this.name = name;
-		this.clustered = clustered;
+		this.distribution = distribution;
 	}
 
-	public boolean isClustered() {
-		return clustered;
+	public boolean hasDistribution() {
+		return distribution;
 	}
 
 	public String getName() {

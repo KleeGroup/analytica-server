@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 final class AppCubeStore {
+	private static final int QUEUE_SIZE = 5000;
 	private final List<HCube> queue;
 	private final Map<HCubeKey, HCube> store;
 	//---------------------------------------------------------------------
@@ -38,7 +39,7 @@ final class AppCubeStore {
 		//---------------------------------------------------------------------
 		//populate a queue
 		queue.add(cube);
-		if (queue.size() > 5000) {
+		if (queue.size() > QUEUE_SIZE) {
 			flushQueue();
 		}
 	}

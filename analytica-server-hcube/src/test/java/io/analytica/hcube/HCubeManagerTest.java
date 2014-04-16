@@ -271,7 +271,7 @@ public final class HCubeManagerTest {
 		metricBuilder.withValue(111222333);//<200000000
 
 		final HMetric metric = metricBuilder.build();
-		final Map<Double, Long> histogram = metric.getClusteredValues();
+		final Map<Double, Long> histogram = metric.getDistribution().getData();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
 		Assert.assertEquals(1, histogram.get(1d), 0);

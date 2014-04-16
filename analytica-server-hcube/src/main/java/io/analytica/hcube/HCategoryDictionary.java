@@ -30,7 +30,7 @@ import java.util.Set;
  *  - Toutes les catégories racines (sql, pages, services..)
  *  - Liste des catégories sous une catégorie chapeau (exemple : toutes les catégories sous sql)
  * 
- * @author statchum, pchretien
+ * @author npiedeloup, pchretien
  */
 public interface HCategoryDictionary {
 	/**

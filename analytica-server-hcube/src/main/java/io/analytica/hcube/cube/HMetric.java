@@ -19,8 +19,6 @@ package io.analytica.hcube.cube;
 
 import io.vertigo.kernel.lang.Assertion;
 
-import java.util.Map;
-
 /**
  * Metric.
  * La métric est le résultat issue de l'aggrégation 
@@ -35,15 +33,15 @@ import java.util.Map;
  */
 public final class HMetric {
 	private final HMetricKey metricKey;
+	private final HDistribution distribution;
 
 	private final long count;
 	private final double min;
 	private final double max;
 	private final double sum;
 	private final double sqrSum;
-	private final Map<Double, Long> clusteredValues;
 
-	HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, final Map<Double, Long> clusteredValues) {
+	HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, final HDistribution distribution) {
 		Assertion.checkNotNull(metricKey);
 		//Assertion.checkArgument(metricKey.isClustered() ^ clusteredValues != null, "la metric {0} cluster doit avoir des données clusterisées", metricKey);
 		//---------------------------------------------------------------------
@@ -54,7 +52,7 @@ public final class HMetric {
 		this.sum = sum;
 		this.sqrSum = sqrSum;
 		//---------------------------------------------------------------------
-		this.clusteredValues = clusteredValues;
+		this.distribution = distribution;
 	}
 
 	/**
@@ -113,13 +111,12 @@ public final class HMetric {
 		return Double.NaN;
 	}
 
-	public Map<Double, Long> getClusteredValues() {
-		return clusteredValues;
+	public HDistribution getDistribution() {
+		return distribution;
 	}
 
 	@Override
 	public String toString() {
-		return "{key: " + metricKey + ", count:" + count + ", mean:" + getMean() + (clusteredValues == null ? " " : ", clustered:" + clusteredValues) + "}";
+		return "{key: " + metricKey + ", count:" + count + ", mean:" + getMean() + (distribution == null ? " " : ", distribution:" + getDistribution()) + "}";
 	}
-
 }

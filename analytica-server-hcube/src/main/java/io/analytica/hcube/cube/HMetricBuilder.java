@@ -20,10 +20,6 @@ package io.analytica.hcube.cube;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 /**
  * Builder permettant de contruire une metric.
  * Une métric est une mesure agrégée.
@@ -37,6 +33,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	private double max = Double.NaN; //Par défaut pas de max
 	private double sum = 0;
 	private double sqrSum = 0;
+	private final HDistributionBuilder distributionBuilder;
 
 	/**
 	 * Constructeur.
@@ -46,11 +43,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		Assertion.checkNotNull(metricKey);
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
-		if (metricKey.isClustered()) {
-			clusteredValues = new HashMap<>();
-		} else {
-			clusteredValues = null;
-		}
+		distributionBuilder = metricKey.hasDistribution() ? new HDistributionBuilder() : null;
 	}
 
 	/**
@@ -64,8 +57,8 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		min = min(min, value);
 		sum += value;
 		sqrSum += value * value;
-		if (metricKey.isClustered()) {
-			incTreshold(clusterValue2(value), 1);
+		if (distributionBuilder != null) {
+			distributionBuilder.withValue(value);
 		}
 		return this;
 	}
@@ -78,7 +71,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	public HMetricBuilder withMetric(final HMetric metric) {
 		Assertion.checkNotNull(metric);
 		Assertion.checkArgument(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
-		Assertion.checkArgument(metricKey.isClustered() ^ !metric.getKey().isClustered(), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
+		Assertion.checkArgument(metricKey.hasDistribution() ^ !metric.getKey().hasDistribution(), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
 		//---------------------------------------------------------------------
 		count += metric.get(HCounterType.count);
 		max = max(max, metric.get(HCounterType.max));
@@ -86,10 +79,8 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		sum += metric.get(HCounterType.sum);
 		sqrSum += metric.get(HCounterType.sqrSum);
 		//---------------------------------------------------------------------
-		if (metricKey.isClustered()) {
-			for (final Entry<Double, Long> entry : metric.getClusteredValues().entrySet()) {
-				incTreshold(entry.getKey(), entry.getValue());
-			}
+		if (distributionBuilder != null) {
+			distributionBuilder.withDistribution(metric.getDistribution());
 		}
 		return this;
 	}
@@ -101,7 +92,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	public HMetric build() {
 		Assertion.checkArgument(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
 		//---------------------------------------------------------------------
-		return new HMetric(metricKey, count, min, max, sum, sqrSum, clusteredValues);
+		return new HMetric(metricKey, count, min, max, sum, sqrSum, distributionBuilder == null ? null : distributionBuilder.build());
 	}
 
 	private static double max(final double d1, final double d2) {
@@ -114,55 +105,4 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : d1 < d2 ? d1 : d2;
 	}
 
-	//-----------------------------------------------------------------------------------
-	//---------------------------Cluster-------------------------------------------------
-	//-----------------------------------------------------------------------------------
-	private final Map<Double, Long> clusteredValues;
-
-	private void incTreshold(final double treshold, final long incBy) {
-		final Long hcount = clusteredValues.get(treshold);
-		clusteredValues.put(treshold, incBy + (hcount == null ? 0 : hcount));
-	}
-
-	private double clusterValue2(final double value) {
-		//On crée une répartion : 1, 2, 5 - 10, 20, 50 - 100, 200, 500...
-		//Optim 
-		/*	if (value <= 0)
-				return 0;
-			if (value <= 1)
-				return 1;
-			if (value <= 2)
-				return 2;
-			if (value <= 5)
-				return 5;
-			if (value <= 10)
-				return 10;
-			if (value <= 20)
-				return 20;
-			if (value <= 50)
-				return 50;
-			if (value <= 100)
-				return 100;
-			if (value <= 200)
-				return 200;
-			if (value <= 500)
-				return 500;
-			if (value <= 1000)
-				return 1000;
-			if (value <= 2000)
-				return 2000;
-			if (value <= 5000)
-				return 5000;*/
-		//Other cases
-		final double index = Math.floor(Math.log10(value));
-		final double treshold = Math.pow(10, index);
-		if (value <= treshold) {
-			return treshold;
-		} else if (value <= 2 * treshold) {
-			return 2 * treshold;
-		} else if (value <= 5 * treshold) {
-			return 5 * treshold;
-		}
-		return 10 * treshold;
-	}
 }
