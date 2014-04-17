@@ -71,7 +71,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	public HMetricBuilder withMetric(final HMetric metric) {
 		Assertion.checkNotNull(metric);
 		Assertion.checkArgument(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
-		Assertion.checkArgument(metricKey.hasDistribution() ^ !metric.getKey().hasDistribution(), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
+		Assertion.checkArgument(distributionBuilder == null ^ !(metric.getDistribution() == null), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
 		//---------------------------------------------------------------------
 		count += metric.get(HCounterType.count);
 		max = max(max, metric.get(HCounterType.max));

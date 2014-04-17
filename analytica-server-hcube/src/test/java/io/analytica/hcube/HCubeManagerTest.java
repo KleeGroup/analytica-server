@@ -411,6 +411,9 @@ public final class HCubeManagerTest {
 		System.out.println("start = " + startDate);
 		final HCategory category = new HCategory(PAGES, "WELCOME");
 
+		final HMetricKey duration = new HMetricKey("DURATION", true);
+		final HMetricKey weight = new HMetricKey("WEIGHT", false);
+
 		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {
@@ -419,14 +422,12 @@ public final class HCubeManagerTest {
 					//--------		
 					final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
 
-					final HMetricKey duration = new HMetricKey("DURATION", true);
 					final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
 					for (int i = 0; i < 100; i++) {
 						metricBuilder.withValue(100 - i);
 						metricBuilder.withValue(100 + i);
 					}
 
-					final HMetricKey weight = new HMetricKey("WEIGHT", false);
 					final HMetric weightMetric = new HMetricBuilder(weight).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder(cubeKey)//
@@ -440,6 +441,15 @@ public final class HCubeManagerTest {
 			if (day % 100 == 0) {
 				System.out.println(">>> day = " + day + " in " + (System.currentTimeMillis() - start) + " ms");
 			}
+			//			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+			//				System.gc();
+			//				if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+			//					System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
+			//					System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
+			//					System.out.println(">>>> mem total > 90% - days =" + day);
+			//					System.exit(0);
+			//				}
+			//			}
 		}
 	}
 
