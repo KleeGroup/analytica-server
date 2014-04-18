@@ -28,8 +28,6 @@ import io.vertigo.kernel.component.Manager;
  * @author pchretien, npiedeloup
  */
 public interface HCubeManager extends Manager {
-	void register (String appName 
-
 	/**
 	 * @return Dictionnaire des catégories
 	 */
