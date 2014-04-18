@@ -53,7 +53,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	/** {@inheritDoc} */
 	public HResult execute(String appName, final HQuery query) {
-		return new HResult(query, query.getAllCategories(appName, getCategoryDictionary()), cubeStorePlugin.findAll(appName, query, getCategoryDictionary()));
+		return new HResult(query, query.getAllCategories(appName, getCategoryDictionary()), cubeStorePlugin.findAll(appName, query));
 	}
 
 	/** {@inheritDoc} */

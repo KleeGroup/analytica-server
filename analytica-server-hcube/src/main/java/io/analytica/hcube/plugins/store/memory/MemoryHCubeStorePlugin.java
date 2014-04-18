@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.plugins.store.memory;
 
-import io.analytica.hcube.HCategoryDictionary;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.impl.HCubeStorePlugin;
@@ -53,12 +52,12 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Map<HCategory, HSerie> findAll(final String appName, final HQuery query, final HCategoryDictionary categoryDictionary) {
+	public synchronized Map<HCategory, HSerie> findAll(final String appName, final HQuery query) {
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
-			return EMPTY.findAll(query, categoryDictionary);
+			return EMPTY.findAll(query, this);
 		}
-		return appCubeStore.findAll(query, categoryDictionary);
+		return appCubeStore.findAll(query, this);
 	}
 
 	/** {@inheritDoc} */
