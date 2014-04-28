@@ -60,4 +60,8 @@ public final class HCubeManagerImpl implements HCubeManager {
 	public HCategoryDictionary getCategoryDictionary() {
 		return cubeStorePlugin;
 	}
+
+	public long count(String appName) {
+		return cubeStorePlugin.count(appName);
+	}
 }

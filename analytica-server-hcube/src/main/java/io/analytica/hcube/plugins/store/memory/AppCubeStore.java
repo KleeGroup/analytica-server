@@ -152,6 +152,7 @@ final class AppCubeStore {
 		}
 		return set.add(category);
 	}
+
 	/** {@inheritDoc} */
 	/*@Override
 	public synchronized String toString() {
@@ -162,5 +163,10 @@ final class AppCubeStore {
 		}
 		return sb.toString();
 	}*/
+
+	long count() {
+		flushQueue();
+		return store.size();
+	}
 
 }

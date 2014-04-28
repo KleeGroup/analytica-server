@@ -45,4 +45,6 @@ public interface HCubeManager extends Manager {
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
 	HResult execute(String appName, HQuery query);
+
+	long count(String appName);
 }

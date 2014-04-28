@@ -83,4 +83,12 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		return appCubeStore.getAllSubCategories(category);
 	}
 
+	public synchronized long count(String appName) {
+		final AppCubeStore appCubeStore = appCubeStores.get(appName);
+		if (appCubeStore == null) {
+			return 0;
+		}
+		return appCubeStore.count();
+	}
+
 }

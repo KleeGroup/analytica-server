@@ -441,15 +441,20 @@ public final class HCubeManagerTest {
 			if (day % 100 == 0) {
 				System.out.println(">>> day = " + day + " in " + (System.currentTimeMillis() - start) + " ms");
 			}
-			//			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			//				System.gc();
-			//				if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			//					System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
-			//					System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
-			//					System.out.println(">>>> mem total > 90% - days =" + day);
-			//					System.exit(0);
-			//				}
-			//			}
+			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+				cubeManager.count(APP_NAME);
+				System.gc();
+				if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+					System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
+					System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
+					System.out.println(">>>> mem total > 90% - days =" + day);
+					System.out.println(">>>> cubes count =" + cubeManager.count(APP_NAME));
+
+					System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(APP_NAME)) + " octets");
+
+					System.exit(0);
+				}
+			}
 		}
 	}
 

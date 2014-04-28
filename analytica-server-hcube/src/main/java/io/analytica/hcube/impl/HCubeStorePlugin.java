@@ -47,4 +47,6 @@ public interface HCubeStorePlugin extends Plugin, HCategoryDictionary {
 	 * @return Séries des cubes 
 	 */
 	Map<HCategory, HSerie> findAll(String appName, HQuery query);
+
+	long count(String appName);
 }
