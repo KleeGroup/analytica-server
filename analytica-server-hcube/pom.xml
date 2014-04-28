@@ -36,6 +36,13 @@
 			<version>4.7.0</version>
 			<optional>true</optional> <!-- for LuceneHCubeStorePlugin -->
 		</dependency>
+		<!--  
+		<dependency>
+	        <groupId>com.hazelcast</groupId>
+	        <artifactId>hazelcast</artifactId>
+	        <version>3.1</version>
+	    </dependency>
+		-->
 	</dependencies>
 
 	<build>
