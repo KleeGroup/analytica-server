@@ -63,7 +63,7 @@ public final class JerseyRestProcessNetApi {
 		LOG.info("PUSH " + processes.length + " processes.");
 		//LOG.info("-> " + json);
 		for (final KProcess process : processes) {
-			serverManager.push(process.getSystemName(), process.getSystemLocation(), process);
+			serverManager.push(process);
 		}
 	}
 

@@ -36,8 +36,6 @@ import io.analytica.museum.Museum;
 import io.analytica.museum.PageListener;
 import io.analytica.museum.StatsUtil;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,15 +55,8 @@ import org.junit.Test;
  *
  */
 public class ServerManagerTest extends AbstractTestCaseJU4Rule {
-	private static final String SYSTEM_NAME = "Server-Test";
-	private static final String[] SYSTEM_LOCATION = { "test", "UnknownHost" };
-	static {
-		try {
-			SYSTEM_LOCATION[1] = InetAddress.getLocalHost().getHostAddress();
-		} catch (final UnknownHostException e) {
-			//nothing, we keep UnknownHost
-		}
-	}
+	private static final String APP_NAME = "MY_PTREETY_APP";
+
 	private static final String MONTANT = "MONTANT";
 	private static final HMetricKey MONTANT_KEY = new HMetricKey(MONTANT, false);
 	private static final String PROCESS_SQL = "SQL";
@@ -93,10 +84,10 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testSimpleProcess() {
-		final KProcess selectProcess1 = new KProcessBuilder(date, 100, SYSTEM_NAME, SYSTEM_LOCATION, PROCESS_SQL, "select article")//
+		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, date, 100, PROCESS_SQL, "select article")//
 				.incMeasure(MONTANT, price)//
 				.build();
-		serverManager.push(selectProcess1.getSystemName(), selectProcess1.getSystemLocation(), selectProcess1);
+		serverManager.push(selectProcess1);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
@@ -105,7 +96,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 				.with("SQL").build();
 
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
-		final HResult result = serverManager.execute(daySqlQuery);
+		final HResult result = serverManager.execute(APP_NAME, daySqlQuery);
 		Assert.assertEquals(1, result.getAllCategories().size());
 
 		final List<HCube> cubes = result.getSerie(processSQLCategory).getCubes();
@@ -173,7 +164,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 		new Museum(new PageListener() {
 			@Override
 			public void onPage(final KProcess process) {
-				serverManager.push(process.getSystemName(), process.getSystemLocation(), process);
+				serverManager.push(process);
 			}
 		}).load(days, visitsByDay);
 		//Thread.sleep(1000000000);

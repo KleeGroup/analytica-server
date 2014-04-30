@@ -414,6 +414,7 @@ public final class HCubeManagerTest {
 		final HMetricKey duration = new HMetricKey("DURATION", true);
 		final HMetricKey weight = new HMetricKey("WEIGHT", false);
 
+		long mc = 0;
 		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {
@@ -436,12 +437,13 @@ public final class HCubeManagerTest {
 							.build();
 
 					cubeManager.push(APP_NAME, cube);
+					//--
+					checkMemory(cubeManager, APP_NAME, day);
+					if ((mc++) % (60 * 24 * 10) == 0) {
+						System.out.println(">>> day/hour/min = " + day + "/" + h + "/" + min + " in " + (System.currentTimeMillis() - start) + " ms");
+					}
 				}
 			}
-			if (day % 100 == 0) {
-				System.out.println(">>> day = " + day + " in " + (System.currentTimeMillis() - start) + " ms");
-			}
-			checkMemory(cubeManager, APP_NAME, day);
 		}
 
 	}
@@ -458,7 +460,12 @@ public final class HCubeManagerTest {
 				System.out.println(">>>> cubes count =" + cubeManager.count(appName));
 
 				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(appName)) + " octets");
-
+				try {
+					Thread.sleep(1000 * 20);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.exit(0);
 			}
 		}

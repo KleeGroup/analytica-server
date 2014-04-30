@@ -32,18 +32,14 @@ import io.vertigo.kernel.component.Manager;
 public interface ServerManager extends Manager {
 	/**
 	 * Add a process.
-	 * @param appName Application's name
-	 * @param serverLocation Server location
 	 * @param process Process to push
 	 */
-	void push(String appName, String[] serverLocation, KProcess process);
-
-	//void push(String appName, String serverName, Observation process);
+	void push(KProcess process);
 
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
-	HResult execute(HQuery query);
+	HResult execute(final String appName, HQuery query);
 }

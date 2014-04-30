@@ -57,7 +57,7 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 
 	/** {@inheritDoc} */
 	public void add(final KProcess process) {
-		final BerkeleyDatabase database = obtainDatabase(process.getSystemName());
+		final BerkeleyDatabase database = obtainDatabase(process.getAppName());
 		final long key = database.getSequenceNextVal();
 		final DatabaseEntry dataKey = writer.writeKey(key);
 		final DatabaseEntry dataProcess = writer.writeProcess(process);

@@ -64,14 +64,14 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public void push(final String appName, final String[] serverLocation, final KProcess process) {
+	public void push(final KProcess process) {
 		processStorePlugin.add(process);
 		//hcubeManager.push(process);
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(final HQuery query) {
-		return hcubeManager.execute(query);
+	public HResult execute(final String appName, final HQuery query) {
+		return hcubeManager.execute(appName, query);
 	}
 
 	/** {@inheritDoc} */
@@ -106,7 +106,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 				processStatsPlugin.get().merge(process.getData());
 			}
 			for (final HCube cube : cubes) {
-				hcubeManager.push(cube);
+				hcubeManager.push(process.getData().getAppName(), cube);
 			}
 			lastProcessIdStored = process.getKey();
 		}

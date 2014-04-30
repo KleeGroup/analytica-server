@@ -93,15 +93,10 @@ final class KProcessBinding extends TupleBinding {
 		for (int i = 0; i < nbNames; i++) {
 			names[i] = ti.readString();
 		}
-		final String systemName = ti.readString();
-		final int nbLocations = ti.readInt();
-		final String[] systemLocation = new String[nbLocations];
-		for (int i = 0; i < nbLocations; i++) {
-			systemLocation[i] = ti.readString();
-		}
+		final String appName = ti.readString();
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, systemName, systemLocation, type, names);
+		final KProcessBuilder processBuilder = new KProcessBuilder(appName, startDate, duration, type, names);
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {
@@ -137,11 +132,7 @@ final class KProcessBinding extends TupleBinding {
 			to.writeString(namePart);
 		}
 
-		to.writeString(process.getSystemName());
-		to.writeInt(process.getSystemLocation().length);
-		for (final String locationPart : process.getSystemLocation()) {
-			to.writeString(locationPart);
-		}
+		to.writeString(process.getAppName());
 
 		to.writeLong(process.getStartDate().getTime());
 		to.writeDouble(process.getMeasures().get(KProcess.DURATION));
@@ -174,11 +165,10 @@ final class KProcessBinding extends TupleBinding {
 		for (int i = 0; i < nbNames; i++) {
 			names[i] = ti.readString();
 		}
-		final String systemName = "mainSystem"; //pas de systemName et systemLocation en v2
-		final String[] systemLocation = {};
+		final String appName = "mainSystem"; //pas de systemName et systemLocation en v2
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, systemName, systemLocation, type, names);
+		final KProcessBuilder processBuilder = new KProcessBuilder(appName, startDate, duration, type, names);
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {
@@ -208,11 +198,10 @@ final class KProcessBinding extends TupleBinding {
 	private KProcess doEntryToProcessV1(final TupleInput ti) throws Exception {
 		final String type = ti.readString();
 		final String name = ti.readString();
-		final String systemName = "mainSystem"; //pas de systemName et systemLocation en v1
-		final String[] systemLocation = {};
+		final String appName = "mainSystem"; //pas de systemName et systemLocation en v1
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(startDate, duration, systemName, systemLocation, type, name.split("/"));
+		final KProcessBuilder processBuilder = new KProcessBuilder(appName, startDate, duration, type, name.split("/"));
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {
