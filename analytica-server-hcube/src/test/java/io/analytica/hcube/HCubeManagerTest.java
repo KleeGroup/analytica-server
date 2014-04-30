@@ -133,7 +133,7 @@ public final class HCubeManagerTest {
 	public void testLoadAndQuery() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
-		final int days = 10;
+		final int days = 10000;
 		final Date end = dateFormat.parse("2012/12/13");
 
 		//----	
@@ -441,19 +441,25 @@ public final class HCubeManagerTest {
 			if (day % 100 == 0) {
 				System.out.println(">>> day = " + day + " in " + (System.currentTimeMillis() - start) + " ms");
 			}
+			checkMemory(cubeManager, APP_NAME, day);
+		}
+
+	}
+
+	private static void checkMemory(final HCubeManager cubeManager, String appName, final long day) {
+		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+			cubeManager.count(appName);
+			System.gc();
+			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-				cubeManager.count(APP_NAME);
-				System.gc();
-				if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-					System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
-					System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
-					System.out.println(">>>> mem total > 90% - days =" + day);
-					System.out.println(">>>> cubes count =" + cubeManager.count(APP_NAME));
+				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
+				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
+				System.out.println(">>>> mem total > 90% - days =" + day);
+				System.out.println(">>>> cubes count =" + cubeManager.count(appName));
 
-					System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(APP_NAME)) + " octets");
+				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(appName)) + " octets");
 
-					System.exit(0);
-				}
+				System.exit(0);
 			}
 		}
 	}
