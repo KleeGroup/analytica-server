@@ -47,7 +47,6 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 			appCubeStore = new AppCubeStore(appName);
 			appCubeStores.put(appName, appCubeStore);
 		}
-		appCubeStore.addCategory(cube.getKey().getCategory());
 		appCubeStore.merge(cube);
 	}
 

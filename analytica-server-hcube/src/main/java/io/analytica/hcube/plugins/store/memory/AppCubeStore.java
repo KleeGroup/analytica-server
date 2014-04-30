@@ -41,6 +41,8 @@ final class AppCubeStore {
 	void merge(final HCube cube) {
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
+		addCategory(cube.getKey().getCategory());
+
 		//populate a queue
 		queue.add(cube);
 		if (queue.size() > QUEUE_SIZE) {
@@ -121,7 +123,7 @@ final class AppCubeStore {
 		return Collections.unmodifiableSet(rootCategories);
 	}
 
-	void addCategory(HCategory category) {
+	private void addCategory(HCategory category) {
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
 		HCategory currentCategory = category;

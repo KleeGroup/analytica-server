@@ -133,7 +133,7 @@ public final class HCubeManagerTest {
 	public void testLoadAndQuery() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
-		final int days = 10000;
+		final int days = 10;
 		final Date end = dateFormat.parse("2012/12/13");
 
 		//----	
