@@ -607,7 +607,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	//On charge 10 jours à 50 visites par jourDURATION
 	public void testMuseum() {
-		final int days = 9;
+		final int days = 50;
 		final int visitsByDay = 200;
 		new Museum(new PageListener() {
 			@Override
@@ -629,7 +629,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.to(new DateBuilder(today.getTime()).addDays(1).build())//
 				.with("PAGE")//
 				.build();
-		final List<HCube> cubes = hcubeManager.execute(APP_NAME, hourQuery).getSerie(pageCategory).getCubes();
+		final List<HCube> cubes = hcubeManager.execute(Museum.APP_NAME, hourQuery).getSerie(pageCategory).getCubes();
 		Assert.assertEquals(24, cubes.size());
 		//cube 0==>10h00, 1==>11h etc
 		//final HMetric montantMetric = cubes.get(5).getMetric(DURATION);
@@ -640,7 +640,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	private void pushProcess(final KProcess process) {
 		final List<HCube> cubes = processEncoder.encode(process);
 		for (final HCube cube : cubes) {
-			hcubeManager.push(APP_NAME, cube);
+			hcubeManager.push(process.getAppName(), cube);
 		}
 	}
 

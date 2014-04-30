@@ -60,12 +60,12 @@ public final class Museum {
 		System.out.println("=============");
 
 		final long start = System.currentTimeMillis();
-		for (int d = 0; d < days; d++) {
-			final Date visitDate = new DateBuilder(startDate).addDays(-d).build();
+		for (int day = 0; day < days; day++) {
+			final Date visitDate = new DateBuilder(startDate).addDays(-day).build();
 			final Calendar calendar = new GregorianCalendar();
 			calendar.setTime(visitDate);
-			loadVisitors(visitDate, StatsUtil.random(visitsByDay, getCoefPerDay(calendar.get(Calendar.DAY_OF_WEEK))));
-			checkMemory(d);
+			loadVisitors(visitDate, StatsUtil.random(visitsByDay, Activity.getCoefPerDay(calendar.get(Calendar.DAY_OF_WEEK))));
+			checkMemory(day);
 
 		}
 		System.out.println();
@@ -80,11 +80,12 @@ public final class Museum {
 			System.gc();
 			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+				System.out.println();
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
-				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
+				System.out.println(">>>> max   mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
 				System.out.println(">>>> cubes count =" + cubeManager.count(APP_NAME));
-				System.out.println(">>>> pages =" + pages);
+				System.out.println(">>>> pages       =" + pages);
 
 				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(APP_NAME)) + " octets");
 				try {
@@ -98,49 +99,12 @@ public final class Museum {
 		}
 	}
 
-	private static double getCoefPerDay(final int dayOfWeek) {
-		switch (dayOfWeek) {
-			case Calendar.MONDAY:
-				return 0.6;
-			case Calendar.TUESDAY:
-				return 0.8;
-			case Calendar.WEDNESDAY:
-				return 1;
-			case Calendar.THURSDAY:
-				return 0.9;
-			case Calendar.FRIDAY:
-				return 0.8;
-			case Calendar.SATURDAY:
-				return 1.6;
-			case Calendar.SUNDAY:
-				return 1.4;
-			default:
-				return 1;
-		}
-	}
-
-	private static double getCoefPerHour(final int hourOfDay) {
-		if (hourOfDay <= 5) {
-			return 0.01;
-		} else if (hourOfDay <= 7) {
-			return 0.1;
-		} else if (hourOfDay <= 12) {
-			return 0.5 + 0.5 * ((hourOfDay - 7) / 5d);
-		} else if (hourOfDay <= 16) {
-			return 0.9 - 0.4 * ((hourOfDay - 12) / 4d);
-		} else if (hourOfDay <= 20) {
-			return 0.5 + 0.3 * ((hourOfDay - 16) / 4d);
-		} else {
-			return 0.7 - 0.65 * ((hourOfDay - 20) / 3d);
-		}
-	}
-
 	private void loadVisitors(final Date startDate, final double visitsByDay) {
 		System.out.println("\n===== add " + visitsByDay + " at " + startDate);
 		double visitRatioSum = 0;
 		final double[] visitRatioPerHour = new double[24];
 		for (int h = 0; h < 24; h++) {
-			visitRatioPerHour[h] = Math.round(StatsUtil.random(visitsByDay, getCoefPerHour(h)));
+			visitRatioPerHour[h] = Math.round(StatsUtil.random(visitsByDay, Activity.getCoefPerHour(h)));
 			visitRatioSum += visitRatioPerHour[h];
 		}
 		final double visitPerHourRatio = visitsByDay / visitRatioSum;
