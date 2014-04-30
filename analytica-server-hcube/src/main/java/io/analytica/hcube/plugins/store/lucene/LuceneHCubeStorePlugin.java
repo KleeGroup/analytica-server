@@ -68,8 +68,9 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 			for (final HCubeKey cubeKey : cube.getKey().drillUp()) {
 				final Document document = new Document();
 				document.add(new LongField("time", cubeKey.getTime().inMillis(), Field.Store.YES));
+				document.add(new StringField("timeDimension", cubeKey.getTime().getDimension().name(), Field.Store.YES));
 				document.add(new TextField("category", cubeKey.getCategory().getId(), Field.Store.YES));
-
+				//adding metrics
 				for (final HMetric metric : cube.getMetrics()) {
 					document.add(new StringField("metric", metric.getKey().getName(), Field.Store.YES));
 					document.add(new LongField(metric.getKey().getName() + ":count", metric.getCount(), Field.Store.YES));
@@ -79,10 +80,9 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 					document.add(new DoubleField(metric.getKey().getName() + ":sqrSum", metric.get(HCounterType.sqrSum), Field.Store.YES));
 					if (metric.getKey().hasDistribution()) {
 						for (Entry<Double, Long> entry : metric.getDistribution().getData().entrySet()) {
-							document.add(new DoubleField(metric.getKey().getName() + ":distribution:" + entry.getKey(), entry.getValue(), Field.Store.YES));
+							document.add(new LongField(metric.getKey().getName() + ":distribution:" + entry.getKey(), entry.getValue(), Field.Store.YES));
 						}
 					}
-
 				}
 				indexWriter.addDocument(document);
 			}
