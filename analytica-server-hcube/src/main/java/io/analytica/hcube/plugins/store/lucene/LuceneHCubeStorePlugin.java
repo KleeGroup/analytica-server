@@ -59,7 +59,7 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		}
 	}
 
-	public void merge(String appName, HCube cube) {
+	public void push(String appName, HCube cube) {
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		addCategory(cube.getKey().getCategory());

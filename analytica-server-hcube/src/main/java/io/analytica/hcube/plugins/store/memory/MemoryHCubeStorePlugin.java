@@ -21,6 +21,7 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
 
@@ -39,7 +40,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 
 	/** {@inheritDoc} */
-	public synchronized void merge(String appName, final HCube cube) {
+	public synchronized void push(String appName, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
 		AppCubeStore appCubeStore = appCubeStores.get(appName);
@@ -50,8 +51,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		appCubeStore.merge(cube);
 	}
 
-	/** {@inheritDoc} */
-	public synchronized Map<HCategory, HSerie> findAll(final String appName, final HQuery query) {
+	private Map<HCategory, HSerie> findAll(final String appName, final HQuery query) {
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
 			return EMPTY.findAll(query, this);
@@ -90,4 +90,8 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		return appCubeStore.count();
 	}
 
+	/** {@inheritDoc} */
+	public synchronized HResult execute(String appName, final HQuery query) {
+		return new HResult(query, query.getAllCategories(appName, this), this.findAll(appName, query));
+	}
 }

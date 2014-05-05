@@ -115,13 +115,13 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.build();
 		pushProcess(selectProcess3);
 
-		final Set<HCategory> rootCategories = hcubeManager.getCategoryDictionary().getAllRootCategories(APP_NAME);
+		final Set<HCategory> rootCategories = hcubeManager.getAllRootCategories(APP_NAME);
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 		//--- On vérifie la catégorie racine.
 		Assert.assertEquals(1, rootCategories.size());
 		Assert.assertEquals(processSQLCategory, rootCategories.iterator().next());
 		//--- On vérifie les sous-catégories.
-		final Set<HCategory> categories = hcubeManager.getCategoryDictionary().getAllSubCategories(APP_NAME, processSQLCategory);
+		final Set<HCategory> categories = hcubeManager.getAllSubCategories(APP_NAME, processSQLCategory);
 		Assert.assertEquals(2, categories.size());
 	}
 

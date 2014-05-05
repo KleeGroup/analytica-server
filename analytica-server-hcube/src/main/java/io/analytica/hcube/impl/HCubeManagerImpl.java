@@ -17,11 +17,8 @@
  */
 package io.analytica.hcube.impl;
 
-import io.analytica.hcube.HCategoryDictionary;
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HResult;
+import io.analytica.hcube.HCubeStore;
 import io.vertigo.kernel.lang.Assertion;
 
 import javax.inject.Inject;
@@ -30,7 +27,7 @@ import javax.inject.Inject;
  * @author pchretien, npiedeloup
  */
 public final class HCubeManagerImpl implements HCubeManager {
-	private final HCubeStorePlugin cubeStorePlugin;
+	private final HCubeStore cubeStore;
 
 	/**
 	 * Constructeur.
@@ -41,27 +38,11 @@ public final class HCubeManagerImpl implements HCubeManager {
 	public HCubeManagerImpl(final HCubeStorePlugin cubeStorePlugin) {
 		Assertion.checkNotNull(cubeStorePlugin);
 		//-----------------------------------------------------------------
-		this.cubeStorePlugin = cubeStorePlugin;
-		//this.processStatsPlugin = Option.option(processStatsPlugin);
+		this.cubeStore = cubeStorePlugin;
 	}
 
 	/** {@inheritDoc} */
-	public void push(String appName, final HCube cube) {
-		//---Alimentation du dictionnaire des catégories puis des cubes
-		cubeStorePlugin.merge(appName, cube);
-	}
-
-	/** {@inheritDoc} */
-	public HResult execute(String appName, final HQuery query) {
-		return new HResult(query, query.getAllCategories(appName, getCategoryDictionary()), cubeStorePlugin.findAll(appName, query));
-	}
-
-	/** {@inheritDoc} */
-	public HCategoryDictionary getCategoryDictionary() {
-		return cubeStorePlugin;
-	}
-
-	public long count(String appName) {
-		return cubeStorePlugin.count(appName);
+	public HCubeStore getStore() {
+		return cubeStore;
 	}
 }

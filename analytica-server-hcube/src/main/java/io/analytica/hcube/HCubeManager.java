@@ -17,9 +17,6 @@
  */
 package io.analytica.hcube;
 
-import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.component.Manager;
 
 /**
@@ -28,23 +25,5 @@ import io.vertigo.kernel.component.Manager;
  * @author pchretien, npiedeloup
  */
 public interface HCubeManager extends Manager {
-	/**
-	 * @return Dictionnaire des catégories
-	 */
-	HCategoryDictionary getCategoryDictionary();
-
-	/**
-	 * Ajout d'un cube.
-	 * @param cube HCube à ajouter 
-	 */
-	void push(String appName, HCube cube);
-
-	/**
-	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
-	 * @param query Paramètres de la requete
-	 * @return cube virtuel, constitué d'une liste de cubes
-	 */
-	HResult execute(String appName, HQuery query);
-
-	long count(String appName);
+	HCubeStore getStore();
 }

@@ -1,6 +1,6 @@
 package io.analytica.hcube.plugins.store.memory;
 
-import io.analytica.hcube.HCategoryDictionary;
+import io.analytica.hcube.HCubeStore;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.dimension.HCategory;
@@ -80,15 +80,15 @@ final class AppCubeStore {
 		System.out.println("memStore : " + store.size() + " cubes");
 	}
 
-	Map<HCategory, HSerie> findAll(final HQuery query, final HCategoryDictionary categoryDictionary) {
+	Map<HCategory, HSerie> findAll(final HQuery query, final HCubeStore cubeStore) {
 		Assertion.checkNotNull(query);
-		Assertion.checkNotNull(categoryDictionary);
+		Assertion.checkNotNull(cubeStore);
 		//---------------------------------------------------------------------
 		flushQueue();
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
-		for (final HCategory category : query.getAllCategories(appName, categoryDictionary)) {
+		for (final HCategory category : query.getAllCategories(appName, cubeStore)) {
 			final List<HCube> cubes = new ArrayList<>();
 
 			for (HTime currentTime : query.getAllTimes()) {

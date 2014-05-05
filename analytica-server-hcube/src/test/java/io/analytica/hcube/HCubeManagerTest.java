@@ -117,13 +117,13 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 		//----	
-		Assert.assertEquals(0, cubeManager.getCategoryDictionary().getAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(0, cubeManager.getCategoryDictionary().getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		Assert.assertEquals(0, cubeManager.getStore().getAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(0, cubeManager.getStore().getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 		//---
 		populateData(cubeManager, start, days);
 		//----	
-		Assert.assertEquals(1, cubeManager.getCategoryDictionary().getAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(1, cubeManager.getCategoryDictionary().getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		Assert.assertEquals(1, cubeManager.getStore().getAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(1, cubeManager.getStore().getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 	}
 
 	/**
@@ -146,7 +146,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.execute(APP_NAME, query);
+		final HResult result = cubeManager.getStore().execute(APP_NAME, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -217,7 +217,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.execute(APP_NAME, query);
+		final HResult result = cubeManager.getStore().execute(APP_NAME, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -403,7 +403,7 @@ public final class HCubeManagerTest {
 				.withMetric(metricMetric)//
 				.withMetric(weightMetric)//
 				.build();
-		cubeManager.push(APP_NAME, cube);
+		cubeManager.getStore().push(APP_NAME, cube);
 	}
 
 	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
@@ -436,7 +436,7 @@ public final class HCubeManagerTest {
 							.withMetric(weightMetric)//
 							.build();
 
-					cubeManager.push(APP_NAME, cube);
+					cubeManager.getStore().push(APP_NAME, cube);
 					//--
 					checkMemory(cubeManager, APP_NAME, day);
 					if ((mc++) % (60 * 24 * 10) == 0) {
@@ -450,16 +450,16 @@ public final class HCubeManagerTest {
 
 	private static void checkMemory(final HCubeManager cubeManager, String appName, final long day) {
 		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			cubeManager.count(appName);
+			cubeManager.getStore().count(appName);
 			System.gc();
 			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
-				System.out.println(">>>> cubes count =" + cubeManager.count(appName));
+				System.out.println(">>>> cubes count =" + cubeManager.getStore().count(appName));
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(appName)) + " octets");
+				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.getStore().count(appName)) + " octets");
 				try {
 					Thread.sleep(1000 * 20);
 				} catch (InterruptedException e) {
@@ -480,7 +480,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.execute(APP_NAME, query);
+		final HResult result = cubeManager.getStore().execute(APP_NAME, query);
 		Assert.assertEquals(query, result.getQuery());
 		//Check : 1 category
 		Assert.assertEquals(1, result.getAllCategories().size());

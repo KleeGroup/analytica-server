@@ -17,7 +17,7 @@
  */
 package io.analytica.hcube.query;
 
-import io.analytica.hcube.HCategoryDictionary;
+import io.analytica.hcube.HCubeStore;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
 import io.vertigo.kernel.lang.Assertion;
@@ -49,11 +49,11 @@ public final class HQuery {
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 * @return
 	 */
-	public Set<HCategory> getAllCategories(final String appName, final HCategoryDictionary categoryDictionary) {
-		Assertion.checkNotNull(categoryDictionary);
+	public Set<HCategory> getAllCategories(final String appName, final HCubeStore cubeStore) {
+		Assertion.checkNotNull(cubeStore);
 		// ---------------------------------------------------------------------
 		if (categorySelection.hasChildren()) {
-			return categoryDictionary.getAllSubCategories(appName, categorySelection.getCategory());
+			return cubeStore.getAllSubCategories(appName, categorySelection.getCategory());
 		}
 		return Collections.singleton(categorySelection.getCategory());
 	}

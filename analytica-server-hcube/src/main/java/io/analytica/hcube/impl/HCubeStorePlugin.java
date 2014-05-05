@@ -17,36 +17,13 @@
  */
 package io.analytica.hcube.impl;
 
-import io.analytica.hcube.HCategoryDictionary;
-import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HSerie;
+import io.analytica.hcube.HCubeStore;
 import io.vertigo.kernel.component.Plugin;
-
-import java.util.Map;
 
 /**
  * Plugin gérant le stockage des cubes.
  * @author npiedeloup
  */
-public interface HCubeStorePlugin extends Plugin, HCategoryDictionary {
-
-	//	Collection<String> getAppNames();
-
-	/**
-	 * Enregistre un cube.
-	 * Celui-ci sera mergé avec les autres cubes déjà enregistrés.
-	 * @param cube Cube.
-	 */
-	void merge(String appName, HCube cube);
-
-	/**
-	 * Liste des cubes, regroupés par série indexée par ma catégorie correspondant à une requête.
-	 * @param query Requête
-	 * @return Séries des cubes 
-	 */
-	Map<HCategory, HSerie> findAll(String appName, HQuery query);
-
-	long count(String appName);
+public interface HCubeStorePlugin extends HCubeStore, Plugin {
+	//
 }
