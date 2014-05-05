@@ -28,7 +28,7 @@ import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
+import io.analytica.hcube.plugins.store.lucene.LuceneHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HPoint;
@@ -56,7 +56,9 @@ import org.junit.Test;
 public final class HCubeManagerTest {
 	private static final String APP_NAME = "MY_APP";
 	private static final String PAGES = "PAGES";
-	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
+	//private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
+
+	private final HCubeManager cubeManager = new HCubeManagerImpl(new LuceneHCubeStorePlugin());
 
 	@Test
 	public void testQuery() {
@@ -133,7 +135,7 @@ public final class HCubeManagerTest {
 	public void testLoadAndQuery() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
-		final int days = 10;
+		final int days = 20;
 		final Date end = dateFormat.parse("2012/12/13");
 
 		//----	

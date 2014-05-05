@@ -7,15 +7,11 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HSerie;
+import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.exception.VRuntimeException;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -34,19 +30,13 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
-public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
+public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	private final Directory directory;
 	private final IndexWriter indexWriter;
-	//--
-	private final Set<HCategory> rootCategories;
-	private final Map<HCategory, Set<HCategory>> categories;
 
 	public LuceneHCubeStorePlugin() {
 		directory = new RAMDirectory();
 		indexWriter = createIndexWriter(directory);
-		//---------------------------------------------------------------------
-		rootCategories = new HashSet<>();
-		categories = new HashMap<>();
 	}
 
 	private static IndexWriter createIndexWriter(final Directory directory) {
@@ -62,7 +52,7 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	public void push(String appName, HCube cube) {
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
-		addCategory(cube.getKey().getCategory());
+		//	addCategory(cube.getKey().getCategory());
 
 		try {
 			for (final HCubeKey cubeKey : cube.getKey().drillUp()) {
@@ -95,18 +85,11 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	public Set<HCategory> getAllSubCategories(String appName, HCategory category) {
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
-
-		Set<HCategory> set = categories.get(category);
-		return set == null ? Collections.<HCategory> emptySet() : Collections.unmodifiableSet(set);
+		throw new UnsupportedOperationException();
 	}
 
 	public Set<HCategory> getAllRootCategories(String appName) {
-		return Collections.unmodifiableSet(rootCategories);
-	}
-
-	public Map<HCategory, HSerie> findAll(String appName, HQuery query) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public long count(String appName) {
@@ -119,35 +102,22 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		}
 	}
 
-	private void addCategory(HCategory category) {
-		Assertion.checkNotNull(category);
-		//---------------------------------------------------------------------
-		HCategory currentCategory = category;
-		HCategory parentCategory;
-		boolean drillUp;
-		do {
-			parentCategory = currentCategory.drillUp();
-			//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
-			//On dispose donc d'une info pour savoir si il faut remonter 
-			drillUp = doPut(parentCategory, currentCategory);
-			currentCategory = parentCategory;
-		} while (drillUp);
-	}
+	//	private void addCategory(HCategory category) {
+	//		Assertion.checkNotNull(category);
+	//		//---------------------------------------------------------------------
+	//		HCategory currentCategory = category;
+	//		HCategory parentCategory;
+	//		boolean drillUp;
+	//		do {
+	//			parentCategory = currentCategory.drillUp();
+	//			//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
+	//			//On dispose donc d'une info pour savoir si il faut remonter 
+	//			drillUp = doPut(parentCategory, currentCategory);
+	//			currentCategory = parentCategory;
+	//		} while (drillUp);
+	//	}
 
-	private boolean doPut(HCategory parentCategory, HCategory category) {
-		Assertion.checkNotNull(category);
-		//---------------------------------------------------------------------
-		if (parentCategory == null) {
-			//category est une catégorie racine
-			rootCategories.add(category);
-			return false;
-		}
-		//category n'est pas une catégorie racine
-		Set<HCategory> set = categories.get(parentCategory);
-		if (set == null) {
-			set = new HashSet<>();
-			categories.put(parentCategory, set);
-		}
-		return set.add(category);
+	public HResult execute(String appName, HQuery query) {
+		return null;
 	}
 }

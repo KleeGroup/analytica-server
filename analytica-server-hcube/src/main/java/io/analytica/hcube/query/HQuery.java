@@ -49,6 +49,13 @@ public final class HQuery {
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 * @return
 	 */
+	//A déplacer 
+	//A déplacer 
+	//A déplacer 
+	//A déplacer 
+	//A déplacer 
+	//A déplacer 
+	//A déplacer 
 	public Set<HCategory> getAllCategories(final String appName, final HCubeStore cubeStore) {
 		Assertion.checkNotNull(cubeStore);
 		// ---------------------------------------------------------------------
