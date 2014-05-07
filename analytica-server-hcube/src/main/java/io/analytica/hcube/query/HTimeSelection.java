@@ -32,7 +32,7 @@ import java.util.List;
  *  - toutes les années de 1914 à 1918 
  * @author npiedeloup, pchretien
  */
-final class HTimeSelection {
+public final class HTimeSelection {
 	private final HTime minTime;
 	private final HTime maxTime;
 
@@ -48,7 +48,15 @@ final class HTimeSelection {
 		maxTime = new HTime(maxDate, dimension);
 	}
 
-	List<HTime> getAllTimes() {
+	public HTime getMinTime() {
+		return minTime;
+	}
+
+	public HTime getMaxTime() {
+		return maxTime;
+	}
+
+	static List<HTime> getAllTimes(HTime minTime, HTime maxTime) {
 		final List<HTime> times = new ArrayList<>();
 		//On prépare les bornes de temps
 		int loops = 0;

@@ -7,6 +7,7 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HQueryUtil;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
 
@@ -91,7 +92,7 @@ final class AppCubeStore {
 		for (final HCategory category : query.getAllCategories(appName, cubeStore)) {
 			final List<HCube> cubes = new ArrayList<>();
 
-			for (HTime currentTime : query.getAllTimes()) {
+			for (HTime currentTime : HQueryUtil.getAllTimes(query.getTimeSelection().getMinTime(), query.getTimeSelection().getMaxTime())) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
 				final HCube cube = store.get(cubeKey);
 				//---

@@ -8,45 +8,32 @@ import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
-import io.vertigo.kernel.exception.VRuntimeException;
+import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 
 public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
-	private final Directory directory;
-	private final IndexWriter indexWriter;
+	private final RamLuceneIndex index;
+
+	//private final RamLuceneIndex categoriesIndex;
 
 	public LuceneHCubeStorePlugin() {
-		directory = new RAMDirectory();
-		indexWriter = createIndexWriter(directory);
-	}
+		index = new RamLuceneIndex();
 
-	private static IndexWriter createIndexWriter(final Directory directory) {
-		try {
-			final Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_46);
-			final IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_46, analyzer);
-			return new IndexWriter(directory, config);
-		} catch (final IOException e) {
-			throw new VRuntimeException(e);
-		}
 	}
 
 	public void push(String appName, HCube cube) {
@@ -54,52 +41,68 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		//---------------------------------------------------------------------
 		//	addCategory(cube.getKey().getCategory());
 
-		try {
-			for (final HCubeKey cubeKey : cube.getKey().drillUp()) {
-				final Document document = new Document();
-				document.add(new LongField("time", cubeKey.getTime().inMillis(), Field.Store.YES));
-				document.add(new StringField("timeDimension", cubeKey.getTime().getDimension().name(), Field.Store.YES));
-				document.add(new TextField("category", cubeKey.getCategory().getId(), Field.Store.YES));
-				//adding metrics
-				for (final HMetric metric : cube.getMetrics()) {
-					document.add(new StringField("metric", metric.getKey().getName(), Field.Store.YES));
-					document.add(new LongField(metric.getKey().getName() + ":count", metric.getCount(), Field.Store.YES));
-					document.add(new DoubleField(metric.getKey().getName() + ":sum", metric.get(HCounterType.sum), Field.Store.YES));
-					document.add(new DoubleField(metric.getKey().getName() + ":min", metric.get(HCounterType.min), Field.Store.YES));
-					document.add(new DoubleField(metric.getKey().getName() + ":max", metric.get(HCounterType.max), Field.Store.YES));
-					document.add(new DoubleField(metric.getKey().getName() + ":sqrSum", metric.get(HCounterType.sqrSum), Field.Store.YES));
-					if (metric.getKey().hasDistribution()) {
-						for (Entry<Double, Long> entry : metric.getDistribution().getData().entrySet()) {
-							document.add(new LongField(metric.getKey().getName() + ":distribution:" + entry.getKey(), entry.getValue(), Field.Store.YES));
-						}
+		List<Document> documents = new ArrayList<>();
+		for (final HCubeKey cubeKey : cube.getKey().drillUp()) {
+			final Document document = new Document();
+			document.add(new LongField("time", cubeKey.getTime().inMillis(), Field.Store.YES));
+			document.add(new StringField("timeDimension", cubeKey.getTime().getDimension().name(), Field.Store.YES));
+			document.add(new TextField("rootCategory", cubeKey.getCategory().getRoot().getId(), Field.Store.YES));
+			//			System.out.println("   root :" + cubeKey.getCategory().getRoot().getId());
+			document.add(new StringField("category", cubeKey.getCategory().getId(), Field.Store.YES));
+			//			System.out.println("   category :" + cubeKey.getCategory().getId());
+			document.add(new LongField("metrics", cube.getMetrics().size(), Field.Store.YES));
+			//adding metrics
+			int m = 0;
+			for (final HMetric metric : cube.getMetrics()) {
+				document.add(new StringField("metric:" + m, metric.getKey().getName(), Field.Store.YES));
+				document.add(new LongField(m + ":count", metric.getCount(), Field.Store.YES));
+				document.add(new DoubleField(m + ":sum", metric.get(HCounterType.sum), Field.Store.YES));
+				document.add(new DoubleField(m + ":min", metric.get(HCounterType.min), Field.Store.YES));
+				document.add(new DoubleField(m + ":max", metric.get(HCounterType.max), Field.Store.YES));
+				document.add(new DoubleField(m + ":sqrSum", metric.get(HCounterType.sqrSum), Field.Store.YES));
+				if (metric.getKey().hasDistribution()) {
+					for (Entry<Double, Long> entry : metric.getDistribution().getData().entrySet()) {
+						document.add(new LongField(m + ":distribution:" + entry.getKey(), entry.getValue(), Field.Store.YES));
 					}
 				}
-				indexWriter.addDocument(document);
+				m++;
 			}
-		} catch (final IOException e) {
-			throw new VRuntimeException(e);
+			documents.add(document);
 		}
-
+		index.addDocuments(documents);
 	}
 
 	public Set<HCategory> getAllSubCategories(String appName, HCategory category) {
-		Assertion.checkNotNull(category);
+		return getAllSubCategories(appName, "category", category);
+
+	}
+
+	private Set<HCategory> getAllSubCategories(String appName, String field, HCategory categoryFilter) {
+		//	Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
-		throw new UnsupportedOperationException();
+		Set<HCategory> categories = new HashSet<>();
+		for (String term : index.terms(field)) {
+			//			System.out.println("  field : " + field);
+			//			System.out.println("  term : " + term);
+			if (categoryFilter == null) {
+				categories.add(new HCategory(term));
+			} else if (term.startsWith(categoryFilter.getId() + "/")) {
+				//On filtre les catégories comnecant par la catégorie
+				//				System.out.println("  categoryFilter : " + category.getId());
+				categories.add(new HCategory(term));
+			}
+		}
+		System.out.println("CCCC [" + field + "]>>" + categories);
+		return categories;
 	}
 
 	public Set<HCategory> getAllRootCategories(String appName) {
-		throw new UnsupportedOperationException();
+		return getAllSubCategories(appName, "rootCategory", null);
+
 	}
 
 	public long count(String appName) {
-		IndexReader reader;
-		try {
-			reader = IndexReader.open(directory);
-			return reader.numDocs();
-		} catch (IOException e) {
-			throw new VRuntimeException(e);
-		}
+		return index.numDocs();
 	}
 
 	//	private void addCategory(HCategory category) {
@@ -118,6 +121,22 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	//	}
 
 	public HResult execute(String appName, HQuery query) {
-		return null;
+		return new HResult(query, query.getAllCategories(appName, this), findAll(appName, query));
+	}
+
+	private Map<HCategory, HSerie> findAll(String appName, final HQuery query) {
+		Assertion.checkNotNull(query);
+		//		Assertion.checkNotNull(cubeStore);
+		//---------------------------------------------------------------------
+		//On itère sur les séries indexées par les catégories de la sélection.
+		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
+
+		for (final HCategory category : query.getAllCategories(appName, this)) {
+			//			final List<HCube> cubes = new ArrayList<>();
+			System.out.println(">>>>findAll " + query);
+			final List<HCube> cubes = index.findAll(category, query.getTimeSelection());
+			cubeSeries.put(category, new HSerie(category, cubes));
+		}
+		return cubeSeries;
 	}
 }

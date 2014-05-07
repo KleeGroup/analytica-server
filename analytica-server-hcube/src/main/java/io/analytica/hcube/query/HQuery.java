@@ -19,11 +19,9 @@ package io.analytica.hcube.query;
 
 import io.analytica.hcube.HCubeStore;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HTime;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -66,8 +64,8 @@ public final class HQuery {
 	}
 
 	//-----------------------When----------------------------------------------
-	public List<HTime> getAllTimes() {
-		return timeSelection.getAllTimes();
+	public HTimeSelection getTimeSelection() {
+		return timeSelection;
 	}
 
 	/** {@inheritDoc} */

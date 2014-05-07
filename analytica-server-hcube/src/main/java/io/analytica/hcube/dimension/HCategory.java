@@ -91,4 +91,8 @@ public final class HCategory {
 		return id;
 	}
 
+	public HCategory getRoot() {
+		return new HCategory(type);
+	}
+
 }

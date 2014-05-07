@@ -41,7 +41,7 @@ public final class HMetric {
 	private final double sum;
 	private final double sqrSum;
 
-	HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, final HDistribution distribution) {
+	public HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, final HDistribution distribution) {
 		Assertion.checkNotNull(metricKey);
 		//Assertion.checkArgument(metricKey.isClustered() ^ clusteredValues != null, "la metric {0} cluster doit avoir des données clusterisées", metricKey);
 		//---------------------------------------------------------------------
