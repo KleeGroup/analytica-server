@@ -21,9 +21,7 @@ import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.vertigo.kernel.lang.Assertion;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Selection temporelle permettant de définir un ensemble de positions sur un niveau temporel donné.
@@ -56,27 +54,9 @@ public final class HTimeSelection {
 		return maxTime;
 	}
 
-	static List<HTime> getAllTimes(HTime minTime, HTime maxTime) {
-		final List<HTime> times = new ArrayList<>();
-		//On prépare les bornes de temps
-		int loops = 0;
-		HTime currentTime = minTime;
-		do {
-			times.add(currentTime);
-			//---------------
-			currentTime = currentTime.next();
-			loops++;
-			if (loops > 1000) {
-				throw new RuntimeException("time range is too large : more than 1000 positions");
-			}
-		} while (currentTime.inMillis() < maxTime.inMillis());
-
-		return times;
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "{ from:" + minTime + ", to:" + maxTime + " }";
+		return "{ from:'" + minTime + "', to:'" + maxTime + "' }";
 	}
 }

@@ -31,6 +31,7 @@ import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugins.store.lucene.LuceneHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
+import io.analytica.hcube.query.HQueryUtil;
 import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
@@ -77,10 +78,10 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 		//---
-		Assert.assertEquals(3, query1.getAllTimes().size()); //3 HOURS
-		Assert.assertEquals(3, query2.getAllTimes().size()); //3 HOURS
-		Assert.assertTrue(query1.getAllTimes().containsAll(query2.getAllTimes()));
-		Assert.assertTrue(query2.getAllTimes().containsAll(query1.getAllTimes()));
+		Assert.assertEquals(3, HQueryUtil.getAllTimes(query1.getTimeSelection().getMinTime(), query1.getTimeSelection().getMaxTime()).size()); //3 HOURS
+		Assert.assertEquals(3, HQueryUtil.getAllTimes(query2.getTimeSelection().getMinTime(), query2.getTimeSelection().getMaxTime()).size()); //3 HOURS
+		Assert.assertTrue(HQueryUtil.getAllTimes(query1.getTimeSelection().getMinTime(), query1.getTimeSelection().getMaxTime()).containsAll(HQueryUtil.getAllTimes(query2.getTimeSelection().getMinTime(), query2.getTimeSelection().getMaxTime())));
+		Assert.assertTrue(HQueryUtil.getAllTimes(query2.getTimeSelection().getMinTime(), query2.getTimeSelection().getMaxTime()).containsAll(HQueryUtil.getAllTimes(query1.getTimeSelection().getMinTime(), query1.getTimeSelection().getMaxTime())));
 		Assert.assertEquals(query1.toString(), query2.toString());
 
 	}
@@ -94,7 +95,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 		//---
-		Assert.assertEquals(3 * 24, query.getAllTimes().size()); //72 hours 
+		Assert.assertEquals(3 * 24, HQueryUtil.getAllTimes(query.getTimeSelection().getMinTime(), query.getTimeSelection().getMaxTime()).size()); //72 hours 
 	}
 
 	/*
@@ -423,7 +424,7 @@ public final class HCubeManagerTest {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.Minute);
 					//--------		
-					final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
+					final HCubeKey cubeKey = new HCubeKey(time, category);
 
 					final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
 					for (int i = 0; i < 100; i++) {

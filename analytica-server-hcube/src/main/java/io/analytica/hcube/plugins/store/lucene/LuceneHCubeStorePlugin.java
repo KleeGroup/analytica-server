@@ -45,7 +45,7 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		for (final HCubeKey cubeKey : cube.getKey().drillUp()) {
 			final Document document = new Document();
 			document.add(new LongField("time", cubeKey.getTime().inMillis(), Field.Store.YES));
-			document.add(new StringField("timeDimension", cubeKey.getTime().getDimension().name(), Field.Store.YES));
+			document.add(new TextField("timeDimension", cubeKey.getTime().getDimension().name(), Field.Store.YES));
 			document.add(new TextField("rootCategory", cubeKey.getCategory().getRoot().getId(), Field.Store.YES));
 			//			System.out.println("   root :" + cubeKey.getCategory().getRoot().getId());
 			document.add(new StringField("category", cubeKey.getCategory().getId(), Field.Store.YES));
@@ -54,7 +54,7 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 			//adding metrics
 			int m = 0;
 			for (final HMetric metric : cube.getMetrics()) {
-				document.add(new StringField("metric:" + m, metric.getKey().getName(), Field.Store.YES));
+				document.add(new StringField(m + ":metric", metric.getKey().getName(), Field.Store.YES));
 				document.add(new LongField(m + ":count", metric.getCount(), Field.Store.YES));
 				document.add(new DoubleField(m + ":sum", metric.get(HCounterType.sum), Field.Store.YES));
 				document.add(new DoubleField(m + ":min", metric.get(HCounterType.min), Field.Store.YES));

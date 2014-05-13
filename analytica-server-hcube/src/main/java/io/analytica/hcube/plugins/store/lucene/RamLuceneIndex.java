@@ -29,6 +29,8 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MultiFields;
 import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -57,7 +59,7 @@ final class RamLuceneIndex {
 	 * @throws IOException Exception I/O
 	 */
 	RamLuceneIndex() {
-		analyzer = new SimpleAnalyzer(Version.LUCENE_47);
+		analyzer = new SimpleAnalyzer(Version.LUCENE_40);
 		directory = new RAMDirectory();
 		buildIndex();
 	}
@@ -73,7 +75,7 @@ final class RamLuceneIndex {
 
 	/** {@inheritDoc} */
 	private IndexWriter createIndexWriter() throws IOException {
-		final IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_47, analyzer);
+		final IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_40, analyzer);
 		return new IndexWriter(directory, config);
 	}
 
@@ -129,12 +131,21 @@ final class RamLuceneIndex {
 		//!hitsPerPage
 		//!!!!!!
 		//!!!!!!
-		final int hitsPerPage = 100;
+		final int hitsPerPage = 100000;
 
 		try (final IndexReader indexReader = createIndexReader()) {
+			System.out.println("index numdocs" + indexReader.numDocs());
+			Document doc = indexReader.document(1);
+			System.out.println("doc" + doc);
+			//--
 			final IndexSearcher searcher = new IndexSearcher(indexReader);
 			String queryText = category.getId();
-			Query query = new QueryBuilder(analyzer).createBooleanQuery("category", queryText);
+			Query query1 = new QueryBuilder(analyzer).createPhraseQuery("rootCategory", queryText);
+			Query query2 = new QueryBuilder(analyzer).createPhraseQuery("timeDimension", HTimeDimension.SixMinutes.name());
+
+			BooleanQuery query = new BooleanQuery();
+			query.add(query1, Occur.MUST);
+			query.add(query2, Occur.MUST);
 
 			TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
 			searcher.search(query, collector);
@@ -155,7 +166,7 @@ final class RamLuceneIndex {
 				long metrics = Long.valueOf(document.get("metrics"));
 				HCubeBuilder cubeBuilder = new HCubeBuilder(cubeKey);
 				for (int m = 0; m < metrics; m++) {
-					HMetricKey metricKey = new HMetricKey(document.get("metric"), false);
+					HMetricKey metricKey = new HMetricKey(document.get(m + ":metric"), false);
 					long count = Long.valueOf(document.get(m + ":count"));
 					double sum = Double.valueOf(document.get(m + ":sum"));
 					double min = Double.valueOf(document.get(m + ":min"));
