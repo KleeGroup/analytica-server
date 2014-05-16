@@ -23,6 +23,7 @@ import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.cube.HVirtualCube;
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HTime;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import java.util.Map.Entry;
  */
 public final class HSerie implements HVirtualCube {
 	private final HCategory category;
-	private final List<HCube> cubes;
+	private final Map<HTime, HCube> cubes;
 	private Map<HMetricKey, HMetric> metrics; //lazy
 
 	/**
@@ -50,7 +51,7 @@ public final class HSerie implements HVirtualCube {
 	 * @param category Catégorie de la série
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
-	public HSerie(final HCategory category, final List<HCube> cubes) {
+	public HSerie(final HCategory category, final Map<HTime, HCube> cubes) {
 		Assertion.checkNotNull(category);
 		Assertion.checkNotNull(cubes);
 		//---------------------------------------------------------------------
@@ -68,17 +69,17 @@ public final class HSerie implements HVirtualCube {
 	/**
 	 * @return Liste ordonnée des élements du parallélépipède
 	 */
-	public List<HCube> getCubes() {
+	public Map<HTime, HCube> getCubes() {
 		Assertion.checkNotNull(category);
 		//-------------------------------------------------------------------------
-		return Collections.unmodifiableList(cubes);
+		return Collections.unmodifiableMap(cubes);
 	}
 
 	//-------------------------------------------------------------------------
 	private Map<HMetricKey, HMetric> getLazyMetrics() {
 		if (metrics == null) {
 			final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
-			for (final HCube cube : cubes) {
+			for (final HCube cube : cubes.values()) {
 				for (final HMetric metric : cube.getMetrics()) {
 					HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
 					if (metricBuilder == null) {
@@ -110,16 +111,16 @@ public final class HSerie implements HVirtualCube {
 
 	public List<HPoint> getPoints(final HMetricKey metricKey) {
 		final List<HPoint> points = new ArrayList<>();
-		for (final HCube cube : cubes) {
+		for (final Entry<HTime, HCube> entry : cubes.entrySet()) {
 			points.add(new HPoint() {
 				/** {@inheritDoc} */
 				public HMetric getMetric() {
-					return cube.getMetric(metricKey);
+					return entry.getValue().getMetric(metricKey);
 				}
 
 				/** {@inheritDoc} */
 				public Date getDate() {
-					return new Date(cube.getKey().getTime().inMillis());
+					return new Date(entry.getKey().inMillis());
 				}
 			});
 		}

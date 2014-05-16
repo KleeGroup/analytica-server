@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -165,7 +166,9 @@ public final class HCubeManagerTest {
 		final HSerie serie = result.getSerie(new HCategory(PAGES));
 		Assert.assertEquals(new HCategory(PAGES), serie.getCategory());
 
-		for (final HCube cube : serie.getCubes()) {
+		for (final Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
+			HCube cube = entry.getValue();
+			//	HTime time = entry.getKey();
 			Assert.assertTrue(cube.toString().startsWith("{"));
 			Assert.assertTrue(cube.toString().endsWith("}"));
 			Assert.assertEquals(2, cube.getMetrics().size());
@@ -401,11 +404,11 @@ public final class HCubeManagerTest {
 		final HMetric weightMetric = new HMetricBuilder(weight)//
 				.withValue(weightValue)//
 				.build();
-		final HCube cube = new HCubeBuilder(cubeKey)//
+		final HCube cube = new HCubeBuilder()//
 				.withMetric(metricMetric)//
 				.withMetric(weightMetric)//
 				.build();
-		cubeManager.getStore().push(APP_NAME, cube);
+		cubeManager.getStore().push(APP_NAME, cubeKey, cube);
 	}
 
 	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
@@ -433,12 +436,12 @@ public final class HCubeManagerTest {
 
 					final HMetric weightMetric = new HMetricBuilder(weight).withValue(h).build();
 
-					final HCube cube = new HCubeBuilder(cubeKey)//
+					final HCube cube = new HCubeBuilder()//
 							.withMetric(metricBuilder.build())//
 							.withMetric(weightMetric)//
 							.build();
 
-					cubeManager.getStore().push(APP_NAME, cube);
+					cubeManager.getStore().push(APP_NAME, cubeKey, cube);
 					//--
 					checkMemory(cubeManager, APP_NAME, day);
 					if ((mc++) % (60 * 24 * 10) == 0) {
@@ -487,9 +490,9 @@ public final class HCubeManagerTest {
 		//Check : 1 category
 		Assert.assertEquals(1, result.getAllCategories().size());
 		//Check : 10*24 cubes per minute
-		final List<HCube> cubes = result.getSerie(new HCategory(PAGES)).getCubes();
+		final Map<HTime, HCube> cubes = result.getSerie(new HCategory(PAGES)).getCubes();
 		Assert.assertEquals(3, cubes.size());
-		assertMetricEquals(cubes.get(0), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
+		assertMetricEquals(cubes.get(new HTime(start, timeDimension)), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
 		assertMetricEquals(cubes.get(1), weight, espectedCount, espectedSum, espectedSum / espectedCount, espectedMin, espectedMax);
 		assertMetricEquals(cubes.get(2), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
 	}

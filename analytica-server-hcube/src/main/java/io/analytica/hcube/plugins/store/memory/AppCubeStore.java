@@ -20,8 +20,21 @@ import java.util.Map;
 import java.util.Set;
 
 final class AppCubeStore {
+	private static final class QueueItem {
+		final HCubeKey cubeKey;
+		final HCube cube;
+
+		QueueItem(HCubeKey cubeKey, HCube cube) {
+			Assertion.checkNotNull(cubeKey);
+			Assertion.checkNotNull(cube);
+			//---------------------------------------------------------------------
+			this.cubeKey = cubeKey;
+			this.cube = cube;
+		}
+	}
+
 	private static final int QUEUE_SIZE = 5000;
-	private final List<HCube> queue;
+	private final List<QueueItem> queue;
 	private final Map<HCubeKey, HCube> store;
 	//---------------------------------------------------------------------
 	private final Set<HCategory> rootCategories;
@@ -39,13 +52,14 @@ final class AppCubeStore {
 		categories = new HashMap<>();
 	}
 
-	void merge(final HCube cube) {
+	void push(final HCubeKey cubeKey, final HCube cube) {
+		Assertion.checkNotNull(cubeKey);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
-		addCategory(cube.getKey().getCategory());
+		addCategory(cubeKey.getCategory());
 
 		//populate a queue
-		queue.add(cube);
+		queue.add(new QueueItem(cubeKey, cube));
 		if (queue.size() > QUEUE_SIZE) {
 			flushQueue();
 		}
@@ -53,9 +67,9 @@ final class AppCubeStore {
 
 	//flushing queue into store
 	private void flushQueue() {
-		for (final HCube cube : queue) {
-			for (final HCubeKey upCubeKeys : cube.getKey().drillUp()) {
-				merge(cube, upCubeKeys);
+		for (final QueueItem item : queue) {
+			for (final HCubeKey upCubeKeys : item.cubeKey.drillUp()) {
+				merge(upCubeKeys, item.cube);
 			}
 		}
 		queue.clear();
@@ -63,18 +77,16 @@ final class AppCubeStore {
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
-	private void merge(final HCube cube, final HCubeKey cubeKey) {
+	private void merge(final HCubeKey cubeKey, final HCube cube) {
 
 		final HCube oldCube = store.get(cubeKey);
 		final HCube newCube;
 		if (oldCube != null) {
-			newCube = new HCubeBuilder(cubeKey).withMetrics(cube.getMetrics()).withMetrics(oldCube.getMetrics()).build();
-		} else if (cube.getKey().equals(cubeKey)) {
-			newCube = cube;
+			newCube = new HCubeBuilder().withMetrics(cube.getMetrics()).withMetrics(oldCube.getMetrics()).build();
 		} else {
-			newCube = new HCubeBuilder(cubeKey).withMetrics(cube.getMetrics()).build();
+			newCube = cube;
 		}
-		store.put(newCube.getKey(), newCube);
+		store.put(cubeKey, newCube);
 	}
 
 	private void printStats() {
@@ -90,14 +102,14 @@ final class AppCubeStore {
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
 		for (final HCategory category : HQueryUtil.findCategories(appName, query.getCategorySelection(), cubeStore)) {
-			final List<HCube> cubes = new ArrayList<>();
+			final Map<HTime, HCube> cubes = new HashMap<>();
 
 			for (HTime currentTime : HQueryUtil.findTimes(query.getTimeSelection())) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
 				final HCube cube = store.get(cubeKey);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
-				cubes.add(cube == null ? new HCubeBuilder(cubeKey).build() : cube);
+				cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
 				/*if (cube != null) {
 					cubes.add(new HCubeBuilder(cubeKey).build());
 				}*/
