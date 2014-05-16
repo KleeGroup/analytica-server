@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.cube;
 
-import io.analytica.hcube.dimension.HCubeKey;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collection;
@@ -36,19 +35,12 @@ public final class HCube implements HVirtualCube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
-	private final HCubeKey cubeKey;
 	private final Map<HMetricKey, HMetric> metrics;
 
-	HCube(final HCubeKey cubeKey, final Map<HMetricKey, HMetric> metrics) {
-		Assertion.checkNotNull(cubeKey);
+	HCube(final Map<HMetricKey, HMetric> metrics) {
 		Assertion.checkNotNull(metrics);
 		//---------------------------------------------------------------------
-		this.cubeKey = cubeKey;
 		this.metrics = metrics;
-	}
-
-	public HCubeKey getKey() {
-		return cubeKey;
 	}
 
 	/** {@inheritDoc} */
@@ -66,7 +58,7 @@ public final class HCube implements HVirtualCube {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
-				.append("{ cubekey:").append(cubeKey).append(",\n\tmetrics:{");
+				.append("{ metrics:{");
 		for (final HMetric metric : getMetrics()) {
 			sb.append("\n\t\t ").append(metric).append(",");
 		}

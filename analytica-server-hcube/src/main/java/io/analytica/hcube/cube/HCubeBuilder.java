@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.cube;
 
-import io.analytica.hcube.dimension.HCubeKey;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
@@ -32,18 +31,7 @@ import java.util.Map;
  * @author npiedeloup, pchretien
  */
 public final class HCubeBuilder implements Builder<HCube> {
-	private final HCubeKey cubeKey;
 	private final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
-
-	/**
-	 * Constructeur.
-	 * @param cubeKey Identifiant du cube
-	 */
-	public HCubeBuilder(final HCubeKey cubeKey) {
-		Assertion.checkNotNull(cubeKey);
-		//---------------------------------------------------------------------
-		this.cubeKey = cubeKey;
-	}
 
 	/**
 	 * Ajout d'une metric. 
@@ -86,6 +74,6 @@ public final class HCubeBuilder implements Builder<HCube> {
 			HMetric metric = metricBuilder.build();
 			metrics.put(metric.getKey(), metric);
 		}
-		return new HCube(cubeKey, metrics);
+		return new HCube(metrics);
 	}
 }

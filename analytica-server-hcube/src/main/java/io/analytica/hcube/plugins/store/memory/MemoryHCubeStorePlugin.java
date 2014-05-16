@@ -19,6 +19,7 @@ package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryUtil;
@@ -41,15 +42,17 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 
 	/** {@inheritDoc} */
-	public synchronized void push(String appName, final HCube cube) {
+	public synchronized void push(String appName, final HCubeKey cubeKey, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
+		Assertion.checkNotNull(cubeKey);
+		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
 			appCubeStore = new AppCubeStore(appName);
 			appCubeStores.put(appName, appCubeStore);
 		}
-		appCubeStore.merge(cube);
+		appCubeStore.push(cubeKey, cube);
 	}
 
 	private Map<HCategory, HSerie> findAll(final String appName, final HQuery query) {

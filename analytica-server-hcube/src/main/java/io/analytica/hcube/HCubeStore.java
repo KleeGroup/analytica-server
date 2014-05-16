@@ -2,6 +2,7 @@ package io.analytica.hcube;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 
@@ -28,7 +29,7 @@ public interface HCubeStore {
 	 * @param cube HCube à ajouter 
 	 * 
 	 */
-	void push(String appName, HCube cube);
+	void push(String appName, HCubeKey cubeKey, HCube cube);
 
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  

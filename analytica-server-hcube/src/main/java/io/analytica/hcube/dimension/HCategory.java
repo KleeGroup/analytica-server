@@ -39,6 +39,7 @@ public final class HCategory {
 
 	public HCategory(final String type, final String... subTypes) {
 		Assertion.checkArgNotEmpty(type);
+		Assertion.checkNotNull(subTypes);
 		//---------------------------------------------------------------------
 		id = buildKey(type, subTypes);
 		this.subTypes = subTypes;
