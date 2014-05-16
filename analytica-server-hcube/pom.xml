@@ -36,6 +36,14 @@
 			<version>4.7.0</version>
 			<optional>true</optional> <!-- for LuceneHCubeStorePlugin -->
 		</dependency>
+		
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>2.4.2</version>
+    <type>jar</type>
+    <scope>compile</scope>
+</dependency>
 		<!--  
 		<dependency>
 	        <groupId>com.hazelcast</groupId>

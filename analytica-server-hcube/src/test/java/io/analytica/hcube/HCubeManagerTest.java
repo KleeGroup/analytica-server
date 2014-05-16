@@ -28,7 +28,7 @@ import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.store.lucene.LuceneHCubeStorePlugin;
+import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.query.HQueryUtil;
@@ -57,9 +57,9 @@ import org.junit.Test;
 public final class HCubeManagerTest {
 	private static final String APP_NAME = "MY_APP";
 	private static final String PAGES = "PAGES";
-	//private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
+	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 
-	private final HCubeManager cubeManager = new HCubeManagerImpl(new LuceneHCubeStorePlugin());
+	//private final HCubeManager cubeManager = new HCubeManagerImpl(new LuceneHCubeStorePlugin());
 
 	@Test
 	public void testQuery() {
@@ -78,12 +78,11 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 		//---
-		Assert.assertEquals(3, HQueryUtil.getAllTimes(query1.getTimeSelection().getMinTime(), query1.getTimeSelection().getMaxTime()).size()); //3 HOURS
-		Assert.assertEquals(3, HQueryUtil.getAllTimes(query2.getTimeSelection().getMinTime(), query2.getTimeSelection().getMaxTime()).size()); //3 HOURS
-		Assert.assertTrue(HQueryUtil.getAllTimes(query1.getTimeSelection().getMinTime(), query1.getTimeSelection().getMaxTime()).containsAll(HQueryUtil.getAllTimes(query2.getTimeSelection().getMinTime(), query2.getTimeSelection().getMaxTime())));
-		Assert.assertTrue(HQueryUtil.getAllTimes(query2.getTimeSelection().getMinTime(), query2.getTimeSelection().getMaxTime()).containsAll(HQueryUtil.getAllTimes(query1.getTimeSelection().getMinTime(), query1.getTimeSelection().getMaxTime())));
+		Assert.assertEquals(3, HQueryUtil.findTimes(query1.getTimeSelection()).size()); //3 HOURS
+		Assert.assertEquals(3, HQueryUtil.findTimes(query2.getTimeSelection()).size()); //3 HOURS
+		Assert.assertTrue(HQueryUtil.findTimes(query1.getTimeSelection()).containsAll(HQueryUtil.findTimes(query2.getTimeSelection())));
+		Assert.assertTrue(HQueryUtil.findTimes(query2.getTimeSelection()).containsAll(HQueryUtil.findTimes(query1.getTimeSelection())));
 		Assert.assertEquals(query1.toString(), query2.toString());
-
 	}
 
 	@Test
@@ -95,7 +94,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 		//---
-		Assert.assertEquals(3 * 24, HQueryUtil.getAllTimes(query.getTimeSelection().getMinTime(), query.getTimeSelection().getMaxTime()).size()); //72 hours 
+		Assert.assertEquals(3 * 24, HQueryUtil.findTimes(query.getTimeSelection()).size()); //72 hours 
 	}
 
 	/*

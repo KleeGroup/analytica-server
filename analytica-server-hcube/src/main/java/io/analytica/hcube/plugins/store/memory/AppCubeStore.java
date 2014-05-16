@@ -89,10 +89,10 @@ final class AppCubeStore {
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
-		for (final HCategory category : query.getAllCategories(appName, cubeStore)) {
+		for (final HCategory category : HQueryUtil.findCategories(appName, query.getCategorySelection(), cubeStore)) {
 			final List<HCube> cubes = new ArrayList<>();
 
-			for (HTime currentTime : HQueryUtil.getAllTimes(query.getTimeSelection().getMinTime(), query.getTimeSelection().getMaxTime())) {
+			for (HTime currentTime : HQueryUtil.findTimes(query.getTimeSelection())) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
 				final HCube cube = store.get(cubeKey);
 				//---

@@ -28,7 +28,7 @@ import io.vertigo.kernel.lang.Assertion;
  * 
  * @author npiedeloup, pchretien, statchum
  */
-final class HCategorySelection {
+public final class HCategorySelection {
 	private final HCategory selectedCategory;
 	private final boolean children;
 
@@ -39,12 +39,12 @@ final class HCategorySelection {
 		selectedCategory = category;
 	}
 
-	HCategory getCategory() {
+	public HCategory getCategory() {
 		return selectedCategory;
 
 	}
 
-	boolean hasChildren() {
+	public boolean hasChildren() {
 		return children;
 
 	}

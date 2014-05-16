@@ -17,12 +17,7 @@
  */
 package io.analytica.hcube.query;
 
-import io.analytica.hcube.HCubeStore;
-import io.analytica.hcube.dimension.HCategory;
 import io.vertigo.kernel.lang.Assertion;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
@@ -42,28 +37,10 @@ public final class HQuery {
 		this.categorySelection = categorySelection;
 	}
 
-	//-----------------------What----------------------------------------------
-	/**
-	 * Liste triée par ordre alphabétique des catégories matchant la sélection
-	 * @return
-	 */
-	//A déplacer 
-	//A déplacer 
-	//A déplacer 
-	//A déplacer 
-	//A déplacer 
-	//A déplacer 
-	//A déplacer 
-	public Set<HCategory> getAllCategories(final String appName, final HCubeStore cubeStore) {
-		Assertion.checkNotNull(cubeStore);
-		// ---------------------------------------------------------------------
-		if (categorySelection.hasChildren()) {
-			return cubeStore.getAllSubCategories(appName, categorySelection.getCategory());
-		}
-		return Collections.singleton(categorySelection.getCategory());
+	public HCategorySelection getCategorySelection() {
+		return categorySelection;
 	}
 
-	//-----------------------When----------------------------------------------
 	public HTimeSelection getTimeSelection() {
 		return timeSelection;
 	}

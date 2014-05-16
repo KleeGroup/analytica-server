@@ -21,6 +21,7 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HQueryUtil;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
@@ -92,6 +93,6 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 
 	/** {@inheritDoc} */
 	public synchronized HResult execute(String appName, final HQuery query) {
-		return new HResult(query, query.getAllCategories(appName, this), this.findAll(appName, query));
+		return new HResult(query, HQueryUtil.findCategories(appName, query.getCategorySelection(), this), this.findAll(appName, query));
 	}
 }

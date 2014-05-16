@@ -7,6 +7,7 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HQueryUtil;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
@@ -121,7 +122,7 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	//	}
 
 	public HResult execute(String appName, HQuery query) {
-		return new HResult(query, query.getAllCategories(appName, this), findAll(appName, query));
+		return new HResult(query, HQueryUtil.findCategories(appName, query.getCategorySelection(), this), findAll(appName, query));
 	}
 
 	private Map<HCategory, HSerie> findAll(String appName, final HQuery query) {
@@ -131,7 +132,7 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
-		for (final HCategory category : query.getAllCategories(appName, this)) {
+		for (final HCategory category : HQueryUtil.findCategories(appName, query.getCategorySelection(), this)) {
 			//			final List<HCube> cubes = new ArrayList<>();
 			System.out.println(">>>>findAll " + query);
 			final List<HCube> cubes = index.findAll(category, query.getTimeSelection());
