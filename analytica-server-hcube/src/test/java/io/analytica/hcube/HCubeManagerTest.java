@@ -476,7 +476,7 @@ public final class HCubeManagerTest {
 		}
 	}
 
-	private static void checkMergedMetric(final HCubeManager cubeManager, final HTimeDimension timeDimension, final Date start, final Date end, final HMetricKey weight, final int espectedCount, final double espectedSum, final double espectedMin, final double espectedMax) {
+	private static void checkMergedMetric(final HCubeManager cubeManager, final HTimeDimension timeDimension, final Date start, final Date end, final HMetricKey weight, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) {
 		//----	
 		final HQuery query = new HQueryBuilder()//
 				.on(timeDimension)//
@@ -492,9 +492,11 @@ public final class HCubeManagerTest {
 		//Check : 10*24 cubes per minute
 		final Map<HTime, HCube> cubes = result.getSerie(new HCategory(PAGES)).getCubes();
 		Assert.assertEquals(3, cubes.size());
-		assertMetricEquals(cubes.get(new HTime(start, timeDimension)), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
-		assertMetricEquals(cubes.get(1), weight, espectedCount, espectedSum, espectedSum / espectedCount, espectedMin, espectedMax);
-		assertMetricEquals(cubes.get(2), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
+		//on vérifie 
+		HTime startTime = new HTime(start, timeDimension);
+		assertMetricEquals(cubes.get(startTime), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
+		assertMetricEquals(cubes.get(startTime.next()), weight, expectedCount, expectedSum, expectedSum / expectedCount, expectedMin, expectedMax);
+		assertMetricEquals(cubes.get(startTime.next().next()), weight, 0, 0, Double.NaN, Double.NaN, Double.NaN);
 	}
 
 	private static void assertMetricEquals(final HCube hCube, final HMetricKey metricKey, final double count, final double sum, final double mean, final double min, final double max) {

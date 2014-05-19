@@ -17,7 +17,7 @@
 	</properties>
 	
 	<dependencies>
-		<dependency>
+	<!--  		<dependency>
 			<groupId>io.vertigo</groupId>
 			<artifactId>vertigo-core</artifactId>
 			<version>${vertigo.version}</version>
@@ -34,7 +34,7 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-common</artifactId>
 			<version>4.7.0</version>
-			<optional>true</optional> <!-- for LuceneHCubeStorePlugin -->
+			<optional>true</optional> 
 		</dependency>
 		
 <dependency>
@@ -44,7 +44,6 @@
     <type>jar</type>
     <scope>compile</scope>
 </dependency>
-		<!--  
 		<dependency>
 	        <groupId>com.hazelcast</groupId>
 	        <artifactId>hazelcast</artifactId>
