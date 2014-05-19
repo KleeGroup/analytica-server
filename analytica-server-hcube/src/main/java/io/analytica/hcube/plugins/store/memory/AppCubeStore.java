@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -102,7 +103,7 @@ final class AppCubeStore {
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
 		for (final HCategory category : HQueryUtil.findCategories(appName, query.getCategorySelection(), cubeStore)) {
-			final Map<HTime, HCube> cubes = new HashMap<>();
+			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
 			for (HTime currentTime : HQueryUtil.findTimes(query.getTimeSelection())) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
