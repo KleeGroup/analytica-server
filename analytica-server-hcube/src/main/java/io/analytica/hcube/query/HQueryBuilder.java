@@ -51,9 +51,27 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/**
 	 * @param date lower selection (INCLUDED)
+	 * @param date upper selection (EXCLUDED)
 	 * @return HQueryBuilder
 	 */
-	public HQueryBuilder from(final String date) {
+	public HQueryBuilder between(final String startdate, final String endDate) {
+		return from(startdate).to(endDate);
+	}
+
+	/**
+	 * @param date lower selection (INCLUDED)
+	 * @param date upper selection (EXCLUDED)
+	 * @return HQueryBuilder
+	 */
+	public HQueryBuilder between(final Date startdate, final Date endDate) {
+		return from(startdate).to(endDate);
+	}
+
+	/**
+	* @param date lower selection (INCLUDED)
+	* @return HQueryBuilder
+	*/
+	private HQueryBuilder from(final String date) {
 		Assertion.checkNotNull(hTimeDimension);
 		//---------------------------------------------------------------------
 		return from(readDate(date, hTimeDimension));
@@ -63,7 +81,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	 * @param date lower selection (INCLUDED)
 	 * @return HQueryBuilder
 	 */
-	public HQueryBuilder from(final Date date) {
+	private HQueryBuilder from(final Date date) {
 		Assertion.checkNotNull(date);
 		Assertion.checkState(from == null, "Date From already set");
 		//---------------------------------------------------------------------
@@ -75,7 +93,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	 * @param date upper selection (EXCLUDED)
 	 * @return HQueryBuilder
 	 */
-	public HQueryBuilder to(final Date date) {
+	private HQueryBuilder to(final Date date) {
 		Assertion.checkNotNull(date);
 		Assertion.checkState(to == null, "Date To already set");
 		//---------------------------------------------------------------------
@@ -87,7 +105,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	 * @param date date upper selection (EXCLUDED)
 	 * @return
 	 */
-	public HQueryBuilder to(final String date) {
+	private HQueryBuilder to(final String date) {
 		Assertion.checkNotNull(hTimeDimension);
 		//---------------------------------------------------------------------
 		return to(readDate(date, hTimeDimension));
