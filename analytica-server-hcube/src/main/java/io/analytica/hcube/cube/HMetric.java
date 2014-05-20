@@ -32,7 +32,6 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HMetric {
-	private final HMetricKey metricKey;
 	private final HDistribution distribution;
 
 	private final long count;
@@ -41,11 +40,9 @@ public final class HMetric {
 	private final double sum;
 	private final double sqrSum;
 
-	public HMetric(final HMetricKey metricKey, final long count, final double min, final double max, final double sum, final double sqrSum, final HDistribution distribution) {
-		Assertion.checkNotNull(metricKey);
+	public HMetric( final long count, final double min, final double max, final double sum, final double sqrSum, final HDistribution distribution) {
 		//Assertion.checkArgument(metricKey.isClustered() ^ clusteredValues != null, "la metric {0} cluster doit avoir des données clusterisées", metricKey);
 		//---------------------------------------------------------------------
-		this.metricKey = metricKey;
 		this.count = count;
 		this.min = min;
 		this.max = max;
@@ -53,13 +50,6 @@ public final class HMetric {
 		this.sqrSum = sqrSum;
 		//---------------------------------------------------------------------
 		this.distribution = distribution;
-	}
-
-	/**
-	 * @return Nom de metric
-	 */
-	public HMetricKey getKey() {
-		return metricKey;
 	}
 
 	/**
@@ -117,6 +107,6 @@ public final class HMetric {
 
 	@Override
 	public String toString() {
-		return "{key: " + metricKey + ", count:" + count + ", mean:" + getMean() + (distribution == null ? " " : ", distribution:" + getDistribution()) + "}";
+		return "{ count:" + count + ", mean:" + getMean() + (distribution == null ? " " : ", distribution:" + getDistribution()) + "}";
 	}
 }
