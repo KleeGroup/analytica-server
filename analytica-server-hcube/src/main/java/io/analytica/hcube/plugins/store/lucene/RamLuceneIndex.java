@@ -5,7 +5,7 @@ import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.query.HTimeSelection;
@@ -161,7 +161,7 @@ final class RamLuceneIndex {
 				HTimeDimension timeDimension = HTimeDimension.valueOf(document.get("timeDimension"));
 				Date date = new Date(Long.valueOf(document.get("time")));
 				HTime time = new HTime(date, timeDimension);
-				HCubeKey cubeKey = new HCubeKey(time, category);
+				HKey cubeKey = new HKey(time, category);
 
 				long metrics = Long.valueOf(document.get("metrics"));
 				HCubeBuilder cubeBuilder = new HCubeBuilder(cubeKey);

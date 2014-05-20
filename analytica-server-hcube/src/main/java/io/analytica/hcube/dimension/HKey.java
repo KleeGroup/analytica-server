@@ -30,11 +30,11 @@ import java.util.List;
  *  
  * @author npiedeloup, pchretien
  */
-public final class HCubeKey {
+public final class HKey {
 	private final HTime time;
 	private final HCategory category;
 
-	public HCubeKey(final HTime time, final HCategory category) {
+	public HKey(final HTime time, final HCategory category) {
 		Assertion.checkNotNull(time);
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
@@ -55,21 +55,21 @@ public final class HCubeKey {
 	 * Cette méthode permet de préparer toutes les agrégations.
 	 * @return Liste de tous les cubes auxquels le présent cube appartient
 	 */
-	public List<HCubeKey> drillUp() {
-		final List<HCubeKey> upperCubeKeys = new ArrayList<>();
+	public List<HKey> drillUp() {
+		final List<HKey> upperKeys = new ArrayList<>();
 		//on remonte les axes, le premier sera le plus bas niveau
 		HTime hTime = getTime();
 		while (hTime != null) {
 			HCategory hCategory = getCategory();
 			while (hCategory != null) {
-				upperCubeKeys.add(new HCubeKey(hTime, hCategory/*, hLocation*/));
+				upperKeys.add(new HKey(hTime, hCategory/*, hLocation*/));
 				//On remonte l'arbre des categories
 				hCategory = hCategory.drillUp();
 			}
 			//On remonte time
 			hTime = hTime.drillUp();
 		}
-		return upperCubeKeys;
+		return upperKeys;
 	}
 
 	@Override
@@ -81,8 +81,8 @@ public final class HCubeKey {
 	public final boolean equals(final Object object) {
 		if (object == this) {
 			return true;
-		} else if (object instanceof HCubeKey) {
-			final HCubeKey other = HCubeKey.class.cast(object);
+		} else if (object instanceof HKey) {
+			final HKey other = HKey.class.cast(object);
 			return time.equals(other.time) && category.equals(other.category);
 		}
 		return false;

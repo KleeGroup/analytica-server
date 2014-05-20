@@ -17,11 +17,11 @@
  */
 package io.analytica.hcube.plugins.store.memory;
 
-import io.analytica.hcube.HSelector;
+import io.analytica.hcube.HCategorySelector;
 import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
@@ -39,14 +39,14 @@ import java.util.Set;
  * 
  * @author npiedeloup, pchretien
  */
-public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector {
+public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategorySelector {
 	private static final AppCubeStore EMPTY = new AppCubeStore("EMPTY");
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 
 	/** {@inheritDoc} */
-	public synchronized void push(String appName, final HCubeKey cubeKey, final HCube cube) {
+	public synchronized void push(String appName, final HKey key, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
-		Assertion.checkNotNull(cubeKey);
+		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		AppCubeStore appCubeStore = appCubeStores.get(appName);
@@ -54,7 +54,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector
 			appCubeStore = new AppCubeStore(appName);
 			appCubeStores.put(appName, appCubeStore);
 		}
-		appCubeStore.push(cubeKey, cube);
+		appCubeStore.push(key, cube);
 	}
 
 	public synchronized long count(String appName) {
@@ -73,13 +73,13 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector
 		//---------------------------------------------------------------------
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
-			return EMPTY.findAll(query, timeSelector, this.getSelector());
+			return EMPTY.findAll(query, timeSelector, this.getCategorySelector());
 		}
-		return appCubeStore.findAll(query, timeSelector, this.getSelector());
+		return appCubeStore.findAll(query, timeSelector, this.getCategorySelector());
 	}
 
 	/** {@inheritDoc} */
-	public HSelector getSelector() {
+	public HCategorySelector getCategorySelector() {
 		return this;
 	}
 

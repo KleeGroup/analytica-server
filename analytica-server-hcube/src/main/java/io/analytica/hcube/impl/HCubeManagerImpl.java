@@ -18,10 +18,10 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.HSelector;
+import io.analytica.hcube.HCategorySelector;
 import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
@@ -55,17 +55,17 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	/** {@inheritDoc} */
 	public HResult execute(String appName, final HQuery query) {
-		return new HResult(query, cubeStore.getSelector().findCategories(appName, query.getCategorySelection()), cubeStore.execute(appName, query, timeSelector));
+		return new HResult(query, cubeStore.getCategorySelector().findCategories(appName, query.getCategorySelection()), cubeStore.execute(appName, query, timeSelector));
 	}
 
 	/** {@inheritDoc} */
-	public HSelector getSelector() {
-		return cubeStore.getSelector();
+	public HCategorySelector getCategorySelector() {
+		return cubeStore.getCategorySelector();
 	}
 
 	/** {@inheritDoc} */
-	public void push(String appName, HCubeKey cubeKey, HCube cube) {
-		cubeStore.push(appName, cubeKey, cube);
+	public void push(String appName, HKey key, HCube cube) {
+		cubeStore.push(appName, key, cube);
 	}
 
 	/** {@inheritDoc} */

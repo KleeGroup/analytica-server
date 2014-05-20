@@ -24,7 +24,7 @@ import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
@@ -118,14 +118,14 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 		//----	
-		HSelector selector = cubeManager.getSelector();
-		Assert.assertEquals(0, selector.findAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(0, selector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		HCategorySelector categorySlector = cubeManager.getCategorySelector();
+		Assert.assertEquals(0, categorySlector.findAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(0, categorySlector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 		//---
 		populateData(cubeManager, start, days);
 		//----	
-		Assert.assertEquals(1, selector.findAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(1, selector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		Assert.assertEquals(1, categorySlector.findAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(1, categorySlector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 	}
 
 	/**
@@ -394,7 +394,7 @@ public final class HCubeManagerTest {
 	private static void addCube(final HCubeManager cubeManager, final Date current, final int weightValue, final HMetricKey duration, final HMetricKey weight) {
 		final HCategory category = new HCategory(PAGES, "WELCOME");
 		final HTime time = new HTime(current, HTimeDimension.Minute);
-		final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
+		final HKey key = new HKey(time, category/*, location*/);
 		final HMetric durationMetric = new HMetricBuilder(duration)//
 				.withValue(100)//
 				.build();
@@ -405,7 +405,7 @@ public final class HCubeManagerTest {
 				.withMetric(duration, durationMetric)//
 				.withMetric(weight, weightMetric)//
 				.build();
-		cubeManager.push(APP_NAME, cubeKey, cube);
+		cubeManager.push(APP_NAME, key, cube);
 	}
 
 	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
@@ -423,7 +423,7 @@ public final class HCubeManagerTest {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.Minute);
 					//--------		
-					final HCubeKey cubeKey = new HCubeKey(time, category);
+					final HKey key = new HKey(time, category);
 
 					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(duration);
 					for (int i = 0; i < 100; i++) {
@@ -438,7 +438,7 @@ public final class HCubeManagerTest {
 							.withMetric(weight, weightMetric)//
 							.build();
 
-					cubeManager.push(APP_NAME, cubeKey, cube);
+					cubeManager.push(APP_NAME, key, cube);
 					//--
 					checkMemory(cubeManager, APP_NAME, day);
 					if ((mc++) % (60 * 24 * 10) == 0) {

@@ -4,7 +4,7 @@ import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryUtil;
@@ -43,7 +43,7 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		//	addCategory(cube.getKey().getCategory());
 
 		List<Document> documents = new ArrayList<>();
-		for (final HCubeKey cubeKey : cube.getKey().drillUp()) {
+		for (final HKey cubeKey : cube.getKey().drillUp()) {
 			final Document document = new Document();
 			document.add(new LongField("time", cubeKey.getTime().inMillis(), Field.Store.YES));
 			document.add(new TextField("timeDimension", cubeKey.getTime().getDimension().name(), Field.Store.YES));

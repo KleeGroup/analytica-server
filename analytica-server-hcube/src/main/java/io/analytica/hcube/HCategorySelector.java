@@ -5,7 +5,7 @@ import io.analytica.hcube.query.HCategorySelection;
 
 import java.util.Set;
 
-public interface HSelector {
+public interface HCategorySelector {
 	/**
 	 * @return Set des catégories racines
 	 */

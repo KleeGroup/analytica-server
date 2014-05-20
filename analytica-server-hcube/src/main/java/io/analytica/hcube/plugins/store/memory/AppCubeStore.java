@@ -1,12 +1,12 @@
 package io.analytica.hcube.plugins.store.memory;
 
-import io.analytica.hcube.HSelector;
+import io.analytica.hcube.HCategorySelector;
 import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HSerie;
@@ -23,21 +23,21 @@ import java.util.Set;
 
 final class AppCubeStore {
 	private static final class QueueItem {
-		final HCubeKey cubeKey;
+		final HKey key;
 		final HCube cube;
 
-		QueueItem(HCubeKey cubeKey, HCube cube) {
-			Assertion.checkNotNull(cubeKey);
+		QueueItem(HKey key, HCube cube) {
+			Assertion.checkNotNull(key);
 			Assertion.checkNotNull(cube);
 			//---------------------------------------------------------------------
-			this.cubeKey = cubeKey;
+			this.key = key;
 			this.cube = cube;
 		}
 	}
 
 	private static final int QUEUE_SIZE = 5000;
 	private final List<QueueItem> queue;
-	private final Map<HCubeKey, HCube> store;
+	private final Map<HKey, HCube> store;
 	//---------------------------------------------------------------------
 	private final Set<HCategory> rootCategories;
 	private final Map<HCategory, Set<HCategory>> categories;
@@ -54,14 +54,14 @@ final class AppCubeStore {
 		categories = new HashMap<>();
 	}
 
-	void push(final HCubeKey cubeKey, final HCube cube) {
-		Assertion.checkNotNull(cubeKey);
+	void push(final HKey key, final HCube cube) {
+		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
-		addCategory(cubeKey.getCategory());
+		addCategory(key.getCategory());
 
 		//populate a queue
-		queue.add(new QueueItem(cubeKey, cube));
+		queue.add(new QueueItem(key, cube));
 		if (queue.size() > QUEUE_SIZE) {
 			flushQueue();
 		}
@@ -70,8 +70,8 @@ final class AppCubeStore {
 	//flushing queue into store
 	private void flushQueue() {
 		for (final QueueItem item : queue) {
-			for (final HCubeKey upCubeKeys : item.cubeKey.drillUp()) {
-				merge(upCubeKeys, item.cube);
+			for (final HKey upKeys : item.key.drillUp()) {
+				merge(upKeys, item.cube);
 			}
 		}
 		queue.clear();
@@ -79,11 +79,11 @@ final class AppCubeStore {
 	}
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
-	private void merge(final HCubeKey cubeKey, final HCube cube) {
-		Assertion.checkNotNull(cubeKey);
+	private void merge(final HKey key, final HCube cube) {
+		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
-		final HCube oldCube = store.get(cubeKey);
+		final HCube oldCube = store.get(key);
 		final HCube newCube;
 		if (oldCube != null) {
 			HCubeBuilder cubeBuilder = new HCubeBuilder();
@@ -98,33 +98,33 @@ final class AppCubeStore {
 		} else {
 			newCube = cube;
 		}
-		store.put(cubeKey, newCube);
+		store.put(key, newCube);
 	}
 
 	private void printStats() {
 		System.out.println("memStore : " + store.size() + " cubes");
 	}
 
-	List<HSerie> findAll(final HQuery query, final HTimeSelector timeSelector, final HSelector selector) {
+	List<HSerie> findAll(final HQuery query, final HTimeSelector timeSelector, final HCategorySelector categorySelector) {
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(timeSelector);
-		Assertion.checkNotNull(selector);
+		Assertion.checkNotNull(categorySelector);
 		//---------------------------------------------------------------------
 		flushQueue();
 		//On itère sur les séries indexées par les catégories de la sélection.
 		List<HSerie> series = new ArrayList<>();
 
-		for (final HCategory category : selector.findCategories(appName, query.getCategorySelection())) {
+		for (final HCategory category : categorySelector.findCategories(appName, query.getCategorySelection())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
 			for (HTime currentTime : timeSelector.findTimes(query.getTimeSelection())) {
-				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
-				final HCube cube = store.get(cubeKey);
+				final HKey key = new HKey(currentTime, category/*, null*/);
+				final HCube cube = store.get(key);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
 				cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
 				/*if (cube != null) {
-					cubes.add(new HCubeBuilder(cubeKey).build());
+					cubes.add(new HCubeBuilder(key).build());
 				}*/
 				//---
 				currentTime = currentTime.getDimension().next(currentTime.inMillis());
