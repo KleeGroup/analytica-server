@@ -1,27 +1,16 @@
 package io.analytica.hcube;
 
 import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
-
-import java.util.Set;
 
 /**
  * Plugin gérant le stockage des cubes.
  * @author npiedeloup
  */
 public interface HCubeStore {
-	/**
-	 * @return Set des catégories racines
-	 */
-	Set<HCategory> getAllRootCategories(String appName);
-
-	/**
-	 * @return Liste des catégories filles
-	 */
-	Set<HCategory> getAllSubCategories(String appName, HCategory category);
+	HSelector getSelector();
 
 	//-------------------------------------------------------------------------
 	/**

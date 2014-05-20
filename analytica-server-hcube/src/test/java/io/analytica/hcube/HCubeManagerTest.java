@@ -116,13 +116,14 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 		//----	
-		Assert.assertEquals(0, cubeManager.getStore().getAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(0, cubeManager.getStore().getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		HSelector selector = cubeManager.getStore().getSelector();
+		Assert.assertEquals(0, selector.getAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(0, selector.getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 		//---
 		populateData(cubeManager, start, days);
 		//----	
-		Assert.assertEquals(1, cubeManager.getStore().getAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(1, cubeManager.getStore().getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		Assert.assertEquals(1, selector.getAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(1, selector.getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 	}
 
 	/**

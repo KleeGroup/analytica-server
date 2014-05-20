@@ -113,7 +113,7 @@ final class AppCubeStore {
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
 
-		for (final HCategory category : HQueryUtil.findCategories(appName, query.getCategorySelection(), cubeStore)) {
+		for (final HCategory category : HQueryUtil.findCategories(appName, query.getCategorySelection(), cubeStore.getSelector())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
 			for (HTime currentTime : HQueryUtil.findTimes(query.getTimeSelection())) {

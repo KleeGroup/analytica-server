@@ -17,6 +17,7 @@
  */
 package io.analytica.hcube.plugins.store.memory;
 
+import io.analytica.hcube.HSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
@@ -37,7 +38,7 @@ import java.util.Set;
  * 
  * @author npiedeloup, pchretien
  */
-public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
+public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector {
 	private static final AppCubeStore EMPTY = new AppCubeStore("EMPTY");
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 
@@ -97,5 +98,10 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	/** {@inheritDoc} */
 	public synchronized HResult execute(String appName, final HQuery query) {
 		return new HResult(query, HQueryUtil.findCategories(appName, query.getCategorySelection(), this), this.findAll(appName, query));
+	}
+
+	/** {@inheritDoc} */
+	public HSelector getSelector() {
+		return this;
 	}
 }
