@@ -17,7 +17,8 @@
  */
 package io.analytica.hcube.cube;
 
-import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Un cube contient :
@@ -35,11 +36,6 @@ public interface HVirtualCube {
 	 * @return Métrique
 	 */
 	HMetric getMetric(final HMetricKey metricKey);
-
-	/**
-	 * Liste de toutes les métriques
-	 * @return Métriques du cube
-	 */
-	Collection<HMetric> getMetrics();
-
+	
+	Set<HMetricKey> getMetricKeys();
 }

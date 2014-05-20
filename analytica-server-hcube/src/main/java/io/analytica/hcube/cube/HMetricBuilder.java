@@ -46,6 +46,9 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		distributionBuilder = metricKey.hasDistribution() ? new HDistributionBuilder() : null;
 	}
 
+	public HMetricKey getMetricKey() {
+		return metricKey;
+	}
 	/**
 	 * Add value.
 	 * @param value Value to add 
@@ -68,9 +71,8 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * @param metric Metric
 	 * @return MetricBuilder builder
 	 */
-	public HMetricBuilder withMetric(final HMetric metric) {
+	public HMetricBuilder withMetric( final HMetric metric) {
 		Assertion.checkNotNull(metric);
-		Assertion.checkArgument(metricKey.equals(metric.getKey()), "On ne peut merger que des metrics indentiques ({0} != {1})", metricKey, metric.getKey());
 		Assertion.checkArgument(distributionBuilder == null ^ !(metric.getDistribution() == null), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
 		//---------------------------------------------------------------------
 		count += metric.get(HCounterType.count);
@@ -92,7 +94,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	public HMetric build() {
 		Assertion.checkArgument(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
 		//---------------------------------------------------------------------
-		return new HMetric(metricKey, count, min, max, sum, sqrSum, distributionBuilder == null ? null : distributionBuilder.build());
+		return new HMetric( count, min, max, sum, sqrSum, distributionBuilder == null ? null : distributionBuilder.build());
 	}
 
 	private static double max(final double d1, final double d2) {

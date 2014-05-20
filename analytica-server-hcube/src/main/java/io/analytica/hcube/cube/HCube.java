@@ -19,8 +19,8 @@ package io.analytica.hcube.cube;
 
 import io.vertigo.kernel.lang.Assertion;
 
-import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Un cube contient :
@@ -49,20 +49,20 @@ public final class HCube implements HVirtualCube {
 		//---------------------------------------------------------------------
 		return metrics.get(metricKey);
 	}
-
 	/** {@inheritDoc} */
-	public Collection<HMetric> getMetrics() {
-		return metrics.values();
+	public Set<HMetricKey> getMetricKeys() {
+		return metrics.keySet();
 	}
+
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
 				.append("{ metrics:{");
-		for (final HMetric metric : getMetrics()) {
-			sb.append("\n\t\t ").append(metric).append(",");
-		}
-		if (!getMetrics().isEmpty()) {
+		//for (final Entry<HMetricKey, HMetric> entry: getMetrics().entrySet()) {
+			sb.append(metrics);
+//			append("\n\t\t metrics: ").append(entry.getKey()).append(",");
+		if (!getMetricKeys().isEmpty()) {
 			sb.append("\n\t");
 		}
 		sb.append("}");

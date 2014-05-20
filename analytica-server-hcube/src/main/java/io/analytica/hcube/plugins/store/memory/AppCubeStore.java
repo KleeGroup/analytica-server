@@ -3,6 +3,8 @@ package io.analytica.hcube.plugins.store.memory;
 import io.analytica.hcube.HCubeStore;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
+import io.analytica.hcube.cube.HMetric;
+import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
@@ -19,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 final class AppCubeStore {
 	private static final class QueueItem {
@@ -79,11 +82,21 @@ final class AppCubeStore {
 
 	//On construit un nouveau cube à partir de l'ancien(peut être null) et du nouveau.
 	private void merge(final HCubeKey cubeKey, final HCube cube) {
-
+		Assertion.checkNotNull(cubeKey);
+		Assertion.checkNotNull(cube);
+		//---------------------------------------------------------------------
 		final HCube oldCube = store.get(cubeKey);
 		final HCube newCube;
 		if (oldCube != null) {
-			newCube = new HCubeBuilder().withMetrics(cube.getMetrics()).withMetrics(oldCube.getMetrics()).build();
+			HCubeBuilder cubeBuilder = new HCubeBuilder() ;
+			for (final HMetricKey metricKey : cube.getMetricKeys()) {
+				cubeBuilder.withMetric(metricKey, cube.getMetric(metricKey));
+			}
+			for (final HMetricKey metricKey : oldCube.getMetricKeys()) {
+				cubeBuilder.withMetric(metricKey, oldCube.getMetric(metricKey));
+			}
+
+			newCube = cubeBuilder.build();
 		} else {
 			newCube = cube;
 		}

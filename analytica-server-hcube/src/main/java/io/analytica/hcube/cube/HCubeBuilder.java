@@ -20,10 +20,10 @@ package io.analytica.hcube.cube;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Builder permettant de contruire un cube.
@@ -37,42 +37,42 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 * Ajout d'une metric. 
 	 * @param metric Metric
 	 */
-	public HCubeBuilder withMetric(final HMetric metric) {
+	public HCubeBuilder withMetric(final HMetricKey metricKey, HMetric metric) {
+		Assertion.checkNotNull(metricKey);
 		Assertion.checkNotNull(metric);
 		//---------------------------------------------------------------------
-		HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
+		HMetricBuilder metricBuilder = metricBuilders.get(metricKey);
 		if (metricBuilder == null) {
-			metricBuilder = new HMetricBuilder(metric.getKey());
-			metricBuilders.put(metric.getKey(), metricBuilder);
+			metricBuilder = new HMetricBuilder(metricKey);
+			metricBuilders.put(metricKey, metricBuilder);
 		}
 		//On ajoute metric
 		metricBuilder.withMetric(metric);
 		return this;
 	}
 
-	/**
-	 * Ajout de ttes les Metrics. 
-	 * @param Metrics  
-	 */
-	public HCubeBuilder withMetrics(final Collection<HMetric> metrics) {
-		Assertion.checkNotNull(metrics);
-		//---------------------------------------------------------------------
-		for (final HMetric metric : metrics) {
-			withMetric(metric);
-		}
-		return this;
-	}
+//	/**
+//	 * Ajout de ttes les Metrics. 
+//	 * @param Metrics  
+//	 */
+//	public HCubeBuilder withMetrics(final Map<HMetricKey, HMetric> metrics) {
+//		Assertion.checkNotNull(metrics);
+//		//---------------------------------------------------------------------
+//		for (final Entry<HMetricKey, HMetric> entry : metrics.entrySet()) {
+//			withMetric(entry.getKey(), entry.getValue());
+//		}
+//		return this;
+//	}
 
 	/** 
 	 * Construction du Cube.
 	 * @return cube
 	 */
 	public HCube build() {
-		//---------------------------------------------------------------------
 		final Map<HMetricKey, HMetric> metrics = new LinkedHashMap<>(metricBuilders.size());
-		for (final HMetricBuilder metricBuilder : metricBuilders.values()) {
-			HMetric metric = metricBuilder.build();
-			metrics.put(metric.getKey(), metric);
+		for (final Entry<HMetricKey, HMetricBuilder> entry: metricBuilders.entrySet()) {
+			HMetric metric = entry.getValue().build();
+			metrics.put(entry.getKey(), metric);
 		}
 		return new HCube(metrics);
 	}

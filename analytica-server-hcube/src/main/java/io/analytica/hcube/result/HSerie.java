@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Résultat d'une série.
@@ -57,6 +58,7 @@ public final class HSerie implements HVirtualCube {
 		//---------------------------------------------------------------------
 		this.category = category;
 		this.cubes = cubes;
+		metrics = buildMetrics(cubes.values());
 	}
 
 	/**
@@ -76,24 +78,22 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	//-------------------------------------------------------------------------
-	private Map<HMetricKey, HMetric> getLazyMetrics() {
-		if (metrics == null) {
+	private static Map<HMetricKey, HMetric> buildMetrics(Collection<HCube> cubes) {
+			Map<HMetricKey, HMetric> metrics= new HashMap<>();
 			final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
-			for (final HCube cube : cubes.values()) {
-				for (final HMetric metric : cube.getMetrics()) {
-					HMetricBuilder metricBuilder = metricBuilders.get(metric.getKey());
+			for (final HCube cube : cubes) {
+				for (final HMetricKey metricKey: cube.getMetricKeys()) {
+					HMetricBuilder metricBuilder = metricBuilders.get(metricKey);
 					if (metricBuilder == null) {
-						metricBuilder = new HMetricBuilder(metric.getKey());
-						metricBuilders.put(metric.getKey(), metricBuilder);
+						metricBuilder = new HMetricBuilder(metricKey);
+						metricBuilders.put(metricKey, metricBuilder);
 					}
-					metricBuilder.withMetric(metric);
+					metricBuilder.withMetric(cube.getMetric(metricKey));
 				}
 			}
-			metrics = new HashMap<>();
 			for (final Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
 				metrics.put(entry.getKey(), entry.getValue().build());
 			}
-		}
 		return metrics;
 	}
 
@@ -101,12 +101,12 @@ public final class HSerie implements HVirtualCube {
 	public HMetric getMetric(final HMetricKey metricKey) {
 		Assertion.checkNotNull(metricKey);
 		//---------------------------------------------------------------------
-		return getLazyMetrics().get(metricKey);
+		return metrics.get(metricKey);
 	}
 
 	/** {@inheritDoc} */
-	public Collection<HMetric> getMetrics() {
-		return getLazyMetrics().values();
+	public Set<HMetricKey> getMetricKeys() {
+		return metrics.keySet();
 	}
 
 	public List<HPoint> getPoints(final HMetricKey metricKey) {

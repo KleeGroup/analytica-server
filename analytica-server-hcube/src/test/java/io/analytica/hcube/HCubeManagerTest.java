@@ -160,7 +160,7 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(24, result.getSerie(new HCategory(PAGES)).getCubes().size());
 
 		//Check : serie contains 2 metric (DURATION and WEIGHT)
-		Assert.assertEquals(2, result.getSerie(new HCategory(PAGES)).getMetrics().size());
+		Assert.assertEquals(2, result.getSerie(new HCategory(PAGES)).getMetricKeys().size());
 
 		//
 		final HSerie serie = result.getSerie(new HCategory(PAGES));
@@ -171,7 +171,7 @@ public final class HCubeManagerTest {
 			//	HTime time = entry.getKey();
 			Assert.assertTrue(cube.toString().startsWith("{"));
 			Assert.assertTrue(cube.toString().endsWith("}"));
-			Assert.assertEquals(2, cube.getMetrics().size());
+			Assert.assertEquals(2, cube.getMetricKeys().size());
 			final HMetric metric = cube.getMetric(new HMetricKey("DURATION", true));
 			Assert.assertEquals(100 * 60 * 2, metric.getCount(), 0);
 			Assert.assertEquals(100, metric.getMean(), 0);
@@ -181,7 +181,7 @@ public final class HCubeManagerTest {
 		Assert.assertTrue(metric.toString().startsWith("{"));
 		Assert.assertTrue(metric.toString().endsWith("}"));
 
-		Assert.assertEquals("DURATION", metric.getKey().getName());
+	//Assert.assertEquals("DURATION", metric.getKey().getName());
 		Assert.assertEquals(100 * 60 * 2 * 24, metric.getCount(), 0);
 		Assert.assertEquals(100, metric.getMean(), 0);
 		Assert.assertTrue(metric.get(HCounterType.stdDev) > 0);
@@ -398,15 +398,15 @@ public final class HCubeManagerTest {
 		final HCategory category = new HCategory(PAGES, "WELCOME");
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
-		final HMetric metricMetric = new HMetricBuilder(duration)//
+		final HMetric durationMetric = new HMetricBuilder(duration)//
 				.withValue(100)//
 				.build();
 		final HMetric weightMetric = new HMetricBuilder(weight)//
 				.withValue(weightValue)//
 				.build();
 		final HCube cube = new HCubeBuilder()//
-				.withMetric(metricMetric)//
-				.withMetric(weightMetric)//
+				.withMetric(duration, durationMetric)//
+				.withMetric(weight, weightMetric)//
 				.build();
 		cubeManager.getStore().push(APP_NAME, cubeKey, cube);
 	}
@@ -437,8 +437,8 @@ public final class HCubeManagerTest {
 					final HMetric weightMetric = new HMetricBuilder(weight).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder()//
-							.withMetric(metricBuilder.build())//
-							.withMetric(weightMetric)//
+							.withMetric(metricBuilder.getMetricKey(), metricBuilder.build())//
+							.withMetric(weight, weightMetric)//
 							.build();
 
 					cubeManager.getStore().push(APP_NAME, cubeKey, cube);
