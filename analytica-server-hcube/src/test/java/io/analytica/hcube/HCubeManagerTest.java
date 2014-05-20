@@ -181,7 +181,7 @@ public final class HCubeManagerTest {
 		Assert.assertTrue(metric.toString().startsWith("{"));
 		Assert.assertTrue(metric.toString().endsWith("}"));
 
-	//Assert.assertEquals("DURATION", metric.getKey().getName());
+		//Assert.assertEquals("DURATION", metric.getKey().getName());
 		Assert.assertEquals(100 * 60 * 2 * 24, metric.getCount(), 0);
 		Assert.assertEquals(100, metric.getMean(), 0);
 		Assert.assertTrue(metric.get(HCounterType.stdDev) > 0);
@@ -428,16 +428,16 @@ public final class HCubeManagerTest {
 					//--------		
 					final HCubeKey cubeKey = new HCubeKey(time, category);
 
-					final HMetricBuilder metricBuilder = new HMetricBuilder(duration);
+					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(duration);
 					for (int i = 0; i < 100; i++) {
-						metricBuilder.withValue(100 - i);
-						metricBuilder.withValue(100 + i);
+						durationMetricBuilder.withValue(100 - i);
+						durationMetricBuilder.withValue(100 + i);
 					}
 
 					final HMetric weightMetric = new HMetricBuilder(weight).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder()//
-							.withMetric(metricBuilder.getMetricKey(), metricBuilder.build())//
+							.withMetric(duration, durationMetricBuilder.build())//
 							.withMetric(weight, weightMetric)//
 							.build();
 

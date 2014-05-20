@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.cube;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,6 +35,6 @@ public interface HVirtualCube {
 	 * @return Métrique
 	 */
 	HMetric getMetric(final HMetricKey metricKey);
-	
+
 	Set<HMetricKey> getMetricKeys();
 }
