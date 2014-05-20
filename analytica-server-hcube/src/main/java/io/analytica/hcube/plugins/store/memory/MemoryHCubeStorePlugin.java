@@ -18,18 +18,19 @@
 package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.HSelector;
+import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
+import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.query.HQueryUtil;
-import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,12 +57,41 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector
 		appCubeStore.push(cubeKey, cube);
 	}
 
-	private Map<HCategory, HSerie> findAll(final String appName, final HQuery query) {
+	public synchronized long count(String appName) {
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
-			return EMPTY.findAll(query, this);
+			return 0;
 		}
-		return appCubeStore.findAll(query, this);
+		return appCubeStore.count();
+	}
+
+	/** {@inheritDoc} */
+	public synchronized List<HSerie> execute(String appName, final HQuery query, final HTimeSelector timeSelector) {
+		Assertion.checkArgNotEmpty(appName);
+		Assertion.checkNotNull(query);
+		Assertion.checkNotNull(timeSelector);
+		//---------------------------------------------------------------------
+		final AppCubeStore appCubeStore = appCubeStores.get(appName);
+		if (appCubeStore == null) {
+			return EMPTY.findAll(query, timeSelector, this.getSelector());
+		}
+		return appCubeStore.findAll(query, timeSelector, this.getSelector());
+	}
+
+	/** {@inheritDoc} */
+	public HSelector getSelector() {
+		return this;
+	}
+
+	/** {@inheritDoc} */
+	public Set<HCategory> findCategories(final String appName, final HCategorySelection categorySelection) {
+		Assertion.checkNotNull(appName);
+		Assertion.checkNotNull(categorySelection);
+		// ---------------------------------------------------------------------
+		if (categorySelection.hasChildren()) {
+			return getAllSubCategories(appName, categorySelection.getCategory());
+		}
+		return Collections.singleton(categorySelection.getCategory());
 	}
 
 	/** {@inheritDoc} */
@@ -85,23 +115,5 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector
 			return Collections.emptySet();
 		}
 		return appCubeStore.getAllSubCategories(category);
-	}
-
-	public synchronized long count(String appName) {
-		final AppCubeStore appCubeStore = appCubeStores.get(appName);
-		if (appCubeStore == null) {
-			return 0;
-		}
-		return appCubeStore.count();
-	}
-
-	/** {@inheritDoc} */
-	public synchronized HResult execute(String appName, final HQuery query) {
-		return new HResult(query, HQueryUtil.findCategories(appName, query.getCategorySelection(), this), this.findAll(appName, query));
-	}
-
-	/** {@inheritDoc} */
-	public HSelector getSelector() {
-		return this;
 	}
 }

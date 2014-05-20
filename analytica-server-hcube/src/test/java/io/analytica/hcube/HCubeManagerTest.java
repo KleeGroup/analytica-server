@@ -31,7 +31,6 @@ import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
-import io.analytica.hcube.query.HQueryUtil;
 import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
@@ -77,10 +76,11 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 		//---
-		Assert.assertEquals(3, HQueryUtil.findTimes(query1.getTimeSelection()).size()); //3 HOURS
-		Assert.assertEquals(3, HQueryUtil.findTimes(query2.getTimeSelection()).size()); //3 HOURS
-		Assert.assertTrue(HQueryUtil.findTimes(query1.getTimeSelection()).containsAll(HQueryUtil.findTimes(query2.getTimeSelection())));
-		Assert.assertTrue(HQueryUtil.findTimes(query2.getTimeSelection()).containsAll(HQueryUtil.findTimes(query1.getTimeSelection())));
+		HTimeSelector timeSelector = cubeManager.getTimeSelector();
+		Assert.assertEquals(3, timeSelector.findTimes(query1.getTimeSelection()).size()); //3 HOURS
+		Assert.assertEquals(3, timeSelector.findTimes(query2.getTimeSelection()).size()); //3 HOURS
+		Assert.assertTrue(timeSelector.findTimes(query1.getTimeSelection()).containsAll(timeSelector.findTimes(query2.getTimeSelection())));
+		Assert.assertTrue(timeSelector.findTimes(query2.getTimeSelection()).containsAll(timeSelector.findTimes(query1.getTimeSelection())));
 		Assert.assertEquals(query1.toString(), query2.toString());
 	}
 
@@ -91,8 +91,10 @@ public final class HCubeManagerTest {
 				.between("NOW", "NOW+3d")//
 				.with(PAGES)//
 				.build();
-		//---
-		Assert.assertEquals(3 * 24, HQueryUtil.findTimes(query.getTimeSelection()).size()); //72 hours 
+		//---		
+		HTimeSelector timeSelector = cubeManager.getTimeSelector();
+
+		Assert.assertEquals(3 * 24, timeSelector.findTimes(query.getTimeSelection()).size()); //72 hours 
 	}
 
 	/*
@@ -145,7 +147,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.getStore().execute(APP_NAME, query);
+		final HResult result = cubeManager.execute(APP_NAME, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -217,7 +219,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.getStore().execute(APP_NAME, query);
+		final HResult result = cubeManager.execute(APP_NAME, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -479,7 +481,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.getStore().execute(APP_NAME, query);
+		final HResult result = cubeManager.execute(APP_NAME, query);
 		Assert.assertEquals(query, result.getQuery());
 		//Check : 1 category
 		Assert.assertEquals(1, result.getAllCategories().size());

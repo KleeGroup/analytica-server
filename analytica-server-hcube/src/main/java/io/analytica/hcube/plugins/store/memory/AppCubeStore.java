@@ -1,6 +1,7 @@
 package io.analytica.hcube.plugins.store.memory;
 
-import io.analytica.hcube.HCubeStore;
+import io.analytica.hcube.HSelector;
+import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetricKey;
@@ -8,7 +9,6 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.query.HQueryUtil;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
 
@@ -105,18 +105,19 @@ final class AppCubeStore {
 		System.out.println("memStore : " + store.size() + " cubes");
 	}
 
-	Map<HCategory, HSerie> findAll(final HQuery query, final HCubeStore cubeStore) {
+	List<HSerie> findAll(final HQuery query, final HTimeSelector timeSelector, final HSelector selector) {
 		Assertion.checkNotNull(query);
-		Assertion.checkNotNull(cubeStore);
+		Assertion.checkNotNull(timeSelector);
+		Assertion.checkNotNull(selector);
 		//---------------------------------------------------------------------
 		flushQueue();
 		//On itère sur les séries indexées par les catégories de la sélection.
-		final Map<HCategory, HSerie> cubeSeries = new HashMap<>();
+		List<HSerie> series = new ArrayList<>();
 
-		for (final HCategory category : HQueryUtil.findCategories(appName, query.getCategorySelection(), cubeStore.getSelector())) {
+		for (final HCategory category : selector.findCategories(appName, query.getCategorySelection())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
-			for (HTime currentTime : HQueryUtil.findTimes(query.getTimeSelection())) {
+			for (HTime currentTime : timeSelector.findTimes(query.getTimeSelection())) {
 				final HCubeKey cubeKey = new HCubeKey(currentTime, category/*, null*/);
 				final HCube cube = store.get(cubeKey);
 				//---
@@ -130,11 +131,11 @@ final class AppCubeStore {
 			}
 			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données 
 			//if (!cubes.isEmpty()) {
-			cubeSeries.put(category, new HSerie(category, cubes));
+			series.add(new HSerie(category, cubes));
 			//}
 		}
 		printStats();
-		return cubeSeries;
+		return series;
 	}
 
 	Set<HCategory> getAllSubCategories(HCategory category) {

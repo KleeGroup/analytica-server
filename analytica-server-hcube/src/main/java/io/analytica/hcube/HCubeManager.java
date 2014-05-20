@@ -17,6 +17,8 @@
  */
 package io.analytica.hcube;
 
+import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.component.Manager;
 
 /**
@@ -25,5 +27,9 @@ import io.vertigo.kernel.component.Manager;
  * @author pchretien, npiedeloup
  */
 public interface HCubeManager extends Manager {
+	HTimeSelector getTimeSelector();
+
 	HCubeStore getStore();
+
+	HResult execute(String appName, final HQuery query);
 }

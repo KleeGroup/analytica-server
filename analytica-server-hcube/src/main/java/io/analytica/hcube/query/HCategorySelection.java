@@ -46,7 +46,6 @@ public final class HCategorySelection {
 
 	public boolean hasChildren() {
 		return children;
-
 	}
 
 	/** {@inheritDoc} */

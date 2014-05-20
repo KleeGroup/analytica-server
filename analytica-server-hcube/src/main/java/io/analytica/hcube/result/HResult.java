@@ -21,6 +21,8 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.query.HQuery;
 import io.vertigo.kernel.lang.Assertion;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,14 +43,17 @@ public final class HResult {
 	 * @param query Requete initiale
 	 * @param series Liste des séries par catégorie
 	 */
-	public HResult(final HQuery query, final Set<HCategory> categories, final Map<HCategory, HSerie> series) {
+	public HResult(final HQuery query, final Set<HCategory> categories, final List<HSerie> series) {
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categories);
 		Assertion.checkNotNull(series);
 		//---------------------------------------------------------------------
 		this.query = query;
 		this.categories = categories;
-		this.series = series;
+		this.series = new HashMap<>();
+		for (HSerie serie : series) {
+			this.series.put(serie.getCategory(), serie);
+		}
 	}
 
 	//-----------------------What----------------------------------------------

@@ -3,7 +3,9 @@ package io.analytica.hcube;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HResult;
+import io.analytica.hcube.result.HSerie;
+
+import java.util.List;
 
 /**
  * Plugin gérant le stockage des cubes.
@@ -12,7 +14,6 @@ import io.analytica.hcube.result.HResult;
 public interface HCubeStore {
 	HSelector getSelector();
 
-	//-------------------------------------------------------------------------
 	/**
 	 * Ajout d'un cube.
 	 * @param cube HCube à ajouter 
@@ -25,14 +26,7 @@ public interface HCubeStore {
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
-	HResult execute(String appName, HQuery query);
-
-	//	/**
-	//	 * Liste des cubes, regroupés par série indexée par ma catégorie correspondant à une requête.
-	//	 * @param query Requête
-	//	 * @return Séries des cubes 
-	//	 */
-	//	Map<HCategory, HSerie> findAll(String appName, HQuery query);
+	List<HSerie> execute(String appName, final HQuery query, final HTimeSelector timeSelector);
 
 	long count(String appName);
 }

@@ -19,6 +19,9 @@ package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.HCubeStore;
+import io.analytica.hcube.HTimeSelector;
+import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
 import javax.inject.Inject;
@@ -28,6 +31,7 @@ import javax.inject.Inject;
  */
 public final class HCubeManagerImpl implements HCubeManager {
 	private final HCubeStore cubeStore;
+	private final HTimeSelector timeSelector;
 
 	/**
 	 * Constructeur.
@@ -39,10 +43,20 @@ public final class HCubeManagerImpl implements HCubeManager {
 		Assertion.checkNotNull(cubeStorePlugin);
 		//-----------------------------------------------------------------
 		this.cubeStore = cubeStorePlugin;
+		timeSelector = new HTimeSelectorImpl();
 	}
 
 	/** {@inheritDoc} */
 	public HCubeStore getStore() {
 		return cubeStore;
+	}
+
+	/** {@inheritDoc} */
+	public HTimeSelector getTimeSelector() {
+		return timeSelector;
+	}
+
+	public HResult execute(String appName, final HQuery query) {
+		return new HResult(query, getStore().getSelector().findCategories(appName, query.getCategorySelection()), getStore().execute(appName, query, timeSelector));
 	}
 }
