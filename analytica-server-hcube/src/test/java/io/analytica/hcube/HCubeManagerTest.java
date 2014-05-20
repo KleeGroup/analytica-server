@@ -67,15 +67,13 @@ public final class HCubeManagerTest {
 		final Date start = new Date();
 		final HQuery query1 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
-				.from(new DateBuilder(start).addHours(-3).toDateTime())//
-				.to(start)//
+				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
 				.with(PAGES)//
 				.build();
 
 		final HQuery query2 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
-				.from("NOW-3h")//
-				.to("NOW")//
+				.between("NOW-3h", "NOW")//
 				.with(PAGES)//
 				.build();
 		//---
@@ -90,8 +88,7 @@ public final class HCubeManagerTest {
 	public void testQuery2() {
 		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
-				.from("NOW")//
-				.to("NOW+3d")//
+				.between("NOW", "NOW+3d")//
 				.with(PAGES)//
 				.build();
 		//---
@@ -105,8 +102,7 @@ public final class HCubeManagerTest {
 	public void testQueryFail() {
 		new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
-				.from("NOW")//
-				.to("NOW-3m")//
+				.between("NOW", "NOW-3m")//
 				.with(PAGES)//
 				.build();
 	}
@@ -144,8 +140,7 @@ public final class HCubeManagerTest {
 		//----	
 		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
-				.from(start)//
-				.to(end)//
+				.between(start, end)//
 				.with(PAGES)//
 				.build();
 
@@ -217,8 +212,7 @@ public final class HCubeManagerTest {
 		//----	
 		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.SixMinutes)//
-				.from(start)//
-				.to(end)//
+				.between(start, end)//
 				.with(PAGES)//
 				.build();
 
@@ -480,8 +474,7 @@ public final class HCubeManagerTest {
 		//----	
 		final HQuery query = new HQueryBuilder()//
 				.on(timeDimension)//
-				.from(start)//
-				.to(end)//
+				.between(start, end)//
 				.with(PAGES)//
 				.build();
 
