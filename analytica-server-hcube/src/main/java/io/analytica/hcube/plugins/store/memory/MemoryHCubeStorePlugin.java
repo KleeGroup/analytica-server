@@ -89,13 +89,13 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector
 		Assertion.checkNotNull(categorySelection);
 		// ---------------------------------------------------------------------
 		if (categorySelection.hasChildren()) {
-			return getAllSubCategories(appName, categorySelection.getCategory());
+			return findAllSubCategories(appName, categorySelection.getCategory());
 		}
 		return Collections.singleton(categorySelection.getCategory());
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategory> getAllRootCategories(String appName) {
+	public synchronized Set<HCategory> findAllRootCategories(String appName) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
@@ -106,7 +106,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HSelector
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategory> getAllSubCategories(String appName, HCategory category) {
+	public synchronized Set<HCategory> findAllSubCategories(String appName, HCategory category) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------

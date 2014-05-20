@@ -18,8 +18,10 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.HCubeStore;
+import io.analytica.hcube.HSelector;
 import io.analytica.hcube.HTimeSelector;
+import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
@@ -30,7 +32,7 @@ import javax.inject.Inject;
  * @author pchretien, npiedeloup
  */
 public final class HCubeManagerImpl implements HCubeManager {
-	private final HCubeStore cubeStore;
+	private final HCubeStorePlugin cubeStore;
 	private final HTimeSelector timeSelector;
 
 	/**
@@ -47,16 +49,27 @@ public final class HCubeManagerImpl implements HCubeManager {
 	}
 
 	/** {@inheritDoc} */
-	public HCubeStore getStore() {
-		return cubeStore;
-	}
-
-	/** {@inheritDoc} */
 	public HTimeSelector getTimeSelector() {
 		return timeSelector;
 	}
 
+	/** {@inheritDoc} */
 	public HResult execute(String appName, final HQuery query) {
-		return new HResult(query, getStore().getSelector().findCategories(appName, query.getCategorySelection()), getStore().execute(appName, query, timeSelector));
+		return new HResult(query, cubeStore.getSelector().findCategories(appName, query.getCategorySelection()), cubeStore.execute(appName, query, timeSelector));
+	}
+
+	/** {@inheritDoc} */
+	public HSelector getSelector() {
+		return cubeStore.getSelector();
+	}
+
+	/** {@inheritDoc} */
+	public void push(String appName, HCubeKey cubeKey, HCube cube) {
+		cubeStore.push(appName, cubeKey, cube);
+	}
+
+	/** {@inheritDoc} */
+	public long count(String appName) {
+		return cubeStore.count(appName);
 	}
 }

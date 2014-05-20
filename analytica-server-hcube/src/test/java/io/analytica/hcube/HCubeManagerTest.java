@@ -118,14 +118,14 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 		//----	
-		HSelector selector = cubeManager.getStore().getSelector();
-		Assert.assertEquals(0, selector.getAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(0, selector.getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		HSelector selector = cubeManager.getSelector();
+		Assert.assertEquals(0, selector.findAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(0, selector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 		//---
 		populateData(cubeManager, start, days);
 		//----	
-		Assert.assertEquals(1, selector.getAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(1, selector.getAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		Assert.assertEquals(1, selector.findAllRootCategories(APP_NAME).size());
+		Assert.assertEquals(1, selector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 	}
 
 	/**
@@ -405,7 +405,7 @@ public final class HCubeManagerTest {
 				.withMetric(duration, durationMetric)//
 				.withMetric(weight, weightMetric)//
 				.build();
-		cubeManager.getStore().push(APP_NAME, cubeKey, cube);
+		cubeManager.push(APP_NAME, cubeKey, cube);
 	}
 
 	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
@@ -438,7 +438,7 @@ public final class HCubeManagerTest {
 							.withMetric(weight, weightMetric)//
 							.build();
 
-					cubeManager.getStore().push(APP_NAME, cubeKey, cube);
+					cubeManager.push(APP_NAME, cubeKey, cube);
 					//--
 					checkMemory(cubeManager, APP_NAME, day);
 					if ((mc++) % (60 * 24 * 10) == 0) {
@@ -452,16 +452,16 @@ public final class HCubeManagerTest {
 
 	private static void checkMemory(final HCubeManager cubeManager, String appName, final long day) {
 		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			cubeManager.getStore().count(appName);
+			cubeManager.count(appName);
 			System.gc();
 			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
-				System.out.println(">>>> cubes count =" + cubeManager.getStore().count(appName));
+				System.out.println(">>>> cubes count =" + cubeManager.count(appName));
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.getStore().count(appName)) + " octets");
+				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(appName)) + " octets");
 				try {
 					Thread.sleep(1000 * 20);
 				} catch (InterruptedException e) {

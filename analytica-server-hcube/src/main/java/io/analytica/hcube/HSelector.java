@@ -9,12 +9,12 @@ public interface HSelector {
 	/**
 	 * @return Set des catégories racines
 	 */
-	Set<HCategory> getAllRootCategories(String appName);
+	Set<HCategory> findAllRootCategories(String appName);
 
 	/**
 	 * @return Liste des catégories filles
 	 */
-	Set<HCategory> getAllSubCategories(String appName, HCategory category);
+	Set<HCategory> findAllSubCategories(String appName, HCategory category);
 
 	/**
 	 * Liste des catégories matchant la sélection

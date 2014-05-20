@@ -17,6 +17,8 @@
  */
 package io.analytica.hcube;
 
+import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.dimension.HCubeKey;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.component.Manager;
@@ -29,7 +31,16 @@ import io.vertigo.kernel.component.Manager;
 public interface HCubeManager extends Manager {
 	HTimeSelector getTimeSelector();
 
-	HCubeStore getStore();
+	HSelector getSelector();
+
+	/**
+	 * Ajout d'un cube.
+	 * @param cube HCube à ajouter 
+	 * 
+	 */
+	void push(String appName, HCubeKey cubeKey, HCube cube);
+
+	long count(String appName);
 
 	HResult execute(String appName, final HQuery query);
 }
