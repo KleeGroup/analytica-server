@@ -91,9 +91,4 @@ public final class HCategory {
 	public final String toString() {
 		return id;
 	}
-
-	public HCategory getRoot() {
-		return new HCategory(type);
-	}
-
 }
