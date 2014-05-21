@@ -57,7 +57,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 		appCubeStore.push(key, cube);
 	}
 
-	public synchronized long count(String appName) {
+	public synchronized long size(String appName) {
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
 			return 0;
@@ -115,5 +115,9 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 			return Collections.emptySet();
 		}
 		return appCubeStore.getAllSubCategories(category);
+	}
+
+	public Set<String> getAppNames() {
+		return appCubeStores.keySet();
 	}
 }

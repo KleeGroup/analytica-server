@@ -25,6 +25,7 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -115,13 +117,13 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				.build();
 		pushProcess(selectProcess3);
 
-		final Set<HCategory> rootCategories = hcubeManager.getAllRootCategories(APP_NAME);
+		final Set<HCategory> rootCategories = hcubeManager.getSelector().getCategorySelector().findAllRootCategories(APP_NAME);
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 		//--- On vérifie la catégorie racine.
 		Assert.assertEquals(1, rootCategories.size());
 		Assert.assertEquals(processSQLCategory, rootCategories.iterator().next());
 		//--- On vérifie les sous-catégories.
-		final Set<HCategory> categories = hcubeManager.getAllSubCategories(APP_NAME, processSQLCategory);
+		final Set<HCategory> categories = hcubeManager.getSelector().getCategorySelector().findAllSubCategories(APP_NAME, processSQLCategory);
 		Assert.assertEquals(2, categories.size());
 	}
 
@@ -139,8 +141,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.withChildren(PROCESS_SQL) //pas d'aggregation
 				.build();
 
@@ -151,7 +152,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		Assert.assertEquals(2, sqlCategories.size());
 
 		for (final HCategory category : sqlCategories) {
-			final List<HCube> cubes = result.getSerie(category).getCubes();
+			final Map<HTime, HCube> cubes = result.getSerie(category).getCubes();
 			Assert.assertEquals(1, cubes.size());
 			final HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
 			assertMetricEquals(montantMetric, 1, price * 1, price, price, price);
@@ -181,8 +182,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.withChildren(PROCESS_SQL) //pas d'aggregation
 				.build();
 
@@ -196,7 +196,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		System.out.println(sqlCategories);
 		Assert.assertEquals(2, sqlCategories.size());
 		for (final HCategory category : sqlCategories) {
-			final List<HCube> cubes = result.getSerie(category).getCubes();
+			final Map<HTime, HCube> cubes = result.getSerie(category).getCubes();
 			Assert.assertEquals(1, cubes.size());
 			final HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
 			assertMetricEquals(montantMetric, 2, price * 2, price, price, price);
@@ -212,14 +212,13 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 
 		final HCategory sqlCategory = new HCategory("SQL");
 
-		List<HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
+		Map<HTime, HCube> cubes = hcubeManager.execute(APP_NAME, daySqlQuery).getSerie(sqlCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
@@ -227,8 +226,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery monthSqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Month)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 
@@ -240,8 +238,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery yearSqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Month)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 
@@ -282,8 +279,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//---------------------------------------------------------------------
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 		final HCategory sqlCategory = new HCategory("SQL");
@@ -310,8 +306,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//---------------------------------------------------------------------
 		final HQuery dayServiceslQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date date)//
 				.with("SERVICES")//
 				.build();
 
@@ -368,8 +363,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//---------------------------------------------------------------------
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 		final HCategory sqlCategory = new HCategory("SQL");
@@ -384,8 +378,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//---------------------------------------------------------------------
 		final HQuery hourQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
-				.from(date)//
-				.to(new DateBuilder(date).addDays(1).build())//
+				.between(date, new DateBuilder(date).addDays(1).build())//
 				.with("SQL")//
 				.build();
 		cubes = hcubeManager.execute(APP_NAME, hourQuery).getSerie(sqlCategory).getCubes();
@@ -396,8 +389,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//---------------------------------------------------------------------
 		final HQuery dayServiceslQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SERVICES")//
 				.build();
 
@@ -425,8 +417,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 
@@ -457,8 +448,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 
@@ -471,8 +461,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//Check SQL/select article#1
 		final HQuery daySelectQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL", "select article#3")//
 				.build();
 
@@ -505,8 +494,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 		final HCategory sqlCategory = new HCategory("SQL");
@@ -538,8 +526,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
+				.between(date, date)//
 				.with("SQL")//
 				.build();
 
@@ -625,8 +612,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 		final HQuery hourQuery = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
-				.from(today.getTime())//
-				.to(new DateBuilder(today.getTime()).addDays(1).build())//
+				.between(today.getTime(), new DateBuilder(today.getTime()).addDays(1).build())//
 				.with("PAGE")//
 				.build();
 		final List<HCube> cubes = hcubeManager.execute(Museum.APP_NAME, hourQuery).getSerie(pageCategory).getCubes();

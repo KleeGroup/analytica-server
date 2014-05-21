@@ -24,6 +24,8 @@ import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.component.Manager;
 
+import java.util.Set;
+
 /**
  * Base de données temporelles.
  * 
@@ -41,4 +43,6 @@ public interface HCubeManager extends Manager {
 	long size(String appName);
 
 	HResult execute(String appName, final HQuery query);
+
+	Set<String> getAppNames();
 }

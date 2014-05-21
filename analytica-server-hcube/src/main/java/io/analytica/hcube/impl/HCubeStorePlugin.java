@@ -26,12 +26,15 @@ import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.component.Plugin;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Plugin gérant le stockage des cubes.
  * @author npiedeloup
  */
 public interface HCubeStorePlugin extends Plugin {
+	Set<String> getAppNames();
+
 	HCategorySelector getCategorySelector();
 
 	/**
@@ -48,5 +51,5 @@ public interface HCubeStorePlugin extends Plugin {
 	 */
 	List<HSerie> execute(String appName, final HQuery query, final HSelector selector);
 
-	long count(String appName);
+	long size(String appName);
 }

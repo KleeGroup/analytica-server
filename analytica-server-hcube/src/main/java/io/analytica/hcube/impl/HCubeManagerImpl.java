@@ -27,6 +27,8 @@ import io.analytica.hcube.query.HTimeSelector;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 
 /**
@@ -81,11 +83,16 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	/** {@inheritDoc} */
 	public long size(String appName) {
-		return cubeStore.count(appName);
+		return cubeStore.size(appName);
 	}
 
 	/** {@inheritDoc} */
 	public HSelector getSelector() {
 		return selector;
+	}
+
+	/** {@inheritDoc} */
+	public Set<String> getAppNames() {
+		return cubeStore.getAppNames();
 	}
 }

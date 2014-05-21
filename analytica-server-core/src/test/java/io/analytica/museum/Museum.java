@@ -76,7 +76,7 @@ public final class Museum {
 	private void checkMemory(final long day) {
 		final HCubeManager cubeManager = Home.getComponentSpace().resolve(HCubeManager.class);
 		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			cubeManager.count(APP_NAME);
+			cubeManager.size(APP_NAME);
 			System.gc();
 			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
@@ -84,10 +84,10 @@ public final class Museum {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max   mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
-				System.out.println(">>>> cubes count =" + cubeManager.count(APP_NAME));
+				System.out.println(">>>> cubes count =" + cubeManager.size(APP_NAME));
 				System.out.println(">>>> pages       =" + pages);
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(APP_NAME)) + " octets");
+				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.size(APP_NAME)) + " octets");
 				try {
 					Thread.sleep(1000 * 20); //20s
 				} catch (InterruptedException e) {
