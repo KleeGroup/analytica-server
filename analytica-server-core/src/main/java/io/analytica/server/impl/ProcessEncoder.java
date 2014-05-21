@@ -23,7 +23,7 @@ import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HCubeKey;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 
@@ -46,13 +46,25 @@ import java.util.Map.Entry;
  */
 public final class ProcessEncoder {
 
+	public static class Dual {
+		final HCubeBuilder cubeBuilder = new HCubeBuilder();
+		final HKey key;
+
+		private Dual(final KProcess process) {
+			final HTime time = new HTime(process.getStartDate(), HTimeDimension.Minute);
+			final HCategory category = new HCategory(process.getType(), process.getSubTypes() != null ? process.getSubTypes() : new String[0]);
+			//	final HLocation location = new HLocation(process.getSystemName(), process.getSystemLocation() != null ? process.getSystemLocation() : new String[0]);
+			key = new HKey(time, category/*, location*/);
+		}
+	}
+
 	/**
 	 * Transforme un KProcess et ses sous process en cubes.
 	 * @param process Process à convertir
 	 * @return Liste des Cubes associés
 	 */
-	public List<HCube> encode(final KProcess process) {
-		final List<HCubeBuilder> resultBuilder = new ArrayList<>();
+	public List<Dual> encode(final KProcess process) {
+		final List<Dual> resultBuilder = new Dual<>(process);
 		doEncode(process, Collections.unmodifiableList(new ArrayList<HCubeBuilder>()), resultBuilder);
 		//---
 		final List<HCube> result = new ArrayList<>();
@@ -69,6 +81,8 @@ public final class ProcessEncoder {
 	 */
 	private static void doEncode(final KProcess process, final List<HCubeBuilder> parentBuilders, final List<HCubeBuilder> allResultBuilders) {
 		//On aggrège les mesures dans un nouveau cube 
+		final HKey key = createKey(process);
+
 		final HCubeBuilder localBuilder = encodeMeasures(process);
 		//On ajoute les durées du process dans ses parents
 		encodeSubDurations(process, parentBuilders);
@@ -85,14 +99,6 @@ public final class ProcessEncoder {
 		}
 	}
 
-	private static HCubeBuilder createCubeBuilder(final KProcess process) {
-		final HTime time = new HTime(process.getStartDate(), HTimeDimension.Minute);
-		final HCategory category = new HCategory(process.getType(), process.getSubTypes() != null ? process.getSubTypes() : new String[0]);
-		//	final HLocation location = new HLocation(process.getSystemName(), process.getSystemLocation() != null ? process.getSystemLocation() : new String[0]);
-		final HCubeKey cubeKey = new HCubeKey(time, category/*, location*/);
-		return new HCubeBuilder(cubeKey);
-	}
-
 	/**
 	 * Transforme le Process de premier niveau en un cube.
 	 * @param process
@@ -100,12 +106,13 @@ public final class ProcessEncoder {
 	 * @return HCubeBuilder le cubeBuilder du process
 	 */
 	private static HCubeBuilder encodeMeasures(final KProcess process) {
-		final HCubeBuilder cubeBuilder = createCubeBuilder(process);
+		final HCubeBuilder cubeBuilder = new HCubeBuilder();
 		//---
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
 			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
 			final boolean cluster = KProcess.DURATION.equals(measure.getKey());
-			cubeBuilder.withMetric(new HMetricBuilder(new HMetricKey(measure.getKey(), cluster)).withValue(measure.getValue()).build());
+			HMetricKey metricKey = new HMetricKey(measure.getKey(), cluster);
+			cubeBuilder.withMetric(metricKey, new HMetricBuilder(metricKey).withValue(measure.getValue()).build());
 		}
 		return cubeBuilder;
 	}
@@ -120,12 +127,13 @@ public final class ProcessEncoder {
 		//On remonte les durée au parent
 		final double duration = process.getDuration();
 		final Double subDuration = process.getMeasures().get(KProcess.SUB_DURATION);
-
+		HMetricKey metricKey = new HMetricKey(process.getType(), true);
+		HMetricKey subProcessKey = new HMetricKey("sub-" + process.getType(), true);
 		for (final HCubeBuilder parentBuilder : parentBuilders) {
 			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
-			parentBuilder.withMetric(new HMetricBuilder(new HMetricKey(process.getType(), true)).withValue(duration).build());
+			parentBuilder.withMetric(metricKey, new HMetricBuilder(metricKey).withValue(duration).build());
 			if (subDuration != null) {
-				parentBuilder.withMetric(new HMetricBuilder(new HMetricKey("sub-" + process.getType(), true)).withValue(subDuration).build());
+				parentBuilder.withMetric(subProcessKey, new HMetricBuilder(subProcessKey).withValue(subDuration).build());
 			}
 		}
 	}

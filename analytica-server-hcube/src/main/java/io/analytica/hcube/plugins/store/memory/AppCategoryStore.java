@@ -9,11 +9,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-final class CategoryRepository {
+final class AppCategoryStore {
 	private final Set<HCategory> rootCategories;
 	private final Map<HCategory, Set<HCategory>> categories;
 
-	CategoryRepository() {
+	//	private final String appName;
+
+	AppCategoryStore(final String appName) {
+		Assertion.checkArgNotEmpty(appName);
+		//---------------------------------------------------------------------
+		//	this.appName = appName;
 		rootCategories = new HashSet<>();
 		categories = new HashMap<>();
 	}

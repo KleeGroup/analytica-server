@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 final class AppCubeStore {
 	private static final class QueueItem {
@@ -37,7 +36,6 @@ final class AppCubeStore {
 	private final Map<HKey, HCube> store;
 	//---------------------------------------------------------------------
 	private final String appName;
-	private final CategoryRepository categoryRepository = new CategoryRepository();
 
 	AppCubeStore(final String appName) {
 		Assertion.checkArgNotEmpty(appName);
@@ -51,8 +49,6 @@ final class AppCubeStore {
 		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
-		categoryRepository.addCategory(key.getCategory());
-
 		//populate a queue
 		queue.add(new QueueItem(key, cube));
 		if (queue.size() > QUEUE_SIZE) {
@@ -128,14 +124,6 @@ final class AppCubeStore {
 		}
 		printStats();
 		return series;
-	}
-
-	Set<HCategory> getAllSubCategories(HCategory category) {
-		return categoryRepository.getAllSubCategories(category);
-	}
-
-	Set<HCategory> getAllRootCategories() {
-		return categoryRepository.getAllRootCategories();
 	}
 
 	/** {@inheritDoc} */

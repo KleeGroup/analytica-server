@@ -30,6 +30,7 @@ import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +42,9 @@ import java.util.Set;
  */
 public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategorySelector {
 	private static final AppCubeStore EMPTY = new AppCubeStore("EMPTY");
+	private final Set<String> appNames = new HashSet<>();
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
+	private final Map<String, AppCategoryStore> appCategoryStores = new HashMap<>();
 
 	/** {@inheritDoc} */
 	public synchronized void push(String appName, final HKey key, final HCube cube) {
@@ -49,12 +52,21 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
-		AppCubeStore appCubeStore = appCubeStores.get(appName);
-		if (appCubeStore == null) {
+		final AppCubeStore appCubeStore;
+		final AppCategoryStore appCategoryStore;
+		if (appNames.contains(appName)) {
+			appCubeStore = appCubeStores.get(appName);
+			appCategoryStore = appCategoryStores.get(appName);
+		} else {
 			appCubeStore = new AppCubeStore(appName);
+			appCategoryStore = new AppCategoryStore(appName);
 			appCubeStores.put(appName, appCubeStore);
+			appCategoryStores.put(appName, appCategoryStore);
+			appNames.add(appName);
 		}
+
 		appCubeStore.push(key, cube);
+		appCategoryStore.addCategory(key.getCategory());
 	}
 
 	public synchronized long size(String appName) {
@@ -71,10 +83,10 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(selector);
 		//---------------------------------------------------------------------
-		final AppCubeStore appCubeStore = appCubeStores.get(appName);
-		if (appCubeStore == null) {
+		if (!appNames.contains(appName)) {
 			return EMPTY.findAll(query, selector);
 		}
+		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		return appCubeStore.findAll(query, selector);
 	}
 
@@ -84,7 +96,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 	}
 
 	/** {@inheritDoc} */
-	public Set<HCategory> findCategories(final String appName, final HCategorySelection categorySelection) {
+	public synchronized Set<HCategory> findCategories(final String appName, final HCategorySelection categorySelection) {
 		Assertion.checkNotNull(appName);
 		Assertion.checkNotNull(categorySelection);
 		// ---------------------------------------------------------------------
@@ -98,11 +110,10 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 	public synchronized Set<HCategory> findAllRootCategories(String appName) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
-		final AppCubeStore appCubeStore = appCubeStores.get(appName);
-		if (appCubeStore == null) {
+		if (!appNames.contains(appName)) {
 			return Collections.emptySet();
 		}
-		return appCubeStore.getAllRootCategories();
+		return appCategoryStores.get(appName).getAllRootCategories();
 	}
 
 	/** {@inheritDoc} */
@@ -110,14 +121,14 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
-		final AppCubeStore appCubeStore = appCubeStores.get(appName);
-		if (appCubeStore == null) {
+		if (!appNames.contains(appName)) {
 			return Collections.emptySet();
 		}
-		return appCubeStore.getAllSubCategories(category);
+		return appCategoryStores.get(appName).getAllSubCategories(category);
 	}
 
-	public Set<String> getAppNames() {
-		return appCubeStores.keySet();
+	/** {@inheritDoc} */
+	public synchronized Set<String> getAppNames() {
+		return Collections.unmodifiableSet(appNames);
 	}
 }
