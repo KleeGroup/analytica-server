@@ -29,6 +29,8 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HCategory {
+	private static final String REGEX = "[a-zA-Z]*";
+	private static char SEPARATOR = '/';
 	private final String type;
 	private final String[] subTypes;
 	private final String id;
@@ -45,6 +47,7 @@ public final class HCategory {
 		this.subTypes = subTypes;
 		this.type = type;
 	}
+	
 
 	/**
 	 * @return Upper HCategory  or null.
@@ -64,10 +67,12 @@ public final class HCategory {
 		return id;
 	}
 
-	private static String buildKey(final String type, final String[] subCategory) {
+	private static String buildKey(final String type, final String[] subTypes) {
+		Assertion.checkArgument(type.matches(REGEX), " type and subtypes must contain only letters");
 		final StringBuilder sb = new StringBuilder(type);
-		for (final String element : subCategory) {
-			sb.append("/").append(element);
+		for (final String subType : subTypes) {
+			Assertion.checkArgument(subType.matches(REGEX), " type and subtypes must contain only letters");
+			sb.append(SEPARATOR).append(subType);
 		}
 		return sb.toString();
 	}

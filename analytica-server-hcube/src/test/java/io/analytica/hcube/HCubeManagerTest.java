@@ -80,13 +80,13 @@ public final class HCubeManagerTest {
 		final HQuery query1 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
-				.with(PAGES)//
+				.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HQuery query2 = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.between("NOW-3h", "NOW")//
-				.with(PAGES)//
+				.whereCategoryEquals(PAGES)//
 				.build();
 		//---
 		HTimeSelector timeSelector = cubeManager.getSelector().getTimeSelector();
@@ -102,7 +102,7 @@ public final class HCubeManagerTest {
 		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.between("NOW", "NOW+3d")//
-				.with(PAGES)//
+				.whereCategoryEquals(PAGES)//
 				.build();
 		//---		
 		HTimeSelector timeSelector = cubeManager.getSelector().getTimeSelector();
@@ -118,7 +118,7 @@ public final class HCubeManagerTest {
 		new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.between("NOW", "NOW-3m")//
-				.with(PAGES)//
+				.whereCategoryEquals(PAGES)//
 				.build();
 	}
 
@@ -157,7 +157,7 @@ public final class HCubeManagerTest {
 		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.Hour)//
 				.between(start, end)//
-				.with(PAGES)//
+				.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HResult result = cubeManager.execute(APP_NAME, query);
@@ -229,7 +229,7 @@ public final class HCubeManagerTest {
 		final HQuery query = new HQueryBuilder()//
 				.on(HTimeDimension.SixMinutes)//
 				.between(start, end)//
-				.with(PAGES)//
+				.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HResult result = cubeManager.execute(APP_NAME, query);
@@ -267,25 +267,24 @@ public final class HCubeManagerTest {
 	public void testHistogram() {
 		final HMetricKey metricKey = new HMetricKey("TEST", true);
 		//---
-		final HMetricBuilder metricBuilder = new HMetricBuilder(metricKey);
-		metricBuilder.withValue(0);//<0
-		metricBuilder.withValue(1);//<1
-		metricBuilder.withValue(2);//<2
-		metricBuilder.withValue(3);//<5
-		metricBuilder.withValue(4);//<5
-		metricBuilder.withValue(5);//<5
-		metricBuilder.withValue(6);//<10
-		metricBuilder.withValue(7);//<10
-		metricBuilder.withValue(8);//<10
-		metricBuilder.withValue(9);//<10
-		metricBuilder.withValue(10);//<10
-		metricBuilder.withValue(11);//<20
-		metricBuilder.withValue(35);//<50
-		metricBuilder.withValue(455);//<500
-		metricBuilder.withValue(355);//<500
-		metricBuilder.withValue(111222333);//<200000000
-
-		final HMetric metric = metricBuilder.build();
+		final HMetric metric = new HMetricBuilder(metricKey)//
+		.withValue(0)//<0
+		.withValue(1)//<1
+		.withValue(2)//<2
+		.withValue(3)//<5
+		.withValue(4)//<5
+		.withValue(5)//<5
+		.withValue(6)//<10
+		.withValue(7)//<10
+		.withValue(8)//<10
+		.withValue(9)//<10
+		.withValue(10)//<10
+		.withValue(11)//<20
+		.withValue(35)//<50
+		.withValue(455)//<500
+		.withValue(355)//<500
+		.withValue(111222333)//<200000000
+		.build();
 		final Map<Double, Long> histogram = metric.getDistribution().getData();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
@@ -491,7 +490,7 @@ public final class HCubeManagerTest {
 		final HQuery query = new HQueryBuilder()//
 				.on(timeDimension)//
 				.between(start, end)//
-				.with(PAGES)//
+				.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HResult result = cubeManager.execute(APP_NAME, query);

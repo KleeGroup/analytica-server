@@ -111,11 +111,11 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return to(readDate(date, hTimeDimension));
 	}
 
-	public HQueryBuilder withChildren(final String type, final String... subCategories) {
+	public HQueryBuilder whereCategoryStartsWith(final String type, final String... subCategories) {
 		return doWith(type, subCategories, true);
 	}
 
-	public HQueryBuilder with(final String type, final String... subCategories) {
+	public HQueryBuilder whereCategoryEquals(final String type, final String... subCategories) {
 		return doWith(type, subCategories, false);
 	}
 
@@ -128,9 +128,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return this;
 	}
 
-	public HQueryBuilder whereChildren(final String systemName, final String... systemLocation) {
-		return doWith(systemName, systemLocation, true);
-	}
+//	public HQueryBuilder whereChildren(final String systemName, final String... systemLocation) {
+//		return doWith(systemName, systemLocation, true);
+//	}
 
 	/*public HQueryBuilder where(final String systemName, final String... systemLocation) {
 		return doWhere(systemName, systemLocation, false);
