@@ -1,7 +1,5 @@
 package io.analytica.hcube.plugins.store.memory;
 
-import io.analytica.hcube.HCategorySelector;
-import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetricKey;
@@ -9,6 +7,7 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
 
@@ -105,19 +104,18 @@ final class AppCubeStore {
 		System.out.println("memStore : " + store.size() + " cubes");
 	}
 
-	List<HSerie> findAll(final HQuery query, final HTimeSelector timeSelector, final HCategorySelector categorySelector) {
+	List<HSerie> findAll(final HQuery query, final HSelector selector) {
 		Assertion.checkNotNull(query);
-		Assertion.checkNotNull(timeSelector);
-		Assertion.checkNotNull(categorySelector);
+		Assertion.checkNotNull(selector);
 		//---------------------------------------------------------------------
 		flushQueue();
 		//On itère sur les séries indexées par les catégories de la sélection.
 		List<HSerie> series = new ArrayList<>();
 
-		for (final HCategory category : categorySelector.findCategories(appName, query.getCategorySelection())) {
+		for (final HCategory category : selector.getCategorySelector().findCategories(appName, query.getCategorySelection())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
-			for (HTime currentTime : timeSelector.findTimes(query.getTimeSelection())) {
+			for (HTime currentTime : selector.getTimeSelector().findTimes(query.getTimeSelection())) {
 				final HKey key = new HKey(currentTime, category/*, null*/);
 				final HCube cube = store.get(key);
 				//---

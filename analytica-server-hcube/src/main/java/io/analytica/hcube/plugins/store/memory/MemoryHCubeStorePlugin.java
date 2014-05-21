@@ -17,14 +17,14 @@
  */
 package io.analytica.hcube.plugins.store.memory;
 
-import io.analytica.hcube.HCategorySelector;
-import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HCategorySelection;
+import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
 
@@ -66,16 +66,16 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 	}
 
 	/** {@inheritDoc} */
-	public synchronized List<HSerie> execute(String appName, final HQuery query, final HTimeSelector timeSelector) {
+	public synchronized List<HSerie> execute(String appName, final HQuery query, final HSelector selector) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(query);
-		Assertion.checkNotNull(timeSelector);
+		Assertion.checkNotNull(selector);
 		//---------------------------------------------------------------------
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
-			return EMPTY.findAll(query, timeSelector, this.getCategorySelector());
+			return EMPTY.findAll(query, selector);
 		}
-		return appCubeStore.findAll(query, timeSelector, this.getCategorySelector());
+		return appCubeStore.findAll(query, selector);
 	}
 
 	/** {@inheritDoc} */

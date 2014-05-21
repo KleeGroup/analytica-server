@@ -1,7 +1,6 @@
-package io.analytica.hcube;
+package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.query.HCategorySelection;
 
 import java.util.Set;
 

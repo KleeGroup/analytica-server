@@ -17,11 +17,11 @@
  */
 package io.analytica.hcube.impl;
 
-import io.analytica.hcube.HCategorySelector;
-import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.component.Plugin;
 
@@ -46,7 +46,7 @@ public interface HCubeStorePlugin extends Plugin {
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
-	List<HSerie> execute(String appName, final HQuery query, final HTimeSelector timeSelector);
+	List<HSerie> execute(String appName, final HQuery query, final HSelector selector);
 
 	long count(String appName);
 }

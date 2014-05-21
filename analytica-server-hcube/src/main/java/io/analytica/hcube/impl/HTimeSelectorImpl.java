@@ -1,8 +1,8 @@
 package io.analytica.hcube.impl;
 
-import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HTimeSelection;
+import io.analytica.hcube.query.HTimeSelector;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.ArrayList;

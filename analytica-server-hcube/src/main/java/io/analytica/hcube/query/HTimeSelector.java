@@ -1,7 +1,6 @@
-package io.analytica.hcube;
+package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HTime;
-import io.analytica.hcube.query.HTimeSelection;
 
 import java.util.List;
 

@@ -29,8 +29,10 @@ import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
+import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
+import io.analytica.hcube.query.HTimeSelector;
 import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
@@ -76,7 +78,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 		//---
-		HTimeSelector timeSelector = cubeManager.getTimeSelector();
+		HTimeSelector timeSelector = cubeManager.getSelector().getTimeSelector();
 		Assert.assertEquals(3, timeSelector.findTimes(query1.getTimeSelection()).size()); //3 HOURS
 		Assert.assertEquals(3, timeSelector.findTimes(query2.getTimeSelection()).size()); //3 HOURS
 		Assert.assertTrue(timeSelector.findTimes(query1.getTimeSelection()).containsAll(timeSelector.findTimes(query2.getTimeSelection())));
@@ -92,7 +94,7 @@ public final class HCubeManagerTest {
 				.with(PAGES)//
 				.build();
 		//---		
-		HTimeSelector timeSelector = cubeManager.getTimeSelector();
+		HTimeSelector timeSelector = cubeManager.getSelector().getTimeSelector();
 
 		Assert.assertEquals(3 * 24, timeSelector.findTimes(query.getTimeSelection()).size()); //72 hours 
 	}
@@ -118,7 +120,7 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 		//----	
-		HCategorySelector categorySlector = cubeManager.getCategorySelector();
+		HCategorySelector categorySlector = cubeManager.getSelector().getCategorySelector();
 		Assert.assertEquals(0, categorySlector.findAllRootCategories(APP_NAME).size());
 		Assert.assertEquals(0, categorySlector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
 		//---
@@ -452,16 +454,16 @@ public final class HCubeManagerTest {
 
 	private static void checkMemory(final HCubeManager cubeManager, String appName, final long day) {
 		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			cubeManager.count(appName);
+			cubeManager.size(appName);
 			System.gc();
 			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
-				System.out.println(">>>> cubes count =" + cubeManager.count(appName));
+				System.out.println(">>>> cubes count =" + cubeManager.size(appName));
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.count(appName)) + " octets");
+				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.size(appName)) + " octets");
 				try {
 					Thread.sleep(1000 * 20);
 				} catch (InterruptedException e) {

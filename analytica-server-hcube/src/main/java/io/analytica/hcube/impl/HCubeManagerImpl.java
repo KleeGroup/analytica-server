@@ -18,11 +18,12 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.HCategorySelector;
-import io.analytica.hcube.HTimeSelector;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
+import io.analytica.hcube.query.HSelector;
+import io.analytica.hcube.query.HTimeSelector;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
@@ -33,7 +34,7 @@ import javax.inject.Inject;
  */
 public final class HCubeManagerImpl implements HCubeManager {
 	private final HCubeStorePlugin cubeStore;
-	private final HTimeSelector timeSelector;
+	private final HSelector selector;
 
 	/**
 	 * Constructeur.
@@ -45,17 +46,27 @@ public final class HCubeManagerImpl implements HCubeManager {
 		Assertion.checkNotNull(cubeStorePlugin);
 		//-----------------------------------------------------------------
 		this.cubeStore = cubeStorePlugin;
-		timeSelector = new HTimeSelectorImpl();
+		selector = new HSelector() {
+			private HTimeSelector timeSelector = new HTimeSelectorImpl();
+
+			public HTimeSelector getTimeSelector() {
+				return timeSelector;
+			}
+
+			public HCategorySelector getCategorySelector() {
+				return cubeStore.getCategorySelector();
+			}
+		};
 	}
 
-	/** {@inheritDoc} */
-	public HTimeSelector getTimeSelector() {
-		return timeSelector;
-	}
+	//	/** {@inheritDoc} */
+	//	public HTimeSelector getTimeSelector() {
+	//		return timeSelector;
+	//	}
 
 	/** {@inheritDoc} */
 	public HResult execute(String appName, final HQuery query) {
-		return new HResult(query, cubeStore.getCategorySelector().findCategories(appName, query.getCategorySelection()), cubeStore.execute(appName, query, timeSelector));
+		return new HResult(query, cubeStore.getCategorySelector().findCategories(appName, query.getCategorySelection()), cubeStore.execute(appName, query, selector));
 	}
 
 	/** {@inheritDoc} */
@@ -69,7 +80,12 @@ public final class HCubeManagerImpl implements HCubeManager {
 	}
 
 	/** {@inheritDoc} */
-	public long count(String appName) {
+	public long size(String appName) {
 		return cubeStore.count(appName);
+	}
+
+	/** {@inheritDoc} */
+	public HSelector getSelector() {
+		return selector;
 	}
 }
