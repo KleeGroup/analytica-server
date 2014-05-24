@@ -31,17 +31,24 @@ import java.util.List;
  * @author npiedeloup, pchretien
  */
 public final class HKey {
+	private final String type;
 	private final HTime time;
 	private final HCategory category;
 
-	public HKey(final HTime time, final HCategory category) {
+	public HKey(final String type, final HTime time, final HCategory category) {
+		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(time);
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
+		this.type = type;
 		this.time = time;
 		this.category = category;
 	}
 
+	public String getType() {
+		return type;
+	}
+	
 	public HTime getTime() {
 		return time;
 	}
@@ -62,7 +69,7 @@ public final class HKey {
 		while (hTime != null) {
 			HCategory hCategory = getCategory();
 			while (hCategory != null) {
-				upperKeys.add(new HKey(hTime, hCategory/*, hLocation*/));
+				upperKeys.add(new HKey(type, hTime, hCategory/*, hLocation*/));
 				//On remonte l'arbre des categories
 				hCategory = hCategory.drillUp();
 			}
@@ -83,13 +90,13 @@ public final class HKey {
 			return true;
 		} else if (object instanceof HKey) {
 			final HKey other = HKey.class.cast(object);
-			return time.equals(other.time) && category.equals(other.category);
+			return type.equals(other.type)&& time.equals(other.time) && category.equals(other.category);
 		}
 		return false;
 	}
 
 	@Override
 	public final String toString() {
-		return " { time:" + time + ", category:" + category + " }";
+		return " { type:"+type+", time:" + time + ", category:" + category + " }";
 	}
 }

@@ -31,21 +31,14 @@ import io.vertigo.kernel.lang.Assertion;
 public final class HCategory {
 	private static final String REGEX = "[a-zA-Z]*";
 	private static char SEPARATOR = '/';
-	private final String type;
 	private final String[] subTypes;
 	private final String id;
 
-	public HCategory(final String type) {
-		this(type, new String[0]);
-	}
-
-	public HCategory(final String type, final String... subTypes) {
-		Assertion.checkArgNotEmpty(type);
+	public HCategory(final String... subTypes) {
 		Assertion.checkNotNull(subTypes);
 		//---------------------------------------------------------------------
-		id = buildKey(type, subTypes);
+		id = buildKey(subTypes);
 		this.subTypes = subTypes;
-		this.type = type;
 	}
 	
 
@@ -60,16 +53,15 @@ public final class HCategory {
 		for (int i = 0; i < subTypes.length - 1; i++) {
 			redux[i] = subTypes[i];
 		}
-		return new HCategory(type, redux);
+		return new HCategory(redux);
 	}
 
 	public final String getId() {
 		return id;
 	}
 
-	private static String buildKey(final String type, final String[] subTypes) {
-		Assertion.checkArgument(type.matches(REGEX), " type and subtypes must contain only letters");
-		final StringBuilder sb = new StringBuilder(type);
+	private static String buildKey(final String[] subTypes) {
+		final StringBuilder sb = new StringBuilder();
 		for (final String subType : subTypes) {
 			Assertion.checkArgument(subType.matches(REGEX), " type and subtypes must contain only letters");
 			sb.append(SEPARATOR).append(subType);

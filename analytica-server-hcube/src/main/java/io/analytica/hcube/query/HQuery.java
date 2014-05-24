@@ -26,17 +26,24 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HQuery {
+	private final String type;
 	private final HTimeSelection timeSelection;
 	private final HCategorySelection categorySelection;
 
-	HQuery(final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
+	HQuery(final String type,final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
+		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(timeSelection);
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------
+		this.type = type;
 		this.timeSelection = timeSelection;
 		this.categorySelection = categorySelection;
 	}
 
+	public String getType() {
+		return type;
+	}
+	
 	public HCategorySelection getCategorySelection() {
 		return categorySelection;
 	}

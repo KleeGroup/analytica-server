@@ -78,15 +78,17 @@ public final class HCubeManagerTest {
 	public void testQuery() {
 		final Date start = new Date();
 		final HQuery query1 = new HQueryBuilder()//
+				.onType(PAGES)//
 				.on(HTimeDimension.Hour)//
 				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
-				.whereCategoryEquals(PAGES)//
+				//.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HQuery query2 = new HQueryBuilder()//
+		.onType(PAGES)//
 				.on(HTimeDimension.Hour)//
 				.between("NOW-3h", "NOW")//
-				.whereCategoryEquals(PAGES)//
+//				.whereCategoryEquals(PAGES)//
 				.build();
 		//---
 		HTimeSelector timeSelector = cubeManager.getSelector().getTimeSelector();
@@ -100,6 +102,7 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery2() {
 		final HQuery query = new HQueryBuilder()//
+				.onType(PAGES)//
 				.on(HTimeDimension.Hour)//
 				.between("NOW", "NOW+3d")//
 				.whereCategoryEquals(PAGES)//
@@ -133,12 +136,12 @@ public final class HCubeManagerTest {
 		//----	
 		HCategorySelector categorySlector = cubeManager.getSelector().getCategorySelector();
 		Assert.assertEquals(0, categorySlector.findAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(0, categorySlector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		Assert.assertEquals(0, categorySlector.findAllSubCategories(APP_NAME, new HCategory()).size());
 		//---
 		populateData(cubeManager, start, days);
 		//----	
 		Assert.assertEquals(1, categorySlector.findAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(1, categorySlector.findAllSubCategories(APP_NAME, new HCategory(PAGES)).size());
+		Assert.assertEquals(1, categorySlector.findAllSubCategories(APP_NAME, new HCategory()).size());
 	}
 
 	/**
@@ -155,9 +158,10 @@ public final class HCubeManagerTest {
 		populateData(cubeManager, start, days);
 		//----	
 		final HQuery query = new HQueryBuilder()//
+				.onType(PAGES)//
 				.on(HTimeDimension.Hour)//
 				.between(start, end)//
-				.whereCategoryEquals(PAGES)//
+				//.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HResult result = cubeManager.execute(APP_NAME, query);
@@ -168,14 +172,14 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(1, result.getAllCategories().size());
 
 		//Check : 24 cubes(per hour) by day
-		Assert.assertEquals(24, result.getSerie(new HCategory(PAGES)).getCubes().size());
+		Assert.assertEquals(24, result.getSerie(new HCategory()).getCubes().size());
 
 		//Check : serie contains 2 metric (DURATION and WEIGHT)
-		Assert.assertEquals(2, result.getSerie(new HCategory(PAGES)).getMetricKeys().size());
+		Assert.assertEquals(2, result.getSerie(new HCategory()).getMetricKeys().size());
 
 		//
-		final HSerie serie = result.getSerie(new HCategory(PAGES));
-		Assert.assertEquals(new HCategory(PAGES), serie.getCategory());
+		final HSerie serie = result.getSerie(new HCategory());
+		Assert.assertEquals(new HCategory(), serie.getCategory());
 
 		for (final Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
 			HCube cube = entry.getValue();
@@ -227,9 +231,10 @@ public final class HCubeManagerTest {
 		populateData(cubeManager, start, days);
 		//----	
 		final HQuery query = new HQueryBuilder()//
+				.onType(PAGES)//
 				.on(HTimeDimension.SixMinutes)//
 				.between(start, end)//
-				.whereCategoryEquals(PAGES)//
+				//.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HResult result = cubeManager.execute(APP_NAME, query);
@@ -240,7 +245,7 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(1, result.getAllCategories().size());
 
 		//Check : 10*24 cubes per minute
-		Assert.assertEquals(240, result.getSerie(new HCategory(PAGES)).getCubes().size());
+		Assert.assertEquals(240, result.getSerie(new HCategory()).getCubes().size());
 	}
 
 	@Test
@@ -404,9 +409,9 @@ public final class HCubeManagerTest {
 	//---------------------------STATIC ---------------------------------------	
 	//-------------------------------------------------------------------------	
 	private static void addCube(final HCubeManager cubeManager, final Date current, final int weightValue, final HMetricKey duration, final HMetricKey weight) {
-		final HCategory category = new HCategory(PAGES, "WELCOME");
+		final HCategory category = new HCategory( "WELCOME");
 		final HTime time = new HTime(current, HTimeDimension.Minute);
-		final HKey key = new HKey(time, category/*, location*/);
+		final HKey key = new HKey(PAGES, time, category);
 		final HMetric durationMetric = new HMetricBuilder(duration)//
 				.withValue(100)//
 				.build();
@@ -423,7 +428,7 @@ public final class HCubeManagerTest {
 	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
 		final long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
-		final HCategory category = new HCategory(PAGES, "WELCOME");
+		final HCategory category = new HCategory( "WELCOME");
 
 		final HMetricKey duration = new HMetricKey("DURATION", true);
 		final HMetricKey weight = new HMetricKey("WEIGHT", false);
@@ -435,7 +440,7 @@ public final class HCubeManagerTest {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.Minute);
 					//--------		
-					final HKey key = new HKey(time, category);
+					final HKey key = new HKey(PAGES, time, category);
 
 					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(duration);
 					for (int i = 0; i < 100; i++) {
@@ -488,9 +493,10 @@ public final class HCubeManagerTest {
 	private static void checkMergedMetric(final HCubeManager cubeManager, final HTimeDimension timeDimension, final Date start, final Date end, final HMetricKey weight, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) {
 		//----	
 		final HQuery query = new HQueryBuilder()//
+				.onType(PAGES)//
 				.on(timeDimension)//
 				.between(start, end)//
-				.whereCategoryEquals(PAGES)//
+			//	.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HResult result = cubeManager.execute(APP_NAME, query);
@@ -498,7 +504,7 @@ public final class HCubeManagerTest {
 		//Check : 1 category
 		Assert.assertEquals(1, result.getAllCategories().size());
 		//Check : 10*24 cubes per minute
-		final Map<HTime, HCube> cubes = result.getSerie(new HCategory(PAGES)).getCubes();
+		final Map<HTime, HCube> cubes = result.getSerie(new HCategory()).getCubes();
 		Assert.assertEquals(3, cubes.size());
 		//on vérifie 
 		HTime startTime = new HTime(start, timeDimension);

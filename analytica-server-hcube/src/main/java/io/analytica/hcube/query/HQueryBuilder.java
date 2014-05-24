@@ -30,6 +30,7 @@ import java.util.Date;
  * @author npiedeloup, pchretien
  */
 public final class HQueryBuilder implements Builder<HQuery> {
+	private String type;
 	private HTimeDimension hTimeDimension;
 	private Date from;
 	private Date to;
@@ -40,6 +41,14 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	//----
 	//	private HLocation location;
 	//	private boolean locationChildren;
+
+	public HQueryBuilder onType(final String type) {
+		Assertion.checkNotNull(type);
+		Assertion.checkState(this.type== null, "type already set");
+		//---------------------------------------------------------------------
+		this.type = type;
+		return this;
+	}
 
 	public HQueryBuilder on(final HTimeDimension timeDimension) {
 		Assertion.checkNotNull(timeDimension);
@@ -111,19 +120,18 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return to(readDate(date, hTimeDimension));
 	}
 
-	public HQueryBuilder whereCategoryStartsWith(final String type, final String... subCategories) {
-		return doWith(type, subCategories, true);
+	public HQueryBuilder whereCategoryStartsWith(final String... subCategories) {
+		return doWith(subCategories, true);
 	}
 
-	public HQueryBuilder whereCategoryEquals(final String type, final String... subCategories) {
-		return doWith(type, subCategories, false);
+	public HQueryBuilder whereCategoryEquals(final String... subCategories) {
+		return doWith(subCategories, false);
 	}
 
-	private HQueryBuilder doWith(final String type, final String[] subTypes, final boolean children) {
-		Assertion.checkNotNull(type);
+	private HQueryBuilder doWith( final String[] subTypes, final boolean children) {
 		Assertion.checkState(category == null, "category already set");
 		//---------------------------------------------------------------------
-		category = new HCategory(type, subTypes);
+		category = new HCategory(subTypes);
 		categoryChildren = children;
 		return this;
 	}
@@ -207,6 +215,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/** {@inheritDoc} */
 	public HQuery build() {
-		return new HQuery(new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren));
+		if (category == null) {
+			category = new HCategory();
+		}
+		return new HQuery(type, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren));
 	}
 }
