@@ -28,13 +28,13 @@ final class AppCategoryStore {
 		//---------------------------------------------------------------------
 		for (int i = 0; i < dimensions; i++) {
 			HCategory currentCategory = addedCategories[i];
-			boolean drillUp;
+			boolean go;
 			do {
-				//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
+				//Optim :Si la catégorie existe déjà alors sa partie gauche aussi et on s'arrete !!
 				//On dispose donc d'une info pour savoir si il faut remonter 
-				drillUp = doPut(i, currentCategory);
+				go = doPut(i, currentCategory);
 				currentCategory = currentCategory.drillUp();
-			} while (drillUp && currentCategory != null);
+			} while (go && currentCategory != null);
 		}
 	}
 
