@@ -33,16 +33,21 @@ import java.util.List;
 public final class HKey {
 	private final String type;
 	private final HTime time;
-	private final HCategory category;
+	private final HCategory[] categories;
+	private final int hash;
 
-	public HKey(final String type, final HTime time, final HCategory category) {
+	public HKey(final String type, final HTime time, final HCategory... categories) {
 		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(time);
-		Assertion.checkNotNull(category);
+		Assertion.checkNotNull(categories);
+		Assertion.checkArgument(categories.length == 1, "");
+		Assertion.checkNotNull(categories[0]);
 		//---------------------------------------------------------------------
 		this.type = type;
 		this.time = time;
-		this.category = category;
+		this.categories = categories.clone();
+
+		hash = type.hashCode() + time.hashCode() >> 3 + categories[0].hashCode() >> 6;
 	}
 
 	public String getType() {
@@ -53,8 +58,8 @@ public final class HKey {
 		return time;
 	}
 
-	public HCategory getCategory() {
-		return category;
+	public HCategory[] getCategories() {
+		return categories;
 	}
 
 	/**
@@ -67,11 +72,11 @@ public final class HKey {
 		//on remonte les axes, le premier sera le plus bas niveau
 		HTime hTime = getTime();
 		while (hTime != null) {
-			HCategory hCategory = getCategory();
-			while (hCategory != null) {
-				upperKeys.add(new HKey(type, hTime, hCategory/*, hLocation*/));
+			HCategory[] hCategories = categories.clone();
+			while (hCategories[0] != null) {
+				upperKeys.add(new HKey(type, hTime, hCategories));
 				//On remonte l'arbre des categories
-				hCategory = hCategory.drillUp();
+				hCategories[0] = hCategories[0].drillUp();
 			}
 			//On remonte time
 			hTime = hTime.drillUp();
@@ -81,7 +86,7 @@ public final class HKey {
 
 	@Override
 	public int hashCode() {
-		return time.hashCode() + category.hashCode() * 31;
+		return hash;
 	}
 
 	@Override
@@ -90,13 +95,21 @@ public final class HKey {
 			return true;
 		} else if (object instanceof HKey) {
 			final HKey other = HKey.class.cast(object);
-			return type.equals(other.type) && time.equals(other.time) && category.equals(other.category);
+			if (type.equals(other.type) && time.equals(other.time) && (categories.length == other.categories.length)) {
+				//				for (int i = 0; i < categories.length; i++) {
+				return categories[0].equals(other.categories[0]);
+				//					if (!categories[i].equals(other.categories[i])) {
+				//						return false;
+				//					}
+				//				}
+				//				return true;
+			}
 		}
 		return false;
 	}
 
 	@Override
 	public final String toString() {
-		return " { type:" + type + ", time:" + time + ", category:" + category + " }";
+		return " { type:" + type + ", time:" + time + ", category:" + categories + " }";
 	}
 }

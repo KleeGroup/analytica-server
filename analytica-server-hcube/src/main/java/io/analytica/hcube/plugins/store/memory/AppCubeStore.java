@@ -18,39 +18,29 @@ import java.util.List;
 import java.util.Map;
 
 final class AppCubeStore {
-	private static final class QueueItem {
-		final HKey key;
-		final HCube cube;
-
-		QueueItem(HKey key, HCube cube) {
-			Assertion.checkNotNull(key);
-			Assertion.checkNotNull(cube);
-			//---------------------------------------------------------------------
-			this.key = key;
-			this.cube = cube;
-		}
-	}
-
 	private static final int QUEUE_SIZE = 5000;
-	private final List<QueueItem> queue;
+	private final AppQueue queue;
 	private final Map<HKey, HCube> store;
 	//---------------------------------------------------------------------
 	private final String appName;
+
+	//	private final int dimensions = 2;
 
 	AppCubeStore(final String appName) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
 		this.appName = appName;
-		queue = new ArrayList<>();
+		queue = new AppQueue();
 		store = new HashMap<>();
 	}
 
 	void push(final HKey key, final HCube cube) {
 		Assertion.checkNotNull(key);
+		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		//populate a queue
-		queue.add(new QueueItem(key, cube));
+		queue.push(new AppQueue.QueueItem(key, cube));
 		if (queue.size() > QUEUE_SIZE) {
 			flushQueue();
 		}
@@ -58,12 +48,11 @@ final class AppCubeStore {
 
 	//flushing queue into store
 	private void flushQueue() {
-		for (final QueueItem item : queue) {
+		for (AppQueue.QueueItem item = queue.pop(); item != null; item = queue.pop()) {
 			for (final HKey upKeys : item.key.drillUp()) {
 				merge(upKeys, item.cube);
 			}
 		}
-		queue.clear();
 		printStats();
 	}
 
@@ -106,7 +95,7 @@ final class AppCubeStore {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
 			for (HTime currentTime : selector.getTimeSelector().findTimes(query.getTimeSelection())) {
-				final HKey key = new HKey(query.getType(), currentTime, category/*, null*/);
+				final HKey key = new HKey(query.getType(), currentTime, new HCategory[] { category });
 				final HCube cube = store.get(key);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données

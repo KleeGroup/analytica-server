@@ -66,7 +66,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 		}
 
 		appCubeStore.push(key, cube);
-		appCategoryStore.addCategory(key.getCategory());
+		appCategoryStore.addCategory(key.getCategories()[0]);
 	}
 
 	public synchronized long size(String appName) {

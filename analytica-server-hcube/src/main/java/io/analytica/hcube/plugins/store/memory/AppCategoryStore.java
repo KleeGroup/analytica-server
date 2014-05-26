@@ -11,10 +11,6 @@ import java.util.Set;
 final class AppCategoryStore {
 	private final Set<HCategory> categories;
 
-	//	private final Map<HCategory, Set<HCategory>> categories;
-
-	//	private final String appName;
-
 	AppCategoryStore(final String appName) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
