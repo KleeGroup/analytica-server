@@ -97,34 +97,13 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 
 	/** {@inheritDoc} */
 	public synchronized Set<HCategory> findCategories(final String appName, final HCategorySelection categorySelection) {
-		Assertion.checkNotNull(appName);
+		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(categorySelection);
-		// ---------------------------------------------------------------------
-		if (categorySelection.hasChildren()) {
-			return findAllSubCategories(appName, categorySelection.getCategory());
-		}
-		return Collections.singleton(categorySelection.getCategory());
-	}
-
-	/** {@inheritDoc} */
-	public synchronized Set<HCategory> findAllRootCategories(String appName) {
-		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
 		if (!appNames.contains(appName)) {
 			return Collections.emptySet();
 		}
-		return appCategoryStores.get(appName).getAllRootCategories();
-	}
-
-	/** {@inheritDoc} */
-	public synchronized Set<HCategory> findAllSubCategories(String appName, HCategory category) {
-		Assertion.checkArgNotEmpty(appName);
-		Assertion.checkNotNull(category);
-		//---------------------------------------------------------------------
-		if (!appNames.contains(appName)) {
-			return Collections.emptySet();
-		}
-		return appCategoryStores.get(appName).getAllSubCategories(category);
+		return appCategoryStores.get(appName).findCategories(categorySelection);
 	}
 
 	/** {@inheritDoc} */

@@ -36,13 +36,9 @@ public final class HCategory {
 
 	public HCategory(final String category) {
 		Assertion.checkNotNull(category);
-		if (category.length() == 0) {
-			this.id = "";
-		} else {
-			Assertion.checkArgument(category.matches(REGEX), "category must contain only letters separated with '/' like 'aaa/bbb/ccc'");
-			//---------------------------------------------------------------------
-			this.id = category;
-		}
+		Assertion.checkArgument(category.length() == 0 || category.matches(REGEX), "category must contain only letters separated with '/' like 'aaa/bbb/ccc'");
+		//---------------------------------------------------------------------
+		this.id = category;
 	}
 
 	/**

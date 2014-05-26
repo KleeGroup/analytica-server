@@ -29,28 +29,24 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien, statchum
  */
 public final class HCategorySelection {
-	private final HCategory selectedCategory;
-	private final boolean children;
+	private final String pattern;
 
-	HCategorySelection(final HCategory category, final boolean children) {
-		Assertion.checkNotNull(category);
+	public HCategorySelection(final String pattern) {
+		Assertion.checkNotNull(pattern);
 		// ---------------------------------------------------------------------
-		this.children = children;
-		selectedCategory = category;
+		this.pattern = pattern;
 	}
 
-	public HCategory getCategory() {
-		return selectedCategory;
-
-	}
-
-	public boolean hasChildren() {
-		return children;
+	public boolean matches(HCategory category) {
+		if (pattern.endsWith("*")) {
+			return category.getId().startsWith(pattern.substring(pattern.length()));
+		}
+		return category.getId().equals(pattern);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "{ selectedCategory:" + selectedCategory + ", children :" + children + " }";
+		return "{ pattern:" + pattern + "}";
 	}
 }

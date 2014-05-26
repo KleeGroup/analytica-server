@@ -29,6 +29,7 @@ import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
+import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
@@ -135,13 +136,11 @@ public final class HCubeManagerTest {
 		final int days = 1;
 		//----	
 		HCategorySelector categorySlector = cubeManager.getSelector().getCategorySelector();
-		Assert.assertEquals(0, categorySlector.findAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(0, categorySlector.findAllSubCategories(APP_NAME, new HCategory("")).size());
+		Assert.assertEquals(0, categorySlector.findCategories(APP_NAME, new HCategorySelection("*")).size());
 		//---
 		populateData(cubeManager, start, days);
 		//----	
-		Assert.assertEquals(1, categorySlector.findAllRootCategories(APP_NAME).size());
-		Assert.assertEquals(1, categorySlector.findAllSubCategories(APP_NAME, new HCategory("")).size());
+		Assert.assertEquals(2, categorySlector.findCategories(APP_NAME, new HCategorySelection("*")).size());
 	}
 
 	/**
@@ -168,8 +167,8 @@ public final class HCubeManagerTest {
 
 		Assert.assertEquals(query, result.getQuery());
 
-		//Check : 1 category
-		Assert.assertEquals(1, result.getAllCategories().size());
+		//Check : 2 categories
+		Assert.assertEquals(2, result.getAllCategories().size());
 
 		//Check : 24 cubes(per hour) by day
 		Assert.assertEquals(24, result.getSerie(new HCategory("")).getCubes().size());
@@ -242,7 +241,7 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(query, result.getQuery());
 
 		//Check : 1 category
-		Assert.assertEquals(1, result.getAllCategories().size());
+		Assert.assertEquals(2, result.getAllCategories().size());
 
 		//Check : 10*24 cubes per minute
 		Assert.assertEquals(240, result.getSerie(new HCategory("")).getCubes().size());
@@ -502,7 +501,7 @@ public final class HCubeManagerTest {
 		final HResult result = cubeManager.execute(APP_NAME, query);
 		Assert.assertEquals(query, result.getQuery());
 		//Check : 1 category
-		Assert.assertEquals(1, result.getAllCategories().size());
+		Assert.assertEquals(2, result.getAllCategories().size());
 		//Check : 10*24 cubes per minute
 		final Map<HTime, HCube> cubes = result.getSerie(new HCategory("")).getCubes();
 		Assert.assertEquals(3, cubes.size());

@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.query;
 
-import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.vertigo.kernel.exception.VRuntimeException;
 import io.vertigo.kernel.lang.Assertion;
@@ -35,8 +34,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	private Date from;
 	private Date to;
 	//----
-	private HCategory category;
-	private boolean categoryChildren;
+	private String categoryPattern;
+
+	//	private boolean categoryChildren;
 
 	public HQueryBuilder onType(final String type) {
 		Assertion.checkNotNull(type);
@@ -116,38 +116,13 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return to(readDate(date, hTimeDimension));
 	}
 
-	public HQueryBuilder whereCategoryStartsWith(final String strCategory) {
-		return doWith(strCategory, true);
-	}
-
-	public HQueryBuilder whereCategoryEquals(final String strCategory) {
-		return doWith(strCategory, false);
-	}
-
-	private HQueryBuilder doWith(final String strCategory, final boolean children) {
-		Assertion.checkState(this.category == null, "category already set");
+	public HQueryBuilder whereCategoryMatches(final String pattern) {
+		Assertion.checkArgNotEmpty(pattern);
+		Assertion.checkState(this.categoryPattern == null, "category's pattern is already set");
 		//---------------------------------------------------------------------
-		this.category = new HCategory(strCategory);
-		categoryChildren = children;
+		categoryPattern = pattern;
 		return this;
 	}
-
-	//	public HQueryBuilder whereChildren(final String systemName, final String... systemLocation) {
-	//		return doWith(systemName, systemLocation, true);
-	//	}
-
-	/*public HQueryBuilder where(final String systemName, final String... systemLocation) {
-		return doWhere(systemName, systemLocation, false);
-	}
-
-	private HQueryBuilder doWhere(final String systemName, final String[] systemLocation, final boolean children) {
-		Assertion.checkNotNull(systemName);
-		Assertion.checkState(location == null, "location already set");
-		//---------------------------------------------------------------------
-		location = new HLocation(systemName, systemLocation);
-		locationChildren = children;
-		return this;
-	}*/
 
 	/**
 	 *
@@ -211,9 +186,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/** {@inheritDoc} */
 	public HQuery build() {
-		if (category == null) {
-			category = new HCategory("");
+		if (categoryPattern == null) {
+			categoryPattern = "*";
 		}
-		return new HQuery(hType, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren));
+		return new HQuery(hType, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(categoryPattern));
 	}
 }
