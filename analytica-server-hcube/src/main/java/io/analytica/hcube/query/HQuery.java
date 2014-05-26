@@ -30,7 +30,7 @@ public final class HQuery {
 	private final HTimeSelection timeSelection;
 	private final HCategorySelection categorySelection;
 
-	HQuery(final String type,final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
+	HQuery(final String type, final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
 		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(timeSelection);
 		Assertion.checkNotNull(categorySelection);
@@ -43,7 +43,7 @@ public final class HQuery {
 	public String getType() {
 		return type;
 	}
-	
+
 	public HCategorySelection getCategorySelection() {
 		return categorySelection;
 	}

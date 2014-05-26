@@ -40,7 +40,6 @@ public final class HCategory {
 		id = buildKey(subTypes);
 		this.subTypes = subTypes;
 	}
-	
 
 	/**
 	 * @return Upper HCategory  or null.

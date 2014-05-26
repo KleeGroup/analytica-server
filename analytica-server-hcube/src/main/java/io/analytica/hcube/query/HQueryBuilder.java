@@ -30,7 +30,7 @@ import java.util.Date;
  * @author npiedeloup, pchretien
  */
 public final class HQueryBuilder implements Builder<HQuery> {
-	private String type;
+	private String hType;
 	private HTimeDimension hTimeDimension;
 	private Date from;
 	private Date to;
@@ -44,9 +44,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	public HQueryBuilder onType(final String type) {
 		Assertion.checkNotNull(type);
-		Assertion.checkState(this.type== null, "type already set");
+		Assertion.checkState(this.hType == null, "type already set");
 		//---------------------------------------------------------------------
-		this.type = type;
+		this.hType = type;
 		return this;
 	}
 
@@ -128,7 +128,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return doWith(subCategories, false);
 	}
 
-	private HQueryBuilder doWith( final String[] subTypes, final boolean children) {
+	private HQueryBuilder doWith(final String[] subTypes, final boolean children) {
 		Assertion.checkState(category == null, "category already set");
 		//---------------------------------------------------------------------
 		category = new HCategory(subTypes);
@@ -136,9 +136,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return this;
 	}
 
-//	public HQueryBuilder whereChildren(final String systemName, final String... systemLocation) {
-//		return doWith(systemName, systemLocation, true);
-//	}
+	//	public HQueryBuilder whereChildren(final String systemName, final String... systemLocation) {
+	//		return doWith(systemName, systemLocation, true);
+	//	}
 
 	/*public HQueryBuilder where(final String systemName, final String... systemLocation) {
 		return doWhere(systemName, systemLocation, false);
@@ -218,6 +218,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		if (category == null) {
 			category = new HCategory();
 		}
-		return new HQuery(type, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren));
+		return new HQuery(hType, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren));
 	}
 }

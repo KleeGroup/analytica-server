@@ -48,7 +48,7 @@ public final class HKey {
 	public String getType() {
 		return type;
 	}
-	
+
 	public HTime getTime() {
 		return time;
 	}
@@ -90,13 +90,13 @@ public final class HKey {
 			return true;
 		} else if (object instanceof HKey) {
 			final HKey other = HKey.class.cast(object);
-			return type.equals(other.type)&& time.equals(other.time) && category.equals(other.category);
+			return type.equals(other.type) && time.equals(other.time) && category.equals(other.category);
 		}
 		return false;
 	}
 
 	@Override
 	public final String toString() {
-		return " { type:"+type+", time:" + time + ", category:" + category + " }";
+		return " { type:" + type + ", time:" + time + ", category:" + category + " }";
 	}
 }

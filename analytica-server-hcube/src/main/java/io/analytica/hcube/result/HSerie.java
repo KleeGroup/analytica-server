@@ -79,21 +79,21 @@ public final class HSerie implements HVirtualCube {
 
 	//-------------------------------------------------------------------------
 	private static Map<HMetricKey, HMetric> buildMetrics(Collection<HCube> cubes) {
-			Map<HMetricKey, HMetric> metrics= new HashMap<>();
-			final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
-			for (final HCube cube : cubes) {
-				for (final HMetricKey metricKey: cube.getMetricKeys()) {
-					HMetricBuilder metricBuilder = metricBuilders.get(metricKey);
-					if (metricBuilder == null) {
-						metricBuilder = new HMetricBuilder(metricKey);
-						metricBuilders.put(metricKey, metricBuilder);
-					}
-					metricBuilder.withMetric(cube.getMetric(metricKey));
+		Map<HMetricKey, HMetric> metrics = new HashMap<>();
+		final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
+		for (final HCube cube : cubes) {
+			for (final HMetricKey metricKey : cube.getMetricKeys()) {
+				HMetricBuilder metricBuilder = metricBuilders.get(metricKey);
+				if (metricBuilder == null) {
+					metricBuilder = new HMetricBuilder(metricKey);
+					metricBuilders.put(metricKey, metricBuilder);
 				}
+				metricBuilder.withMetric(cube.getMetric(metricKey));
 			}
-			for (final Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
-				metrics.put(entry.getKey(), entry.getValue().build());
-			}
+		}
+		for (final Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
+			metrics.put(entry.getKey(), entry.getValue().build());
+		}
 		return metrics;
 	}
 

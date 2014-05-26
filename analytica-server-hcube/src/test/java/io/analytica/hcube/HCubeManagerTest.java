@@ -85,10 +85,10 @@ public final class HCubeManagerTest {
 				.build();
 
 		final HQuery query2 = new HQueryBuilder()//
-		.onType(PAGES)//
+				.onType(PAGES)//
 				.on(HTimeDimension.Hour)//
 				.between("NOW-3h", "NOW")//
-//				.whereCategoryEquals(PAGES)//
+				//				.whereCategoryEquals(PAGES)//
 				.build();
 		//---
 		HTimeSelector timeSelector = cubeManager.getSelector().getTimeSelector();
@@ -273,23 +273,23 @@ public final class HCubeManagerTest {
 		final HMetricKey metricKey = new HMetricKey("TEST", true);
 		//---
 		final HMetric metric = new HMetricBuilder(metricKey)//
-		.withValue(0)//<0
-		.withValue(1)//<1
-		.withValue(2)//<2
-		.withValue(3)//<5
-		.withValue(4)//<5
-		.withValue(5)//<5
-		.withValue(6)//<10
-		.withValue(7)//<10
-		.withValue(8)//<10
-		.withValue(9)//<10
-		.withValue(10)//<10
-		.withValue(11)//<20
-		.withValue(35)//<50
-		.withValue(455)//<500
-		.withValue(355)//<500
-		.withValue(111222333)//<200000000
-		.build();
+				.withValue(0)//<0
+				.withValue(1)//<1
+				.withValue(2)//<2
+				.withValue(3)//<5
+				.withValue(4)//<5
+				.withValue(5)//<5
+				.withValue(6)//<10
+				.withValue(7)//<10
+				.withValue(8)//<10
+				.withValue(9)//<10
+				.withValue(10)//<10
+				.withValue(11)//<20
+				.withValue(35)//<50
+				.withValue(455)//<500
+				.withValue(355)//<500
+				.withValue(111222333)//<200000000
+				.build();
 		final Map<Double, Long> histogram = metric.getDistribution().getData();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
@@ -409,7 +409,7 @@ public final class HCubeManagerTest {
 	//---------------------------STATIC ---------------------------------------	
 	//-------------------------------------------------------------------------	
 	private static void addCube(final HCubeManager cubeManager, final Date current, final int weightValue, final HMetricKey duration, final HMetricKey weight) {
-		final HCategory category = new HCategory( "WELCOME");
+		final HCategory category = new HCategory("WELCOME");
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(PAGES, time, category);
 		final HMetric durationMetric = new HMetricBuilder(duration)//
@@ -428,7 +428,7 @@ public final class HCubeManagerTest {
 	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
 		final long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
-		final HCategory category = new HCategory( "WELCOME");
+		final HCategory category = new HCategory("WELCOME");
 
 		final HMetricKey duration = new HMetricKey("DURATION", true);
 		final HMetricKey weight = new HMetricKey("WEIGHT", false);
@@ -496,7 +496,7 @@ public final class HCubeManagerTest {
 				.onType(PAGES)//
 				.on(timeDimension)//
 				.between(start, end)//
-			//	.whereCategoryEquals(PAGES)//
+				//	.whereCategoryEquals(PAGES)//
 				.build();
 
 		final HResult result = cubeManager.execute(APP_NAME, query);

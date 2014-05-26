@@ -51,18 +51,18 @@ public final class HCubeBuilder implements Builder<HCube> {
 		return this;
 	}
 
-//	/**
-//	 * Ajout de ttes les Metrics. 
-//	 * @param Metrics  
-//	 */
-//	public HCubeBuilder withMetrics(final Map<HMetricKey, HMetric> metrics) {
-//		Assertion.checkNotNull(metrics);
-//		//---------------------------------------------------------------------
-//		for (final Entry<HMetricKey, HMetric> entry : metrics.entrySet()) {
-//			withMetric(entry.getKey(), entry.getValue());
-//		}
-//		return this;
-//	}
+	//	/**
+	//	 * Ajout de ttes les Metrics. 
+	//	 * @param Metrics  
+	//	 */
+	//	public HCubeBuilder withMetrics(final Map<HMetricKey, HMetric> metrics) {
+	//		Assertion.checkNotNull(metrics);
+	//		//---------------------------------------------------------------------
+	//		for (final Entry<HMetricKey, HMetric> entry : metrics.entrySet()) {
+	//			withMetric(entry.getKey(), entry.getValue());
+	//		}
+	//		return this;
+	//	}
 
 	/** 
 	 * Construction du Cube.
@@ -70,7 +70,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 */
 	public HCube build() {
 		final Map<HMetricKey, HMetric> metrics = new LinkedHashMap<>(metricBuilders.size());
-		for (final Entry<HMetricKey, HMetricBuilder> entry: metricBuilders.entrySet()) {
+		for (final Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
 			HMetric metric = entry.getValue().build();
 			metrics.put(entry.getKey(), metric);
 		}
