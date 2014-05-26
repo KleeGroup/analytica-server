@@ -24,8 +24,6 @@ final class AppCubeStore {
 	//---------------------------------------------------------------------
 	private final String appName;
 
-	//	private final int dimensions = 2;
-
 	AppCubeStore(final String appName) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------

@@ -9,39 +9,46 @@ import java.util.HashSet;
 import java.util.Set;
 
 final class AppCategoryStore {
-	private final Set<HCategory> categories;
+	private final Set<HCategory>[] categories;
+	private final int dimensions = 1;
 
 	AppCategoryStore(final String appName) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
 		//	this.appName = appName;
-		categories = new HashSet<>();
+		categories = new Set[dimensions];
+		for (int i = 0; i < dimensions; i++) {
+			categories[i] = new HashSet<>();
+		}
 	}
 
-	void addCategory(HCategory category) {
-		Assertion.checkNotNull(category);
+	void addCategories(HCategory[] addedCategories) {
+		Assertion.checkNotNull(addedCategories);
+		Assertion.checkArgument(addedCategories.length == dimensions, "count of categories must be {0} instead of {1}", dimensions, addedCategories.length);
 		//---------------------------------------------------------------------
-		HCategory currentCategory = category;
-		boolean drillUp;
-		do {
-			//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
-			//On dispose donc d'une info pour savoir si il faut remonter 
-			drillUp = doPut(currentCategory);
-			currentCategory = currentCategory.drillUp();
-		} while (drillUp && currentCategory != null);
+		for (int i = 0; i < dimensions; i++) {
+			HCategory currentCategory = addedCategories[i];
+			boolean drillUp;
+			do {
+				//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
+				//On dispose donc d'une info pour savoir si il faut remonter 
+				drillUp = doPut(i, currentCategory);
+				currentCategory = currentCategory.drillUp();
+			} while (drillUp && currentCategory != null);
+		}
 	}
 
-	private boolean doPut(HCategory category) {
+	private boolean doPut(int i, HCategory category) {
 		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
-		return categories.add(category);
+		return categories[i].add(category);
 	}
 
 	Set<HCategory> findCategories(HCategorySelection categorySelection) {
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------
 		Set<HCategory> set = new HashSet<>();
-		for (HCategory category : categories) {
+		for (HCategory category : categories[0]) {
 			if (categorySelection.matches(category)) {
 				set.add(category);
 			}
