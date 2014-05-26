@@ -38,10 +38,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	private HCategory category;
 	private boolean categoryChildren;
 
-	//----
-	//	private HLocation location;
-	//	private boolean locationChildren;
-
 	public HQueryBuilder onType(final String type) {
 		Assertion.checkNotNull(type);
 		Assertion.checkState(this.hType == null, "type already set");
@@ -120,18 +116,18 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		return to(readDate(date, hTimeDimension));
 	}
 
-	public HQueryBuilder whereCategoryStartsWith(final String... subCategories) {
-		return doWith(subCategories, true);
+	public HQueryBuilder whereCategoryStartsWith(final String strCategory) {
+		return doWith(strCategory, true);
 	}
 
-	public HQueryBuilder whereCategoryEquals(final String... subCategories) {
-		return doWith(subCategories, false);
+	public HQueryBuilder whereCategoryEquals(final String strCategory) {
+		return doWith(strCategory, false);
 	}
 
-	private HQueryBuilder doWith(final String[] subTypes, final boolean children) {
-		Assertion.checkState(category == null, "category already set");
+	private HQueryBuilder doWith(final String strCategory, final boolean children) {
+		Assertion.checkState(this.category == null, "category already set");
 		//---------------------------------------------------------------------
-		category = new HCategory(subTypes);
+		this.category = new HCategory(strCategory);
 		categoryChildren = children;
 		return this;
 	}
@@ -216,7 +212,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	/** {@inheritDoc} */
 	public HQuery build() {
 		if (category == null) {
-			category = new HCategory();
+			category = new HCategory("");
 		}
 		return new HQuery(hType, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(category, categoryChildren));
 	}

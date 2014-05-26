@@ -29,43 +29,38 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HCategory {
-	private static final String REGEX = "[a-zA-Z]*";
+	//	private static final HCategoryROOT = new HCategory("");
+	private static final String REGEX = "([a-zA-Z]([a-zA-Z]|/))*[a-zA-Z]";
 	private static char SEPARATOR = '/';
-	private final String[] subTypes;
 	private final String id;
 
-	public HCategory(final String... subTypes) {
-		Assertion.checkNotNull(subTypes);
-		//---------------------------------------------------------------------
-		id = buildKey(subTypes);
-		this.subTypes = subTypes;
+	public HCategory(final String category) {
+		Assertion.checkNotNull(category);
+		if (category.length() == 0) {
+			this.id = "";
+		} else {
+			Assertion.checkArgument(category.matches(REGEX), "category must contain only letters separated with '/' like 'aaa/bbb/ccc'");
+			//---------------------------------------------------------------------
+			this.id = category;
+		}
 	}
 
 	/**
 	 * @return Upper HCategory  or null.
 	 */
 	public HCategory drillUp() {
-		if (subTypes.length == 0) {
-			return null;
+		if (id.indexOf(SEPARATOR) == -1) {
+			return (id.length() > 0) ? new HCategory("") : null;
 		}
-		final String[] redux = new String[subTypes.length - 1];
-		for (int i = 0; i < subTypes.length - 1; i++) {
-			redux[i] = subTypes[i];
+		int i = id.length();
+		while (id.charAt(i - 1) != SEPARATOR) {
+			i--;
 		}
-		return new HCategory(redux);
+		return new HCategory(id.substring(0, i));
 	}
 
 	public final String getId() {
 		return id;
-	}
-
-	private static String buildKey(final String[] subTypes) {
-		final StringBuilder sb = new StringBuilder();
-		for (final String subType : subTypes) {
-			Assertion.checkArgument(subType.matches(REGEX), " type and subtypes must contain only letters");
-			sb.append(SEPARATOR).append(subType);
-		}
-		return sb.toString();
 	}
 
 	@Override
