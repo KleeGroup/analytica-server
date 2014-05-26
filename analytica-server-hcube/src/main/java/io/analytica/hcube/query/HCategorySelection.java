@@ -38,6 +38,8 @@ public final class HCategorySelection {
 	}
 
 	public boolean matches(HCategory category) {
+		Assertion.checkNotNull(category);
+		// ---------------------------------------------------------------------
 		if (pattern.endsWith("*")) {
 			return category.getId().startsWith(pattern.substring(pattern.length()));
 		}

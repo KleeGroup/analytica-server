@@ -141,6 +141,7 @@ public final class HCubeManagerTest {
 		populateData(cubeManager, start, days);
 		//----	
 		Assert.assertEquals(2, categorySlector.findCategories(APP_NAME, new HCategorySelection("*")).size());
+		Assert.assertEquals(1, categorySlector.findCategories(APP_NAME, new HCategorySelection("WELCOME")).size());
 	}
 
 	/**

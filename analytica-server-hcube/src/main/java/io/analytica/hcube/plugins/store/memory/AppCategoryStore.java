@@ -50,7 +50,7 @@ final class AppCategoryStore {
 				set.add(category);
 			}
 		}
-		System.out.println(">>>>findCat>> " + set);
+		//		System.out.println(">>>>findCat>> " + set);
 		return Collections.unmodifiableSet(set);
 	}
 }
