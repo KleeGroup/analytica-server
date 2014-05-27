@@ -32,36 +32,36 @@ public final class HCategory {
 	//	private static final HCategoryROOT = new HCategory("");
 	private static final String REGEX = "([a-zA-Z]([a-zA-Z]|/))*[a-zA-Z]";
 	private static char SEPARATOR = '/';
-	private final String id;
+	private final String path;
 
-	public HCategory(final String category) {
-		Assertion.checkNotNull(category);
-		Assertion.checkArgument(category.length() == 0 || category.matches(REGEX), "category must contain only letters separated with '/' like 'aaa/bbb/ccc'");
+	public HCategory(final String path) {
+		Assertion.checkNotNull(path);
+		Assertion.checkArgument(path.length() == 0 || path.matches(REGEX), "category must contain only letters separated with '/' like 'aaa/bbb/ccc'");
 		//---------------------------------------------------------------------
-		this.id = category;
+		this.path = path;
 	}
 
 	/**
 	 * @return Upper HCategory  or null.
 	 */
 	public HCategory drillUp() {
-		if (id.indexOf(SEPARATOR) == -1) {
-			return (id.length() > 0) ? new HCategory("") : null;
+		if (path.indexOf(SEPARATOR) == -1) {
+			return (path.length() > 0) ? new HCategory("") : null;
 		}
-		int i = id.length();
-		while (id.charAt(i - 1) != SEPARATOR) {
+		int i = path.length();
+		while (path.charAt(i - 1) != SEPARATOR) {
 			i--;
 		}
-		return new HCategory(id.substring(0, i));
+		return new HCategory(path.substring(0, i));
 	}
 
-	public final String getId() {
-		return id;
+	public final String getPath() {
+		return path;
 	}
 
 	@Override
 	public final int hashCode() {
-		return id.hashCode();
+		return path.hashCode();
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public final class HCategory {
 		if (object == this) {
 			return true;
 		} else if (object instanceof HCategory) {
-			return id.equals(((HCategory) object).id);
+			return path.equals(((HCategory) object).path);
 		}
 		return false;
 	}
 
 	@Override
 	public final String toString() {
-		return id;
+		return path;
 	}
 }

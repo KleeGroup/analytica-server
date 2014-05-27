@@ -41,9 +41,9 @@ public final class HCategorySelection {
 		Assertion.checkNotNull(category);
 		// ---------------------------------------------------------------------
 		if (pattern.endsWith("*")) {
-			return category.getId().startsWith(pattern.substring(pattern.length()));
+			return category.getPath().startsWith(pattern.substring(pattern.length()));
 		}
-		return category.getId().equals(pattern);
+		return category.getPath().equals(pattern);
 	}
 
 	/** {@inheritDoc} */

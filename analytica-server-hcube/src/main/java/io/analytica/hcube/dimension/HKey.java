@@ -40,8 +40,6 @@ public final class HKey {
 		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(time);
 		Assertion.checkNotNull(categories);
-		Assertion.checkArgument(categories.length == 1, "");
-		Assertion.checkNotNull(categories[0]);
 		//---------------------------------------------------------------------
 		this.type = type;
 		this.time = time;
@@ -96,13 +94,12 @@ public final class HKey {
 		} else if (object instanceof HKey) {
 			final HKey other = HKey.class.cast(object);
 			if (type.equals(other.type) && time.equals(other.time) && (categories.length == other.categories.length)) {
-				//				for (int i = 0; i < categories.length; i++) {
-				return categories[0].equals(other.categories[0]);
-				//					if (!categories[i].equals(other.categories[i])) {
-				//						return false;
-				//					}
-				//				}
-				//				return true;
+				for (int i = 0; i < categories.length; i++) {
+					if (!categories[i].equals(other.categories[i])) {
+						return false;
+					}
+				}
+				return true;
 			}
 		}
 		return false;
@@ -110,6 +107,6 @@ public final class HKey {
 
 	@Override
 	public final String toString() {
-		return " { type:" + type + ", time:" + time + ", category:" + categories + " }";
+		return " { type:" + type + ", time:" + time + ", categories:" + categories + " }";
 	}
 }

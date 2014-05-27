@@ -98,16 +98,9 @@ final class AppCubeStore {
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
 				cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
-				/*if (cube != null) {
-					cubes.add(new HCubeBuilder(key).build());
-				}*/
-				//---
-				currentTime = currentTime.getDimension().next(currentTime.inMillis());
 			}
 			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données 
-			//if (!cubes.isEmpty()) {
 			series.add(new HSerie(category, cubes));
-			//}
 		}
 		printStats();
 		return series;
