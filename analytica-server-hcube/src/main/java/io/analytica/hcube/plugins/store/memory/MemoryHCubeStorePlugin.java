@@ -96,7 +96,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<HCategory> findCategories(final String appName, final HCategorySelection categorySelection) {
+	public synchronized Set<List<HCategory>> findCategories(final String appName, final HCategorySelection categorySelection) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------

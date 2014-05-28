@@ -6,6 +6,7 @@ import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 final class AppCategoryStore {
@@ -44,13 +45,13 @@ final class AppCategoryStore {
 		return categories[i].add(category);
 	}
 
-	Set<HCategory> findCategories(HCategorySelection categorySelection) {
+	Set<List<HCategory>> findCategories(HCategorySelection categorySelection) {
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------
-		Set<HCategory> set = new HashSet<>();
+		Set<List<HCategory>> set = new HashSet<>();
 		for (HCategory category : categories[0]) {
 			if (categorySelection.matches(category)) {
-				set.add(category);
+				set.add(Collections.singletonList(category));
 			}
 		}
 		//		System.out.println(">>>>findCat>> " + set);

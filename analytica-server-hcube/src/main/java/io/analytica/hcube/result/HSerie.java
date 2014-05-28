@@ -43,7 +43,7 @@ import java.util.Set;
  * @author pchretien, npiedeloup
  */
 public final class HSerie implements HVirtualCube {
-	private final HCategory category;
+	private final List<HCategory> categories;
 	private final Map<HTime, HCube> cubes;
 	private Map<HMetricKey, HMetric> metrics; //lazy
 
@@ -52,11 +52,11 @@ public final class HSerie implements HVirtualCube {
 	 * @param category Catégorie de la série
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
-	public HSerie(final HCategory category, final Map<HTime, HCube> cubes) {
-		Assertion.checkNotNull(category);
+	public HSerie(final List<HCategory> categories, final Map<HTime, HCube> cubes) {
+		Assertion.checkNotNull(categories);
 		Assertion.checkNotNull(cubes);
 		//---------------------------------------------------------------------
-		this.category = category;
+		this.categories = categories;
 		this.cubes = cubes;
 		metrics = buildMetrics(cubes.values());
 	}
@@ -64,16 +64,14 @@ public final class HSerie implements HVirtualCube {
 	/**
 	 * @return Category de la série
 	 */
-	public HCategory getCategory() {
-		return category;
+	public List<HCategory> getCategories() {
+		return categories;
 	}
 
 	/**
 	 * @return Liste ordonnée des élements du parallélépipède
 	 */
 	public Map<HTime, HCube> getCubes() {
-		Assertion.checkNotNull(category);
-		//-------------------------------------------------------------------------
 		return Collections.unmodifiableMap(cubes);
 	}
 

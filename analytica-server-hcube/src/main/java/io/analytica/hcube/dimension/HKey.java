@@ -36,7 +36,11 @@ public final class HKey {
 	private final HCategory[] categories;
 	private final int hash;
 
-	public HKey(final String type, final HTime time, final HCategory... categories) {
+	public HKey(final String type, final HTime time, final String... categories) {
+		this(type, time, to(categories));
+	}
+
+	public HKey(final String type, final HTime time, final HCategory[] categories) {
 		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(time);
 		Assertion.checkNotNull(categories);
@@ -44,8 +48,15 @@ public final class HKey {
 		this.type = type;
 		this.time = time;
 		this.categories = categories.clone();
-
 		hash = type.hashCode() + time.hashCode() >> 3 + categories[0].hashCode() >> 6;
+	}
+
+	public static HCategory[] to(final String[] strCategories) {
+		HCategory[] categories = new HCategory[strCategories.length];
+		for (int i = 0; i < categories.length; i++) {
+			categories[i] = new HCategory(strCategories[i]);
+		}
+		return categories;
 	}
 
 	public String getType() {

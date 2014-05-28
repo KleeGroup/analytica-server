@@ -42,6 +42,7 @@ import io.vertigo.kernel.lang.DateBuilder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -172,14 +173,14 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(2, result.getAllCategories().size());
 
 		//Check : 24 cubes(per hour) by day
-		Assert.assertEquals(24, result.getSerie(new HCategory("")).getCubes().size());
+		Assert.assertEquals(24, result.getSerie("").getCubes().size());
 
 		//Check : serie contains 2 metric (DURATION and WEIGHT)
-		Assert.assertEquals(2, result.getSerie(new HCategory("")).getMetricKeys().size());
+		Assert.assertEquals(2, result.getSerie("").getMetricKeys().size());
 
 		//
-		final HSerie serie = result.getSerie(new HCategory(""));
-		Assert.assertEquals(new HCategory(""), serie.getCategory());
+		final HSerie serie = result.getSerie("");
+		Assert.assertEquals(Collections.singletonList(new HCategory("")), serie.getCategories());
 
 		for (final Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
 			HCube cube = entry.getValue();
@@ -245,7 +246,7 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(2, result.getAllCategories().size());
 
 		//Check : 10*24 cubes per minute
-		Assert.assertEquals(240, result.getSerie(new HCategory("")).getCubes().size());
+		Assert.assertEquals(240, result.getSerie("").getCubes().size());
 	}
 
 	@Test
@@ -409,9 +410,8 @@ public final class HCubeManagerTest {
 	//---------------------------STATIC ---------------------------------------	
 	//-------------------------------------------------------------------------	
 	private static void addCube(final HCubeManager cubeManager, final Date current, final int weightValue, final HMetricKey duration, final HMetricKey weight) {
-		final HCategory category = new HCategory("WELCOME");
 		final HTime time = new HTime(current, HTimeDimension.Minute);
-		final HKey key = new HKey(PAGES, time, category);
+		final HKey key = new HKey(PAGES, time, "WELCOME");
 		final HMetric durationMetric = new HMetricBuilder(duration)//
 				.withValue(100)//
 				.build();
@@ -428,7 +428,6 @@ public final class HCubeManagerTest {
 	private static void populateData(final HCubeManager cubeManager, final Date startDate, final int days) {
 		final long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
-		final HCategory category = new HCategory("WELCOME");
 
 		final HMetricKey duration = new HMetricKey("DURATION", true);
 		final HMetricKey weight = new HMetricKey("WEIGHT", false);
@@ -440,7 +439,7 @@ public final class HCubeManagerTest {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.Minute);
 					//--------		
-					final HKey key = new HKey(PAGES, time, category);
+					final HKey key = new HKey(PAGES, time, "WELCOME");
 
 					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(duration);
 					for (int i = 0; i < 100; i++) {
@@ -504,7 +503,7 @@ public final class HCubeManagerTest {
 		//Check : 1 category
 		Assert.assertEquals(2, result.getAllCategories().size());
 		//Check : 10*24 cubes per minute
-		final Map<HTime, HCube> cubes = result.getSerie(new HCategory("")).getCubes();
+		final Map<HTime, HCube> cubes = result.getSerie("").getCubes();
 		Assert.assertEquals(3, cubes.size());
 		//on vérifie 
 		HTime startTime = new HTime(start, timeDimension);
