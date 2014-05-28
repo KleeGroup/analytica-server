@@ -29,14 +29,13 @@ import io.vertigo.kernel.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HCategory {
-	//	private static final HCategoryROOT = new HCategory("");
-	private static final String REGEX = "([a-zA-Z]([a-zA-Z]|/))*[a-zA-Z]";
+	private static final String REGEX = "([a-z]([a-z]|/))*[a-z]";
 	private static char SEPARATOR = '/';
 	private final String path;
 
 	public HCategory(final String path) {
 		Assertion.checkNotNull(path);
-		Assertion.checkArgument(path.length() == 0 || path.matches(REGEX), "category must contain only letters separated with '/' like 'aaa/bbb/ccc'");
+		Assertion.checkArgument(path.length() == 0 || path.matches(REGEX), "category '{0}'must contain only letters separated with '/' like 'aaa/bbb/ccc'", path);
 		//---------------------------------------------------------------------
 		this.path = path;
 	}

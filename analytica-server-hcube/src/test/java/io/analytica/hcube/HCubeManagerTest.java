@@ -142,7 +142,7 @@ public final class HCubeManagerTest {
 		populateData(cubeManager, start, days);
 		//----	
 		Assert.assertEquals(2, categorySlector.findCategories(APP_NAME, new HCategorySelection("*")).size());
-		Assert.assertEquals(1, categorySlector.findCategories(APP_NAME, new HCategorySelection("WELCOME")).size());
+		Assert.assertEquals(1, categorySlector.findCategories(APP_NAME, new HCategorySelection("welcome")).size());
 	}
 
 	/**
@@ -411,7 +411,7 @@ public final class HCubeManagerTest {
 	//-------------------------------------------------------------------------	
 	private static void addCube(final HCubeManager cubeManager, final Date current, final int weightValue, final HMetricKey duration, final HMetricKey weight) {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
-		final HKey key = new HKey(PAGES, time, "WELCOME");
+		final HKey key = new HKey(PAGES, time, "welcome");
 		final HMetric durationMetric = new HMetricBuilder(duration)//
 				.withValue(100)//
 				.build();
@@ -439,7 +439,7 @@ public final class HCubeManagerTest {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.Minute);
 					//--------		
-					final HKey key = new HKey(PAGES, time, "WELCOME");
+					final HKey key = new HKey(PAGES, time, "welcome");
 
 					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(duration);
 					for (int i = 0; i < 100; i++) {

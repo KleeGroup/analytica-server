@@ -40,7 +40,11 @@ public final class HKey {
 		this(type, time, to(categories));
 	}
 
-	public HKey(final String type, final HTime time, final HCategory[] categories) {
+	public HKey(final String type, final HTime time, final List<HCategory> categories) {
+		this(type, time, categories.toArray(new HCategory[categories.size()]));
+	}
+
+	private HKey(final String type, final HTime time, final HCategory[] categories) {
 		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(time);
 		Assertion.checkNotNull(categories);

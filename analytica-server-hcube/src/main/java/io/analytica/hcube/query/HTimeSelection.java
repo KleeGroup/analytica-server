@@ -36,14 +36,14 @@ public final class HTimeSelection {
 
 	//	private final TimeDimension dimension;
 
-	HTimeSelection(final HTimeDimension dimension, final Date minDate, final Date maxDate) {
+	HTimeSelection(final HTimeDimension timeDimension, final Date minDate, final Date maxDate) {
 		Assertion.checkNotNull(minDate);
 		Assertion.checkNotNull(maxDate);
 		Assertion.checkArgument(minDate.equals(maxDate) || minDate.before(maxDate), "la date min doit être inférieure à la date max");
-		Assertion.checkNotNull(dimension);
+		Assertion.checkNotNull(timeDimension);
 		//---------------------------------------------------------------------
-		minTime = new HTime(minDate, dimension);
-		maxTime = new HTime(maxDate, dimension);
+		minTime = new HTime(minDate, timeDimension);
+		maxTime = new HTime(maxDate, timeDimension);
 	}
 
 	public HTime getMinTime() {

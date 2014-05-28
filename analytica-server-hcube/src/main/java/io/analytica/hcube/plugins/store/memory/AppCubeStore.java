@@ -93,7 +93,7 @@ final class AppCubeStore {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
 			for (HTime currentTime : selector.getTimeSelector().findTimes(query.getTimeSelection())) {
-				final HKey key = new HKey(query.getType(), currentTime, categories.toArray(new HCategory[categories.size()]));
+				final HKey key = new HKey(query.getType(), currentTime, categories);
 				final HCube cube = store.get(key);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données

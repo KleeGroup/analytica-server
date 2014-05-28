@@ -170,13 +170,13 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		}
 
 		switch (unit) {
-			case 'd':
+			case 'd'://day
 				return delta * 24 * 60 * 60 * 1000L;
 
-			case 'h':
+			case 'h'://hour
 				return delta * 60 * 60 * 1000L;
 
-			case 'm':
+			case 'm': //minute
 				return delta * 60 * 1000L;
 
 			default:

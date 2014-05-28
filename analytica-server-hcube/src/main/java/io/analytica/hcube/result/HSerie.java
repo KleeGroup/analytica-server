@@ -45,7 +45,7 @@ import java.util.Set;
 public final class HSerie implements HVirtualCube {
 	private final List<HCategory> categories;
 	private final Map<HTime, HCube> cubes;
-	private Map<HMetricKey, HMetric> metrics; //lazy
+	private Map<HMetricKey, HMetric> metrics;
 
 	/**
 	 * Constructeur.
@@ -123,5 +123,10 @@ public final class HSerie implements HVirtualCube {
 			});
 		}
 		return Collections.unmodifiableList(points);
+	}
+
+	@Override
+	public String toString() {
+		return "{categories:" + categories + ", cubes" + cubes + "}";
 	}
 }

@@ -85,6 +85,7 @@ public final class HTime {
 
 	@Override
 	public String toString() {
-		return " { dimension :'" + timeDimension.name() + "', date: '" + new Date(time).toString() + "'} ";
+		return " { dimension :'" + timeDimension.name() + "', date: '" + timeDimension.format(new Date(time)) + "'} ";
 	}
+
 }

@@ -45,6 +45,11 @@ final class AppCategoryStore {
 		return categories[i].add(category);
 	}
 
+	/**
+	 * Liste des Catégories 
+	 * @param categorySelection
+	 * @return
+	 */
 	Set<List<HCategory>> findCategories(HCategorySelection categorySelection) {
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------

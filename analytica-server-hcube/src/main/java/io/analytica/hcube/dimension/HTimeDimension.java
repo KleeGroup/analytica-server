@@ -17,8 +17,10 @@
  */
 package io.analytica.hcube.dimension;
 
+import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.DateBuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -31,36 +33,38 @@ public enum HTimeDimension {
 	/** 
 	 * Année.
 	 */
-	Year(null),
+	Year(null, "YYYY"),
 	/**
 	 * Mois.
 	 */
-	Month(Year),
+	Month(Year, "YYYY/MM"),
 	/**
 	 * Jour.
 	 */
-	Day(Month),
+	Day(Month, "YYYY/MM/dd"),
 	/**
 	 * Heure.
 	 */
-	Hour(Day),
+	Hour(Day, "YYYY/MM/dd/hh"),
 	/**
 	 * 6 Minutes.
 	 */
-	SixMinutes(Hour),
+	SixMinutes(Hour, "YYYY/MM-dd::mm"),
 	/**
 	 * Minute.
 	 */
-	Minute(SixMinutes);
+	Minute(SixMinutes, "YYYY/MM-dd:mm");
 
 	private final HTimeDimension upTimeDimension;
+	private final String pattern;
 
 	/**
 	 * Constructeur.
 	 * @param up Niveau supérieur
 	 */
-	HTimeDimension(final HTimeDimension upTimeDimension) {
+	HTimeDimension(final HTimeDimension upTimeDimension, String pattern) {
 		this.upTimeDimension = upTimeDimension;
+		this.pattern = pattern;
 	}
 
 	/**
@@ -142,5 +146,11 @@ public enum HTimeDimension {
 				throw new IllegalArgumentException("Invalid dimension :" + this);
 		}
 		return new HTime(nextDate, this);
+	}
+
+	public String format(Date date) {
+		Assertion.checkNotNull(date);
+		//---------------------------------------------------------------------
+		return new SimpleDateFormat(pattern).format(date);
 	}
 }
