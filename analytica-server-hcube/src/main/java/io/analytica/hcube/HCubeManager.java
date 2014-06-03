@@ -32,6 +32,7 @@ import java.util.Set;
  * @author pchretien, npiedeloup
  */
 public interface HCubeManager extends Manager {
+
 	HSelector getSelector();
 
 	/**
@@ -44,5 +45,7 @@ public interface HCubeManager extends Manager {
 
 	HResult execute(String appName, final HQuery query);
 
-	Set<String> getAppNames();
+	Set<HAppConfig> getAppConfigs();
+
+	HAppConfig getAppConfig(String appName);
 }

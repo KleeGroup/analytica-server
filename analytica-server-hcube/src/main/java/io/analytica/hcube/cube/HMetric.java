@@ -107,6 +107,6 @@ public final class HMetric {
 
 	@Override
 	public String toString() {
-		return "{ count:" + count + ", mean:" + getMean() + (distribution == null ? " " : ", distribution:" + getDistribution()) + "}";
+		return "{ count:" + count + ", mean:" + getMean() + ", min:" + get(HCounterType.min) + ", max:" + get(HCounterType.max) + (distribution == null ? " " : ", distribution:" + getDistribution()) + "}";
 	}
 }
