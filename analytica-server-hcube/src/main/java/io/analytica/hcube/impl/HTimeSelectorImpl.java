@@ -2,13 +2,12 @@ package io.analytica.hcube.impl;
 
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HTimeSelection;
-import io.analytica.hcube.query.HTimeSelector;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-final class HTimeSelectorImpl implements HTimeSelector {
+final class HTimeSelector {
 	/** {@inheritDoc} */
 	public List<HTime> findTimes(HTimeSelection timeSelection) {
 		Assertion.checkNotNull(timeSelection);

@@ -1,7 +1,16 @@
 package io.analytica.hcube.query;
 
-public interface HSelector {
-	HTimeSelector getTimeSelector();
+import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HTime;
 
-	HCategorySelector getCategorySelector();
+import java.util.List;
+import java.util.Set;
+
+public interface HSelector {
+	/**
+	 * Liste des catégories matchant la sélection
+	 */
+	Set<List<HCategory>> findCategories(final HCategorySelection categorySelection);
+
+	List<HTime> findTimes(HTimeSelection timeSelection);
 }

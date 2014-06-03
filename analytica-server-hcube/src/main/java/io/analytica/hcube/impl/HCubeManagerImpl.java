@@ -91,7 +91,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 			return "MY_APP";
 		}
 
-		public Set<String> getKeys() {
+		public Set<String> getMetricKeys() {
 			return map.keySet();
 		}
 

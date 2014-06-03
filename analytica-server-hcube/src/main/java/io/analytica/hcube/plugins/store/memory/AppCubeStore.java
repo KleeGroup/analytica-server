@@ -90,10 +90,10 @@ final class AppCubeStore {
 		//On itère sur les séries indexées par les catégories de la sélection.
 		List<HSerie> series = new ArrayList<>();
 
-		for (final List<HCategory> categories : selector.getCategorySelector().findCategories(query.getCategorySelection())) {
+		for (final List<HCategory> categories : selector.findCategories(query.getCategorySelection())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
-			for (HTime currentTime : selector.getTimeSelector().findTimes(query.getTimeSelection())) {
+			for (HTime currentTime : selector.findTimes(query.getTimeSelection())) {
 				final HKey key = new HKey(query.getType(), currentTime, categories);
 				final HCube cube = store.get(key);
 				//---

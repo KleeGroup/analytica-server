@@ -31,6 +31,7 @@ import java.util.Set;
 
 /**
  * Plugin gérant le stockage des cubes.
+ * Ce plugin met a plat toutes les fonctions.
  * @author npiedeloup
  */
 public interface HCubeStorePlugin extends Plugin {

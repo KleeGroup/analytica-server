@@ -5,11 +5,11 @@ import io.analytica.hcube.HAppConfig;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HCategorySelection;
-import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
-import io.analytica.hcube.query.HTimeSelector;
+import io.analytica.hcube.query.HTimeSelection;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
@@ -28,21 +28,16 @@ final class HAppImp implements HApp {
 		this.cubeStore = cubeStore;
 		this.config = config;
 		selector = new HSelector() {
-			private HTimeSelector timeSelector = new HTimeSelectorImpl();
+			private HTimeSelector timeSelector = new HTimeSelector();
 
-			public HTimeSelector getTimeSelector() {
-				return timeSelector;
+			public List<HTime> findTimes(HTimeSelection timeSelection) {
+				return timeSelector.findTimes(timeSelection);
 			}
 
-			public HCategorySelector getCategorySelector() {
-				return new HCategorySelector() {
-
-					public Set<List<HCategory>> findCategories(HCategorySelection categorySelection) {
-						return cubeStore.findCategories(config.getName(), categorySelection);
-					}
-
-				};
+			public Set<List<HCategory>> findCategories(HCategorySelection categorySelection) {
+				return cubeStore.findCategories(config.getName(), categorySelection);
 			}
+
 		};
 	}
 
@@ -53,7 +48,7 @@ final class HAppImp implements HApp {
 
 	/** {@inheritDoc} */
 	public HResult execute(final HQuery query) {
-		return new HResult(query, selector.getCategorySelector().findCategories(query.getCategorySelection()), cubeStore.execute(config.getName(), query, selector));
+		return new HResult(query, selector.findCategories(query.getCategorySelection()), cubeStore.execute(config.getName(), query, selector));
 	}
 
 	/** {@inheritDoc} */

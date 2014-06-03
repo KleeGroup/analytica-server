@@ -30,10 +30,8 @@ import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HCategorySelection;
-import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
-import io.analytica.hcube.query.HTimeSelector;
 import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
@@ -95,11 +93,10 @@ public final class HCubeManagerTest {
 				//				.whereCategoryEquals(PAGES)//
 				.build();
 		//---
-		HTimeSelector timeSelector = app.getSelector().getTimeSelector();
-		Assert.assertEquals(3, timeSelector.findTimes(query1.getTimeSelection()).size()); //3 HOURS
-		Assert.assertEquals(3, timeSelector.findTimes(query2.getTimeSelection()).size()); //3 HOURS
-		Assert.assertTrue(timeSelector.findTimes(query1.getTimeSelection()).containsAll(timeSelector.findTimes(query2.getTimeSelection())));
-		Assert.assertTrue(timeSelector.findTimes(query2.getTimeSelection()).containsAll(timeSelector.findTimes(query1.getTimeSelection())));
+		Assert.assertEquals(3, app.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
+		Assert.assertEquals(3, app.getSelector().findTimes(query2.getTimeSelection()).size()); //3 HOURS
+		Assert.assertTrue(app.getSelector().findTimes(query1.getTimeSelection()).containsAll(app.getSelector().findTimes(query2.getTimeSelection())));
+		Assert.assertTrue(app.getSelector().findTimes(query2.getTimeSelection()).containsAll(app.getSelector().findTimes(query1.getTimeSelection())));
 		Assert.assertEquals(query1.toString(), query2.toString());
 	}
 
@@ -112,9 +109,7 @@ public final class HCubeManagerTest {
 				//				.whereCategoryEquals(PAGES)//
 				.build();
 		//---		
-		HTimeSelector timeSelector = app.getSelector().getTimeSelector();
-
-		Assert.assertEquals(3 * 24, timeSelector.findTimes(query.getTimeSelection()).size()); //72 hours 
+		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours 
 	}
 
 	/*
@@ -139,13 +134,12 @@ public final class HCubeManagerTest {
 		final int days = 1;
 
 		//----	
-		final HCategorySelector categorySelector = app.getSelector().getCategorySelector();
-		Assert.assertEquals(0, categorySelector.findCategories(new HCategorySelection("*")).size());
+		Assert.assertEquals(0, app.getSelector().findCategories(new HCategorySelection("*")).size());
 		//---
 		populateData(start, days);
 		//----	
-		Assert.assertEquals(2, categorySelector.findCategories(new HCategorySelection("*")).size());
-		Assert.assertEquals(1, categorySelector.findCategories(new HCategorySelection("welcome")).size());
+		Assert.assertEquals(2, app.getSelector().findCategories(new HCategorySelection("*")).size());
+		Assert.assertEquals(1, app.getSelector().findCategories(new HCategorySelection("welcome")).size());
 	}
 
 	/**
