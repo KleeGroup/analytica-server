@@ -17,8 +17,10 @@
  */
 package io.analytica.hcube.impl;
 
+import io.analytica.hcube.HAppConfig;
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
@@ -27,6 +29,10 @@ import io.analytica.hcube.query.HTimeSelector;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -94,5 +100,42 @@ public final class HCubeManagerImpl implements HCubeManager {
 	/** {@inheritDoc} */
 	public Set<String> getAppNames() {
 		return cubeStore.getAppNames();
+	}
+
+	private static HAppConfig CONFIG = new HAppConfig() {
+		private Map<String, HMetricKey> map = new HashMap<>();
+		{
+			final HMetricKey duration = new HMetricKey("DURATION", true);
+			final HMetricKey weight = new HMetricKey("WEIGHT", false);
+			map.put("DURATION", duration);
+			map.put("WEIGHT", weight);
+		}
+
+		public Set<String> getTypes() {
+			Set<String> set = new HashSet<>();
+			set.add("sql");
+			set.add("pages");
+			return set;
+		}
+
+		public String getName() {
+			return "my_app";
+		}
+
+		public Set<String> getKeys() {
+			return map.keySet();
+		}
+
+		public HMetricKey getKey(String name) {
+			return map.get(name);
+		}
+	};
+
+	public Set<HAppConfig> getAppConfigs() {
+		return Collections.singleton(CONFIG);
+	}
+
+	public HAppConfig getAppConfig(String appName) {
+		return CONFIG;
 	}
 }

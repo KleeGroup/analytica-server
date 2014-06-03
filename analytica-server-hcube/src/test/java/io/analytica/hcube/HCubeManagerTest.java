@@ -66,14 +66,14 @@ public final class HCubeManagerTest {
 	//private final HCubeManager cubeManager = new HCubeManagerImpl(new LuceneHCubeStorePlugin());
 	@Test
 	public void testAppNames() throws ParseException {
-		Assert.assertEquals(0, cubeManager.getAppNames().size());
+		Assert.assertEquals(1, cubeManager.getAppConfigs().size());
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 		//----	
 		populateData(cubeManager, start, days);
 		//----
-		Assert.assertEquals(1, cubeManager.getAppNames().size());
+		Assert.assertEquals(1, cubeManager.getAppConfigs().size());
 	}
 
 	@Test

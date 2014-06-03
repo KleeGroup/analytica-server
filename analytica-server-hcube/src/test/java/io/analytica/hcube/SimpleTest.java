@@ -43,15 +43,16 @@ import org.junit.Test;
  * @author pchretien
  */
 public final class SimpleTest {
-	private static final String APP_NAME = "MY_APP";
+	private static final String APP_NAME = "MY_FANCY_APP";
 	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 
 	@Test
 	public void test() {
 		final HTime time = new HTime(new Date(), HTimeDimension.Minute);
 		//--------		
-		final HMetricKey workingKey = new HMetricKey("working", false);
+		final HMetricKey workingKey = new HMetricKey("perf", false);
 		final HMetric workingHours = new HMetricBuilder(workingKey)//
+				.withValue(10)//
 				.withValue(17)//
 				.build();
 
@@ -59,12 +60,12 @@ public final class SimpleTest {
 				.withMetric(workingKey, workingHours)//
 				.build();
 
-		cubeManager.push(APP_NAME, new HKey("WORK", time, "www"), cube);
+		cubeManager.push(APP_NAME, new HKey("PAGES", time, "www"), cube);
 
 		final HQuery query = new HQueryBuilder()//
-				.onType("WORK")//
+				.onType("PAGES")//
 				.on(HTimeDimension.SixMinutes)//
-				.between("NOW-1d", "NOW+1d")//
+				.between("NOW", "NOW")//
 				//	.whereCategoryEquals(PAGES)//
 				.build();
 
