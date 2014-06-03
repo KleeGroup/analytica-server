@@ -18,8 +18,9 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
-import io.analytica.hcube.query.HCategorySelector;
+import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
@@ -35,7 +36,7 @@ import java.util.Set;
 public interface HCubeStorePlugin extends Plugin {
 	Set<String> getAppNames();
 
-	HCategorySelector getCategorySelector();
+	Set<List<HCategory>> findCategories(String appName, final HCategorySelection categorySelection);
 
 	/**
 	 * Ajout d'un cube.

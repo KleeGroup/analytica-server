@@ -22,7 +22,6 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HCategorySelection;
-import io.analytica.hcube.query.HCategorySelector;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
@@ -40,7 +39,7 @@ import java.util.Set;
  * 
  * @author npiedeloup, pchretien
  */
-public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategorySelector {
+public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private static final AppCubeStore EMPTY = new AppCubeStore("EMPTY");
 	private final Set<String> appNames = new HashSet<>();
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
@@ -88,11 +87,6 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin, HCategory
 		}
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		return appCubeStore.findAll(query, selector);
-	}
-
-	/** {@inheritDoc} */
-	public HCategorySelector getCategorySelector() {
-		return this;
 	}
 
 	/** {@inheritDoc} */

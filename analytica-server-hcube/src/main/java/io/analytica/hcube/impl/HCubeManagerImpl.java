@@ -17,16 +17,10 @@
  */
 package io.analytica.hcube.impl;
 
+import io.analytica.hcube.HApp;
 import io.analytica.hcube.HAppConfig;
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetricKey;
-import io.analytica.hcube.dimension.HKey;
-import io.analytica.hcube.query.HCategorySelector;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.query.HSelector;
-import io.analytica.hcube.query.HTimeSelector;
-import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collections;
@@ -42,7 +36,6 @@ import javax.inject.Inject;
  */
 public final class HCubeManagerImpl implements HCubeManager {
 	private final HCubeStorePlugin cubeStore;
-	private final HSelector selector;
 
 	/**
 	 * Constructeur.
@@ -54,17 +47,8 @@ public final class HCubeManagerImpl implements HCubeManager {
 		Assertion.checkNotNull(cubeStorePlugin);
 		//-----------------------------------------------------------------
 		this.cubeStore = cubeStorePlugin;
-		selector = new HSelector() {
-			private HTimeSelector timeSelector = new HTimeSelectorImpl();
 
-			public HTimeSelector getTimeSelector() {
-				return timeSelector;
-			}
-
-			public HCategorySelector getCategorySelector() {
-				return cubeStore.getCategorySelector();
-			}
-		};
+		APP = new HAppImp(cubeStore, CONFIG);
 	}
 
 	//	/** {@inheritDoc} */
@@ -72,30 +56,15 @@ public final class HCubeManagerImpl implements HCubeManager {
 	//		return timeSelector;
 	//	}
 
-	/** {@inheritDoc} */
-	public HResult execute(String appName, final HQuery query) {
-		return new HResult(query, cubeStore.getCategorySelector().findCategories(appName, query.getCategorySelection()), cubeStore.execute(appName, query, selector));
-	}
-
-	/** {@inheritDoc} */
-	public HCategorySelector getCategorySelector() {
-		return cubeStore.getCategorySelector();
-	}
-
-	/** {@inheritDoc} */
-	public void push(String appName, HKey key, HCube cube) {
-		cubeStore.push(appName, key, cube);
-	}
-
-	/** {@inheritDoc} */
-	public long size(String appName) {
-		return cubeStore.size(appName);
-	}
-
-	/** {@inheritDoc} */
-	public HSelector getSelector() {
-		return selector;
-	}
+	//	/** {@inheritDoc} */
+	//	public HCategorySelector getCategorySelector() {
+	//		return cubeStore.getCategorySelector();
+	//	}
+	//
+	//	/** {@inheritDoc} */
+	//	public HSelector getSelector() {
+	//		return selector;
+	//	}
 
 	/** {@inheritDoc} */
 	public Set<String> getAppNames() {
@@ -119,7 +88,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 		}
 
 		public String getName() {
-			return "my_app";
+			return "MY_APP";
 		}
 
 		public Set<String> getKeys() {
@@ -131,11 +100,21 @@ public final class HCubeManagerImpl implements HCubeManager {
 		}
 	};
 
-	public Set<HAppConfig> getAppConfigs() {
-		return Collections.singleton(CONFIG);
+	//	public Set<HAppConfig> getAppConfigs() {
+	//		return Collections.singleton(CONFIG);
+	//	}
+	//
+	//	public HAppConfig getAppConfig(String appName) {
+	//		return CONFIG;
+	//	}
+
+	private final HApp APP;
+
+	public Set<HApp> getApps() {
+		return Collections.singleton(APP);
 	}
 
-	public HAppConfig getAppConfig(String appName) {
-		return CONFIG;
+	public HApp getApp(String appName) {
+		return APP;
 	}
 }

@@ -17,11 +17,6 @@
  */
 package io.analytica.hcube;
 
-import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.dimension.HKey;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.query.HSelector;
-import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.component.Manager;
 
 import java.util.Set;
@@ -33,19 +28,9 @@ import java.util.Set;
  */
 public interface HCubeManager extends Manager {
 
-	HSelector getSelector();
+	//	void registerApp(HAppConfig);
 
-	/**
-	 * Ajout d'un cube.
-	 * @param cube HCube à ajouter 
-	 */
-	void push(String appName, HKey key, HCube cube);
+	Set<HApp> getApps();
 
-	long size(String appName);
-
-	HResult execute(String appName, final HQuery query);
-
-	Set<HAppConfig> getAppConfigs();
-
-	HAppConfig getAppConfig(String appName);
+	HApp getApp(String appName);
 }

@@ -9,5 +9,5 @@ public interface HCategorySelector {
 	/**
 	 * Liste des catégories matchant la sélection
 	 */
-	Set<List<HCategory>> findCategories(final String appName, final HCategorySelection categorySelection);
+	Set<List<HCategory>> findCategories(final HCategorySelection categorySelection);
 }

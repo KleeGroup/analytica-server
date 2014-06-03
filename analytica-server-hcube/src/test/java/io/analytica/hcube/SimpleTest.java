@@ -45,6 +45,7 @@ import org.junit.Test;
 public final class SimpleTest {
 	private static final String APP_NAME = "MY_FANCY_APP";
 	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
+	private final HApp app = cubeManager.getApp(APP_NAME);
 
 	@Test
 	public void test() {
@@ -60,7 +61,7 @@ public final class SimpleTest {
 				.withMetric(workingKey, workingHours)//
 				.build();
 
-		cubeManager.push(APP_NAME, new HKey("PAGES", time, "www"), cube);
+		app.push(new HKey("PAGES", time, "www"), cube);
 
 		final HQuery query = new HQueryBuilder()//
 				.onType("PAGES")//
@@ -69,7 +70,7 @@ public final class SimpleTest {
 				//	.whereCategoryEquals(PAGES)//
 				.build();
 
-		final HResult result = cubeManager.execute(APP_NAME, query);
+		final HResult result = app.execute(query);
 		System.out.println(">>> " + result.getSerie(""));
 	}
 }

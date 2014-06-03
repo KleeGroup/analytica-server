@@ -21,13 +21,14 @@ final class AppCubeStore {
 	private static final int QUEUE_SIZE = 5000;
 	private final AppQueue queue;
 	private final Map<HKey, HCube> store;
+
 	//---------------------------------------------------------------------
-	private final String appName;
+	//private final String appName;
 
 	AppCubeStore(final String appName) {
 		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
-		this.appName = appName;
+		//		this.appName = appName;
 		queue = new AppQueue();
 		store = new HashMap<>();
 	}
@@ -89,7 +90,7 @@ final class AppCubeStore {
 		//On itère sur les séries indexées par les catégories de la sélection.
 		List<HSerie> series = new ArrayList<>();
 
-		for (final List<HCategory> categories : selector.getCategorySelector().findCategories(appName, query.getCategorySelection())) {
+		for (final List<HCategory> categories : selector.getCategorySelector().findCategories(query.getCategorySelection())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
 			for (HTime currentTime : selector.getTimeSelector().findTimes(query.getTimeSelection())) {
