@@ -183,7 +183,7 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(24, result.getSerie("").getCubes().size());
 
 		//Check : serie contains 2 metric (DURATION and WEIGHT)
-		Assert.assertEquals(2, result.getSerie("").getMetricNames().size());
+		Assert.assertEquals(2, result.getSerie("").getMetrics().size());
 
 		//
 		final HSerie serie = result.getSerie("");
@@ -194,7 +194,7 @@ public final class HCubeManagerTest {
 			//	HTime time = entry.getKey();
 			Assert.assertTrue(cube.toString().startsWith("{"));
 			Assert.assertTrue(cube.toString().endsWith("}"));
-			Assert.assertEquals(2, cube.getMetricNames().size());
+			Assert.assertEquals(2, cube.getMetrics().size());
 			final HMetric metric = cube.getMetric("duration");
 			Assert.assertEquals(100 * 60 * 2, metric.getCount(), 0);
 			Assert.assertEquals(100, metric.getMean(), 0);

@@ -2,6 +2,7 @@ package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
+import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
@@ -9,7 +10,6 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.Builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,11 +58,11 @@ final class AppCubeStore {
 		final HCube newCube;
 		if (oldCube != null) {
 			HCubeBuilder cubeBuilder = new HCubeBuilder();
-			for (final String metricName : cube.getMetricNames()) {
-				cubeBuilder.withMetric(cube.getMetric(metricName));
+			for (final HMetric metric : cube.getMetrics()) {
+				cubeBuilder.withMetric(metric);
 			}
-			for (final String metricName : oldCube.getMetricNames()) {
-				cubeBuilder.withMetric(oldCube.getMetric(metricName));
+			for (final HMetric metric : oldCube.getMetrics()) {
+				cubeBuilder.withMetric(metric);
 			}
 
 			newCube = cubeBuilder.build();

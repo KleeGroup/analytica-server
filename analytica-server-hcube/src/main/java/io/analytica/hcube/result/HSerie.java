@@ -81,13 +81,13 @@ public final class HSerie implements HVirtualCube {
 		Map<String, HMetric> metrics = new HashMap<>();
 		final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
 		for (final HCube cube : cubes) {
-			for (final String metricName : cube.getMetricNames()) {
-				HMetricBuilder metricBuilder = metricBuilders.get(metricName);
+			for (final HMetric metric : cube.getMetrics()) {
+				HMetricBuilder metricBuilder = metricBuilders.get(metric);
 				if (metricBuilder == null) {
-					metricBuilder = new HMetricBuilder(cube.getMetric(metricName).getMetricKey());
-					metricBuilders.put(metricName, metricBuilder);
+					metricBuilder = new HMetricBuilder(metric.getMetricKey());
+					metricBuilders.put(metric.getMetricKey().getName(), metricBuilder);
 				}
-				metricBuilder.withMetric(cube.getMetric(metricName));
+				metricBuilder.withMetric(metric);
 			}
 		}
 		for (final Entry<String, HMetricBuilder> entry : metricBuilders.entrySet()) {
@@ -104,8 +104,8 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	/** {@inheritDoc} */
-	public Set<String> getMetricNames() {
-		return metrics.keySet();
+	public Collection<HMetric> getMetrics() {
+		return metrics.values();
 	}
 
 	public List<HPoint> getPoints(final String metricName) {
