@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.cube;
 
-import io.analytica.hcube.HApp;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
@@ -45,14 +44,13 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 * Ajout d'une metric. 
 	 * @param metric Metric
 	 */
-	public HCubeBuilder withMetric(final HMetricKey metricKey, HMetric metric) {
-		Assertion.checkNotNull(metricKey);
+	public HCubeBuilder withMetric(HMetric metric) {
 		Assertion.checkNotNull(metric);
-		String metricName = metricKey.getName();
+		String metricName = metric.getMetricKey().getName();
 		//---------------------------------------------------------------------
 		HMetricBuilder metricBuilder = metricBuilders.get(metricName);
 		if (metricBuilder == null) {
-			metricBuilder = new HMetricBuilder(metricKey);
+			metricBuilder = new HMetricBuilder(metric.getMetricKey());
 			metricBuilders.put(metricName, metricBuilder);
 		}
 		//On ajoute metric

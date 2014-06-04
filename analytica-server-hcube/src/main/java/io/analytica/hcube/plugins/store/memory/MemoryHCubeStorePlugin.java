@@ -48,7 +48,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private final Map<String, AppCategoryStore> appCategoryStores = new HashMap<>();
 //	private final Map<String, AppMetricStore> appMetricStores = new HashMap<>();
 	private final  AppMetricStore appMetricStore= new AppMetricStore();
-	private  final AppCubeStore EMPTY = new AppCubeStore(appMetricStore);
+	private static final AppCubeStore EMPTY = new AppCubeStore();
 
 	/** {@inheritDoc} */
 	public synchronized void push(String appName, final HKey key, final HCube cube) {
@@ -62,7 +62,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 			appCubeStore = appCubeStores.get(appName);
 			appCategoryStore = appCategoryStores.get(appName);
 		} else {
-			appCubeStore = new AppCubeStore(appMetricStore);
+			appCubeStore = new AppCubeStore();
 			appCategoryStore = new AppCategoryStore(appName);
 			appCubeStores.put(appName, appCubeStore);
 			appCategoryStores.put(appName, appCategoryStore);

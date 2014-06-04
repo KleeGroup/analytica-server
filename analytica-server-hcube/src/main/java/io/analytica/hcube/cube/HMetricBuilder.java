@@ -17,7 +17,6 @@
  */
 package io.analytica.hcube.cube;
 
-import io.analytica.hcube.HApp;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 

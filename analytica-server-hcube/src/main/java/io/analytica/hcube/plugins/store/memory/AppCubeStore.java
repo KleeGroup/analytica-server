@@ -21,13 +21,8 @@ final class AppCubeStore {
 	private static final int QUEUE_SIZE = 5000;
 	private final AppQueue queue;
 	private final Map<HKey, HCube> store;
-	//---------------------------------------------------------------------
-	private final AppMetricStore appMetricStore;
 	
-	AppCubeStore(final AppMetricStore appMetricStore) {
-		Assertion.checkNotNull(appMetricStore);
-		//---------------------------------------------------------------------
-		this.appMetricStore = appMetricStore;
+	AppCubeStore() {
 		queue = new AppQueue();
 		store = new HashMap<>();
 	}
@@ -64,10 +59,10 @@ final class AppCubeStore {
 		if (oldCube != null) {
 			HCubeBuilder cubeBuilder = new HCubeBuilder();
 			for (final String metricName : cube.getMetricNames()) {
-				cubeBuilder.withMetric(appMetricStore.getMetricKey(metricName), cube.getMetric(metricName));
+				cubeBuilder.withMetric(cube.getMetric(metricName));
 			}
 			for (final String metricName : oldCube.getMetricNames()) {
-				cubeBuilder.withMetric(appMetricStore.getMetricKey(metricName), oldCube.getMetric(metricName));
+				cubeBuilder.withMetric(oldCube.getMetric(metricName));
 			}
 
 			newCube = cubeBuilder.build();

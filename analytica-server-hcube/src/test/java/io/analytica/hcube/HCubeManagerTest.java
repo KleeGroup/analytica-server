@@ -418,8 +418,8 @@ public final class HCubeManagerTest {
 				.withValue(weightValue)//
 				.build();
 		final HCube cube = new HCubeBuilder()//
-				.withMetric(app.getMetricKey("duration"), durationMetric)//
-				.withMetric(app.getMetricKey("weight"), weightMetric)//
+				.withMetric(durationMetric)//
+				.withMetric( weightMetric)//
 				.build();
 		app.push(key, cube);
 	}
@@ -446,8 +446,8 @@ public final class HCubeManagerTest {
 					final HMetric weightMetric = new HMetricBuilder(app.getMetricKey("weight")).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder()//
-							.withMetric(app.getMetricKey("duration"), durationMetricBuilder.build())//
-							.withMetric(app.getMetricKey("weight"), weightMetric)//
+							.withMetric(durationMetricBuilder.build())//
+							.withMetric( weightMetric)//
 							.build();
 
 					app.push(key, cube);
