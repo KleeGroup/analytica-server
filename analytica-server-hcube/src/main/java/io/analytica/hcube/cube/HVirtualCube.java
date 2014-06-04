@@ -34,7 +34,7 @@ public interface HVirtualCube {
 	 * @param name Nom de la métrique
 	 * @return Métrique
 	 */
-	HMetric getMetric(final HMetricKey metricKey);
+	HMetric getMetric(final String metricName);
 
-	Set<HMetricKey> getMetricKeys();
+	Set<String> getMetricNames();
 }

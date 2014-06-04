@@ -52,12 +52,14 @@ public final class SimpleTest {
 		final HTime time = new HTime(new Date(), HTimeDimension.Minute);
 		//--------		
 		final HMetricKey workingKey = new HMetricKey("perf", false);
-		final HMetric workingHours = new HMetricBuilder(workingKey)//
+		app.register(workingKey);
+
+		final HMetric workingHours = new HMetricBuilder("perf", app)//
 				.withValue(10)//
 				.withValue(17)//
 				.build();
 
-		final HCube cube = new HCubeBuilder()//
+		final HCube cube = new HCubeBuilder(app)//
 				.withMetric(workingKey, workingHours)//
 				.build();
 

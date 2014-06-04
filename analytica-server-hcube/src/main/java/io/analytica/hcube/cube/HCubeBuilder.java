@@ -17,6 +17,7 @@
  */
 package io.analytica.hcube.cube;
 
+import io.analytica.hcube.HApp;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
@@ -31,7 +32,14 @@ import java.util.Map.Entry;
  * @author npiedeloup, pchretien
  */
 public final class HCubeBuilder implements Builder<HCube> {
-	private final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
+	private final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
+	private final HApp app;
+
+	public HCubeBuilder(final HApp app) {
+		Assertion.checkNotNull(app);
+		//---------------------------------------------------------------------
+		this.app = app;
+	}
 
 	/**
 	 * Ajout d'une metric. 
@@ -40,15 +48,24 @@ public final class HCubeBuilder implements Builder<HCube> {
 	public HCubeBuilder withMetric(final HMetricKey metricKey, HMetric metric) {
 		Assertion.checkNotNull(metricKey);
 		Assertion.checkNotNull(metric);
+		String metricName = metricKey.getName();
 		//---------------------------------------------------------------------
-		HMetricBuilder metricBuilder = metricBuilders.get(metricKey);
+		HMetricBuilder metricBuilder = metricBuilders.get(metricName);
 		if (metricBuilder == null) {
 			metricBuilder = new HMetricBuilder(metricKey);
-			metricBuilders.put(metricKey, metricBuilder);
+			metricBuilders.put(metricName, metricBuilder);
 		}
 		//On ajoute metric
 		metricBuilder.withMetric(metric);
 		return this;
+	}
+
+	/**
+	 * Ajout d'une metric. 
+	 * @param metric Metric
+	 */
+	public HCubeBuilder withMetric(final String metricName, HMetric metric) {
+		return withMetric(app.getMetricKey(metricName), metric);
 	}
 
 	//	/**
@@ -69,8 +86,8 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 * @return cube
 	 */
 	public HCube build() {
-		final Map<HMetricKey, HMetric> metrics = new LinkedHashMap<>(metricBuilders.size());
-		for (final Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
+		final Map<String, HMetric> metrics = new LinkedHashMap<>(metricBuilders.size());
+		for (final Entry<String, HMetricBuilder> entry : metricBuilders.entrySet()) {
 			HMetric metric = entry.getValue().build();
 			metrics.put(entry.getKey(), metric);
 		}

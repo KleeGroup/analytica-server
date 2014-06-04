@@ -17,10 +17,10 @@
  */
 package io.analytica.hcube.result;
 
+import io.analytica.hcube.HApp;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
-import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.cube.HVirtualCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
@@ -45,20 +45,21 @@ import java.util.Set;
 public final class HSerie implements HVirtualCube {
 	private final List<HCategory> categories;
 	private final Map<HTime, HCube> cubes;
-	private Map<HMetricKey, HMetric> metrics;
+	private Map<String, HMetric> metrics;
 
 	/**
 	 * Constructeur.
 	 * @param category Catégorie de la série
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
-	public HSerie(final List<HCategory> categories, final Map<HTime, HCube> cubes) {
+	public HSerie(final HApp app, final List<HCategory> categories, final Map<HTime, HCube> cubes) {
+		Assertion.checkNotNull(app);
 		Assertion.checkNotNull(categories);
 		Assertion.checkNotNull(cubes);
 		//---------------------------------------------------------------------
 		this.categories = categories;
 		this.cubes = cubes;
-		metrics = buildMetrics(cubes.values());
+		metrics = buildMetrics(app, cubes.values());
 	}
 
 	/**
@@ -76,44 +77,44 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	//-------------------------------------------------------------------------
-	private static Map<HMetricKey, HMetric> buildMetrics(Collection<HCube> cubes) {
-		Map<HMetricKey, HMetric> metrics = new HashMap<>();
-		final Map<HMetricKey, HMetricBuilder> metricBuilders = new HashMap<>();
+	private static Map<String, HMetric> buildMetrics(HApp app, Collection<HCube> cubes) {
+		Map<String, HMetric> metrics = new HashMap<>();
+		final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
 		for (final HCube cube : cubes) {
-			for (final HMetricKey metricKey : cube.getMetricKeys()) {
-				HMetricBuilder metricBuilder = metricBuilders.get(metricKey);
+			for (final String metricName : cube.getMetricNames()) {
+				HMetricBuilder metricBuilder = metricBuilders.get(metricName);
 				if (metricBuilder == null) {
-					metricBuilder = new HMetricBuilder(metricKey);
-					metricBuilders.put(metricKey, metricBuilder);
+					metricBuilder = new HMetricBuilder(metricName, app);
+					metricBuilders.put(metricName, metricBuilder);
 				}
-				metricBuilder.withMetric(cube.getMetric(metricKey));
+				metricBuilder.withMetric(cube.getMetric(metricName));
 			}
 		}
-		for (final Entry<HMetricKey, HMetricBuilder> entry : metricBuilders.entrySet()) {
+		for (final Entry<String, HMetricBuilder> entry : metricBuilders.entrySet()) {
 			metrics.put(entry.getKey(), entry.getValue().build());
 		}
 		return metrics;
 	}
 
 	/** {@inheritDoc} */
-	public HMetric getMetric(final HMetricKey metricKey) {
-		Assertion.checkNotNull(metricKey);
+	public HMetric getMetric(final String metricName) {
+		Assertion.checkNotNull(metricName);
 		//---------------------------------------------------------------------
-		return metrics.get(metricKey);
+		return metrics.get(metricName);
 	}
 
 	/** {@inheritDoc} */
-	public Set<HMetricKey> getMetricKeys() {
+	public Set<String> getMetricNames() {
 		return metrics.keySet();
 	}
 
-	public List<HPoint> getPoints(final HMetricKey metricKey) {
+	public List<HPoint> getPoints(final String metricName) {
 		final List<HPoint> points = new ArrayList<>();
 		for (final Entry<HTime, HCube> entry : cubes.entrySet()) {
 			points.add(new HPoint() {
 				/** {@inheritDoc} */
 				public HMetric getMetric() {
-					return entry.getValue().getMetric(metricKey);
+					return entry.getValue().getMetric(metricName);
 				}
 
 				/** {@inheritDoc} */

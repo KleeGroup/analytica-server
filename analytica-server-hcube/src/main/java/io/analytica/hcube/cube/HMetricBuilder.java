@@ -17,6 +17,7 @@
  */
 package io.analytica.hcube.cube;
 
+import io.analytica.hcube.HApp;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
@@ -44,6 +45,14 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		//---------------------------------------------------------------------
 		this.metricKey = metricKey;
 		distributionBuilder = metricKey.hasDistribution() ? new HDistributionBuilder() : null;
+	}
+
+	/**
+	 * Constructeur.
+	 * @param metricName Nom de la metric
+	 */
+	public HMetricBuilder(final String metricName, HApp app) {
+		this(app.getMetricKey(metricName));
 	}
 
 	/**
@@ -104,4 +113,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : d1 < d2 ? d1 : d2;
 	}
 
+	public HMetricKey getMetricKey() {
+		return metricKey;
+	}
 }

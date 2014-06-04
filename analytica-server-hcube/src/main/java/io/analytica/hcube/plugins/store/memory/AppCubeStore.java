@@ -2,7 +2,6 @@ package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
-import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
@@ -10,6 +9,7 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.lang.Builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,14 +21,13 @@ final class AppCubeStore {
 	private static final int QUEUE_SIZE = 5000;
 	private final AppQueue queue;
 	private final Map<HKey, HCube> store;
-
 	//---------------------------------------------------------------------
-	//private final String appName;
+	private final Builder<HCubeBuilder> cubeBuilderBuilder;
 
-	AppCubeStore(final String appName) {
-		Assertion.checkArgNotEmpty(appName);
+	AppCubeStore(final Builder<HCubeBuilder> cubeBuilderBuilder) {
+		Assertion.checkNotNull(cubeBuilderBuilder);
 		//---------------------------------------------------------------------
-		//		this.appName = appName;
+		this.cubeBuilderBuilder = cubeBuilderBuilder;
 		queue = new AppQueue();
 		store = new HashMap<>();
 	}
@@ -63,12 +62,12 @@ final class AppCubeStore {
 		final HCube oldCube = store.get(key);
 		final HCube newCube;
 		if (oldCube != null) {
-			HCubeBuilder cubeBuilder = new HCubeBuilder();
-			for (final HMetricKey metricKey : cube.getMetricKeys()) {
-				cubeBuilder.withMetric(metricKey, cube.getMetric(metricKey));
+			HCubeBuilder cubeBuilder = cubeBuilderBuilder.build();
+			for (final String metricName : cube.getMetricNames()) {
+				cubeBuilder.withMetric(metricName, cube.getMetric(metricName));
 			}
-			for (final HMetricKey metricKey : oldCube.getMetricKeys()) {
-				cubeBuilder.withMetric(metricKey, oldCube.getMetric(metricKey));
+			for (final String metricName : oldCube.getMetricNames()) {
+				cubeBuilder.withMetric(metricName, oldCube.getMetric(metricName));
 			}
 
 			newCube = cubeBuilder.build();
@@ -98,10 +97,10 @@ final class AppCubeStore {
 				final HCube cube = store.get(key);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
-				cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
+				cubes.put(currentTime, cube == null ? cubeBuilderBuilder.build().build() : cube);
 			}
 			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données 
-			series.add(new HSerie(categories, cubes));
+			series.add(new HSerie(this, categories, cubes));
 		}
 		printStats();
 		return series;

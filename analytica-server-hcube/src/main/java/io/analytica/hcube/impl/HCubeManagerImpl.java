@@ -18,15 +18,10 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HApp;
-import io.analytica.hcube.HAppConfig;
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.cube.HMetricKey;
 import io.vertigo.kernel.lang.Assertion;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -48,65 +43,13 @@ public final class HCubeManagerImpl implements HCubeManager {
 		//-----------------------------------------------------------------
 		this.cubeStore = cubeStorePlugin;
 
-		APP = new HAppImp(cubeStore, CONFIG);
+		APP = new HAppImp(cubeStore, "MY-APP");
 	}
-
-	//	/** {@inheritDoc} */
-	//	public HTimeSelector getTimeSelector() {
-	//		return timeSelector;
-	//	}
-
-	//	/** {@inheritDoc} */
-	//	public HCategorySelector getCategorySelector() {
-	//		return cubeStore.getCategorySelector();
-	//	}
-	//
-	//	/** {@inheritDoc} */
-	//	public HSelector getSelector() {
-	//		return selector;
-	//	}
 
 	/** {@inheritDoc} */
 	public Set<String> getAppNames() {
 		return cubeStore.getAppNames();
 	}
-
-	private static HAppConfig CONFIG = new HAppConfig() {
-		private Map<String, HMetricKey> map = new HashMap<>();
-		{
-			final HMetricKey duration = new HMetricKey("DURATION", true);
-			final HMetricKey weight = new HMetricKey("WEIGHT", false);
-			map.put("DURATION", duration);
-			map.put("WEIGHT", weight);
-		}
-
-		public Set<String> getTypes() {
-			Set<String> set = new HashSet<>();
-			set.add("sql");
-			set.add("pages");
-			return set;
-		}
-
-		public String getName() {
-			return "MY_APP";
-		}
-
-		public Set<String> getMetricKeys() {
-			return map.keySet();
-		}
-
-		public HMetricKey getKey(String name) {
-			return map.get(name);
-		}
-	};
-
-	//	public Set<HAppConfig> getAppConfigs() {
-	//		return Collections.singleton(CONFIG);
-	//	}
-	//
-	//	public HAppConfig getAppConfig(String appName) {
-	//		return CONFIG;
-	//	}
 
 	private final HApp APP;
 

@@ -35,23 +35,23 @@ public final class HCube implements HVirtualCube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
-	private final Map<HMetricKey, HMetric> metrics;
+	private final Map<String, HMetric> metrics;
 
-	HCube(final Map<HMetricKey, HMetric> metrics) {
+	HCube(final Map<String, HMetric> metrics) {
 		Assertion.checkNotNull(metrics);
 		//---------------------------------------------------------------------
 		this.metrics = metrics;
 	}
 
 	/** {@inheritDoc} */
-	public HMetric getMetric(final HMetricKey metricKey) {
-		Assertion.checkNotNull(metricKey);
+	public HMetric getMetric(final String metricName) {
+		Assertion.checkNotNull(metricName);
 		//---------------------------------------------------------------------
-		return metrics.get(metricKey);
+		return metrics.get(metricName);
 	}
 
 	/** {@inheritDoc} */
-	public Set<HMetricKey> getMetricKeys() {
+	public Set<String> getMetricNames() {
 		return metrics.keySet();
 	}
 
@@ -62,7 +62,7 @@ public final class HCube implements HVirtualCube {
 		//for (final Entry<HMetricKey, HMetric> entry: getMetrics().entrySet()) {
 		sb.append(metrics);
 		//			append("\n\t\t metrics: ").append(entry.getKey()).append(",");
-		if (!getMetricKeys().isEmpty()) {
+		if (!getMetricNames().isEmpty()) {
 			sb.append("\n\t");
 		}
 		sb.append("}");

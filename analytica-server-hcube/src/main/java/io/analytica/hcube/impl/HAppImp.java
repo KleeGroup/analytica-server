@@ -1,8 +1,8 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HApp;
-import io.analytica.hcube.HAppConfig;
 import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
@@ -13,20 +13,23 @@ import io.analytica.hcube.query.HTimeSelection;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 final class HAppImp implements HApp {
 	private final HCubeStorePlugin cubeStore;
-	private final HAppConfig config;
+	private final String appName;
 	private final HSelector selector;
 
-	HAppImp(final HCubeStorePlugin cubeStore, final HAppConfig config) {
+	HAppImp(final HCubeStorePlugin cubeStore, final String appName) {
 		Assertion.checkNotNull(cubeStore);
-		Assertion.checkNotNull(config);
+		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
 		this.cubeStore = cubeStore;
-		this.config = config;
+		this.appName = appName;
 		selector = new HSelector() {
 			private HTimeSelector timeSelector = new HTimeSelector();
 
@@ -35,7 +38,7 @@ final class HAppImp implements HApp {
 			}
 
 			public Set<List<HCategory>> findCategories(HCategorySelection categorySelection) {
-				return cubeStore.findCategories(config.getName(), categorySelection);
+				return cubeStore.findCategories(appName, categorySelection);
 			}
 
 		};
@@ -48,21 +51,46 @@ final class HAppImp implements HApp {
 
 	/** {@inheritDoc} */
 	public HResult execute(final HQuery query) {
-		return new HResult(query, selector.findCategories(query.getCategorySelection()), cubeStore.execute(config.getName(), query, selector));
+		return new HResult(query, selector.findCategories(query.getCategorySelection()), cubeStore.execute(appName, query, selector));
 	}
 
 	/** {@inheritDoc} */
 	public void push(HKey key, HCube cube) {
-		cubeStore.push(config.getName(), key, cube);
+		cubeStore.push(appName, key, cube);
 	}
 
 	/** {@inheritDoc} */
 	public long size() {
-		return cubeStore.size(config.getName());
+		return cubeStore.size(appName);
 	}
 
-	public HAppConfig getConfig() {
-		// TODO Auto-generated method stub
-		return null;
+	/** {@inheritDoc} */
+	public String getName() {
+		return appName;
 	}
+
+	private final Map<String, HMetricKey> metricKeys = Collections.synchronizedMap(new HashMap<String, HMetricKey>());
+
+	/** {@inheritDoc} */
+	public void register(HMetricKey metricKey) {
+		Assertion.checkNotNull(metricKey);
+		//---------------------------------------------------------------------
+		metricKeys.put(metricKey.getName(), metricKey);
+	}
+
+	/** {@inheritDoc} */
+	public Set<String> getMetricKeys() {
+		return metricKeys.keySet();
+	}
+
+	/** {@inheritDoc} */
+	public HMetricKey getMetricKey(String name) {
+		Assertion.checkArgNotEmpty(name);
+		//---------------------------------------------------------------------
+		HMetricKey metricKey = metricKeys.get(name);
+		//---------------------------------------------------------------------
+		Assertion.checkNotNull(metricKey, "metricKey {0} is not registred", metricKey);
+		return metricKey;
+	}
+
 }
