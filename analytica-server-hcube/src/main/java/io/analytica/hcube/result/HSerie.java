@@ -21,6 +21,7 @@ import io.analytica.hcube.HApp;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
+import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.cube.HVirtualCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
@@ -52,14 +53,13 @@ public final class HSerie implements HVirtualCube {
 	 * @param category Catégorie de la série
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
-	public HSerie(final HApp app, final List<HCategory> categories, final Map<HTime, HCube> cubes) {
-		Assertion.checkNotNull(app);
+	public HSerie( final List<HCategory> categories, final Map<HTime, HCube> cubes) {
 		Assertion.checkNotNull(categories);
 		Assertion.checkNotNull(cubes);
 		//---------------------------------------------------------------------
 		this.categories = categories;
 		this.cubes = cubes;
-		metrics = buildMetrics(app, cubes.values());
+		metrics = buildMetrics( cubes.values());
 	}
 
 	/**
@@ -77,14 +77,14 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	//-------------------------------------------------------------------------
-	private static Map<String, HMetric> buildMetrics(HApp app, Collection<HCube> cubes) {
+	private static Map<String, HMetric> buildMetrics( Collection<HCube> cubes) {
 		Map<String, HMetric> metrics = new HashMap<>();
 		final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
 		for (final HCube cube : cubes) {
 			for (final String metricName : cube.getMetricNames()) {
 				HMetricBuilder metricBuilder = metricBuilders.get(metricName);
 				if (metricBuilder == null) {
-					metricBuilder = new HMetricBuilder(metricName, app);
+					metricBuilder = new HMetricBuilder(cube.getMetric(metricName).getMetricKey());
 					metricBuilders.put(metricName, metricBuilder);
 				}
 				metricBuilder.withMetric(cube.getMetric(metricName));

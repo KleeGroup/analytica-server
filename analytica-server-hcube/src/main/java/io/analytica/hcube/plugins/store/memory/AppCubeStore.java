@@ -22,12 +22,12 @@ final class AppCubeStore {
 	private final AppQueue queue;
 	private final Map<HKey, HCube> store;
 	//---------------------------------------------------------------------
-	private final Builder<HCubeBuilder> cubeBuilderBuilder;
-
-	AppCubeStore(final Builder<HCubeBuilder> cubeBuilderBuilder) {
-		Assertion.checkNotNull(cubeBuilderBuilder);
+	private final AppMetricStore appMetricStore;
+	
+	AppCubeStore(final AppMetricStore appMetricStore) {
+		Assertion.checkNotNull(appMetricStore);
 		//---------------------------------------------------------------------
-		this.cubeBuilderBuilder = cubeBuilderBuilder;
+		this.appMetricStore = appMetricStore;
 		queue = new AppQueue();
 		store = new HashMap<>();
 	}
@@ -62,12 +62,12 @@ final class AppCubeStore {
 		final HCube oldCube = store.get(key);
 		final HCube newCube;
 		if (oldCube != null) {
-			HCubeBuilder cubeBuilder = cubeBuilderBuilder.build();
+			HCubeBuilder cubeBuilder = new HCubeBuilder();
 			for (final String metricName : cube.getMetricNames()) {
-				cubeBuilder.withMetric(metricName, cube.getMetric(metricName));
+				cubeBuilder.withMetric(appMetricStore.getMetricKey(metricName), cube.getMetric(metricName));
 			}
 			for (final String metricName : oldCube.getMetricNames()) {
-				cubeBuilder.withMetric(metricName, oldCube.getMetric(metricName));
+				cubeBuilder.withMetric(appMetricStore.getMetricKey(metricName), oldCube.getMetric(metricName));
 			}
 
 			newCube = cubeBuilder.build();
@@ -97,10 +97,10 @@ final class AppCubeStore {
 				final HCube cube = store.get(key);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
-				cubes.put(currentTime, cube == null ? cubeBuilderBuilder.build().build() : cube);
+				cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
 			}
 			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données 
-			series.add(new HSerie(this, categories, cubes));
+			series.add(new HSerie(categories, cubes));
 		}
 		printStats();
 		return series;
@@ -117,7 +117,7 @@ final class AppCubeStore {
 		return sb.toString();
 	}*/
 
-	long count() {
+	long size() {
 		flushQueue();
 		return store.size();
 	}

@@ -51,7 +51,7 @@ public final class HCube implements HVirtualCube {
 	}
 
 	/** {@inheritDoc} */
-	public Set<String> getMetricNames() {
+	public Set<String>	getMetricNames() {
 		return metrics.keySet();
 	}
 

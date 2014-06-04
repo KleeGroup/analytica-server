@@ -47,13 +47,13 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		distributionBuilder = metricKey.hasDistribution() ? new HDistributionBuilder() : null;
 	}
 
-	/**
-	 * Constructeur.
-	 * @param metricName Nom de la metric
-	 */
-	public HMetricBuilder(final String metricName, HApp app) {
-		this(app.getMetricKey(metricName));
-	}
+//	/**
+//	 * Constructeur.
+//	 * @param metricName Nom de la metric
+//	 */
+//	public HMetricBuilder(final String metricName, HApp app) {
+//		this(app.getMetricKey(metricName));
+//	}
 
 	/**
 	 * Add value.
@@ -100,7 +100,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	public HMetric build() {
 		Assertion.checkArgument(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
 		//---------------------------------------------------------------------
-		return new HMetric(count, min, max, sum, sqrSum, distributionBuilder == null ? null : distributionBuilder.build());
+		return new HMetric(metricKey, count, min, max, sum, sqrSum, distributionBuilder == null ? null : distributionBuilder.build());
 	}
 
 	private static double max(final double d1, final double d2) {

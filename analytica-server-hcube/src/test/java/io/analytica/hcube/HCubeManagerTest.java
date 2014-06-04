@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -62,7 +63,9 @@ public final class HCubeManagerTest {
 	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 
 	private final HApp app = cubeManager.getApp(APP_NAME);
-	{
+
+	@Before
+	public void init(){
 		final HMetricKey duration = new HMetricKey("duration", true);
 		final HMetricKey weight = new HMetricKey("weight", false);
 		final HMetricKey test = new HMetricKey("test", true);
@@ -255,7 +258,7 @@ public final class HCubeManagerTest {
 	@Test
 	public void testMetrics() {
 		//---
-		final HMetricBuilder metricBuilder = new HMetricBuilder("test", app);
+		final HMetricBuilder metricBuilder = new HMetricBuilder(app.getMetricKey("test"));
 		double sqrSum = 0;
 		for (int i = 0; i < 100; i++) {
 			metricBuilder.withValue(1000 - i);
@@ -273,7 +276,7 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testHistogram() {
-		final HMetric metric = new HMetricBuilder("test", app)//
+		final HMetric metric = new HMetricBuilder(app.getMetricKey("test"))//
 				.withValue(0)//<0
 				.withValue(1)//<1
 				.withValue(2)//<2
@@ -408,15 +411,15 @@ public final class HCubeManagerTest {
 	private void addCube(final Date current, final int weightValue) {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(PAGES, time, "welcome");
-		final HMetric durationMetric = new HMetricBuilder("duration", app)//
+		final HMetric durationMetric = new HMetricBuilder(app.getMetricKey("duration"))//
 				.withValue(100)//
 				.build();
-		final HMetric weightMetric = new HMetricBuilder("weight", app)//
+		final HMetric weightMetric = new HMetricBuilder(app.getMetricKey("weight"))//
 				.withValue(weightValue)//
 				.build();
-		final HCube cube = new HCubeBuilder(app)//
-				.withMetric("duration", durationMetric)//
-				.withMetric("weight", weightMetric)//
+		final HCube cube = new HCubeBuilder()//
+				.withMetric(app.getMetricKey("duration"), durationMetric)//
+				.withMetric(app.getMetricKey("weight"), weightMetric)//
 				.build();
 		app.push(key, cube);
 	}
@@ -434,17 +437,17 @@ public final class HCubeManagerTest {
 					//--------		
 					final HKey key = new HKey(PAGES, time, "welcome");
 
-					final HMetricBuilder durationMetricBuilder = new HMetricBuilder("duration", app);
+					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(app.getMetricKey("duration"));
 					for (int i = 0; i < 100; i++) {
 						durationMetricBuilder.withValue(100 - i);
 						durationMetricBuilder.withValue(100 + i);
 					}
 
-					final HMetric weightMetric = new HMetricBuilder("weight", app).withValue(h).build();
+					final HMetric weightMetric = new HMetricBuilder(app.getMetricKey("weight")).withValue(h).build();
 
-					final HCube cube = new HCubeBuilder(app)//
-							.withMetric("duration", durationMetricBuilder.build())//
-							.withMetric("weight", weightMetric)//
+					final HCube cube = new HCubeBuilder()//
+							.withMetric(app.getMetricKey("duration"), durationMetricBuilder.build())//
+							.withMetric(app.getMetricKey("weight"), weightMetric)//
 							.build();
 
 					app.push(key, cube);

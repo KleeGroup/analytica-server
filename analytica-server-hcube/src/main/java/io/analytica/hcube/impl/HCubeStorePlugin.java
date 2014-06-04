@@ -18,6 +18,7 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.query.HCategorySelection;
@@ -54,4 +55,11 @@ public interface HCubeStorePlugin extends Plugin {
 	List<HSerie> execute(String appName, final HQuery query, final HSelector selector);
 
 	long size(String appName);
+	
+	//-----------Metrics
+	void register(String appName, HMetricKey metricKey);
+
+	Set<String> getMetricKeys(String appName);
+
+	HMetricKey getMetricKey(String appName, String metricName);
 }

@@ -19,6 +19,7 @@ package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
+import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
@@ -42,10 +43,12 @@ import java.util.Set;
  * @author npiedeloup, pchretien
  */
 public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
-	private static final AppCubeStore EMPTY = new AppCubeStore("EMPTY");
 	private final Set<String> appNames = new HashSet<>();
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 	private final Map<String, AppCategoryStore> appCategoryStores = new HashMap<>();
+//	private final Map<String, AppMetricStore> appMetricStores = new HashMap<>();
+	private final  AppMetricStore appMetricStore= new AppMetricStore();
+	private  final AppCubeStore EMPTY = new AppCubeStore(appMetricStore);
 
 	/** {@inheritDoc} */
 	public synchronized void push(String appName, final HKey key, final HCube cube) {
@@ -59,12 +62,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 			appCubeStore = appCubeStores.get(appName);
 			appCategoryStore = appCategoryStores.get(appName);
 		} else {
-			appCubeStore = new AppCubeStore(new Builder<HCubeBuilder>() {
-				public HCubeBuilder build() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-			});
+			appCubeStore = new AppCubeStore(appMetricStore);
 			appCategoryStore = new AppCategoryStore(appName);
 			appCubeStores.put(appName, appCubeStore);
 			appCategoryStores.put(appName, appCategoryStore);
@@ -80,7 +78,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		if (appCubeStore == null) {
 			return 0;
 		}
-		return appCubeStore.count();
+		return appCubeStore.size();
 	}
 
 	/** {@inheritDoc} */
@@ -110,5 +108,20 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	/** {@inheritDoc} */
 	public synchronized Set<String> getAppNames() {
 		return Collections.unmodifiableSet(appNames);
+	}
+
+	@Override
+	public void register(String appName, HMetricKey metricKey) {
+		appMetricStore.register(metricKey);
+	}
+
+	@Override
+	public Set<String> getMetricKeys(String appName) {
+			return appMetricStore.getMetricKeys();
+	}
+
+	@Override
+	public HMetricKey getMetricKey(String appName, String metricName) {
+		return appMetricStore.getMetricKey(metricName);
 	}
 }

@@ -14,7 +14,6 @@ final class AppCategoryStore {
 	private final int dimensions = 1;
 
 	AppCategoryStore(final String appName) {
-		Assertion.checkArgNotEmpty(appName);
 		//---------------------------------------------------------------------
 		//	this.appName = appName;
 		categories = new Set[dimensions];

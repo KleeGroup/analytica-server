@@ -68,29 +68,19 @@ final class HAppImp implements HApp {
 	public String getName() {
 		return appName;
 	}
-
-	private final Map<String, HMetricKey> metricKeys = Collections.synchronizedMap(new HashMap<String, HMetricKey>());
-
 	/** {@inheritDoc} */
 	public void register(HMetricKey metricKey) {
-		Assertion.checkNotNull(metricKey);
-		//---------------------------------------------------------------------
-		metricKeys.put(metricKey.getName(), metricKey);
+		cubeStore.register(appName, metricKey);
 	}
 
 	/** {@inheritDoc} */
 	public Set<String> getMetricKeys() {
-		return metricKeys.keySet();
+		return cubeStore.getMetricKeys(appName);
 	}
 
 	/** {@inheritDoc} */
-	public HMetricKey getMetricKey(String name) {
-		Assertion.checkArgNotEmpty(name);
-		//---------------------------------------------------------------------
-		HMetricKey metricKey = metricKeys.get(name);
-		//---------------------------------------------------------------------
-		Assertion.checkNotNull(metricKey, "metricKey {0} is not registred", metricKey);
-		return metricKey;
+	public HMetricKey getMetricKey(String metricName) {
+		 return cubeStore.getMetricKey(appName, metricName);
 	}
 
 }

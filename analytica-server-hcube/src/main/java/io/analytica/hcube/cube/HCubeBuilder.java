@@ -33,13 +33,13 @@ import java.util.Map.Entry;
  */
 public final class HCubeBuilder implements Builder<HCube> {
 	private final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
-	private final HApp app;
-
-	public HCubeBuilder(final HApp app) {
-		Assertion.checkNotNull(app);
-		//---------------------------------------------------------------------
-		this.app = app;
-	}
+//	private final HApp app;
+//
+//	public HCubeBuilder(final HApp app) {
+//		Assertion.checkNotNull(app);
+//		//---------------------------------------------------------------------
+//		this.app = app;
+//	}
 
 	/**
 	 * Ajout d'une metric. 
@@ -59,14 +59,14 @@ public final class HCubeBuilder implements Builder<HCube> {
 		metricBuilder.withMetric(metric);
 		return this;
 	}
-
-	/**
-	 * Ajout d'une metric. 
-	 * @param metric Metric
-	 */
-	public HCubeBuilder withMetric(final String metricName, HMetric metric) {
-		return withMetric(app.getMetricKey(metricName), metric);
-	}
+//
+//	/**
+//	 * Ajout d'une metric. 
+//	 * @param metric Metric
+//	 */
+//	public HCubeBuilder withMetric(final String metricName, HMetric metric) {
+//		return withMetric(app.getMetricKey(metricName), metric);
+//	}
 
 	//	/**
 	//	 * Ajout de ttes les Metrics. 
