@@ -27,7 +27,7 @@ public final class HMetricKey {
 	private final boolean distribution;
 	private final String name;
 
-	public HMetricKey(final String name, final boolean distribution) {
+	HMetricKey(final String name, final boolean distribution) {
 		Assertion.checkArgNotEmpty(name);
 		//---------------------------------------------------------------------
 		this.name = name;
