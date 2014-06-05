@@ -13,10 +13,7 @@ import io.analytica.hcube.query.HTimeSelection;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.kernel.lang.Assertion;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 final class HAppImp implements HApp {
@@ -68,6 +65,7 @@ final class HAppImp implements HApp {
 	public String getName() {
 		return appName;
 	}
+
 	/** {@inheritDoc} */
 	public void register(HMetricKey metricKey) {
 		cubeStore.register(appName, metricKey);
@@ -80,7 +78,7 @@ final class HAppImp implements HApp {
 
 	/** {@inheritDoc} */
 	public HMetricKey getMetricKey(String metricName) {
-		 return cubeStore.getMetricKey(appName, metricName);
+		return cubeStore.getMetricKey(appName, metricName);
 	}
 
 }

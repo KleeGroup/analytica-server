@@ -65,7 +65,7 @@ public final class HCubeManagerTest {
 	private final HApp app = cubeManager.getApp(APP_NAME);
 
 	@Before
-	public void init(){
+	public void init() {
 		final HMetricKey duration = new HMetricKey("duration", true);
 		final HMetricKey weight = new HMetricKey("weight", false);
 		final HMetricKey test = new HMetricKey("test", true);
@@ -204,7 +204,7 @@ public final class HCubeManagerTest {
 		Assert.assertTrue(metric.toString().startsWith("{"));
 		Assert.assertTrue(metric.toString().endsWith("}"));
 
-		//Assert.assertEquals("DURATION", metric.getKey().getName());
+		Assert.assertEquals("duration", metric.getMetricKey().getName());
 		Assert.assertEquals(100 * 60 * 2 * 24, metric.getCount(), 0);
 		Assert.assertEquals(100, metric.getMean(), 0);
 		Assert.assertTrue(metric.get(HCounterType.stdDev) > 0);
@@ -419,7 +419,7 @@ public final class HCubeManagerTest {
 				.build();
 		final HCube cube = new HCubeBuilder()//
 				.withMetric(durationMetric)//
-				.withMetric( weightMetric)//
+				.withMetric(weightMetric)//
 				.build();
 		app.push(key, cube);
 	}
@@ -447,7 +447,7 @@ public final class HCubeManagerTest {
 
 					final HCube cube = new HCubeBuilder()//
 							.withMetric(durationMetricBuilder.build())//
-							.withMetric( weightMetric)//
+							.withMetric(weightMetric)//
 							.build();
 
 					app.push(key, cube);

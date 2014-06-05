@@ -18,7 +18,6 @@
 package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
@@ -28,7 +27,6 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.Builder;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,8 +44,8 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private final Set<String> appNames = new HashSet<>();
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 	private final Map<String, AppCategoryStore> appCategoryStores = new HashMap<>();
-//	private final Map<String, AppMetricStore> appMetricStores = new HashMap<>();
-	private final  AppMetricStore appMetricStore= new AppMetricStore();
+	//	private final Map<String, AppMetricStore> appMetricStores = new HashMap<>();
+	private final AppMetricStore appMetricStore = new AppMetricStore();
 	private static final AppCubeStore EMPTY = new AppCubeStore();
 
 	/** {@inheritDoc} */
@@ -117,7 +115,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 
 	@Override
 	public Set<String> getMetricKeys(String appName) {
-			return appMetricStore.getMetricKeys();
+		return appMetricStore.getMetricKeys();
 	}
 
 	@Override

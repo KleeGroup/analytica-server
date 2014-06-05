@@ -17,11 +17,9 @@
  */
 package io.analytica.hcube.result;
 
-import io.analytica.hcube.HApp;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
-import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.cube.HVirtualCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
@@ -35,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Résultat d'une série.
@@ -53,13 +50,13 @@ public final class HSerie implements HVirtualCube {
 	 * @param category Catégorie de la série
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
-	public HSerie( final List<HCategory> categories, final Map<HTime, HCube> cubes) {
+	public HSerie(final List<HCategory> categories, final Map<HTime, HCube> cubes) {
 		Assertion.checkNotNull(categories);
 		Assertion.checkNotNull(cubes);
 		//---------------------------------------------------------------------
 		this.categories = categories;
 		this.cubes = cubes;
-		metrics = buildMetrics( cubes.values());
+		metrics = buildMetrics(cubes.values());
 	}
 
 	/**
@@ -77,12 +74,12 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	//-------------------------------------------------------------------------
-	private static Map<String, HMetric> buildMetrics( Collection<HCube> cubes) {
+	private static Map<String, HMetric> buildMetrics(Collection<HCube> cubes) {
 		Map<String, HMetric> metrics = new HashMap<>();
 		final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
 		for (final HCube cube : cubes) {
 			for (final HMetric metric : cube.getMetrics()) {
-				HMetricBuilder metricBuilder = metricBuilders.get(metric);
+				HMetricBuilder metricBuilder = metricBuilders.get(metric.getMetricKey().getName());
 				if (metricBuilder == null) {
 					metricBuilder = new HMetricBuilder(metric.getMetricKey());
 					metricBuilders.put(metric.getMetricKey().getName(), metricBuilder);
