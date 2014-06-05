@@ -17,8 +17,10 @@
  */
 package io.analytica.hcube;
 
+import io.analytica.hcube.cube.HMetricDefinition;
 import io.vertigo.kernel.component.Manager;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -27,6 +29,13 @@ import java.util.Set;
  * @author pchretien, npiedeloup
  */
 public interface HCubeManager extends Manager {
+	void register(HMetricDefinition metricDefinition);
+
+	Collection<HMetricDefinition> getMetricDefinitions();
+
+	HMetricDefinition getMetricDefinition(String name);
+
+	//-----------
 
 	//	void registerApp(HAppConfig);
 

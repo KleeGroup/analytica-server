@@ -2,7 +2,6 @@ package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HApp;
 import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
@@ -65,20 +64,4 @@ final class HAppImp implements HApp {
 	public String getName() {
 		return appName;
 	}
-
-	/** {@inheritDoc} */
-	public void register(HMetricKey metricKey) {
-		cubeStore.register(appName, metricKey);
-	}
-
-	/** {@inheritDoc} */
-	public Set<String> getMetricKeys() {
-		return cubeStore.getMetricKeys(appName);
-	}
-
-	/** {@inheritDoc} */
-	public HMetricKey getMetricKey(String metricName) {
-		return cubeStore.getMetricKey(appName, metricName);
-	}
-
 }

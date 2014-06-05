@@ -21,7 +21,7 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
-import io.analytica.hcube.cube.HMetricKey;
+import io.analytica.hcube.cube.HMetricDefinition;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
@@ -30,9 +30,12 @@ import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
+import io.vertigo.kernel.Home;
 
 import java.util.Date;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -44,23 +47,32 @@ import org.junit.Test;
  */
 public final class SimpleTest {
 	private static final String APP_NAME = "MY_FANCY_APP";
+	private static final String HM_PERF = "HM_PERF";
 	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 	private final HApp app = cubeManager.getApp(APP_NAME);
+
+	@Before
+	public void before() {
+		final HMetricDefinition perf = new HMetricDefinition(HM_PERF, true);
+		cubeManager.register(perf);
+	}
+
+	@After
+	public void after() {
+		Home.getDefinitionSpace().stop();
+	}
 
 	@Test
 	public void test() {
 		final HTime time = new HTime(new Date(), HTimeDimension.Minute);
 		//--------		
-		final HMetricKey workingKey = new HMetricKey("perf", false);
-		app.register(workingKey);
-
-		final HMetric workingHours = new HMetricBuilder("perf", app)//
+		final HMetric workingHours = new HMetricBuilder(HM_PERF)//
 				.withValue(10)//
 				.withValue(17)//
 				.build();
 
-		final HCube cube = new HCubeBuilder(app)//
-				.withMetric(workingKey, workingHours)//
+		final HCube cube = new HCubeBuilder()//
+				.withMetric(workingHours)//
 				.build();
 
 		app.push(new HKey("PAGES", time, "www"), cube);

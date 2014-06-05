@@ -79,10 +79,10 @@ public final class HSerie implements HVirtualCube {
 		final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
 		for (final HCube cube : cubes) {
 			for (final HMetric metric : cube.getMetrics()) {
-				HMetricBuilder metricBuilder = metricBuilders.get(metric.getMetricKey().getName());
+				HMetricBuilder metricBuilder = metricBuilders.get(metric.getName());
 				if (metricBuilder == null) {
-					metricBuilder = new HMetricBuilder(metric.getMetricKey());
-					metricBuilders.put(metric.getMetricKey().getName(), metricBuilder);
+					metricBuilder = new HMetricBuilder(metric.getName());
+					metricBuilders.put(metric.getName(), metricBuilder);
 				}
 				metricBuilder.withMetric(metric);
 			}

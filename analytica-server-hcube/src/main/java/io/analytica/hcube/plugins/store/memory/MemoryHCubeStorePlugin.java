@@ -18,7 +18,6 @@
 package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
@@ -44,8 +43,6 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private final Set<String> appNames = new HashSet<>();
 	private final Map<String, AppCubeStore> appCubeStores = new HashMap<>();
 	private final Map<String, AppCategoryStore> appCategoryStores = new HashMap<>();
-	//	private final Map<String, AppMetricStore> appMetricStores = new HashMap<>();
-	private final AppMetricStore appMetricStore = new AppMetricStore();
 	private static final AppCubeStore EMPTY = new AppCubeStore();
 
 	/** {@inheritDoc} */
@@ -106,20 +103,5 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	/** {@inheritDoc} */
 	public synchronized Set<String> getAppNames() {
 		return Collections.unmodifiableSet(appNames);
-	}
-
-	@Override
-	public void register(String appName, HMetricKey metricKey) {
-		appMetricStore.register(metricKey);
-	}
-
-	@Override
-	public Set<String> getMetricKeys(String appName) {
-		return appMetricStore.getMetricKeys();
-	}
-
-	@Override
-	public HMetricKey getMetricKey(String appName, String metricName) {
-		return appMetricStore.getMetricKey(metricName);
 	}
 }

@@ -18,16 +18,19 @@
 package io.analytica.hcube.cube;
 
 import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.kernel.metamodel.Definition;
+import io.vertigo.kernel.metamodel.Prefix;
 
 /** 
  * Clé de la métrique.
  * @author npiedeloup, pchretien
  */
-public final class HMetricKey {
+@Prefix("HM")
+public final class HMetricDefinition implements Definition {
 	private final boolean distribution;
 	private final String name;
 
-	HMetricKey(final String name, final boolean distribution) {
+	public HMetricDefinition(final String name, final boolean distribution) {
 		Assertion.checkArgNotEmpty(name);
 		//---------------------------------------------------------------------
 		this.name = name;
@@ -38,23 +41,12 @@ public final class HMetricKey {
 		return distribution;
 	}
 
+	/** {@inheritDoc} */
 	public String getName() {
 		return name;
 	}
 
-	@Override
-	public int hashCode() {
-		return name.hashCode();
-	}
-
-	@Override
-	public boolean equals(final Object object) {
-		if (object instanceof HMetricKey) {
-			return name.equals(((HMetricKey) object).name);
-		}
-		return false;
-	}
-
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return name;
