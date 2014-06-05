@@ -17,6 +17,7 @@
  */
 package io.analytica.hcube.cube;
 
+import io.vertigo.kernel.Home;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
@@ -27,7 +28,7 @@ import io.vertigo.kernel.lang.Builder;
  * @author npiedeloup
  */
 public final class HMetricBuilder implements Builder<HMetric> {
-	private final HMetricKey metricKey;
+	private final HMetricDefinition metricDefinition;
 	private long count = 0;
 	private double min = Double.NaN; //Par défaut pas de min
 	private double max = Double.NaN; //Par défaut pas de max
@@ -39,20 +40,12 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * Constructeur.
 	 * @param metricName Nom de la metric
 	 */
-	public HMetricBuilder(final HMetricKey metricKey) {
-		Assertion.checkNotNull(metricKey);
+	public HMetricBuilder(final String metricName) {
+		Assertion.checkNotNull(metricName);
 		//---------------------------------------------------------------------
-		this.metricKey = metricKey;
-		distributionBuilder = metricKey.hasDistribution() ? new HDistributionBuilder() : null;
+		this.metricDefinition = Home.getDefinitionSpace().resolve(metricName, HMetricDefinition.class);
+		distributionBuilder = metricDefinition.hasDistribution() ? new HDistributionBuilder() : null;
 	}
-
-//	/**
-//	 * Constructeur.
-//	 * @param metricName Nom de la metric
-//	 */
-//	public HMetricBuilder(final String metricName, HApp app) {
-//		this(app.getMetricKey(metricName));
-//	}
 
 	/**
 	 * Add value.
@@ -78,7 +71,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 */
 	public HMetricBuilder withMetric(final HMetric metric) {
 		Assertion.checkNotNull(metric);
-		Assertion.checkArgument(distributionBuilder == null ^ !(metric.getDistribution() == null), "La notion de cluster doit être homogène sur les clés {0}", metricKey);
+		Assertion.checkArgument(distributionBuilder == null ^ !(metric.getDistribution() == null), "La notion de cluster doit être homogène sur les clés {0}", metricDefinition);
 		//---------------------------------------------------------------------
 		count += metric.get(HCounterType.count);
 		max = max(max, metric.get(HCounterType.max));
@@ -97,9 +90,9 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * @return Metric du cube
 	 */
 	public HMetric build() {
-		Assertion.checkArgument(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricKey);
+		Assertion.checkArgument(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricDefinition);
 		//---------------------------------------------------------------------
-		return new HMetric(metricKey, count, min, max, sum, sqrSum, distributionBuilder == null ? null : distributionBuilder.build());
+		return new HMetric(metricDefinition, count, min, max, sum, sqrSum, distributionBuilder == null ? null : distributionBuilder.build());
 	}
 
 	private static double max(final double d1, final double d2) {
@@ -110,9 +103,5 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	private static double min(final double d1, final double d2) {
 		//Math.max has low perfs
 		return Double.isNaN(d1) ? d2 : Double.isNaN(d2) ? d1 : d1 < d2 ? d1 : d2;
-	}
-
-	public HMetricKey getMetricKey() {
-		return metricKey;
 	}
 }
