@@ -28,7 +28,8 @@ import java.util.Map;
 public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode> {
 	private static final long serialVersionUID = -5994766764834518173L;
 
-	private final Map<String, ProcessStatsNode> methodStatsRoot = new HashMap<String, ProcessStatsNode>(); //Map de ProcessStatsNode
+	//Map de ProcessStatsNode
+	private final Map<String, ProcessStatsNode> methodStatsRoot = new HashMap<>();
 
 	public Map<String, ProcessStatsNode> getResults() {
 		return methodStatsRoot;

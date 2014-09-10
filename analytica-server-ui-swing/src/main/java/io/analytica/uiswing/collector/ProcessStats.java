@@ -60,9 +60,8 @@ public class ProcessStats implements Serializable {
 	public long getDurationsMean() {
 		if (hits > 0) {
 			return durationsSum / hits;
-		} else {
-			return 0;
 		}
+		return 0;
 	}
 
 	public long getDurationsEcartType() {

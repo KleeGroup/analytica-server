@@ -42,8 +42,8 @@ public class NodeStatsTreeCellRenderer extends DefaultTreeCellRenderer {
 	}
 
 	@Override
-	public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel, final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
-		super.getTreeCellRendererComponent(tree, convertValueToText(value), sel, expanded, leaf, row, hasFocus);
+	public Component getTreeCellRendererComponent(final JTree tree, final Object value, final boolean sel, final boolean expanded, final boolean leaf, final int row, final boolean focus) {
+		super.getTreeCellRendererComponent(tree, convertValueToText(value), sel, expanded, leaf, row, focus);
 		setIcon(null);
 		return this;
 	}

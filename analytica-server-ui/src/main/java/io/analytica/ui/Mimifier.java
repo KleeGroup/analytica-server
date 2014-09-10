@@ -23,7 +23,6 @@ import io.analytica.ui.JSMin.UnterminatedStringLiteralException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,13 +52,13 @@ final class Mimifier {
 
 	}
 
-//	public static void main(final String[] args) {
-//		final File inputDir = new File("D:\\test\\scripts");
-//		final File outPutDir = new File("D:\\test\\results\\out.js");
-//		try {
-//			Mimifier.mimifyAllIn(inputDir, new FileOutputStream(outPutDir));
-//		} catch (IOException | UnterminatedRegExpLiteralException | UnterminatedCommentException | UnterminatedStringLiteralException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	//	public static void main(final String[] args) {
+	//		final File inputDir = new File("D:\\test\\scripts");
+	//		final File outPutDir = new File("D:\\test\\results\\out.js");
+	//		try {
+	//			Mimifier.mimifyAllIn(inputDir, new FileOutputStream(outPutDir));
+	//		} catch (IOException | UnterminatedRegExpLiteralException | UnterminatedCommentException | UnterminatedStringLiteralException e) {
+	//			e.printStackTrace();
+	//		}
+	//	}
 }

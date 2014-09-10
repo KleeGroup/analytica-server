@@ -25,8 +25,6 @@ package io.analytica.uiswing;
 
 import io.analytica.uiswing.collector.PerfCollector;
 
-import java.io.IOException;
-
 import javax.management.AttributeChangeNotification;
 import javax.management.JMX;
 import javax.management.MBeanServerConnection;
@@ -79,21 +77,21 @@ public class Client {
 	private static void echo(final String msg) {
 		System.out.println(msg);
 	}
-
-	private static void sleep(final int millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void waitForEnterPressed() {
-		try {
-			echo("\nPress <Enter> to continue...");
-			System.in.read();
-		} catch (final IOException e) {
-			e.printStackTrace();
-		}
-	}
+	//
+	//	private static void sleep(final int millis) {
+	//		try {
+	//			Thread.sleep(millis);
+	//		} catch (final InterruptedException e) {
+	//			e.printStackTrace();
+	//		}
+	//	}
+	//
+	//	private static void waitForEnterPressed() {
+	//		try {
+	//			echo("\nPress <Enter> to continue...");
+	//			System.in.read();
+	//		} catch (final IOException e) {
+	//			e.printStackTrace();
+	//		}
+	//	}
 }

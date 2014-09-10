@@ -128,10 +128,10 @@ public class PerfPerModuleCollector implements PerfCollector {
 		int getProcessQueueSize() {
 			return processQueue.size();
 		}
-
-		List getProcessQueue() {
-			return processQueue;
-		}
+		//fixme : not used
+		//		List getProcessQueue() {
+		//			return processQueue;
+		//		}
 	}
 
 	public StringBuffer print(final StringBuffer out) {

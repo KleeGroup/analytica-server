@@ -237,12 +237,15 @@ public class JSMin {
 	}
 
 	class UnterminatedCommentException extends Exception {
+		private static final long serialVersionUID = 5734728362051357850L;
 	}
 
 	class UnterminatedStringLiteralException extends Exception {
+		private static final long serialVersionUID = -5171154783153137122L;
 	}
 
 	class UnterminatedRegExpLiteralException extends Exception {
+		private static final long serialVersionUID = 2647298003797820166L;
 	}
 
 	public static void main(final String arg[]) {

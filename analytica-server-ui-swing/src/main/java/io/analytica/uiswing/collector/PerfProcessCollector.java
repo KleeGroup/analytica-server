@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PerfProcessCollector implements PerfCollector {
-	private static final transient Map<String, ProcessStatsMap> PROCESS_STATS_MAP_PAR_MODULE = new HashMap<String, ProcessStatsMap>();
+	private static final transient Map<String, ProcessStatsMap> PROCESS_STATS_MAP_PAR_MODULE = new HashMap<>();
 
 	private static ProcessStatsMap getProcessStatsByModule(final String moduleName) {
 		if (!PROCESS_STATS_MAP_PAR_MODULE.containsKey(moduleName)) {
@@ -51,7 +51,7 @@ public class PerfProcessCollector implements PerfCollector {
 	}
 
 	public Map<String, ProcessStatsCollection> getResults() {
-		final Map<String, ProcessStatsCollection> results = new HashMap<String, ProcessStatsCollection>();
+		final Map<String, ProcessStatsCollection> results = new HashMap<>();
 		for (final String key : PROCESS_STATS_MAP_PAR_MODULE.keySet()) {
 			results.put(key, getProcessStatsByModule(key));
 		}

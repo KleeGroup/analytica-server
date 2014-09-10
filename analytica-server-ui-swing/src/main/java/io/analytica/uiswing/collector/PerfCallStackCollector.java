@@ -159,13 +159,14 @@ public class PerfCallStackCollector implements PerfCollector {
 			return newDuration;
 		}
 
-		String getFirstProcess() {
-			return (String) (processQueue.isEmpty() ? null : processQueue.get(0));
-		}
-
-		int getProcessQueueSize() {
-			return processQueue.size();
-		}
+		//fixme : not used
+		//		String getFirstProcess() {
+		//			return (String) (processQueue.isEmpty() ? null : processQueue.get(0));
+		//		}
+		//
+		//		int getProcessQueueSize() {
+		//			return processQueue.size();
+		//		}
 
 		List getProcessQueue() {
 			return processQueue;

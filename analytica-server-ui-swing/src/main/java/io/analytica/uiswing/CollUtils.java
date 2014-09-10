@@ -33,7 +33,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.RandomAccess;
-import java.util.logging.Logger;
 
 /**
  * Méthodes utilitaires pour manipuler et filtrer des collections.
@@ -42,7 +41,7 @@ import java.util.logging.Logger;
  * @see java.util.Collections
  */
 public class CollUtils {
-	private static final Logger LOG = Logger.getLogger(CollUtils.class.getName());
+	//	private static final Logger LOG = Logger.getLogger(CollUtils.class.getName());
 
 	/**
 	 * Constructeur.
@@ -179,9 +178,9 @@ public class CollUtils {
 			private final Map values = new HashMap(10);
 			private final String[] props;
 
-			ComparisonWrapper(final Object object, final String[] properties) {
+			ComparisonWrapper(final Object object, final String[] props) {
 				this.object = object;
-				props = properties;
+				this.props = props;
 			}
 
 			private Object getValue(final String propertyName) {

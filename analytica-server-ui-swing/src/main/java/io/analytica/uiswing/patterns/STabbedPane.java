@@ -50,7 +50,7 @@ public class STabbedPane extends JTabbedPane implements MPrintInformations {
 		// on ajoute un change listener pour mettre à jour les couleurs à chaque changement de l'onglet ouvert.
 		// sinon le look and feel les changent à chaque sélection
 		addChangeListener(new ChangeListener() {
-			public void stateChanged(final ChangeEvent changeEvent) {
+			public void stateChanged(final ChangeEvent event) {
 				updateColors();
 			}
 		});
@@ -97,8 +97,7 @@ public class STabbedPane extends JTabbedPane implements MPrintInformations {
 		final int selectedIndex = getSelectedIndex();
 		if (selectedIndex != -1) {
 			return getTitleAt(selectedIndex);
-		} else {
-			return null;
 		}
+		return null;
 	}
 }

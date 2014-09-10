@@ -29,10 +29,7 @@ import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.rmi.UnmarshalException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import javax.print.PrintService;
 import javax.swing.ImageIcon;
@@ -51,8 +48,8 @@ import mswing.MUtilities;
  */
 public class SUtilities {
 	// fichiers à supprimer à la fermeture de l'application (et aussi à la relève d'opérateur)
-	private static final List<String> TEMPORARY_FILES = new ArrayList<String>();
-	private static final Logger LOG = Logger.getLogger(SUtilities.class.getName());
+	//	private static final List<String> TEMPORARY_FILES = new ArrayList<String>();
+	//	private static final Logger LOG = Logger.getLogger(SUtilities.class.getName());
 
 	/**
 	 * Constructeur.

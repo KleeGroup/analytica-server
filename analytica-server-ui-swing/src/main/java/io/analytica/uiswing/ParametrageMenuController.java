@@ -37,7 +37,6 @@ import io.analytica.uiswing.patterns.SUtilities;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
-import java.rmi.NotBoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -91,12 +90,12 @@ public class ParametrageMenuController {
 		}
 	}
 
-	public STabbedPane createStatisticsPanel() throws MalformedObjectNameException, NullPointerException, IOException, NotBoundException {
+	public STabbedPane createStatisticsPanel() throws MalformedObjectNameException, NullPointerException, IOException {
 		final STabbedPane tabbedPane = new STabbedPane();
 		Map.Entry entry;
-		Object key;
+		//	Object key;
 		ProcessStats serverValue;
-		final ProcessStats clientValue;
+		//	final ProcessStats clientValue;
 
 		final Map perModuleStats = getServerResults();
 		final Set moduleNameSet = new HashSet();
@@ -114,7 +113,7 @@ public class ParametrageMenuController {
 				}
 				for (final Iterator it = serverStats.entrySet().iterator(); it.hasNext();) {
 					entry = (Map.Entry) it.next();
-					key = entry.getKey();
+					//	key = entry.getKey();
 					serverValue = (ProcessStats) entry.getValue();
 					serverValue.setDurationsSumForAllMethods(serverDurationsSumForAllMethods);
 					allStats.add(serverValue);
@@ -140,7 +139,7 @@ public class ParametrageMenuController {
 		return tabbedPane;
 	}
 
-	private Map getServerResults() throws IOException, MalformedObjectNameException, NullPointerException, NotBoundException {
+	private Map getServerResults() throws IOException, MalformedObjectNameException, NullPointerException {
 		final JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:3334" + "/jmxrmi");
 		final JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
 		try {
