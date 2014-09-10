@@ -18,7 +18,6 @@
 package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HTimeDimension;
-import io.vertigo.kernel.exception.VRuntimeException;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.lang.Builder;
 
@@ -142,7 +141,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 			final long deltaMs = readDeltaAsMs(timeStr.substring("NOW+".length()));
 			return new Date(System.currentTimeMillis() + deltaMs);
 		}
-		throw new VRuntimeException("time must be NOW or NOW+999f or NOW-999f where f is h|d|m");
+		throw new RuntimeException("time must be NOW or NOW+999f or NOW-999f where f is h|d|m");
 
 		//		final SimpleDateFormat sdf = new SimpleDateFormat(dimension.getPattern());
 		//

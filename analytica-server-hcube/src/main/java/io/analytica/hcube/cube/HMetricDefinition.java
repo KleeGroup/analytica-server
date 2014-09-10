@@ -17,9 +17,9 @@
  */
 package io.analytica.hcube.cube;
 
+import io.vertigo.core.stereotype.Prefix;
 import io.vertigo.kernel.lang.Assertion;
 import io.vertigo.kernel.metamodel.Definition;
-import io.vertigo.kernel.metamodel.Prefix;
 
 /** 
  * Clé de la métrique.
