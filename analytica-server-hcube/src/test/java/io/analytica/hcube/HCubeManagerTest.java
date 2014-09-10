@@ -35,8 +35,8 @@ import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.kernel.Home;
-import io.vertigo.kernel.lang.DateBuilder;
+import io.vertigo.core.Home;
+import io.vertigo.core.lang.DateBuilder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -55,7 +55,7 @@ import org.junit.Test;
 /**
  * Test.
  * 
- *  - a request ==> page, duration, status 
+ *  - a request ==> page, duration, status
  * 
  * @author pchretien
  */
@@ -91,7 +91,7 @@ public final class HCubeManagerTest {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
-		//----	
+		//----
 		populateData(start, days);
 		//----
 		Assert.assertEquals(1, cubeManager.getApps().size());
@@ -101,18 +101,18 @@ public final class HCubeManagerTest {
 	public void testQuery() {
 		final Date start = new Date();
 		final HQuery query1 = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
-				//.whereCategoryEquals(PAGES)//
-				.build();
+		.onType(PAGES)//
+		.on(HTimeDimension.Hour)//
+		.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
+		//.whereCategoryEquals(PAGES)//
+		.build();
 
 		final HQuery query2 = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between("NOW-3h", "NOW")//
-				//				.whereCategoryEquals(PAGES)//
-				.build();
+		.onType(PAGES)//
+		.on(HTimeDimension.Hour)//
+		.between("NOW-3h", "NOW")//
+		//				.whereCategoryEquals(PAGES)//
+		.build();
 		//---
 		Assert.assertEquals(3, app.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
 		Assert.assertEquals(3, app.getSelector().findTimes(query2.getTimeSelection()).size()); //3 HOURS
@@ -124,13 +124,13 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery2() {
 		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between("NOW", "NOW+3d")//
-				//				.whereCategoryEquals(PAGES)//
-				.build();
-		//---		
-		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours 
+		.onType(PAGES)//
+		.on(HTimeDimension.Hour)//
+		.between("NOW", "NOW+3d")//
+		//				.whereCategoryEquals(PAGES)//
+		.build();
+		//---
+		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
 	}
 
 	/*
@@ -139,10 +139,10 @@ public final class HCubeManagerTest {
 	@Test(expected = Exception.class)
 	public void testQueryFail() {
 		new HQueryBuilder()//
-				.on(HTimeDimension.Hour)//
-				.between("NOW", "NOW-3m")//
-				//	.whereCategoryEquals(PAGES)//
-				.build();
+		.on(HTimeDimension.Hour)//
+		.between("NOW", "NOW-3m")//
+		//	.whereCategoryEquals(PAGES)//
+		.build();
 	}
 
 	/*
@@ -154,11 +154,11 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 
-		//----	
+		//----
 		Assert.assertEquals(0, app.getSelector().findCategories(new HCategorySelection("*")).size());
 		//---
 		populateData(start, days);
-		//----	
+		//----
 		Assert.assertEquals(2, app.getSelector().findCategories(new HCategorySelection("*")).size());
 		Assert.assertEquals(1, app.getSelector().findCategories(new HCategorySelection("welcome")).size());
 	}
@@ -172,15 +172,15 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 10;
 		final Date end = dateFormat.parse("2012/12/13");
-		//----	
+		//----
 		populateData(start, days);
-		//----	
+		//----
 		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between(start, end)//
-				//.whereCategoryEquals(PAGES)//
-				.build();
+		.onType(PAGES)//
+		.on(HTimeDimension.Hour)//
+		.between(start, end)//
+		//.whereCategoryEquals(PAGES)//
+		.build();
 
 		final HResult result = app.execute(query);
 
@@ -200,7 +200,7 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(Collections.singletonList(new HCategory("")), serie.getCategories());
 
 		for (final Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
-			HCube cube = entry.getValue();
+			final HCube cube = entry.getValue();
 			//	HTime time = entry.getKey();
 			Assert.assertTrue(cube.toString().startsWith("{"));
 			Assert.assertTrue(cube.toString().endsWith("}"));
@@ -244,15 +244,15 @@ public final class HCubeManagerTest {
 		final Date start = dateFormat.parse("2012/12/12");
 		final int days = 1;
 		final Date end = dateFormat.parse("2012/12/13");
-		//----	
+		//----
 		populateData(start, days);
-		//----	
+		//----
 		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.SixMinutes)//
-				.between(start, end)//
-				//.whereCategoryEquals(PAGES)//
-				.build();
+		.onType(PAGES)//
+		.on(HTimeDimension.SixMinutes)//
+		.between(start, end)//
+		//.whereCategoryEquals(PAGES)//
+		.build();
 
 		final HResult result = app.execute(query);
 
@@ -287,23 +287,23 @@ public final class HCubeManagerTest {
 	@Test
 	public void testHistogram() {
 		final HMetric metric = new HMetricBuilder(HM_TEST)//
-				.withValue(0)//<0
-				.withValue(1)//<1
-				.withValue(2)//<2
-				.withValue(3)//<5
-				.withValue(4)//<5
-				.withValue(5)//<5
-				.withValue(6)//<10
-				.withValue(7)//<10
-				.withValue(8)//<10
-				.withValue(9)//<10
-				.withValue(10)//<10
-				.withValue(11)//<20
-				.withValue(35)//<50
-				.withValue(455)//<500
-				.withValue(355)//<500
-				.withValue(111222333)//<200000000
-				.build();
+		.withValue(0)//<0
+		.withValue(1)//<1
+		.withValue(2)//<2
+		.withValue(3)//<5
+		.withValue(4)//<5
+		.withValue(5)//<5
+		.withValue(6)//<10
+		.withValue(7)//<10
+		.withValue(8)//<10
+		.withValue(9)//<10
+		.withValue(10)//<10
+		.withValue(11)//<20
+		.withValue(35)//<50
+		.withValue(455)//<500
+		.withValue(355)//<500
+		.withValue(111222333)//<200000000
+		.build();
 		final Map<Double, Long> histogram = metric.getDistribution().getData();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
@@ -340,15 +340,15 @@ public final class HCubeManagerTest {
 
 	/**
 	 * data are collected during 10 days from 2012/12/12.
-	 * @throws ParseException Date parsing error 
+	 * @throws ParseException Date parsing error
 	 */
 	@Test
 	public void testMergeOnHTime() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		final Date current = dateFormat.parse("2012/12/12 12:12:12");
-		//----	
+		//----
 		addCube(current, 64);
-		//----	
+		//----
 		checkMergedMetric(HTimeDimension.Minute, //
 				new DateBuilder(current).addMinutes(-1).toDateTime(), //
 				new DateBuilder(current).addMinutes(2).toDateTime(), //
@@ -379,7 +379,7 @@ public final class HCubeManagerTest {
 	public void testMergeOnHTime2() throws ParseException {
 		final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		final Date current = dateFormat.parse("2012/12/12 12:12:12");
-		//----	
+		//----
 		addCube(current, 64);
 		addCube(new DateBuilder(current).addMinutes(2).toDateTime(), 256);
 		addCube(new DateBuilder(current).addMinutes(2 * 6).toDateTime(), 1024);
@@ -388,7 +388,7 @@ public final class HCubeManagerTest {
 		addCube(new DateBuilder(current).addMonths(-2).toDateTime(), 65536); //remove 2 months in order to stay the same year
 		addCube(new DateBuilder(current).addYears(2).toDateTime(), 262144);
 
-		//----	
+		//----
 		checkMergedMetric(HTimeDimension.Minute, //
 				new DateBuilder(current).addMinutes(-1).toDateTime(), //
 				new DateBuilder(current).addMinutes(2).toDateTime(), //
@@ -415,22 +415,22 @@ public final class HCubeManagerTest {
 				6, 64 + 256 + 1024 + 4096 + 16384 + 65536, 64, 65536);
 	}
 
-	//-------------------------------------------------------------------------	
-	//---------------------------STATIC ---------------------------------------	
-	//-------------------------------------------------------------------------	
+	//-------------------------------------------------------------------------
+	//---------------------------STATIC ---------------------------------------
+	//-------------------------------------------------------------------------
 	private void addCube(final Date current, final int weightValue) {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(PAGES, time, "welcome");
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)//
-				.withValue(100)//
-				.build();
+		.withValue(100)//
+		.build();
 		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)//
-				.withValue(weightValue)//
-				.build();
+		.withValue(weightValue)//
+		.build();
 		final HCube cube = new HCubeBuilder()//
-				.withMetric(durationMetric)//
-				.withMetric(weightMetric)//
-				.build();
+		.withMetric(durationMetric)//
+		.withMetric(weightMetric)//
+		.build();
 		app.push(key, cube);
 	}
 
@@ -444,7 +444,7 @@ public final class HCubeManagerTest {
 				for (int min = 0; min < 60; min++) {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.Minute);
-					//--------		
+					//--------
 					final HKey key = new HKey(PAGES, time, "welcome");
 
 					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(HM_DURATION);
@@ -456,9 +456,9 @@ public final class HCubeManagerTest {
 					final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder()//
-							.withMetric(durationMetricBuilder.build())//
-							.withMetric(weightMetric)//
-							.build();
+					.withMetric(durationMetricBuilder.build())//
+					.withMetric(weightMetric)//
+					.build();
 
 					app.push(key, cube);
 					//--
@@ -486,7 +486,7 @@ public final class HCubeManagerTest {
 				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / app.size()) + " octets");
 				try {
 					Thread.sleep(1000 * 20);
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -496,13 +496,13 @@ public final class HCubeManagerTest {
 	}
 
 	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) {
-		//----	
+		//----
 		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(timeDimension)//
-				.between(start, end)//
-				//	.whereCategoryEquals(PAGES)//
-				.build();
+		.onType(PAGES)//
+		.on(timeDimension)//
+		.between(start, end)//
+		//	.whereCategoryEquals(PAGES)//
+		.build();
 
 		final HResult result = app.execute(query);
 		Assert.assertEquals(query, result.getQuery());
@@ -511,8 +511,8 @@ public final class HCubeManagerTest {
 		//Check : 10*24 cubes per minute
 		final Map<HTime, HCube> cubes = result.getSerie("").getCubes();
 		Assert.assertEquals(3, cubes.size());
-		//on vérifie 
-		HTime startTime = new HTime(start, timeDimension);
+		//on vérifie
+		final HTime startTime = new HTime(start, timeDimension);
 		assertMetricEquals(cubes.get(startTime), HM_WEIGHT, 0, 0, Double.NaN, Double.NaN, Double.NaN);
 		assertMetricEquals(cubes.get(startTime.next()), HM_WEIGHT, expectedCount, expectedSum, expectedSum / expectedCount, expectedMin, expectedMax);
 		assertMetricEquals(cubes.get(startTime.next().next()), HM_WEIGHT, 0, 0, Double.NaN, Double.NaN, Double.NaN);

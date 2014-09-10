@@ -7,10 +7,9 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.query.HQueryUtil;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,12 +36,12 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 
 	}
 
-	public void push(String appName, HCube cube) {
+	public void push(final String appName, final HCube cube) {
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
 		//	addCategory(cube.getKey().getCategory());
 
-		List<Document> documents = new ArrayList<>();
+		final List<Document> documents = new ArrayList<>();
 		for (final HKey cubeKey : cube.getKey().drillUp()) {
 			final Document document = new Document();
 			document.add(new LongField("time", cubeKey.getTime().inMillis(), Field.Store.YES));
@@ -62,7 +61,7 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 				document.add(new DoubleField(m + ":max", metric.get(HCounterType.max), Field.Store.YES));
 				document.add(new DoubleField(m + ":sqrSum", metric.get(HCounterType.sqrSum), Field.Store.YES));
 				if (metric.getKey().hasDistribution()) {
-					for (Entry<Double, Long> entry : metric.getDistribution().getData().entrySet()) {
+					for (final Entry<Double, Long> entry : metric.getDistribution().getData().entrySet()) {
 						document.add(new LongField(m + ":distribution:" + entry.getKey(), entry.getValue(), Field.Store.YES));
 					}
 				}
@@ -73,16 +72,16 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		index.addDocuments(documents);
 	}
 
-	public Set<HCategory> getAllSubCategories(String appName, HCategory category) {
+	public Set<HCategory> getAllSubCategories(final String appName, final HCategory category) {
 		return getAllSubCategories(appName, "category", category);
 
 	}
 
-	private Set<HCategory> getAllSubCategories(String appName, String field, HCategory categoryFilter) {
+	private Set<HCategory> getAllSubCategories(final String appName, final String field, final HCategory categoryFilter) {
 		//	Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
-		Set<HCategory> categories = new HashSet<>();
-		for (String term : index.terms(field)) {
+		final Set<HCategory> categories = new HashSet<>();
+		for (final String term : index.terms(field)) {
 			//			System.out.println("  field : " + field);
 			//			System.out.println("  term : " + term);
 			if (categoryFilter == null) {
@@ -97,12 +96,12 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		return categories;
 	}
 
-	public Set<HCategory> getAllRootCategories(String appName) {
+	public Set<HCategory> getAllRootCategories(final String appName) {
 		return getAllSubCategories(appName, "rootCategory", null);
 
 	}
 
-	public long count(String appName) {
+	public long count(final String appName) {
 		return index.numDocs();
 	}
 
@@ -115,17 +114,17 @@ public final class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	//		do {
 	//			parentCategory = currentCategory.drillUp();
 	//			//Optim :Si la catégorie existe déjà alors sa partie gauche aussi !!
-	//			//On dispose donc d'une info pour savoir si il faut remonter 
+	//			//On dispose donc d'une info pour savoir si il faut remonter
 	//			drillUp = doPut(parentCategory, currentCategory);
 	//			currentCategory = parentCategory;
 	//		} while (drillUp);
 	//	}
 
-	public HResult execute(String appName, HQuery query) {
+	public HResult execute(final String appName, final HQuery query) {
 		return new HResult(query, HQueryUtil.findCategories(appName, query.getCategorySelection(), this), findAll(appName, query));
 	}
 
-	private Map<HCategory, HSerie> findAll(String appName, final HQuery query) {
+	private Map<HCategory, HSerie> findAll(final String appName, final HQuery query) {
 		Assertion.checkNotNull(query);
 		//		Assertion.checkNotNull(cubeStore);
 		//---------------------------------------------------------------------

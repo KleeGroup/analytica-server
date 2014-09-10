@@ -17,17 +17,17 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Position (ou clé) du cube dans l'espace multidimensionnel. 
+ * Position (ou clé) du cube dans l'espace multidimensionnel.
  * 
  * A partir d'une position il est possible d'accéder à la liste de toutes les positions qui la contiennent.
  * Inversement il est possible de savoir si une poition est contenue dans une autre.
- *  
+ * 
  * @author npiedeloup, pchretien
  */
 public final class HKey {
@@ -56,7 +56,7 @@ public final class HKey {
 	}
 
 	public static HCategory[] to(final String[] strCategories) {
-		HCategory[] categories = new HCategory[strCategories.length];
+		final HCategory[] categories = new HCategory[strCategories.length];
 		for (int i = 0; i < categories.length; i++) {
 			categories[i] = new HCategory(strCategories[i]);
 		}
@@ -85,7 +85,7 @@ public final class HKey {
 		//on remonte les axes, le premier sera le plus bas niveau
 		HTime hTime = getTime();
 		while (hTime != null) {
-			HCategory[] hCategories = categories.clone();
+			final HCategory[] hCategories = categories.clone();
 			while (hCategories[0] != null) {
 				upperKeys.add(new HKey(type, hTime, hCategories));
 				//On remonte l'arbre des categories

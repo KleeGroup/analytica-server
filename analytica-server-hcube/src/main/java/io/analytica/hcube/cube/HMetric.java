@@ -17,16 +17,16 @@
  */
 package io.analytica.hcube.cube;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 /**
  * Metric.
- * La métric est le résultat issue de l'aggrégation 
- *  - de mesures 
+ * La métric est le résultat issue de l'aggrégation
+ *  - de mesures
  *  - de metric
  * 
- * Une metric est identifiée par son nom. 
- * Des metrics ne peuvent être aggrégés ensemble 
+ * Une metric est identifiée par son nom.
+ * Des metrics ne peuvent être aggrégés ensemble
  * que si elles concernent la même entité c'est à dire possède un même nom.
  * 
  * @author npiedeloup, pchretien
@@ -79,22 +79,22 @@ public final class HMetric {
 		Assertion.checkNotNull(dataType);
 		//---------------------------------------------------------------------
 		switch (dataType) {
-			case count:
-				return count;
-			case max:
-				return max;
-			case min:
-				return min;
-			case sum:
-				return sum;
-			case mean:
-				return getMean();
-			case sqrSum:
-				return sqrSum;
-			case stdDev:
-				return getStandardDeviation();
-			default:
-				throw new IllegalArgumentException("Fonction inconnue : " + dataType);
+		case count:
+			return count;
+		case max:
+			return max;
+		case min:
+			return min;
+		case sum:
+			return sum;
+		case mean:
+			return getMean();
+		case sqrSum:
+			return sqrSum;
+		case stdDev:
+			return getStandardDeviation();
+		default:
+			throw new IllegalArgumentException("Fonction inconnue : " + dataType);
 		}
 	}
 

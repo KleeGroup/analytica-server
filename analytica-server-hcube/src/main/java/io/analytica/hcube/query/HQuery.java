@@ -17,12 +17,12 @@
  */
 package io.analytica.hcube.query;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.
  * Cette requête doit être construite avec QueryBuilder.
- * Cette Requête est descriptive, elle peut fonctionner avec des dates absolues ou relatives via la notion NOW. 
+ * Cette Requête est descriptive, elle peut fonctionner avec des dates absolues ou relatives via la notion NOW.
  * @author npiedeloup, pchretien
  */
 public final class HQuery {

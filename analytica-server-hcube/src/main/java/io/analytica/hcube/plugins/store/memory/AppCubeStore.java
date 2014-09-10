@@ -9,7 +9,7 @@ import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ final class AppCubeStore {
 	private static final int QUEUE_SIZE = 5000;
 	private final AppQueue queue;
 	private final Map<HKey, HCube> store;
-	
+
 	AppCubeStore() {
 		queue = new AppQueue();
 		store = new HashMap<>();
@@ -57,7 +57,7 @@ final class AppCubeStore {
 		final HCube oldCube = store.get(key);
 		final HCube newCube;
 		if (oldCube != null) {
-			HCubeBuilder cubeBuilder = new HCubeBuilder();
+			final HCubeBuilder cubeBuilder = new HCubeBuilder();
 			for (final HMetric metric : cube.getMetrics()) {
 				cubeBuilder.withMetric(metric);
 			}
@@ -82,19 +82,19 @@ final class AppCubeStore {
 		//---------------------------------------------------------------------
 		flushQueue();
 		//On itère sur les séries indexées par les catégories de la sélection.
-		List<HSerie> series = new ArrayList<>();
+		final List<HSerie> series = new ArrayList<>();
 
 		for (final List<HCategory> categories : selector.findCategories(query.getCategorySelection())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
-			for (HTime currentTime : selector.findTimes(query.getTimeSelection())) {
+			for (final HTime currentTime : selector.findTimes(query.getTimeSelection())) {
 				final HKey key = new HKey(query.getType(), currentTime, categories);
 				final HCube cube = store.get(key);
 				//---
 				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
 				cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
 			}
-			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données 
+			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données
 			series.add(new HSerie(categories, cubes));
 		}
 		printStats();

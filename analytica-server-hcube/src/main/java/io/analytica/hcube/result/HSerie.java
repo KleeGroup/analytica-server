@@ -23,7 +23,7 @@ import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HVirtualCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +43,7 @@ import java.util.Map.Entry;
 public final class HSerie implements HVirtualCube {
 	private final List<HCategory> categories;
 	private final Map<HTime, HCube> cubes;
-	private Map<String, HMetric> metrics;
+	private final Map<String, HMetric> metrics;
 
 	/**
 	 * Constructeur.
@@ -74,8 +74,8 @@ public final class HSerie implements HVirtualCube {
 	}
 
 	//-------------------------------------------------------------------------
-	private static Map<String, HMetric> buildMetrics(Collection<HCube> cubes) {
-		Map<String, HMetric> metrics = new HashMap<>();
+	private static Map<String, HMetric> buildMetrics(final Collection<HCube> cubes) {
+		final Map<String, HMetric> metrics = new HashMap<>();
 		final Map<String, HMetricBuilder> metricBuilders = new HashMap<>();
 		for (final HCube cube : cubes) {
 			for (final HMetric metric : cube.getMetrics()) {

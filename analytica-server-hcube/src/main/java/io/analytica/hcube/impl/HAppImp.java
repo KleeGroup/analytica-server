@@ -10,7 +10,7 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.query.HTimeSelection;
 import io.analytica.hcube.result.HResult;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.List;
 import java.util.Set;
@@ -27,13 +27,13 @@ final class HAppImp implements HApp {
 		this.cubeStore = cubeStore;
 		this.appName = appName;
 		selector = new HSelector() {
-			private HTimeSelector timeSelector = new HTimeSelector();
+			private final HTimeSelector timeSelector = new HTimeSelector();
 
-			public List<HTime> findTimes(HTimeSelection timeSelection) {
+			public List<HTime> findTimes(final HTimeSelection timeSelection) {
 				return timeSelector.findTimes(timeSelection);
 			}
 
-			public Set<List<HCategory>> findCategories(HCategorySelection categorySelection) {
+			public Set<List<HCategory>> findCategories(final HCategorySelection categorySelection) {
 				return cubeStore.findCategories(appName, categorySelection);
 			}
 
@@ -51,7 +51,7 @@ final class HAppImp implements HApp {
 	}
 
 	/** {@inheritDoc} */
-	public void push(HKey key, HCube cube) {
+	public void push(final HKey key, final HCube cube) {
 		cubeStore.push(appName, key, cube);
 	}
 

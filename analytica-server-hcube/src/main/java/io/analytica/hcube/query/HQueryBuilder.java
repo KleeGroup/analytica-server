@@ -18,8 +18,8 @@
 package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HTimeDimension;
-import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.Builder;
+import io.vertigo.core.lang.Assertion;
+import io.vertigo.core.lang.Builder;
 
 import java.util.Date;
 
@@ -72,9 +72,9 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	}
 
 	/**
-	* @param date lower selection (INCLUDED)
-	* @return HQueryBuilder
-	*/
+	 * @param date lower selection (INCLUDED)
+	 * @return HQueryBuilder
+	 */
 	private HQueryBuilder from(final String date) {
 		Assertion.checkNotNull(hTimeDimension);
 		//---------------------------------------------------------------------
@@ -169,17 +169,17 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		}
 
 		switch (unit) {
-			case 'd'://day
-				return delta * 24 * 60 * 60 * 1000L;
+		case 'd'://day
+			return delta * 24 * 60 * 60 * 1000L;
 
-			case 'h'://hour
-				return delta * 60 * 60 * 1000L;
+		case 'h'://hour
+			return delta * 60 * 60 * 1000L;
 
-			case 'm': //minute
-				return delta * 60 * 1000L;
+		case 'm': //minute
+			return delta * 60 * 1000L;
 
-			default:
-				throw new RuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
+		default:
+			throw new RuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
 		}
 	}
 

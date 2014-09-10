@@ -2,7 +2,7 @@ package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HKey;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ final class AppQueue {
 		final HKey key;
 		final HCube cube;
 
-		QueueItem(HKey key, HCube cube) {
+		QueueItem(final HKey key, final HCube cube) {
 			Assertion.checkNotNull(key);
 			Assertion.checkNotNull(cube);
 			//---------------------------------------------------------------------
@@ -23,7 +23,7 @@ final class AppQueue {
 
 	private final List<QueueItem> queue = new ArrayList<>();
 
-	public synchronized void push(QueueItem queueItem) {
+	public synchronized void push(final QueueItem queueItem) {
 		Assertion.checkNotNull(queueItem);
 		//---------------------------------------------------------------------
 		queue.add(queueItem);

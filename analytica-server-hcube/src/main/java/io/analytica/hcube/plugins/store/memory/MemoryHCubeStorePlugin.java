@@ -25,7 +25,7 @@ import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private static final AppCubeStore EMPTY = new AppCubeStore();
 
 	/** {@inheritDoc} */
-	public synchronized void push(String appName, final HKey key, final HCube cube) {
+	public synchronized void push(final String appName, final HKey key, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
@@ -68,7 +68,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		appCategoryStore.addCategories(key.getCategories());
 	}
 
-	public synchronized long size(String appName) {
+	public synchronized long size(final String appName) {
 		final AppCubeStore appCubeStore = appCubeStores.get(appName);
 		if (appCubeStore == null) {
 			return 0;
@@ -77,7 +77,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized List<HSerie> execute(String appName, final HQuery query, final HSelector selector) {
+	public synchronized List<HSerie> execute(final String appName, final HQuery query, final HSelector selector) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(selector);

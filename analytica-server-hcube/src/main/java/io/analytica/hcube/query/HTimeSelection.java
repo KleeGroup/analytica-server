@@ -19,15 +19,15 @@ package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.Date;
 
 /**
  * Selection temporelle permettant de définir un ensemble de positions sur un niveau temporel donné.
- * exemple : 
+ * exemple :
  *  - tous les jours du 15 septembre 2000 au 15 novembre 2000.
- *  - toutes les années de 1914 à 1918 
+ *  - toutes les années de 1914 à 1918
  * @author npiedeloup, pchretien
  */
 public final class HTimeSelection {

@@ -1,6 +1,6 @@
 package io.analytica.hcube.cube;
 
-import io.vertigo.kernel.lang.Builder;
+import io.vertigo.core.lang.Builder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public final class HDistributionBuilder implements Builder<HDistribution> {
 		incTreshold(getMaxRange(value), 1);
 	}
 
-	void withDistribution(HDistribution distribution) {
+	void withDistribution(final HDistribution distribution) {
 		for (final Entry<Double, Long> entry : distribution.getData().entrySet()) {
 			incTreshold(entry.getKey(), entry.getValue());
 		}
@@ -34,7 +34,7 @@ public final class HDistributionBuilder implements Builder<HDistribution> {
 
 	private double getMaxRange(final double value) {
 		//On crée une répartion : 1, 2, 5 - 10, 20, 50 - 100, 200, 500...
-		//Optim 
+		//Optim
 		/*	if (value <= 0)
 				return 0;
 			if (value <= 1)

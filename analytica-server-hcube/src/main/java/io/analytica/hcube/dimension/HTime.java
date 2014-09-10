@@ -17,7 +17,7 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.Date;
 
@@ -25,9 +25,9 @@ import java.util.Date;
  * HTime represents the time axis.
  * Time is a continuous value, htime is a discrete value ; this allows to aggregate all the values in the same time range.
  * 
- * htime is defined by 
+ * htime is defined by
  *  - a date (inMillis)
- *  - a timeDimension (minute, hour, .... or year) 
+ *  - a timeDimension (minute, hour, .... or year)
  * 
  * @author npiedeloup, pchretien
  */

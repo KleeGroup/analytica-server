@@ -30,7 +30,7 @@ import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
-import io.vertigo.kernel.Home;
+import io.vertigo.core.Home;
 
 import java.util.Date;
 
@@ -41,7 +41,7 @@ import org.junit.Test;
 /**
  * Test.
  * 
- *  - a request ==> page, duration, status 
+ *  - a request ==> page, duration, status
  * 
  * @author pchretien
  */
@@ -65,24 +65,24 @@ public final class SimpleTest {
 	@Test
 	public void test() {
 		final HTime time = new HTime(new Date(), HTimeDimension.Minute);
-		//--------		
+		//--------
 		final HMetric workingHours = new HMetricBuilder(HM_PERF)//
-				.withValue(10)//
-				.withValue(17)//
-				.build();
+		.withValue(10)//
+		.withValue(17)//
+		.build();
 
 		final HCube cube = new HCubeBuilder()//
-				.withMetric(workingHours)//
-				.build();
+		.withMetric(workingHours)//
+		.build();
 
 		app.push(new HKey("PAGES", time, "www"), cube);
 
 		final HQuery query = new HQueryBuilder()//
-				.onType("PAGES")//
-				.on(HTimeDimension.SixMinutes)//
-				.between("NOW", "NOW")//
-				//	.whereCategoryEquals(PAGES)//
-				.build();
+		.onType("PAGES")//
+		.on(HTimeDimension.SixMinutes)//
+		.between("NOW", "NOW")//
+		//	.whereCategoryEquals(PAGES)//
+		.build();
 
 		final HResult result = app.execute(query);
 		System.out.println(">>> " + result.getSerie(""));

@@ -3,13 +3,11 @@ package io.analytica.hcube.plugins.store.lucene;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetric;
-import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.query.HTimeSelection;
-import io.vertigo.kernel.exception.VRuntimeException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +64,7 @@ final class RamLuceneIndex {
 
 	private void buildIndex() {
 		try (final IndexWriter indexWriter = createIndexWriter()) {
-			// we are creating an empty index if it does not exist 
+			// we are creating an empty index if it does not exist
 			System.out.println("build index");
 		} catch (final IOException e) {
 			throw new VRuntimeException(e);
@@ -83,10 +81,10 @@ final class RamLuceneIndex {
 		return IndexReader.open(directory);
 	}
 
-	public void addDocuments(List<Document> documents) {
+	public void addDocuments(final List<Document> documents) {
 		try (final IndexWriter indexWriter = createIndexWriter()) {
 			System.out.println("add doc");
-			for (Document document : documents) {
+			for (final Document document : documents) {
 				indexWriter.addDocument(document);
 			}
 		} catch (final IOException e) {
@@ -104,19 +102,19 @@ final class RamLuceneIndex {
 
 	}
 
-	public Set<String> terms(String field) {
+	public Set<String> terms(final String field) {
 		try (final IndexReader indexReader = createIndexReader()) {
 			System.out.println("terms :" + field);
-			Fields fields = MultiFields.getFields(indexReader);
+			final Fields fields = MultiFields.getFields(indexReader);
 			if (fields == null) {
 				return Collections.emptySet();
 			}
-			Terms terms = fields.terms(field);
-			Set<String> uniqueTerms = new HashSet<>();
-			TermsEnum iterator = terms.iterator(null);
+			final Terms terms = fields.terms(field);
+			final Set<String> uniqueTerms = new HashSet<>();
+			final TermsEnum iterator = terms.iterator(null);
 			BytesRef byteRef = null;
 			while ((byteRef = iterator.next()) != null) {
-				String term = new String(byteRef.bytes, byteRef.offset, byteRef.length);
+				final String term = new String(byteRef.bytes, byteRef.offset, byteRef.length);
 				uniqueTerms.add(term);
 			}
 			return uniqueTerms;
@@ -125,7 +123,7 @@ final class RamLuceneIndex {
 		}
 	}
 
-	public List<HCube> findAll(HCategory category, HTimeSelection timeSelection) {
+	public List<HCube> findAll(final HCategory category, final HTimeSelection timeSelection) {
 		//!!!!!!
 		//!!!!!!
 		//!hitsPerPage
@@ -135,53 +133,53 @@ final class RamLuceneIndex {
 
 		try (final IndexReader indexReader = createIndexReader()) {
 			System.out.println("index numdocs" + indexReader.numDocs());
-			Document doc = indexReader.document(1);
+			final Document doc = indexReader.document(1);
 			System.out.println("doc" + doc);
 			//--
 			final IndexSearcher searcher = new IndexSearcher(indexReader);
-			String queryText = category.getId();
-			Query query1 = new QueryBuilder(analyzer).createPhraseQuery("rootCategory", queryText);
-			Query query2 = new QueryBuilder(analyzer).createPhraseQuery("timeDimension", HTimeDimension.SixMinutes.name());
+			final String queryText = category.getId();
+			final Query query1 = new QueryBuilder(analyzer).createPhraseQuery("rootCategory", queryText);
+			final Query query2 = new QueryBuilder(analyzer).createPhraseQuery("timeDimension", HTimeDimension.SixMinutes.name());
 
-			BooleanQuery query = new BooleanQuery();
+			final BooleanQuery query = new BooleanQuery();
 			query.add(query1, Occur.MUST);
 			query.add(query2, Occur.MUST);
 
-			TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
+			final TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
 			searcher.search(query, collector);
-			ScoreDoc[] hits = collector.topDocs().scoreDocs;
+			final ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
 			// results
 			System.out.println("Found " + hits.length + " hits.");
-			List<HCube> cubes = new ArrayList<>();
-			for (int i = 0; i < hits.length; ++i) {
-				int docId = hits[i].doc;
-				Document document = searcher.doc(docId);
+			final List<HCube> cubes = new ArrayList<>();
+			for (final ScoreDoc hit : hits) {
+				final int docId = hit.doc;
+				final Document document = searcher.doc(docId);
 				//			document .get(name)
-				HTimeDimension timeDimension = HTimeDimension.valueOf(document.get("timeDimension"));
-				Date date = new Date(Long.valueOf(document.get("time")));
-				HTime time = new HTime(date, timeDimension);
-				HKey cubeKey = new HKey(time, category);
+				final HTimeDimension timeDimension = HTimeDimension.valueOf(document.get("timeDimension"));
+				final Date date = new Date(Long.valueOf(document.get("time")));
+				final HTime time = new HTime(date, timeDimension);
+				final HKey cubeKey = new HKey(time, category);
 
-				long metrics = Long.valueOf(document.get("metrics"));
-				HCubeBuilder cubeBuilder = new HCubeBuilder(cubeKey);
+				final long metrics = Long.valueOf(document.get("metrics"));
+				final HCubeBuilder cubeBuilder = new HCubeBuilder(cubeKey);
 				for (int m = 0; m < metrics; m++) {
-					HMetricKey metricKey = new HMetricKey(document.get(m + ":metric"), false);
-					long count = Long.valueOf(document.get(m + ":count"));
-					double sum = Double.valueOf(document.get(m + ":sum"));
-					double min = Double.valueOf(document.get(m + ":min"));
-					double max = Double.valueOf(document.get(m + ":max"));
-					double sqrSum = Double.valueOf(document.get(m + ":sqrSum"));
-					HMetric metric = new HMetric(metricKey, count, min, max, sum, sqrSum, null);
+					final HMetricKey metricKey = new HMetricKey(document.get(m + ":metric"), false);
+					final long count = Long.valueOf(document.get(m + ":count"));
+					final double sum = Double.valueOf(document.get(m + ":sum"));
+					final double min = Double.valueOf(document.get(m + ":min"));
+					final double max = Double.valueOf(document.get(m + ":max"));
+					final double sqrSum = Double.valueOf(document.get(m + ":sqrSum"));
+					final HMetric metric = new HMetric(metricKey, count, min, max, sum, sqrSum, null);
 					cubeBuilder.withMetric(metric);
 				}
-				HCube cube = cubeBuilder.build();
+				final HCube cube = cubeBuilder.build();
 				cubes.add(cube);
 				System.out.println("reload cube :" + cube);
 			}
 			return cubes;
 		} catch (final IOException e) {
-			throw new VRuntimeException(e);
+			throw new RuntimeException(e);
 		}
 	}
 }

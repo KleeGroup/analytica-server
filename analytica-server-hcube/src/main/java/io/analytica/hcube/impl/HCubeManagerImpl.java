@@ -20,8 +20,8 @@ package io.analytica.hcube.impl;
 import io.analytica.hcube.HApp;
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.cube.HMetricDefinition;
-import io.vertigo.kernel.Home;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.Home;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -62,11 +62,11 @@ public final class HCubeManagerImpl implements HCubeManager {
 		return Collections.singleton(APP);
 	}
 
-	public HApp getApp(String appName) {
+	public HApp getApp(final String appName) {
 		return APP;
 	}
 
-	public void register(HMetricDefinition metricDefinition) {
+	public void register(final HMetricDefinition metricDefinition) {
 		Home.getDefinitionSpace().put(metricDefinition, HMetricDefinition.class);
 	}
 
@@ -74,7 +74,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 		return Home.getDefinitionSpace().getAll(HMetricDefinition.class);
 	}
 
-	public HMetricDefinition getMetricDefinition(String name) {
+	public HMetricDefinition getMetricDefinition(final String name) {
 		return Home.getDefinitionSpace().resolve(name, HMetricDefinition.class);
 	}
 }

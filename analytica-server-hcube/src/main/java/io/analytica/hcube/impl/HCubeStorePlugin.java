@@ -24,7 +24,7 @@ import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.kernel.component.Plugin;
+import io.vertigo.core.component.Plugin;
 
 import java.util.List;
 import java.util.Set;
@@ -41,13 +41,13 @@ public interface HCubeStorePlugin extends Plugin {
 
 	/**
 	 * Ajout d'un cube.
-	 * @param cube HCube à ajouter 
+	 * @param cube HCube à ajouter
 	 * 
 	 */
 	void push(String appName, HKey key, HCube cube);
 
 	/**
-	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
+	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */

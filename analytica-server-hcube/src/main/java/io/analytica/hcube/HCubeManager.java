@@ -18,7 +18,7 @@
 package io.analytica.hcube;
 
 import io.analytica.hcube.cube.HMetricDefinition;
-import io.vertigo.kernel.component.Manager;
+import io.vertigo.core.component.Manager;
 
 import java.util.Collection;
 import java.util.Set;

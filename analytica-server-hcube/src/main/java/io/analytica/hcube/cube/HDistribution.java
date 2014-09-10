@@ -1,6 +1,6 @@
 package io.analytica.hcube.cube;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ public final class HDistribution {
 	//
 	private final Map<Double, Long> data;
 
-	HDistribution(Map<Double, Long> data) {
+	HDistribution(final Map<Double, Long> data) {
 		Assertion.checkNotNull(data);
 		//---------------------------------------------------------------------
 		this.data = data;

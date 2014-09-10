@@ -20,7 +20,7 @@ package io.analytica.hcube.result;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.query.HQuery;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.lang.Assertion;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public final class HResult {
 		this.query = query;
 		this.categoriesSet = categories;
 		this.series = new HashMap<>();
-		for (HSerie serie : series) {
+		for (final HSerie serie : series) {
 			this.series.put(serie.getCategories(), serie);
 		}
 	}
@@ -78,12 +78,12 @@ public final class HResult {
 	 * @param category Catégorie demandée
 	 * @return Serie de cette catégorie
 	 */
-	public HSerie getSerie(String... strCategories) {
+	public HSerie getSerie(final String... strCategories) {
 		Assertion.checkNotNull(strCategories);
 		//	Assertion.checkArgument(series.containsKey(categories), "categories: {0} not in resultSet : ", categories);
 		//-------------------------------------------------------------------------
-		List<HCategory> list = Arrays.asList(HKey.to(strCategories));
-		HSerie serie = series.get(list);
+		final List<HCategory> list = Arrays.asList(HKey.to(strCategories));
+		final HSerie serie = series.get(list);
 		Assertion.checkNotNull(serie, "categories: {0} not in resultSet : ", list);
 		return serie;
 	}

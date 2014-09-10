@@ -17,9 +17,9 @@
  */
 package io.analytica.hcube.cube;
 
-import io.vertigo.kernel.Home;
-import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.Builder;
+import io.vertigo.core.Home;
+import io.vertigo.core.lang.Assertion;
+import io.vertigo.core.lang.Builder;
 
 /**
  * Builder permettant de contruire une metric.
@@ -49,7 +49,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 
 	/**
 	 * Add value.
-	 * @param value Value to add 
+	 * @param value Value to add
 	 * @return MetricBuilder builder
 	 */
 	public HMetricBuilder withValue(final double value) {
@@ -65,7 +65,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	}
 
 	/**
-	 * Ajout d'une metric. 
+	 * Ajout d'une metric.
 	 * @param metric Metric
 	 * @return MetricBuilder builder
 	 */
@@ -85,7 +85,7 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		return this;
 	}
 
-	/** 
+	/**
 	 * Construction de la Metric du cube.
 	 * @return Metric du cube
 	 */
