@@ -20,15 +20,9 @@
 		<dependency>
 			<groupId>io.vertigo</groupId>
 			<artifactId>vertigo-core</artifactId>
-			<version>${vertigo.version}</version>
+			<version>0.4.4-SNAPSHOT</version>
+			<!-- version>${vertigo.version}</version-->
 		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers-common</artifactId>
-			<version>4.7.0</version>
-			<optional>true</optional> 
-		</dependency>
-		
 	<!-- 	
 		<dependency>
 			<groupId>io.vertigo</groupId>

@@ -6,19 +6,25 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HResult;
 
+
+/**
+ * An app is defined by its name.
+ * 
+ * @author pchretien, npiedeloup
+ */
 public interface HApp {
 	String getName();
 
 	HSelector getSelector();
 
 	/**
-	 * Ajout d'un cube.
-	 * @param cube HCube à ajouter 
+	 * push a cube into the database.
+	 * if key exists then the cube is merged else the cube is added.
+	 * @param cube HCube to add or merge
 	 */
 	void push(HKey key, HCube cube);
 
 	long size();
 
 	HResult execute(final HQuery query);
-
 }

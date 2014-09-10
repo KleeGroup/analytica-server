@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Base de données temporelles.
+ * time oriented database .
  * 
  * @author pchretien, npiedeloup
  */
