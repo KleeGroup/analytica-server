@@ -1,6 +1,6 @@
 package io.analytica.hcube.cube;
 
-import io.vertigo.core.lang.Builder;
+import io.vertigo.lang.Builder;
 
 import java.util.HashMap;
 import java.util.Map;

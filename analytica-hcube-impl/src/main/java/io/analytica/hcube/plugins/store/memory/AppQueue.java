@@ -2,7 +2,7 @@ package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HKey;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.List;

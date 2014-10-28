@@ -23,7 +23,7 @@ import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HVirtualCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +37,7 @@ import java.util.Map.Entry;
 /**
  * Résultat d'une série.
  * Une série est un parallélépipède continu pour une catégorie donnée, qui peut se voir comme autant un cube virtuel.
- * 
+ *
  * @author pchretien, npiedeloup
  */
 public final class HSerie implements HVirtualCube {
@@ -47,7 +47,7 @@ public final class HSerie implements HVirtualCube {
 
 	/**
 	 * Constructeur.
-	 * @param category Catégorie de la série
+	 * @param categories Catégories de la série
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
 	public HSerie(final List<HCategory> categories, final Map<HTime, HCube> cubes) {

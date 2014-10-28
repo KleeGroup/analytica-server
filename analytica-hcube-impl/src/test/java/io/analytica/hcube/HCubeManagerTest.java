@@ -36,7 +36,7 @@ import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.core.Home;
-import io.vertigo.core.lang.DateBuilder;
+import io.vertigo.util.DateBuilder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -54,9 +54,9 @@ import org.junit.Test;
 
 /**
  * Test.
- * 
+ *
  *  - a request ==> page, duration, status
- * 
+ *
  * @author pchretien
  */
 public final class HCubeManagerTest {
@@ -101,18 +101,18 @@ public final class HCubeManagerTest {
 	public void testQuery() {
 		final Date start = new Date();
 		final HQuery query1 = new HQueryBuilder()//
-		.onType(PAGES)//
-		.on(HTimeDimension.Hour)//
-		.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
-		//.whereCategoryEquals(PAGES)//
-		.build();
+				.onType(PAGES)//
+				.on(HTimeDimension.Hour)//
+				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
+				//.whereCategoryEquals(PAGES)//
+				.build();
 
 		final HQuery query2 = new HQueryBuilder()//
-		.onType(PAGES)//
-		.on(HTimeDimension.Hour)//
-		.between("NOW-3h", "NOW")//
-		//				.whereCategoryEquals(PAGES)//
-		.build();
+				.onType(PAGES)//
+				.on(HTimeDimension.Hour)//
+				.between("NOW-3h", "NOW")//
+				//				.whereCategoryEquals(PAGES)//
+				.build();
 		//---
 		Assert.assertEquals(3, app.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
 		Assert.assertEquals(3, app.getSelector().findTimes(query2.getTimeSelection()).size()); //3 HOURS
@@ -124,11 +124,11 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery2() {
 		final HQuery query = new HQueryBuilder()//
-		.onType(PAGES)//
-		.on(HTimeDimension.Hour)//
-		.between("NOW", "NOW+3d")//
-		//				.whereCategoryEquals(PAGES)//
-		.build();
+				.onType(PAGES)//
+				.on(HTimeDimension.Hour)//
+				.between("NOW", "NOW+3d")//
+				//				.whereCategoryEquals(PAGES)//
+				.build();
 		//---
 		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
 	}
@@ -139,10 +139,10 @@ public final class HCubeManagerTest {
 	@Test(expected = Exception.class)
 	public void testQueryFail() {
 		new HQueryBuilder()//
-		.on(HTimeDimension.Hour)//
-		.between("NOW", "NOW-3m")//
-		//	.whereCategoryEquals(PAGES)//
-		.build();
+				.on(HTimeDimension.Hour)//
+				.between("NOW", "NOW-3m")//
+				//	.whereCategoryEquals(PAGES)//
+				.build();
 	}
 
 	/*
@@ -176,11 +176,11 @@ public final class HCubeManagerTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()//
-		.onType(PAGES)//
-		.on(HTimeDimension.Hour)//
-		.between(start, end)//
-		//.whereCategoryEquals(PAGES)//
-		.build();
+				.onType(PAGES)//
+				.on(HTimeDimension.Hour)//
+				.between(start, end)//
+				//.whereCategoryEquals(PAGES)//
+				.build();
 
 		final HResult result = app.execute(query);
 
@@ -248,11 +248,11 @@ public final class HCubeManagerTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()//
-		.onType(PAGES)//
-		.on(HTimeDimension.SixMinutes)//
-		.between(start, end)//
-		//.whereCategoryEquals(PAGES)//
-		.build();
+				.onType(PAGES)//
+				.on(HTimeDimension.SixMinutes)//
+				.between(start, end)//
+				//.whereCategoryEquals(PAGES)//
+				.build();
 
 		final HResult result = app.execute(query);
 
@@ -287,23 +287,23 @@ public final class HCubeManagerTest {
 	@Test
 	public void testHistogram() {
 		final HMetric metric = new HMetricBuilder(HM_TEST)//
-		.withValue(0)//<0
-		.withValue(1)//<1
-		.withValue(2)//<2
-		.withValue(3)//<5
-		.withValue(4)//<5
-		.withValue(5)//<5
-		.withValue(6)//<10
-		.withValue(7)//<10
-		.withValue(8)//<10
-		.withValue(9)//<10
-		.withValue(10)//<10
-		.withValue(11)//<20
-		.withValue(35)//<50
-		.withValue(455)//<500
-		.withValue(355)//<500
-		.withValue(111222333)//<200000000
-		.build();
+				.withValue(0)//<0
+				.withValue(1)//<1
+				.withValue(2)//<2
+				.withValue(3)//<5
+				.withValue(4)//<5
+				.withValue(5)//<5
+				.withValue(6)//<10
+				.withValue(7)//<10
+				.withValue(8)//<10
+				.withValue(9)//<10
+				.withValue(10)//<10
+				.withValue(11)//<20
+				.withValue(35)//<50
+				.withValue(455)//<500
+				.withValue(355)//<500
+				.withValue(111222333)//<200000000
+				.build();
 		final Map<Double, Long> histogram = metric.getDistribution().getData();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
@@ -422,15 +422,15 @@ public final class HCubeManagerTest {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(PAGES, time, "welcome");
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)//
-		.withValue(100)//
-		.build();
+				.withValue(100)//
+				.build();
 		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)//
-		.withValue(weightValue)//
-		.build();
+				.withValue(weightValue)//
+				.build();
 		final HCube cube = new HCubeBuilder()//
-		.withMetric(durationMetric)//
-		.withMetric(weightMetric)//
-		.build();
+				.withMetric(durationMetric)//
+				.withMetric(weightMetric)//
+				.build();
 		app.push(key, cube);
 	}
 
@@ -456,9 +456,9 @@ public final class HCubeManagerTest {
 					final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder()//
-					.withMetric(durationMetricBuilder.build())//
-					.withMetric(weightMetric)//
-					.build();
+							.withMetric(durationMetricBuilder.build())//
+							.withMetric(weightMetric)//
+							.build();
 
 					app.push(key, cube);
 					//--
@@ -498,11 +498,11 @@ public final class HCubeManagerTest {
 	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) {
 		//----
 		final HQuery query = new HQueryBuilder()//
-		.onType(PAGES)//
-		.on(timeDimension)//
-		.between(start, end)//
-		//	.whereCategoryEquals(PAGES)//
-		.build();
+				.onType(PAGES)//
+				.on(timeDimension)//
+				.between(start, end)//
+				//	.whereCategoryEquals(PAGES)//
+				.build();
 
 		final HResult result = app.execute(query);
 		Assert.assertEquals(query, result.getQuery());

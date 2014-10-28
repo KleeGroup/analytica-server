@@ -17,7 +17,7 @@
  */
 package io.analytica.hcube.query;
 
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 /**
  * Requête permettant de définir les zones de sélections sur les différents axes du cube.

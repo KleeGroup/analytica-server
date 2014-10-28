@@ -18,13 +18,13 @@
 package io.analytica.hcube.cube;
 
 import io.vertigo.core.Home;
-import io.vertigo.core.lang.Assertion;
-import io.vertigo.core.lang.Builder;
+import io.vertigo.lang.Assertion;
+import io.vertigo.lang.Builder;
 
 /**
  * Builder permettant de contruire une metric.
  * Une métric est une mesure agrégée.
- * 
+ *
  * @author npiedeloup
  */
 public final class HMetricBuilder implements Builder<HMetric> {

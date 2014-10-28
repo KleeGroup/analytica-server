@@ -17,14 +17,14 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 /**
  * Une catégorie est composée d'une hierarchie de termes.
  *  * exemple :
  * sql; select  all products
  * Cet exemple illustre une requête de tous les produits (appellée 'all products') classée dans la catégorie sql, sous catégorie select.
- * 
+ *
  * Il doit ncessairement y avoir une catégorie parente (sql) dans notre exemple.
  * @author npiedeloup, pchretien
  */

@@ -18,17 +18,17 @@
 package io.analytica.hcube;
 
 import io.analytica.hcube.cube.HMetricDefinition;
-import io.vertigo.core.component.Manager;
+import io.vertigo.lang.Component;
 
 import java.util.Collection;
 import java.util.Set;
 
 /**
  * time oriented database .
- * 
+ *
  * @author pchretien, npiedeloup
  */
-public interface HCubeManager extends Manager {
+public interface HCubeManager extends Component {
 	void register(HMetricDefinition metricDefinition);
 
 	Collection<HMetricDefinition> getMetricDefinitions();

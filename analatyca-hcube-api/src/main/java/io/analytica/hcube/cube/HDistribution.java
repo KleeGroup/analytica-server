@@ -1,6 +1,6 @@
 package io.analytica.hcube.cube;
 
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Map;
 

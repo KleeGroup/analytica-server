@@ -9,7 +9,7 @@ import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,7 +101,6 @@ final class AppCubeStore {
 		return series;
 	}
 
-	/** {@inheritDoc} */
 	/*@Override
 	public synchronized String toString() {
 		final StringBuilder sb = new StringBuilder();

@@ -23,15 +23,15 @@ import java.util.Collection;
  * Un cube contient :
  *  - des métriques nommées
  *  	exemple : temps réponse, nombre de mails envoyés
- *  - des métadonnées 
+ *  - des métadonnées
  *  	exemple : tags, users
- *  
+ *
  * @author npiedeloup, pchretien
  */
 public interface HVirtualCube {
 	/**
 	 * Accès d'une métrique par son nom
-	 * @param name Nom de la métrique
+	 * @param metricName Nom de la métrique
 	 * @return Métrique
 	 */
 	HMetric getMetric(final String metricName);

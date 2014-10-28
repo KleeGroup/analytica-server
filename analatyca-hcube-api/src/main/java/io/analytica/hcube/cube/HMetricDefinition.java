@@ -17,15 +17,15 @@
  */
 package io.analytica.hcube.cube;
 
-import io.vertigo.core.lang.Assertion;
-import io.vertigo.core.metamodel.Definition;
-import io.vertigo.core.stereotype.Prefix;
+import io.vertigo.core.spaces.definiton.Definition;
+import io.vertigo.core.spaces.definiton.DefinitionPrefix;
+import io.vertigo.lang.Assertion;
 
 /**
  * Clé de la métrique.
  * @author npiedeloup, pchretien
  */
-@Prefix("HM")
+@DefinitionPrefix("HM")
 public final class HMetricDefinition implements Definition {
 	private final boolean distribution;
 	private final String name;

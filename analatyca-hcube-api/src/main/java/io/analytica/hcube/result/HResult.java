@@ -20,7 +20,7 @@ package io.analytica.hcube.result;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.query.HQuery;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import java.util.Set;
 /**
  * Résultat d'une requête.
  * Il s'agit d'une liste de séries.
- * 
+ *
  * @author pchretien, npiedeloup
  */
 public final class HResult {
@@ -61,7 +61,6 @@ public final class HResult {
 	//-----------------------What----------------------------------------------
 	/**
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
-	 * @return
 	 */
 	public Set<List<HCategory>> getAllCategories() {
 		return categoriesSet;
@@ -75,7 +74,7 @@ public final class HResult {
 	}
 
 	/**
-	 * @param category Catégorie demandée
+	 * @param strCategories Catégories demandées
 	 * @return Serie de cette catégorie
 	 */
 	public HSerie getSerie(final String... strCategories) {

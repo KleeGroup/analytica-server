@@ -10,7 +10,7 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.query.HTimeSelection;
 import io.analytica.hcube.result.HResult;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.List;
 import java.util.Set;

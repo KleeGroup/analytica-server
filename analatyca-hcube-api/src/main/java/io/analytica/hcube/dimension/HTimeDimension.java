@@ -17,8 +17,8 @@
  */
 package io.analytica.hcube.dimension;
 
-import io.vertigo.core.lang.Assertion;
-import io.vertigo.core.lang.DateBuilder;
+import io.vertigo.lang.Assertion;
+import io.vertigo.util.DateBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,7 +60,7 @@ public enum HTimeDimension {
 
 	/**
 	 * Constructeur.
-	 * @param up Niveau supérieur
+	 * @param upTimeDimension Niveau supérieur
 	 */
 	HTimeDimension(final HTimeDimension upTimeDimension, final String pattern) {
 		this.upTimeDimension = upTimeDimension;
@@ -69,27 +69,26 @@ public enum HTimeDimension {
 
 	/**
 	 * Normalise la valeur pour correspondre au niveau d'agregation de cette dimension.
-	 * @param date Valeur
 	 * @return Valeur normalisée
 	 */
 	public long reduce(final long time) {
 		if (this == Hour || this == SixMinutes || this == Minute) {
 			final long divide;
 			switch (this) {
-			case Hour:
-				divide = 3600000; //60*60*1000
-				break;
-			case SixMinutes:
-				divide = 360000; //6*60*1000
-				break;
-			case Minute:
-				divide = 60000; //60*1000
-				break;
-			case Day:
-			case Month:
-			case Year:
-			default:
-				throw new IllegalArgumentException("Invalid dimension :" + this);
+				case Hour:
+					divide = 3600000; //60*60*1000
+					break;
+				case SixMinutes:
+					divide = 360000; //6*60*1000
+					break;
+				case Minute:
+					divide = 60000; //60*1000
+					break;
+				case Day:
+				case Month:
+				case Year:
+				default:
+					throw new IllegalArgumentException("Invalid dimension :" + this);
 			}
 			return (time / divide) * divide; //we truncate time for this dimension
 		}
@@ -97,23 +96,23 @@ public enum HTimeDimension {
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
 		switch (this) {
-		case Year:
-			calendar.set(Calendar.MONTH, 0);
-			//$FALL-THROUGH$
-		case Month:
-			calendar.set(Calendar.DAY_OF_MONTH, 1);
-			//$FALL-THROUGH$
-		case Day:
-			calendar.set(Calendar.HOUR_OF_DAY, 0);
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MILLISECOND, 0);
-			break;
-		case Hour:
-		case Minute:
-		case SixMinutes:
-		default:
-			throw new IllegalArgumentException("Invalid dimension :" + this);
+			case Year:
+				calendar.set(Calendar.MONTH, 0);
+				//$FALL-THROUGH$
+			case Month:
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				//$FALL-THROUGH$
+			case Day:
+				calendar.set(Calendar.HOUR_OF_DAY, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MILLISECOND, 0);
+				break;
+			case Hour:
+			case Minute:
+			case SixMinutes:
+			default:
+				throw new IllegalArgumentException("Invalid dimension :" + this);
 		}
 
 		return calendar.getTimeInMillis();
@@ -127,23 +126,23 @@ public enum HTimeDimension {
 		final Date currentDate = new Date(time); //could be optimized with vertigo 0.3.1 when released
 		final Date nextDate;
 		switch (this) {
-		case Year:
-			nextDate = new DateBuilder(currentDate).addYears(1).toDateTime();
-			break;
-		case Month:
-			nextDate = new DateBuilder(currentDate).addMonths(1).toDateTime();
-			break;
-		case Day:
-			nextDate = new DateBuilder(currentDate).addDays(1).toDateTime();
-			break;
-		case Hour:
-			return new HTime(time + 3600000, this);
-		case SixMinutes:
-			return new HTime(time + 360000, this);
-		case Minute:
-			return new HTime(time + 60000, this);
-		default:
-			throw new IllegalArgumentException("Invalid dimension :" + this);
+			case Year:
+				nextDate = new DateBuilder(currentDate).addYears(1).toDateTime();
+				break;
+			case Month:
+				nextDate = new DateBuilder(currentDate).addMonths(1).toDateTime();
+				break;
+			case Day:
+				nextDate = new DateBuilder(currentDate).addDays(1).toDateTime();
+				break;
+			case Hour:
+				return new HTime(time + 3600000, this);
+			case SixMinutes:
+				return new HTime(time + 360000, this);
+			case Minute:
+				return new HTime(time + 60000, this);
+			default:
+				throw new IllegalArgumentException("Invalid dimension :" + this);
 		}
 		return new HTime(nextDate, this);
 	}

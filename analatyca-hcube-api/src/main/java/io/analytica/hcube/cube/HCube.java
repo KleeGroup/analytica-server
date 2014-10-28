@@ -17,7 +17,7 @@
  */
 package io.analytica.hcube.cube;
 
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Collection;
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Map;
  *  	exemple : temps réponse, nombre de mails envoyés
  *  - des métadonnées
  *  	exemple : tags, users
- * 
+ *
  * @author npiedeloup, pchretien
  */
 public final class HCube implements HVirtualCube {
@@ -51,14 +51,14 @@ public final class HCube implements HVirtualCube {
 	}
 
 	/*** {@inheritDoc} */
-	public Collection<HMetric>	getMetrics() {
+	public Collection<HMetric> getMetrics() {
 		return metrics.values();
 	}
 
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder()//
-		.append("{ metrics:{");
+				.append("{ metrics:{");
 		//for (final Entry<HMetricKey, HMetric> entry: getMetrics().entrySet()) {
 		sb.append(metrics);
 		//			append("\n\t\t metrics: ").append(entry.getKey()).append(",");

@@ -21,7 +21,7 @@ import io.analytica.hcube.HApp;
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.cube.HMetricDefinition;
 import io.vertigo.core.Home;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +38,6 @@ public final class HCubeManagerImpl implements HCubeManager {
 	/**
 	 * Constructeur.
 	 * @param cubeStorePlugin Plugin de stockage des Cubes
-	 * @param processStatsPlugin Plugin de statistique des process
 	 */
 	@Inject
 	public HCubeManagerImpl(final HCubeStorePlugin cubeStorePlugin) {
@@ -51,7 +50,6 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	}
 
-	/** {@inheritDoc} */
 	public Set<String> getAppNames() {
 		return cubeStore.getAppNames();
 	}

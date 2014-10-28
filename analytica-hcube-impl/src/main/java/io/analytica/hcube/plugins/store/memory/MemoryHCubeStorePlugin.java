@@ -25,7 +25,7 @@ import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ import java.util.Set;
 
 /**
  * Implémentation mémoire du stockage des Cubes.
- * 
+ *
  * @author npiedeloup, pchretien
  */
 public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {

@@ -18,15 +18,15 @@
 package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HCategory;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 /**
  * Selection de catégories permettant de définir un ensemble de positions sur un niveau donné.
  * exemple :
  * - toutes les catégories racine  : new HCategorySelection()
  * - toutes les sous-catégories de SQL, select : HCategorySelection(new HCategoryPosition("SQL", "select"), true);
- * 
- * @author npiedeloup, pchretien, statchum
+ *
+ * @author npiedeloup, pchretien
  */
 public final class HCategorySelection {
 	private final String pattern;

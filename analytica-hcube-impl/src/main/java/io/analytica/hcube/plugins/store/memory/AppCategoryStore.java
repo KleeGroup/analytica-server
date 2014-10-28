@@ -2,7 +2,7 @@ package io.analytica.hcube.plugins.store.memory;
 
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.query.HCategorySelection;
-import io.vertigo.core.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,8 +46,6 @@ final class AppCategoryStore {
 
 	/**
 	 * Liste des Catégories
-	 * @param categorySelection
-	 * @return
 	 */
 	Set<List<HCategory>> findCategories(final HCategorySelection categorySelection) {
 		Assertion.checkNotNull(categorySelection);

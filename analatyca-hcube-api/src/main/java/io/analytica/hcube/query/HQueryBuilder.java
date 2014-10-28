@@ -18,8 +18,8 @@
 package io.analytica.hcube.query;
 
 import io.analytica.hcube.dimension.HTimeDimension;
-import io.vertigo.core.lang.Assertion;
-import io.vertigo.core.lang.Builder;
+import io.vertigo.lang.Assertion;
+import io.vertigo.lang.Builder;
 
 import java.util.Date;
 
@@ -54,8 +54,8 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	}
 
 	/**
-	 * @param date lower selection (INCLUDED)
-	 * @param date upper selection (EXCLUDED)
+	 * @param startdate lower selection (INCLUDED)
+	 * @param endDate upper selection (EXCLUDED)
 	 * @return HQueryBuilder
 	 */
 	public HQueryBuilder between(final String startdate, final String endDate) {
@@ -63,8 +63,8 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	}
 
 	/**
-	 * @param date lower selection (INCLUDED)
-	 * @param date upper selection (EXCLUDED)
+	 * @param startdate lower selection (INCLUDED)
+	 * @param endDate upper selection (EXCLUDED)
 	 * @return HQueryBuilder
 	 */
 	public HQueryBuilder between(final Date startdate, final Date endDate) {
@@ -107,7 +107,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/**
 	 * @param date date upper selection (EXCLUDED)
-	 * @return
 	 */
 	private HQueryBuilder to(final String date) {
 		Assertion.checkNotNull(hTimeDimension);
@@ -154,7 +153,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/**
 	 *
-	 * @param deltaAsString
+	 * @param deltaAsString Delta en millisecondes
 	 * @return delta en millisecondes
 	 */
 	private static long readDeltaAsMs(final String deltaAsString) {
@@ -169,17 +168,17 @@ public final class HQueryBuilder implements Builder<HQuery> {
 		}
 
 		switch (unit) {
-		case 'd'://day
-			return delta * 24 * 60 * 60 * 1000L;
+			case 'd'://day
+				return delta * 24 * 60 * 60 * 1000L;
 
-		case 'h'://hour
-			return delta * 60 * 60 * 1000L;
+			case 'h'://hour
+				return delta * 60 * 60 * 1000L;
 
-		case 'm': //minute
-			return delta * 60 * 1000L;
+			case 'm': //minute
+				return delta * 60 * 1000L;
 
-		default:
-			throw new RuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
+			default:
+				throw new RuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
 		}
 	}
 
