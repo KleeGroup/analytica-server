@@ -100,18 +100,18 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery() {
 		final Date start = new Date();
-		final HQuery query1 = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)//
-				//.whereCategoryEquals(PAGES)//
+		final HQuery query1 = new HQueryBuilder()
+				.onType(PAGES)
+				.on(HTimeDimension.Hour)
+				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)
+				//.whereCategoryEquals(PAGES)
 				.build();
 
-		final HQuery query2 = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between("NOW-3h", "NOW")//
-				//				.whereCategoryEquals(PAGES)//
+		final HQuery query2 = new HQueryBuilder()
+				.onType(PAGES)
+				.on(HTimeDimension.Hour)
+				.between("NOW-3h", "NOW")
+				//				.whereCategoryEquals(PAGES)
 				.build();
 		//---
 		Assert.assertEquals(3, app.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
@@ -123,11 +123,11 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testQuery2() {
-		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between("NOW", "NOW+3d")//
-				//				.whereCategoryEquals(PAGES)//
+		final HQuery query = new HQueryBuilder()
+				.onType(PAGES)
+				.on(HTimeDimension.Hour)
+				.between("NOW", "NOW+3d")
+				//				.whereCategoryEquals(PAGES)
 				.build();
 		//---
 		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
@@ -138,10 +138,10 @@ public final class HCubeManagerTest {
 	 */
 	@Test(expected = Exception.class)
 	public void testQueryFail() {
-		new HQueryBuilder()//
-				.on(HTimeDimension.Hour)//
-				.between("NOW", "NOW-3m")//
-				//	.whereCategoryEquals(PAGES)//
+		new HQueryBuilder()
+				.on(HTimeDimension.Hour)
+				.between("NOW", "NOW-3m")
+				//	.whereCategoryEquals(PAGES)
 				.build();
 	}
 
@@ -175,11 +175,11 @@ public final class HCubeManagerTest {
 		//----
 		populateData(start, days);
 		//----
-		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.Hour)//
-				.between(start, end)//
-				//.whereCategoryEquals(PAGES)//
+		final HQuery query = new HQueryBuilder()
+				.onType(PAGES)
+				.on(HTimeDimension.Hour)
+				.between(start, end)
+				//.whereCategoryEquals(PAGES)
 				.build();
 
 		final HResult result = app.execute(query);
@@ -247,11 +247,11 @@ public final class HCubeManagerTest {
 		//----
 		populateData(start, days);
 		//----
-		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(HTimeDimension.SixMinutes)//
-				.between(start, end)//
-				//.whereCategoryEquals(PAGES)//
+		final HQuery query = new HQueryBuilder()
+				.onType(PAGES)
+				.on(HTimeDimension.SixMinutes)
+				.between(start, end)
+				//.whereCategoryEquals(PAGES)
 				.build();
 
 		final HResult result = app.execute(query);
@@ -286,7 +286,7 @@ public final class HCubeManagerTest {
 
 	@Test
 	public void testHistogram() {
-		final HMetric metric = new HMetricBuilder(HM_TEST)//
+		final HMetric metric = new HMetricBuilder(HM_TEST)
 				.withValue(0)//<0
 				.withValue(1)//<1
 				.withValue(2)//<2
@@ -349,29 +349,29 @@ public final class HCubeManagerTest {
 		//----
 		addCube(current, 64);
 		//----
-		checkMergedMetric(HTimeDimension.Minute, //
-				new DateBuilder(current).addMinutes(-1).toDateTime(), //
-				new DateBuilder(current).addMinutes(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Minute,
+				new DateBuilder(current).addMinutes(-1).toDateTime(),
+				new DateBuilder(current).addMinutes(2).toDateTime(),
 				1, 64, 64, 64);
-		checkMergedMetric(HTimeDimension.SixMinutes, //
-				new DateBuilder(current).addMinutes(-6).toDateTime(), //
-				new DateBuilder(current).addMinutes(12).toDateTime(), //
+		checkMergedMetric(HTimeDimension.SixMinutes,
+				new DateBuilder(current).addMinutes(-6).toDateTime(),
+				new DateBuilder(current).addMinutes(12).toDateTime(),
 				1, 64, 64, 64);
-		checkMergedMetric(HTimeDimension.Hour, //
-				new DateBuilder(current).addHours(-1).toDateTime(), //
-				new DateBuilder(current).addHours(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Hour,
+				new DateBuilder(current).addHours(-1).toDateTime(),
+				new DateBuilder(current).addHours(2).toDateTime(),
 				1, 64, 64, 64);
-		checkMergedMetric(HTimeDimension.Day, //
-				new DateBuilder(current).addDays(-1).toDateTime(), //
-				new DateBuilder(current).addDays(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Day,
+				new DateBuilder(current).addDays(-1).toDateTime(),
+				new DateBuilder(current).addDays(2).toDateTime(),
 				1, 64, 64, 64);
-		checkMergedMetric(HTimeDimension.Month, //
-				new DateBuilder(current).addMonths(-1).toDateTime(), //
-				new DateBuilder(current).addMonths(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Month,
+				new DateBuilder(current).addMonths(-1).toDateTime(),
+				new DateBuilder(current).addMonths(2).toDateTime(),
 				1, 64, 64, 64);
-		checkMergedMetric(HTimeDimension.Year, //
-				new DateBuilder(current).addYears(-1).toDateTime(), //
-				new DateBuilder(current).addYears(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Year,
+				new DateBuilder(current).addYears(-1).toDateTime(),
+				new DateBuilder(current).addYears(2).toDateTime(),
 				1, 64, 64, 64);
 	}
 
@@ -389,29 +389,29 @@ public final class HCubeManagerTest {
 		addCube(new DateBuilder(current).addYears(2).toDateTime(), 262144);
 
 		//----
-		checkMergedMetric(HTimeDimension.Minute, //
-				new DateBuilder(current).addMinutes(-1).toDateTime(), //
-				new DateBuilder(current).addMinutes(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Minute,
+				new DateBuilder(current).addMinutes(-1).toDateTime(),
+				new DateBuilder(current).addMinutes(2).toDateTime(),
 				1, 64, 64, 64);
-		checkMergedMetric(HTimeDimension.SixMinutes, //
-				new DateBuilder(current).addMinutes(-1 * 6).toDateTime(), //
-				new DateBuilder(current).addMinutes(2 * 6).toDateTime(), //
+		checkMergedMetric(HTimeDimension.SixMinutes,
+				new DateBuilder(current).addMinutes(-1 * 6).toDateTime(),
+				new DateBuilder(current).addMinutes(2 * 6).toDateTime(),
 				2, 64 + 256, 64, 256);
-		checkMergedMetric(HTimeDimension.Hour, //
-				new DateBuilder(current).addHours(-1).toDateTime(), //
-				new DateBuilder(current).addHours(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Hour,
+				new DateBuilder(current).addHours(-1).toDateTime(),
+				new DateBuilder(current).addHours(2).toDateTime(),
 				3, 64 + 256 + 1024, 64, 1024);
-		checkMergedMetric(HTimeDimension.Day, //
-				new DateBuilder(current).addDays(-1).toDateTime(), //
-				new DateBuilder(current).addDays(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Day,
+				new DateBuilder(current).addDays(-1).toDateTime(),
+				new DateBuilder(current).addDays(2).toDateTime(),
 				4, 64 + 256 + 1024 + 4096, 64, 4096);
-		checkMergedMetric(HTimeDimension.Month, //
-				new DateBuilder(current).addMonths(-1).toDateTime(), //
-				new DateBuilder(current).addMonths(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Month,
+				new DateBuilder(current).addMonths(-1).toDateTime(),
+				new DateBuilder(current).addMonths(2).toDateTime(),
 				5, 64 + 256 + 1024 + 4096 + 16384, 64, 16384);
-		checkMergedMetric(HTimeDimension.Year, //
-				new DateBuilder(current).addYears(-1).toDateTime(), //
-				new DateBuilder(current).addYears(2).toDateTime(), //
+		checkMergedMetric(HTimeDimension.Year,
+				new DateBuilder(current).addYears(-1).toDateTime(),
+				new DateBuilder(current).addYears(2).toDateTime(),
 				6, 64 + 256 + 1024 + 4096 + 16384 + 65536, 64, 65536);
 	}
 
@@ -421,15 +421,15 @@ public final class HCubeManagerTest {
 	private void addCube(final Date current, final int weightValue) {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(PAGES, time, "welcome");
-		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)//
+		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)
 				.withValue(100)//
 				.build();
-		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)//
-				.withValue(weightValue)//
+		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)
+				.withValue(weightValue)
 				.build();
-		final HCube cube = new HCubeBuilder()//
-				.withMetric(durationMetric)//
-				.withMetric(weightMetric)//
+		final HCube cube = new HCubeBuilder()
+				.withMetric(durationMetric)
+				.withMetric(weightMetric)
 				.build();
 		app.push(key, cube);
 	}
@@ -455,9 +455,9 @@ public final class HCubeManagerTest {
 
 					final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT).withValue(h).build();
 
-					final HCube cube = new HCubeBuilder()//
-							.withMetric(durationMetricBuilder.build())//
-							.withMetric(weightMetric)//
+					final HCube cube = new HCubeBuilder()
+							.withMetric(durationMetricBuilder.build())
+							.withMetric(weightMetric)
 							.build();
 
 					app.push(key, cube);
@@ -497,11 +497,11 @@ public final class HCubeManagerTest {
 
 	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) {
 		//----
-		final HQuery query = new HQueryBuilder()//
-				.onType(PAGES)//
-				.on(timeDimension)//
-				.between(start, end)//
-				//	.whereCategoryEquals(PAGES)//
+		final HQuery query = new HQueryBuilder()
+				.onType(PAGES)
+				.on(timeDimension)
+				.between(start, end)
+				//	.whereCategoryEquals(PAGES)
 				.build();
 
 		final HResult result = app.execute(query);

@@ -40,9 +40,9 @@ import org.junit.Test;
 
 /**
  * Test.
- * 
+ *
  *  - a request ==> page, duration, status
- * 
+ *
  * @author pchretien
  */
 public final class SimpleTest {
@@ -66,23 +66,23 @@ public final class SimpleTest {
 	public void test() {
 		final HTime time = new HTime(new Date(), HTimeDimension.Minute);
 		//--------
-		final HMetric workingHours = new HMetricBuilder(HM_PERF)//
-		.withValue(10)//
-		.withValue(17)//
-		.build();
+		final HMetric workingHours = new HMetricBuilder(HM_PERF)
+				.withValue(10)
+				.withValue(17)
+				.build();
 
-		final HCube cube = new HCubeBuilder()//
-		.withMetric(workingHours)//
-		.build();
+		final HCube cube = new HCubeBuilder()
+				.withMetric(workingHours)
+				.build();
 
 		app.push(new HKey("PAGES", time, "www"), cube);
 
-		final HQuery query = new HQueryBuilder()//
-		.onType("PAGES")//
-		.on(HTimeDimension.SixMinutes)//
-		.between("NOW", "NOW")//
-		//	.whereCategoryEquals(PAGES)//
-		.build();
+		final HQuery query = new HQueryBuilder()
+				.onType("PAGES")
+				.on(HTimeDimension.SixMinutes)
+				.between("NOW", "NOW")
+				//	.whereCategoryEquals(PAGES)
+				.build();
 
 		final HResult result = app.execute(query);
 		System.out.println(">>> " + result.getSerie(""));
