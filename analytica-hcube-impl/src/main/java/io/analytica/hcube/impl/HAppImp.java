@@ -4,8 +4,10 @@ import io.analytica.hcube.HApp;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HCategorySelection;
+import io.analytica.hcube.query.HLocationSelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.query.HTimeSelection;
@@ -13,7 +15,6 @@ import io.analytica.hcube.result.HResult;
 import io.vertigo.lang.Assertion;
 
 import java.util.List;
-import java.util.Set;
 
 final class HAppImp implements HApp {
 	private final HCubeStorePlugin cubeStore;
@@ -33,8 +34,12 @@ final class HAppImp implements HApp {
 				return timeSelector.findTimes(timeSelection);
 			}
 
-			public Set<List<HCategory>> findCategories(final HCategorySelection categorySelection) {
+			public List<HCategory> findCategories(final HCategorySelection categorySelection) {
 				return cubeStore.findCategories(appName, categorySelection);
+			}
+
+			public List<HLocation> findLocations(final HLocationSelection locationSelection) {
+				return cubeStore.findLocations(appName, locationSelection);
 			}
 
 		};
@@ -46,22 +51,22 @@ final class HAppImp implements HApp {
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(final HQuery query) {
-		return new HResult(query, selector.findCategories(query.getCategorySelection()), cubeStore.execute(appName, query, selector));
+	public HResult execute(final String type, final HQuery query) {
+		return new HResult(query, selector.findCategories(query.getCategorySelection()), cubeStore.execute(appName, type, query, selector));
 	}
 
 	/** {@inheritDoc} */
-	public void push(final HKey key, final HCube cube) {
-		cubeStore.push(appName, key, cube);
+	public void push(final String type, final HKey key, final HCube cube) {
+		cubeStore.push(appName, type, key, cube);
 	}
 
 	/** {@inheritDoc} */
-	public long size() {
-		return cubeStore.size(appName);
+	public long size(final String type) {
+		return cubeStore.size(appName, type);
 	}
 
 	/** {@inheritDoc} */
-	public String getName() {
+	public String getAppName() {
 		return appName;
 	}
 }

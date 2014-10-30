@@ -22,9 +22,8 @@ final class AppCategoryStore {
 		}
 	}
 
-	void addCategories(final HCategory[] addedCategories) {
-		Assertion.checkNotNull(addedCategories);
-		Assertion.checkArgument(addedCategories.length == dimensions, "count of categories must be {0} instead of {1}", dimensions, addedCategories.length);
+	void addCategory(final HCategory addedCategory) {
+		Assertion.checkNotNull(addedCategory);
 		//---------------------------------------------------------------------
 		for (int i = 0; i < dimensions; i++) {
 			HCategory currentCategory = addedCategories[i];
@@ -47,7 +46,7 @@ final class AppCategoryStore {
 	/**
 	 * Liste des Catégories
 	 */
-	Set<List<HCategory>> findCategories(final HCategorySelection categorySelection) {
+	List<HCategory> findCategories(final HCategorySelection categorySelection) {
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------
 		final Set<List<HCategory>> set = new HashSet<>();

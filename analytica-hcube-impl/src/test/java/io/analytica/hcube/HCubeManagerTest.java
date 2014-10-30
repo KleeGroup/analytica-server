@@ -25,6 +25,7 @@ import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HMetricDefinition;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
@@ -100,18 +101,13 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery() {
 		final Date start = new Date();
+		//PAGES
 		final HQuery query1 = new HQueryBuilder()
-				.onType(PAGES)
-				.on(HTimeDimension.Hour)
-				.between(new DateBuilder(start).addHours(-3).toDateTime(), start)
-				//.whereCategoryEquals(PAGES)
+				.between(HTimeDimension.Hour, new DateBuilder(start).addHours(-3).toDateTime(), start)
 				.build();
 
 		final HQuery query2 = new HQueryBuilder()
-				.onType(PAGES)
-				.on(HTimeDimension.Hour)
-				.between("NOW-3h", "NOW")
-				//				.whereCategoryEquals(PAGES)
+				.between(HTimeDimension.Hour, "NOW-3h", "NOW")
 				.build();
 		//---
 		Assert.assertEquals(3, app.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
@@ -124,10 +120,7 @@ public final class HCubeManagerTest {
 	@Test
 	public void testQuery2() {
 		final HQuery query = new HQueryBuilder()
-				.onType(PAGES)
-				.on(HTimeDimension.Hour)
-				.between("NOW", "NOW+3d")
-				//				.whereCategoryEquals(PAGES)
+				.between(HTimeDimension.Hour, "NOW", "NOW+3d")
 				.build();
 		//---
 		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
@@ -139,9 +132,7 @@ public final class HCubeManagerTest {
 	@Test(expected = Exception.class)
 	public void testQueryFail() {
 		new HQueryBuilder()
-				.on(HTimeDimension.Hour)
-				.between("NOW", "NOW-3m")
-				//	.whereCategoryEquals(PAGES)
+				.between(HTimeDimension.Hour, "NOW", "NOW-3m")
 				.build();
 	}
 
@@ -176,13 +167,10 @@ public final class HCubeManagerTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()
-				.onType(PAGES)
-				.on(HTimeDimension.Hour)
-				.between(start, end)
-				//.whereCategoryEquals(PAGES)
+				.between(HTimeDimension.Hour, start, end)
 				.build();
 
-		final HResult result = app.execute(query);
+		final HResult result = app.execute(PAGES, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -248,13 +236,11 @@ public final class HCubeManagerTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()
-				.onType(PAGES)
-				.on(HTimeDimension.SixMinutes)
-				.between(start, end)
+				.between(HTimeDimension.SixMinutes, start, end)
 				//.whereCategoryEquals(PAGES)
 				.build();
 
-		final HResult result = app.execute(query);
+		final HResult result = app.execute(PAGES, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -420,7 +406,9 @@ public final class HCubeManagerTest {
 	//-------------------------------------------------------------------------
 	private void addCube(final Date current, final int weightValue) {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
-		final HKey key = new HKey(PAGES, time, "welcome");
+		final HCategory category = new HCategory("welcome");
+		final HLocation location = new HLocation("myServer");
+		final HKey key = new HKey(location, time, category);
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)
 				.withValue(100)//
 				.build();
@@ -431,7 +419,7 @@ public final class HCubeManagerTest {
 				.withMetric(durationMetric)
 				.withMetric(weightMetric)
 				.build();
-		app.push(key, cube);
+		app.push(PAGES, key, cube);
 	}
 
 	private void populateData(final Date startDate, final int days) {
@@ -439,13 +427,15 @@ public final class HCubeManagerTest {
 		System.out.println("start = " + startDate);
 
 		long mc = 0;
+		final HLocation location = new HLocation("myServer");
+		final HCategory category = new HCategory("welcome");
 		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {
 					final Date current = new DateBuilder(startDate).addDays(day).addHours(h).addMinutes(min).toDateTime();
 					final HTime time = new HTime(current, HTimeDimension.Minute);
 					//--------
-					final HKey key = new HKey(PAGES, time, "welcome");
+					final HKey key = new HKey(location, time, category);
 
 					final HMetricBuilder durationMetricBuilder = new HMetricBuilder(HM_DURATION);
 					for (int i = 0; i < 100; i++) {
@@ -460,7 +450,7 @@ public final class HCubeManagerTest {
 							.withMetric(weightMetric)
 							.build();
 
-					app.push(key, cube);
+					app.push(PAGES, key, cube);
 					//--
 					checkMemory(day);
 					if ((mc++) % (60 * 24 * 10) == 0) {
@@ -474,16 +464,16 @@ public final class HCubeManagerTest {
 
 	private void checkMemory(final long day) {
 		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			app.size();
+			app.size(PAGES);
 			System.gc();
 			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
-				System.out.println(">>>> cubes count =" + app.size());
+				System.out.println(">>>> cubes count =" + app.size(PAGES));
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / app.size()) + " octets");
+				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / app.size(PAGES)) + " octets");
 				try {
 					Thread.sleep(1000 * 20);
 				} catch (final InterruptedException e) {
@@ -498,13 +488,10 @@ public final class HCubeManagerTest {
 	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) {
 		//----
 		final HQuery query = new HQueryBuilder()
-				.onType(PAGES)
-				.on(timeDimension)
-				.between(start, end)
-				//	.whereCategoryEquals(PAGES)
+				.between(timeDimension, start, end)
 				.build();
 
-		final HResult result = app.execute(query);
+		final HResult result = app.execute(PAGES, query);
 		Assert.assertEquals(query, result.getQuery());
 		//Check : 1 category
 		Assert.assertEquals(2, result.getAllCategories().size());

@@ -20,7 +20,9 @@ package io.analytica.hcube.impl;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.query.HCategorySelection;
+import io.analytica.hcube.query.HLocationSelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
@@ -37,22 +39,24 @@ import java.util.Set;
 public interface HCubeStorePlugin extends Plugin {
 	Set<String> getAppNames();
 
-	Set<List<HCategory>> findCategories(String appName, final HCategorySelection categorySelection);
+	List<HCategory> findCategories(String appName, final HCategorySelection categorySelection);
+
+	List<HLocation> findLocations(String appName, final HLocationSelection locationSelection);
 
 	/**
 	 * Ajout d'un cube.
 	 * @param cube HCube à ajouter
 	 *
 	 */
-	void push(String appName, HKey key, HCube cube);
+	void push(String appName, final String type, HKey key, HCube cube);
 
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
-	List<HSerie> execute(String appName, final HQuery query, final HSelector selector);
+	List<HSerie> execute(String appName, final String type, final HQuery query, final HSelector selector);
 
-	long size(String appName);
+	long size(String appName, final String type);
 
 }

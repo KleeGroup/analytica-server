@@ -18,15 +18,12 @@
 package io.analytica.hcube.result;
 
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.query.HQuery;
 import io.vertigo.lang.Assertion;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Résultat d'une requête.
@@ -36,25 +33,25 @@ import java.util.Set;
  */
 public final class HResult {
 	private final HQuery query;
-	private final Map<List<HCategory>, HSerie> series;
+	private final Map<HCategory, HSerie> series;
 	//Liste des catagories matchant la query
-	private final Set<List<HCategory>> categoriesSet;
+	private final List<HCategory> categories;
 
 	/**
 	 * Constructeur.
 	 * @param query Requete initiale
 	 * @param series Liste des séries par catégorie
 	 */
-	public HResult(final HQuery query, final Set<List<HCategory>> categories, final List<HSerie> series) {
+	public HResult(final HQuery query, final List<HCategory> categories, final List<HSerie> series) {
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(categories);
 		Assertion.checkNotNull(series);
 		//---------------------------------------------------------------------
 		this.query = query;
-		this.categoriesSet = categories;
+		this.categories = categories;
 		this.series = new HashMap<>();
 		for (final HSerie serie : series) {
-			this.series.put(serie.getCategories(), serie);
+			this.series.put(serie.getCategory(), serie);
 		}
 	}
 
@@ -62,8 +59,8 @@ public final class HResult {
 	/**
 	 * Liste triée par ordre alphabétique des catégories matchant la sélection
 	 */
-	public Set<List<HCategory>> getAllCategories() {
-		return categoriesSet;
+	public List<HCategory> getAllCategories() {
+		return categories;
 	}
 
 	/**
@@ -74,16 +71,15 @@ public final class HResult {
 	}
 
 	/**
-	 * @param strCategories Catégories demandées
 	 * @return Serie de cette catégorie
 	 */
-	public HSerie getSerie(final String... strCategories) {
-		Assertion.checkNotNull(strCategories);
+	public HSerie getSerie(final HCategory category) {
+		Assertion.checkNotNull(category);
 		//	Assertion.checkArgument(series.containsKey(categories), "categories: {0} not in resultSet : ", categories);
 		//-------------------------------------------------------------------------
-		final List<HCategory> list = Arrays.asList(HKey.to(strCategories));
-		final HSerie serie = series.get(list);
-		Assertion.checkNotNull(serie, "categories: {0} not in resultSet : ", list);
+		//		final List<HCategory> list = Arrays.asList(HKey.to(strCategories));
+		final HSerie serie = series.get(category);
+		Assertion.checkNotNull(serie, "category {0} not in resultSet : ", category);
 		return serie;
 	}
 }

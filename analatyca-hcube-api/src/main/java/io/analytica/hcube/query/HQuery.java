@@ -26,22 +26,22 @@ import io.vertigo.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HQuery {
-	private final String type;
+	private final HLocationSelection locationSelection;
 	private final HTimeSelection timeSelection;
 	private final HCategorySelection categorySelection;
 
-	HQuery(final String type, final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
-		Assertion.checkArgNotEmpty(type);
+	HQuery(final HLocationSelection locationSelection, final HTimeSelection timeSelection, final HCategorySelection categorySelection) {
+		Assertion.checkNotNull(locationSelection);
 		Assertion.checkNotNull(timeSelection);
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------
-		this.type = type;
+		this.locationSelection = locationSelection;
 		this.timeSelection = timeSelection;
 		this.categorySelection = categorySelection;
 	}
 
-	public String getType() {
-		return type;
+	public HLocationSelection getLocationSelection() {
+		return locationSelection;
 	}
 
 	public HCategorySelection getCategorySelection() {
@@ -55,6 +55,6 @@ public final class HQuery {
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {
-		return "{timeSelection :" + timeSelection + ", categorySelection :" + categorySelection + "}";
+		return "{timeSelection :" + timeSelection + ", categorySelection :" + categorySelection + ", locationSelection :" + locationSelection + "}";
 	}
 }

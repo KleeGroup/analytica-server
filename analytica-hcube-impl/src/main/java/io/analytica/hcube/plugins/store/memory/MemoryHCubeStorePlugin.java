@@ -46,8 +46,9 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private static final AppCubeStore EMPTY = new AppCubeStore();
 
 	/** {@inheritDoc} */
-	public synchronized void push(final String appName, final HKey key, final HCube cube) {
+	public synchronized void push(final String appName, final String type, final HKey key, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
+		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
@@ -65,7 +66,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		}
 
 		appCubeStore.push(key, cube);
-		appCategoryStore.addCategories(key.getCategories());
+		appCategoryStore.addCategory(key.getCategory());
 	}
 
 	public synchronized long size(final String appName) {
@@ -77,8 +78,9 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized List<HSerie> execute(final String appName, final HQuery query, final HSelector selector) {
+	public synchronized List<HSerie> execute(final String appName, final String type, final HQuery query, final HSelector selector) {
 		Assertion.checkArgNotEmpty(appName);
+		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(selector);
 		//---------------------------------------------------------------------
@@ -90,12 +92,12 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
-	public synchronized Set<List<HCategory>> findCategories(final String appName, final HCategorySelection categorySelection) {
+	public synchronized List<HCategory> findCategories(final String appName, final HCategorySelection categorySelection) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------
 		if (!appNames.contains(appName)) {
-			return Collections.emptySet();
+			return Collections.emptyList();
 		}
 		return appCategoryStores.get(appName).findCategories(categorySelection);
 	}

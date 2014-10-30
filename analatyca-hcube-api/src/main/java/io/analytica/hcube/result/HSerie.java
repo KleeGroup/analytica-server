@@ -20,7 +20,6 @@ package io.analytica.hcube.result;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
-import io.analytica.hcube.cube.HVirtualCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
 import io.vertigo.lang.Assertion;
@@ -40,21 +39,21 @@ import java.util.Map.Entry;
  *
  * @author pchretien, npiedeloup
  */
-public final class HSerie implements HVirtualCube {
-	private final List<HCategory> categories;
+public final class HSerie {
+	private final HCategory category;
 	private final Map<HTime, HCube> cubes;
 	private final Map<String, HMetric> metrics;
 
 	/**
 	 * Constructeur.
-	 * @param categories Catégories de la série
+	 * @param category Catégories de la série
 	 * @param cubes Liste ordonnée des élements du parallélépipède
 	 */
-	public HSerie(final List<HCategory> categories, final Map<HTime, HCube> cubes) {
-		Assertion.checkNotNull(categories);
+	public HSerie(final HCategory category, final Map<HTime, HCube> cubes) {
+		Assertion.checkNotNull(category);
 		Assertion.checkNotNull(cubes);
 		//---------------------------------------------------------------------
-		this.categories = categories;
+		this.category = category;
 		this.cubes = cubes;
 		metrics = buildMetrics(cubes.values());
 	}
@@ -62,8 +61,8 @@ public final class HSerie implements HVirtualCube {
 	/**
 	 * @return Category de la série
 	 */
-	public List<HCategory> getCategories() {
-		return categories;
+	public HCategory getCategory() {
+		return category;
 	}
 
 	/**
@@ -93,14 +92,12 @@ public final class HSerie implements HVirtualCube {
 		return metrics;
 	}
 
-	/** {@inheritDoc} */
 	public HMetric getMetric(final String metricName) {
 		Assertion.checkNotNull(metricName);
 		//---------------------------------------------------------------------
 		return metrics.get(metricName);
 	}
 
-	/** {@inheritDoc} */
 	public Collection<HMetric> getMetrics() {
 		return metrics.values();
 	}
@@ -125,6 +122,6 @@ public final class HSerie implements HVirtualCube {
 
 	@Override
 	public String toString() {
-		return "{categories:" + categories + ", cubes" + cubes + "}";
+		return "{category:" + category + ", cubes" + cubes + "}";
 	}
 }

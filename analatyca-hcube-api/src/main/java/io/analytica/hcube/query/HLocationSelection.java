@@ -17,33 +17,29 @@
  */
 package io.analytica.hcube.query;
 
-import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HLocation;
 import io.vertigo.lang.Assertion;
 
 /**
- * Selection de catégories permettant de définir un ensemble de positions sur un niveau donné.
- * exemple :
- * - toutes les catégories racine  : new HCategorySelection()
- * - toutes les sous-catégories de SQL, select : HCategorySelection(new HCategoryPosition("SQL", "select"), true);
- *
  * @author npiedeloup, pchretien
  */
-public final class HCategorySelection {
+public final class HLocationSelection {
 	private final String pattern;
 
-	public HCategorySelection(final String pattern) {
-		Assertion.checkArgNotEmpty(pattern);
+	public HLocationSelection(final String pattern) {
+		Assertion.checkNotNull(pattern);
 		// ---------------------------------------------------------------------
 		this.pattern = pattern;
 	}
 
-	public boolean matches(final HCategory category) {
-		Assertion.checkNotNull(category);
-		// ---------------------------------------------------------------------
-		if (pattern.endsWith("*")) {
-			return category.getPath().startsWith(pattern.substring(pattern.length()));
-		}
-		return category.getPath().equals(pattern);
+	public boolean matches(final HLocation location) {
+		return true;
+		//		Assertion.checkNotNull(location);
+		//		// ---------------------------------------------------------------------
+		//		if (pattern.endsWith("*")) {
+		//			return category.getPath().startsWith(pattern.substring(pattern.length()));
+		//		}
+		//		return category.getPath().equals(pattern);
 	}
 
 	/** {@inheritDoc} */

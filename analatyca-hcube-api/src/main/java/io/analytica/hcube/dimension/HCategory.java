@@ -19,6 +19,8 @@ package io.analytica.hcube.dimension;
 
 import io.vertigo.lang.Assertion;
 
+import java.util.regex.Pattern;
+
 /**
  * Une catégorie est composée d'une hierarchie de termes.
  *  * exemple :
@@ -29,38 +31,53 @@ import io.vertigo.lang.Assertion;
  * @author npiedeloup, pchretien
  */
 public final class HCategory {
-	private static final String REGEX = "([a-z]([a-z]|/))*[a-z]";
+	public static final Pattern NAME_REGEX = Pattern.compile("[a-z][a-zA-Z]*");
 	private static char SEPARATOR = '/';
-	private final String path;
+	private final String[] categoryTerms;
+	private final String categoryPath;
 
-	public HCategory(final String path) {
-		Assertion.checkNotNull(path);
-		Assertion.checkArgument(path.length() == 0 || path.matches(REGEX), "category '{0}'must contain only letters separated with '/' like 'aaa/bbb/ccc'", path);
+	public HCategory(final String... categoryTerms) {
+		Assertion.checkNotNull(categoryTerms);
+		for (final String categoryTerm : categoryTerms) {
+			if (!NAME_REGEX.matcher(categoryTerm).matches()) {
+				throw new IllegalArgumentException("categoryTerm " + categoryTerm + " must match regex :" + NAME_REGEX);
+			}
+		}
 		//---------------------------------------------------------------------
-		this.path = path;
+		final StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (final String categoryTerm : categoryTerms) {
+			if (!first) {
+				sb.append(SEPARATOR);
+			}
+			sb.append(categoryTerm);
+			first = false;
+		}
+		this.categoryTerms = categoryTerms.clone();
+		this.categoryPath = sb.toString();
 	}
 
 	/**
 	 * @return Upper HCategory  or null.
 	 */
 	public HCategory drillUp() {
-		if (path.indexOf(SEPARATOR) == -1) {
-			return (path.length() > 0) ? new HCategory("") : null;
+		if (categoryTerms.length == 0) {
+			return null;
 		}
-		int i = path.length();
-		while (path.charAt(i - 1) != SEPARATOR) {
-			i--;
+		final String[] upCategoryTerms = new String[categoryTerms.length - 1];
+		for (int i = 0; i < categoryTerms.length - 1; i++) {
+			upCategoryTerms[i] = categoryTerms[i];
 		}
-		return new HCategory(path.substring(0, i));
+		return new HCategory(upCategoryTerms);
 	}
 
 	public final String getPath() {
-		return path;
+		return categoryPath;
 	}
 
 	@Override
 	public final int hashCode() {
-		return path.hashCode();
+		return categoryPath.hashCode();
 	}
 
 	@Override
@@ -68,13 +85,13 @@ public final class HCategory {
 		if (object == this) {
 			return true;
 		} else if (object instanceof HCategory) {
-			return path.equals(((HCategory) object).path);
+			return categoryPath.equals(((HCategory) object).categoryPath);
 		}
 		return false;
 	}
 
 	@Override
 	public final String toString() {
-		return path;
+		return categoryPath;
 	}
 }

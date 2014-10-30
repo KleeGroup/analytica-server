@@ -28,97 +28,56 @@ import java.util.Date;
  * @author npiedeloup, pchretien
  */
 public final class HQueryBuilder implements Builder<HQuery> {
-	private String hType;
-	private HTimeDimension hTimeDimension;
-	private Date from;
-	private Date to;
-	//----
-	private String categoryPattern;
+	private HCategorySelection categorySelection;
+	private HLocationSelection locationSelection;
+	private HTimeSelection timeSelection;
 
-	//	private boolean categoryChildren;
-
-	public HQueryBuilder onType(final String type) {
-		Assertion.checkNotNull(type);
-		Assertion.checkState(this.hType == null, "type already set");
-		//---------------------------------------------------------------------
-		this.hType = type;
-		return this;
-	}
-
-	public HQueryBuilder on(final HTimeDimension timeDimension) {
+	/**
+	 * @param startdate lower selection (INCLUDED)
+	 * @param endDate upper selection (EXCLUDED)
+	 * @return HQueryBuilder
+	 */
+	public HQueryBuilder between(final HTimeDimension timeDimension, final String startdate, final String endDate) {
 		Assertion.checkNotNull(timeDimension);
-		Assertion.checkState(hTimeDimension == null, "timeDimension already set");
+		Assertion.checkNotNull(startdate);
+		Assertion.checkNotNull(endDate);
+		Assertion.checkState(timeSelection == null, "time selection already set");
 		//---------------------------------------------------------------------
-		hTimeDimension = timeDimension;
+
+		final Date minDate = readDate(startdate, timeDimension);
+		final Date maxDate = readDate(endDate, timeDimension);
+		timeSelection = new HTimeSelection(timeDimension, minDate, maxDate);
 		return this;
 	}
 
 	/**
-	 * @param startdate lower selection (INCLUDED)
+	 * @param startDate lower selection (INCLUDED)
 	 * @param endDate upper selection (EXCLUDED)
 	 * @return HQueryBuilder
 	 */
-	public HQueryBuilder between(final String startdate, final String endDate) {
-		return from(startdate).to(endDate);
-	}
-
-	/**
-	 * @param startdate lower selection (INCLUDED)
-	 * @param endDate upper selection (EXCLUDED)
-	 * @return HQueryBuilder
-	 */
-	public HQueryBuilder between(final Date startdate, final Date endDate) {
-		return from(startdate).to(endDate);
-	}
-
-	/**
-	 * @param date lower selection (INCLUDED)
-	 * @return HQueryBuilder
-	 */
-	private HQueryBuilder from(final String date) {
-		Assertion.checkNotNull(hTimeDimension);
+	public HQueryBuilder between(final HTimeDimension timeDimension, final Date startDate, final Date endDate) {
+		Assertion.checkNotNull(timeDimension);
+		Assertion.checkNotNull(startDate);
+		Assertion.checkNotNull(endDate);
+		Assertion.checkState(timeSelection == null, "time selection already set");
 		//---------------------------------------------------------------------
-		return from(readDate(date, hTimeDimension));
-	}
-
-	/**
-	 * @param date lower selection (INCLUDED)
-	 * @return HQueryBuilder
-	 */
-	private HQueryBuilder from(final Date date) {
-		Assertion.checkNotNull(date);
-		Assertion.checkState(from == null, "Date From already set");
-		//---------------------------------------------------------------------
-		from = date;
+		timeSelection = new HTimeSelection(timeDimension, startDate, endDate);
 		return this;
 	}
 
-	/**
-	 * @param date upper selection (EXCLUDED)
-	 * @return HQueryBuilder
-	 */
-	private HQueryBuilder to(final Date date) {
-		Assertion.checkNotNull(date);
-		Assertion.checkState(to == null, "Date To already set");
+	public HQueryBuilder whereLocationMatches(final String pattern) {
+		Assertion.checkArgNotEmpty(pattern);
+		Assertion.checkState(this.locationSelection == null, "location's pattern is already set");
 		//---------------------------------------------------------------------
-		to = date;
+		locationSelection = new HLocationSelection(pattern);
 		return this;
-	}
-
-	/**
-	 * @param date date upper selection (EXCLUDED)
-	 */
-	private HQueryBuilder to(final String date) {
-		Assertion.checkNotNull(hTimeDimension);
-		//---------------------------------------------------------------------
-		return to(readDate(date, hTimeDimension));
 	}
 
 	public HQueryBuilder whereCategoryMatches(final String pattern) {
 		Assertion.checkArgNotEmpty(pattern);
-		Assertion.checkState(this.categoryPattern == null, "category's pattern is already set");
+		Assertion.checkState(this.categorySelection == null, "category's pattern is already set");
 		//---------------------------------------------------------------------
-		categoryPattern = pattern;
+		categorySelection = new HCategorySelection(pattern);
 		return this;
 	}
 
@@ -184,9 +143,13 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	/** {@inheritDoc} */
 	public HQuery build() {
-		if (categoryPattern == null) {
-			categoryPattern = "*";
+		Assertion.checkNotNull(timeSelection, "date selection is required");
+		if (categorySelection == null) {
+			categorySelection = new HCategorySelection("*"); //par défaut on prend tous
 		}
-		return new HQuery(hType, new HTimeSelection(hTimeDimension, from, to), new HCategorySelection(categoryPattern));
+		if (locationSelection == null) {
+			locationSelection = new HLocationSelection("*"); //par défaut on prend tous
+		}
+		return new HQuery(locationSelection, timeSelection, categorySelection);
 	}
 }

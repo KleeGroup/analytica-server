@@ -19,9 +19,6 @@ package io.analytica.hcube.dimension;
 
 import io.vertigo.lang.Assertion;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Position (ou clé) du cube dans l'espace multidimensionnel.
  *
@@ -31,70 +28,32 @@ import java.util.List;
  * @author npiedeloup, pchretien
  */
 public final class HKey {
-	private final String type;
+	private final HLocation location;
 	private final HTime time;
-	private final HCategory[] categories;
+	private final HCategory category;
 	private final int hash;
 
-	public HKey(final String type, final HTime time, final String... categories) {
-		this(type, time, to(categories));
-	}
-
-	public HKey(final String type, final HTime time, final List<HCategory> categories) {
-		this(type, time, categories.toArray(new HCategory[categories.size()]));
-	}
-
-	private HKey(final String type, final HTime time, final HCategory[] categories) {
-		Assertion.checkArgNotEmpty(type);
+	public HKey(final HLocation location, final HTime time, final HCategory category) {
+		Assertion.checkNotNull(location);
 		Assertion.checkNotNull(time);
-		Assertion.checkNotNull(categories);
+		Assertion.checkNotNull(category);
 		//---------------------------------------------------------------------
-		this.type = type;
+		this.location = location;
 		this.time = time;
-		this.categories = categories.clone();
-		hash = type.hashCode() + time.hashCode() >> 3 + categories[0].hashCode() >> 6;
+		this.category = category;
+		hash = location.hashCode() + time.hashCode() >> 3 + category.hashCode() >> 6;
 	}
 
-	public static HCategory[] to(final String[] strCategories) {
-		final HCategory[] categories = new HCategory[strCategories.length];
-		for (int i = 0; i < categories.length; i++) {
-			categories[i] = new HCategory(strCategories[i]);
-		}
-		return categories;
-	}
-
-	public String getType() {
-		return type;
+	public HLocation getLocation() {
+		return location;
 	}
 
 	public HTime getTime() {
 		return time;
 	}
 
-	public HCategory[] getCategories() {
-		return categories;
-	}
-
-	/**
-	 * Calcule la liste de tous les cubes auxquels le présent cube appartient
-	 * Cette méthode permet de préparer toutes les agrégations.
-	 * @return Liste de tous les cubes auxquels le présent cube appartient
-	 */
-	public List<HKey> drillUp() {
-		final List<HKey> upperKeys = new ArrayList<>();
-		//on remonte les axes, le premier sera le plus bas niveau
-		HTime hTime = getTime();
-		while (hTime != null) {
-			final HCategory[] hCategories = categories.clone();
-			while (hCategories[0] != null) {
-				upperKeys.add(new HKey(type, hTime, hCategories));
-				//On remonte l'arbre des categories
-				hCategories[0] = hCategories[0].drillUp();
-			}
-			//On remonte time
-			hTime = hTime.drillUp();
-		}
-		return upperKeys;
+	public HCategory getCategory() {
+		return category;
 	}
 
 	@Override
@@ -108,20 +67,13 @@ public final class HKey {
 			return true;
 		} else if (object instanceof HKey) {
 			final HKey other = HKey.class.cast(object);
-			if (type.equals(other.type) && time.equals(other.time) && (categories.length == other.categories.length)) {
-				for (int i = 0; i < categories.length; i++) {
-					if (!categories[i].equals(other.categories[i])) {
-						return false;
-					}
-				}
-				return true;
-			}
+			return location.equals(other.location) && time.equals(other.time) && category.equals(other.category);
 		}
 		return false;
 	}
 
 	@Override
 	public final String toString() {
-		return " { type:" + type + ", time:" + time + ", categories:" + categories + " }";
+		return " { location:" + location + ", time:" + time + ", category:" + category + " }";
 	}
 }

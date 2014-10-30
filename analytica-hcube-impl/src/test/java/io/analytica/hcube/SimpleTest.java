@@ -22,7 +22,9 @@ import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.cube.HMetricDefinition;
+import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
@@ -75,16 +77,14 @@ public final class SimpleTest {
 				.withMetric(workingHours)
 				.build();
 
-		app.push(new HKey("PAGES", time, "www"), cube);
+		app.push("PAGES", new HKey(new HLocation("myServer"), time, new HCategory("www")), cube);
 
 		final HQuery query = new HQueryBuilder()
-				.onType("PAGES")
-				.on(HTimeDimension.SixMinutes)
-				.between("NOW", "NOW")
+				.between(HTimeDimension.SixMinutes, "NOW", "NOW")
 				//	.whereCategoryEquals(PAGES)
 				.build();
 
-		final HResult result = app.execute(query);
+		final HResult result = app.execute("PAGES", query);
 		System.out.println(">>> " + result.getSerie(""));
 	}
 }
