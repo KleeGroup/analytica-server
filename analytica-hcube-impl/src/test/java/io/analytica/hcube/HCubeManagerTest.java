@@ -178,14 +178,14 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(2, result.getAllCategories().size());
 
 		//Check : 24 cubes(per hour) by day
-		Assert.assertEquals(24, result.getSerie("").getCubes().size());
+		Assert.assertEquals(24, result.getSerie(category).getCubes().size());
 
 		//Check : serie contains 2 metric (DURATION and WEIGHT)
-		Assert.assertEquals(2, result.getSerie("").getMetrics().size());
+		Assert.assertEquals(2, result.getSerie(category).getMetrics().size());
 
 		//
-		final HSerie serie = result.getSerie("");
-		Assert.assertEquals(Collections.singletonList(new HCategory("")), serie.getCategories());
+		final HSerie serie = result.getSerie(category);
+		Assert.assertEquals(Collections.singletonList(new HCategory("")), serie.getCategory());
 
 		for (final Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
 			final HCube cube = entry.getValue();
@@ -248,7 +248,7 @@ public final class HCubeManagerTest {
 		Assert.assertEquals(2, result.getAllCategories().size());
 
 		//Check : 10*24 cubes per minute
-		Assert.assertEquals(240, result.getSerie("").getCubes().size());
+		Assert.assertEquals(240, result.getSerie(category).getCubes().size());
 	}
 
 	@Test
@@ -406,8 +406,6 @@ public final class HCubeManagerTest {
 	//-------------------------------------------------------------------------
 	private void addCube(final Date current, final int weightValue) {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
-		final HCategory category = new HCategory("welcome");
-		final HLocation location = new HLocation("myServer");
 		final HKey key = new HKey(location, time, category);
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)
 				.withValue(100)//
@@ -422,13 +420,14 @@ public final class HCubeManagerTest {
 		app.push(PAGES, key, cube);
 	}
 
+	private final HCategory category = new HCategory("welcome");
+	final HLocation location = new HLocation("myServer");
+
 	private void populateData(final Date startDate, final int days) {
 		final long start = System.currentTimeMillis();
 		System.out.println("start = " + startDate);
 
 		long mc = 0;
-		final HLocation location = new HLocation("myServer");
-		final HCategory category = new HCategory("welcome");
 		for (int day = 0; day < days; day++) {
 			for (int h = 0; h < 24; h++) {
 				for (int min = 0; min < 60; min++) {
@@ -496,7 +495,7 @@ public final class HCubeManagerTest {
 		//Check : 1 category
 		Assert.assertEquals(2, result.getAllCategories().size());
 		//Check : 10*24 cubes per minute
-		final Map<HTime, HCube> cubes = result.getSerie("").getCubes();
+		final Map<HTime, HCube> cubes = result.getSerie(category).getCubes();
 		Assert.assertEquals(3, cubes.size());
 		//on vérifie
 		final HTime startTime = new HTime(start, timeDimension);

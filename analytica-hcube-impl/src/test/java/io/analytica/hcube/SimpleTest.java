@@ -85,6 +85,6 @@ public final class SimpleTest {
 				.build();
 
 		final HResult result = app.execute("PAGES", query);
-		System.out.println(">>> " + result.getSerie(""));
+		System.out.println(">>> " + result.getSerie(new HCategory("www")));
 	}
 }

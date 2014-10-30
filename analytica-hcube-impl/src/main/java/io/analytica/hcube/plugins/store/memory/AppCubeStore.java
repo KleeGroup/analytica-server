@@ -6,6 +6,7 @@ import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HKeyUtil;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
@@ -85,18 +86,20 @@ final class AppCubeStore {
 		//On itère sur les séries indexées par les catégories de la sélection.
 		final List<HSerie> series = new ArrayList<>();
 
-		for (final HCategory category : selector.findCategories(query.getCategorySelection())) {
+		for (final HCategory currentCategory : selector.findCategories(query.getCategorySelection())) {
 			final Map<HTime, HCube> cubes = new LinkedHashMap<>();
 
 			for (final HTime currentTime : selector.findTimes(query.getTimeSelection())) {
-				final HKey key = new HKey(query.getLocation(), currentTime, category);
-				final HCube cube = store.get(key);
-				//---
-				//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
-				cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
+				for (final HLocation currentLocation : selector.findLocations(query.getLocationSelection())) {
+					final HKey key = new HKey(currentLocation, currentTime, currentCategory);
+					final HCube cube = store.get(key);
+					//---
+					//2 stratégies possibles : on peut choisir de retourner tous les cubes ou seulement ceux avec des données
+					cubes.put(currentTime, cube == null ? new HCubeBuilder().build() : cube);
+				}
 			}
 			//A nouveau on peut choisir de retourner toutes les series ou seulement celles avec des données
-			series.add(new HSerie(category, cubes));
+			series.add(new HSerie(currentCategory, cubes));
 		}
 		printStats();
 		return series;

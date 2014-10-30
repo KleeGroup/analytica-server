@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @author npiedeloup, pchretien
  */
-public final class HCube implements HVirtualCube {
+public final class HCube {
 	/**
 	 * Identifiant du cube : un cube est localisé dans le temps et l'espace (axe fonctionnel).
 	 */
@@ -43,14 +43,12 @@ public final class HCube implements HVirtualCube {
 		this.metrics = metrics;
 	}
 
-	/** {@inheritDoc} */
 	public HMetric getMetric(final String metricName) {
 		Assertion.checkNotNull(metricName);
 		//---------------------------------------------------------------------
 		return metrics.get(metricName);
 	}
 
-	/*** {@inheritDoc} */
 	public Collection<HMetric> getMetrics() {
 		return metrics.values();
 	}

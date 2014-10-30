@@ -20,8 +20,10 @@ package io.analytica.hcube.plugins.store.memory;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
+import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HCategorySelection;
+import io.analytica.hcube.query.HLocationSelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HSerie;
@@ -69,14 +71,6 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		appCategoryStore.addCategory(key.getCategory());
 	}
 
-	public synchronized long size(final String appName) {
-		final AppCubeStore appCubeStore = appCubeStores.get(appName);
-		if (appCubeStore == null) {
-			return 0;
-		}
-		return appCubeStore.size();
-	}
-
 	/** {@inheritDoc} */
 	public synchronized List<HSerie> execute(final String appName, final String type, final HQuery query, final HSelector selector) {
 		Assertion.checkArgNotEmpty(appName);
@@ -106,4 +100,23 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	public synchronized Set<String> getAppNames() {
 		return Collections.unmodifiableSet(appNames);
 	}
+
+	public List<HLocation> findLocations(final String appName, final HLocationSelection locationSelection) {
+		return Collections.emptyList();
+	}
+
+	public synchronized long size(final String appName, final String type) {
+		//XXXX
+		//XXXX
+		//XXXX
+		//XXXX
+		//XXXX
+
+		final AppCubeStore appCubeStore = appCubeStores.get(appName);
+		if (appCubeStore == null) {
+			return 0;
+		}
+		return appCubeStore.size();
+	}
+
 }

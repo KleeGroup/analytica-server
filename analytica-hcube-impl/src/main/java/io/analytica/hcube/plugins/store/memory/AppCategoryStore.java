@@ -4,43 +4,28 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.query.HCategorySelection;
 import io.vertigo.lang.Assertion;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 final class AppCategoryStore {
-	private final Set<HCategory>[] categories;
-	private final int dimensions = 1;
+	private final Set<HCategory> categories = new HashSet<>();
+
+	//	private final int dimensions = 1;
 
 	AppCategoryStore(final String appName) {
 		//---------------------------------------------------------------------
 		//	this.appName = appName;
-		categories = new Set[dimensions];
-		for (int i = 0; i < dimensions; i++) {
-			categories[i] = new HashSet<>();
-		}
 	}
 
 	void addCategory(final HCategory addedCategory) {
 		Assertion.checkNotNull(addedCategory);
 		//---------------------------------------------------------------------
-		for (int i = 0; i < dimensions; i++) {
-			HCategory currentCategory = addedCategories[i];
-			boolean go;
-			do {
-				//Optim :Si la catégorie existe déjà alors sa partie gauche aussi et on s'arrete !!
-				//On dispose donc d'une info pour savoir si il faut remonter
-				go = doPut(i, currentCategory);
-				currentCategory = currentCategory.drillUp();
-			} while (go && currentCategory != null);
+		for (HCategory currentCategory = addedCategory; currentCategory != null; currentCategory = currentCategory.drillUp()) {
+			categories.add(currentCategory);
 		}
-	}
-
-	private boolean doPut(final int i, final HCategory category) {
-		Assertion.checkNotNull(category);
-		//---------------------------------------------------------------------
-		return categories[i].add(category);
 	}
 
 	/**
@@ -49,13 +34,13 @@ final class AppCategoryStore {
 	List<HCategory> findCategories(final HCategorySelection categorySelection) {
 		Assertion.checkNotNull(categorySelection);
 		//---------------------------------------------------------------------
-		final Set<List<HCategory>> set = new HashSet<>();
-		for (final HCategory category : categories[0]) {
+		final List<HCategory> matchingCategories = new ArrayList<>();
+		for (final HCategory category : categories) {
 			if (categorySelection.matches(category)) {
-				set.add(Collections.singletonList(category));
+				matchingCategories.add(category);
 			}
 		}
 		//		System.out.println(">>>>findCat>> " + set);
-		return Collections.unmodifiableSet(set);
+		return Collections.unmodifiableList(matchingCategories);
 	}
 }

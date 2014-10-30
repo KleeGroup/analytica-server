@@ -22,6 +22,10 @@ import io.vertigo.lang.Assertion;
 /**
  * Position (ou clé) du cube dans l'espace multidimensionnel.
  *
+ * [what]  HCategory
+ * [where] HLocation
+ * [when]  Htime
+ *
  * A partir d'une position il est possible d'accéder à la liste de toutes les positions qui la contiennent.
  * Inversement il est possible de savoir si une poition est contenue dans une autre.
  *
