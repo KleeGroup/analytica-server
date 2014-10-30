@@ -33,13 +33,12 @@ public final class HLocationSelection {
 	}
 
 	public boolean matches(final HLocation location) {
-		return true;
-		//		Assertion.checkNotNull(location);
-		//		// ---------------------------------------------------------------------
-		//		if (pattern.endsWith("*")) {
-		//			return category.getPath().startsWith(pattern.substring(pattern.length()));
-		//		}
-		//		return category.getPath().equals(pattern);
+		Assertion.checkNotNull(location);
+		// ---------------------------------------------------------------------
+		if (pattern.endsWith("*")) {
+			return location.getPath().startsWith(pattern.substring(pattern.length()));
+		}
+		return location.getPath().equals(pattern);
 	}
 
 	/** {@inheritDoc} */

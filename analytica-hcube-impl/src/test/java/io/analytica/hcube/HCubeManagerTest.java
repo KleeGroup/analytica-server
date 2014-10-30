@@ -42,7 +42,6 @@ import io.vertigo.util.DateBuilder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -185,7 +184,7 @@ public final class HCubeManagerTest {
 
 		//
 		final HSerie serie = result.getSerie(category);
-		Assert.assertEquals(Collections.singletonList(new HCategory("")), serie.getCategory());
+		Assert.assertEquals(category, serie.getCategory());
 
 		for (final Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
 			final HCube cube = entry.getValue();

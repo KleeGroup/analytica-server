@@ -2,11 +2,17 @@ package io.analytica.hcube.dimension;
 
 import io.vertigo.lang.Assertion;
 
+import java.util.regex.Pattern;
+
 public final class HLocation {
+	public static final Pattern NAME_REGEX = Pattern.compile("[a-z][a-zA-Z]*");
 	private final String location;
 
 	public HLocation(final String location) {
 		Assertion.checkArgNotEmpty(location);
+		if (!NAME_REGEX.matcher(location).matches()) {
+			throw new IllegalArgumentException("location " + location + " must match regex :" + NAME_REGEX);
+		}
 		//---------------------------------------------------------------------
 		this.location = location;
 	}
@@ -28,5 +34,9 @@ public final class HLocation {
 			return location.equals(((HLocation) value).location);
 		}
 		return false;
+	}
+
+	public String getPath() {
+		return location;
 	}
 }
