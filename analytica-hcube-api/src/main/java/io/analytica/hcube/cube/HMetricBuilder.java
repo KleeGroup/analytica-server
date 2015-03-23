@@ -41,25 +41,26 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * Constructeur.
 	 * @param metricName Nom de la metric
 	 */
-	public HMetricBuilder(final String metricName){
+	public HMetricBuilder(final String metricName) {
 		this(metricName, true);
 	}
-	public HMetricBuilder(final HMetric hMetric){
+
+	public HMetricBuilder(final HMetric hMetric) {
 		this(hMetric.getName(), false);
 	}
+
 	private HMetricBuilder(final String metricName, final boolean toCamel) {
 		Assertion.checkNotNull(metricName);
 		final String camelMetricName;
-		if(toCamel){
-			camelMetricName = "HM_"+StringUtil.camelToConstCase(metricName);
+		if (toCamel) {
+			camelMetricName = "HM_" + StringUtil.camelToConstCase(metricName);
 		}
-		else{
+		else {
 			camelMetricName = metricName;
 		}
-	
-		
+
 		//---------------------------------------------------------------------
-		this.metricDefinition = Home.getDefinitionSpace().resolve(camelMetricName, HMetricDefinition.class);
+		metricDefinition = Home.getDefinitionSpace().resolve(camelMetricName, HMetricDefinition.class);
 		distributionBuilder = metricDefinition.hasDistribution() ? new HDistributionBuilder() : null;
 	}
 
@@ -101,13 +102,15 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		return this;
 	}
 
-	public String getName(){
-		return this.metricDefinition.getName();
+	public String getName() {
+		return metricDefinition.getName();
 	}
+
 	/**
 	 * Construction de la Metric du cube.
 	 * @return Metric du cube
 	 */
+	@Override
 	public HMetric build() {
 		Assertion.checkArgument(count > 0, "Aucune valeur ajoutée à cette métric {0}, impossible de la créer.", metricDefinition);
 		//---------------------------------------------------------------------

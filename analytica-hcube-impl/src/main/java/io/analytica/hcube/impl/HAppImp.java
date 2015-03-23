@@ -30,14 +30,17 @@ final class HAppImp implements HApp {
 		selector = new HSelector() {
 			private final HTimeSelector timeSelector = new HTimeSelector();
 
+			@Override
 			public List<HTime> findTimes(final HTimeSelection timeSelection) {
 				return timeSelector.findTimes(timeSelection);
 			}
 
+			@Override
 			public List<HCategory> findCategories(final HCategorySelection categorySelection) {
 				return cubeStore.findCategories(appName, categorySelection);
 			}
 
+			@Override
 			public List<HLocation> findLocations(final HLocationSelection locationSelection) {
 				return cubeStore.findLocations(appName, locationSelection);
 			}
@@ -46,26 +49,31 @@ final class HAppImp implements HApp {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public HSelector getSelector() {
 		return selector;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public HResult execute(final String type, final HQuery query) {
 		return new HResult(query, selector.findCategories(query.getCategorySelection()), cubeStore.execute(appName, type, query, selector));
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void push(final String type, final HKey key, final HCube cube) {
 		cubeStore.push(appName, type, key, cube);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public long size(final String type) {
 		return cubeStore.size(appName, type);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String getAppName() {
 		return appName;
 	}

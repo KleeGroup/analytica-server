@@ -85,6 +85,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 	 * Construction du Cube.
 	 * @return cube
 	 */
+	@Override
 	public HCube build() {
 		final Map<String, HMetric> metrics = new LinkedHashMap<>(metricBuilders.size());
 		for (final Entry<String, HMetricBuilder> entry : metricBuilders.entrySet()) {

@@ -29,7 +29,6 @@ import io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlu
 import io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin;
 import io.analytica.server.plugins.processstore.memory.MemoryProcessStorePlugin;
 import io.analytica.server.plugins.queryapi.rest.RestQueryNetApiPlugin;
-import io.vertigo.core.Home;
 import io.vertigo.core.Home.App;
 import io.vertigo.core.config.AppConfig;
 import io.vertigo.core.config.AppConfigBuilder;
@@ -92,6 +91,7 @@ public class Starter implements Runnable {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public final void run() {
 		try {
 			start();
@@ -235,7 +235,7 @@ public class Starter implements Runnable {
 		try {
 			return new URL(absoluteFileName);
 		} catch (final MalformedURLException e) {
-			//Si fileName non trouvé, on recherche dans le classPath 
+			//Si fileName non trouvé, on recherche dans le classPath
 			final URL url = relativeRootClass.getResource(absoluteFileName);
 			Assertion.checkNotNull(url, "Impossible de récupérer le fichier [" + absoluteFileName + "]");
 			return url;
@@ -245,13 +245,13 @@ public class Starter implements Runnable {
 	private static final String translateFileName(final String fileName, final Class<?> relativeRootClass) {
 		Assertion.checkArgNotEmpty(fileName);
 		//---------------------------------------------------------------------
-		System.out.println(relativeRootClass.getResource(relativeRootClass.getSimpleName()+".class").getPath().toString());
+		System.out.println(relativeRootClass.getResource(relativeRootClass.getSimpleName() + ".class").getPath().toString());
 		if (fileName.startsWith(".")) {
 			//soit en relatif
 			return "/" + getRelativePath(relativeRootClass) + "/" + fileName.replace("./", "");
 		}
 
-		//soit en absolu		
+		//soit en absolu
 		if (fileName.startsWith("/")) {
 			return fileName;
 		}
@@ -259,7 +259,7 @@ public class Starter implements Runnable {
 	}
 
 	private static final String getRelativePath(final Class<?> relativeRootClass) {
-		
+
 		return relativeRootClass.getPackage().getName().replace('.', '/');
 	}
 }

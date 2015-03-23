@@ -43,7 +43,7 @@ public final class HCubeManagerImpl implements HCubeManager {
 	public HCubeManagerImpl(final HCubeStorePlugin cubeStorePlugin) {
 		Assertion.checkNotNull(cubeStorePlugin);
 		//-----------------------------------------------------------------
-		this.cubeStore = cubeStorePlugin;
+		cubeStore = cubeStorePlugin;
 
 		APP = new HAppImp(cubeStore, "MY-APP");
 		Home.getDefinitionSpace().register(HMetricDefinition.class);
@@ -56,22 +56,27 @@ public final class HCubeManagerImpl implements HCubeManager {
 
 	private final HApp APP;
 
+	@Override
 	public Set<HApp> getApps() {
 		return Collections.singleton(APP);
 	}
 
+	@Override
 	public HApp getApp(final String appName) {
 		return APP;
 	}
 
+	@Override
 	public void register(final HMetricDefinition metricDefinition) {
 		Home.getDefinitionSpace().put(metricDefinition, HMetricDefinition.class);
 	}
 
+	@Override
 	public Collection<HMetricDefinition> getMetricDefinitions() {
 		return Home.getDefinitionSpace().getAll(HMetricDefinition.class);
 	}
 
+	@Override
 	public HMetricDefinition getMetricDefinition(final String name) {
 		return Home.getDefinitionSpace().resolve(name, HMetricDefinition.class);
 	}

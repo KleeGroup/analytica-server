@@ -18,7 +18,6 @@
 package io.analytica.restserver.impl;
 
 import io.analytica.restserver.RestServerManager;
-import java.lang.RuntimeException;
 import io.vertigo.lang.Activeable;
 import io.vertigo.lang.Assertion;
 
@@ -74,12 +73,14 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void addResourceHandler(final Class<?> handlerClass) {
 		handlers.add(handlerClass);
 		restart();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void addStaticPath(final String classPath, final String context) {
 		final List<String> paths = obtainPathsPerContext(context);
 		paths.add(classPath);
@@ -96,15 +97,17 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void start() {
 		restart();
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop() {
 		startServerTask.cancel();
 		startServerTask = null;
-		//On programme une fin pour maintenant. 
+		//On programme une fin pour maintenant.
 		//On Utilise le timer pour rester dans le même Thread que le start.
 		//Le stop peut être appellé plusieurs fois.
 		delayedStarter.schedule(new StopServerTask(), 0); //stop now

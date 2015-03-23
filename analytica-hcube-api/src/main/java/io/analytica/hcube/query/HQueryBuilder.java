@@ -67,7 +67,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	public HQueryBuilder whereLocationMatches(final String pattern) {
 		Assertion.checkArgNotEmpty(pattern);
-		Assertion.checkState(this.locationSelection == null, "location's pattern is already set");
+		Assertion.checkState(locationSelection == null, "location's pattern is already set");
 		//---------------------------------------------------------------------
 		locationSelection = new HLocationSelection(pattern);
 		return this;
@@ -75,7 +75,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 
 	public HQueryBuilder whereCategoryMatches(final String pattern) {
 		Assertion.checkArgNotEmpty(pattern);
-		Assertion.checkState(this.categorySelection == null, "category's pattern is already set");
+		Assertion.checkState(categorySelection == null, "category's pattern is already set");
 		//---------------------------------------------------------------------
 		categorySelection = new HCategorySelection(pattern);
 		return this;
@@ -142,6 +142,7 @@ public final class HQueryBuilder implements Builder<HQuery> {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public HQuery build() {
 		Assertion.checkNotNull(timeSelection, "date selection is required");
 		if (categorySelection == null) {

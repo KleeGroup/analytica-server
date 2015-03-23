@@ -48,6 +48,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	private static final AppCubeStore EMPTY = new AppCubeStore();
 
 	/** {@inheritDoc} */
+	@Override
 	public synchronized void push(final String appName, final String type, final HKey key, final HCube cube) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkArgNotEmpty(type);
@@ -72,6 +73,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public synchronized List<HSerie> execute(final String appName, final String type, final HQuery query, final HSelector selector) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkArgNotEmpty(type);
@@ -86,6 +88,7 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public synchronized List<HCategory> findCategories(final String appName, final HCategorySelection categorySelection) {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkNotNull(categorySelection);
@@ -97,15 +100,18 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public synchronized Set<String> getAppNames() {
 		return Collections.unmodifiableSet(appNames);
 	}
 
+	@Override
 	public List<HLocation> findLocations(final String appName, final HLocationSelection locationSelection) {
 		// TODO THIS IS NOT AN IMPLEMENTATION!!
 		return Collections.emptyList();
 	}
 
+	@Override
 	public synchronized long size(final String appName, final String type) {
 		// TODO type is not used!!!
 		//XXXX

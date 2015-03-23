@@ -23,7 +23,6 @@ import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
 import io.vertigo.lang.Assertion;
-import io.vertigo.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -108,11 +107,13 @@ public final class HSerie {
 		for (final Entry<HTime, HCube> entry : cubes.entrySet()) {
 			points.add(new HPoint() {
 				/** {@inheritDoc} */
+				@Override
 				public HMetric getMetric() {
 					return entry.getValue().getMetric(metricName);
 				}
 
 				/** {@inheritDoc} */
+				@Override
 				public Date getDate() {
 					return new Date(entry.getKey().inMillis());
 				}

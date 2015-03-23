@@ -18,7 +18,6 @@
 package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
-import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.dimension.HCategory;
@@ -26,7 +25,6 @@ import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
-import io.vertigo.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,36 +33,36 @@ import java.util.Map.Entry;
 
 /**
  * Implémentation de la transformation des Process en cubes.
- * 
+ *
  * Transformation d'un Process constitué de sous-process.
  * Chaque Process (et donc sous process) est transformé en Cube avec :
  * - une agregation des mesures de ce process
- * - une agregation des mesures des sous process 
- * 
- * 
+ * - une agregation des mesures des sous process
+ *
+ *
  * @author npiedeloup
  * @version $Id: StandardProcessEncoderPlugin.java,v 1.16 2012/10/16 17:27:12 pchretien Exp $
  */
 public final class ProcessEncoder {
 
 	public static class Dual {
-		final private HCubeBuilder cubeBuilder ;
+		final private HCubeBuilder cubeBuilder;
 		final private HKey key;
 
-		private Dual(final KProcess process,HCubeBuilder cubeBuilder) {
+		private Dual(final KProcess process, final HCubeBuilder cubeBuilder) {
 			final HTime time = new HTime(process.getStartDate(), HTimeDimension.Minute);
-			int nbOfCategoryTerms=process.getCategoryTerms()!=null?process.getCategoryTerms().length:0;
-			String[] categories = new String [nbOfCategoryTerms+1];
-			categories[0]=process.getType();
-			if(nbOfCategoryTerms>0){
+			final int nbOfCategoryTerms = process.getCategoryTerms() != null ? process.getCategoryTerms().length : 0;
+			final String[] categories = new String[nbOfCategoryTerms + 1];
+			categories[0] = process.getType();
+			if (nbOfCategoryTerms > 0) {
 				System.arraycopy(process.getCategoryTerms(), 0, categories, 1, nbOfCategoryTerms);
 			}
-		
+
 			final HCategory category = new HCategory(categories);
 			// TODO ETAPE 1 Utilisation du premier element du tableau
-			final HLocation location = new HLocation( process.getLocation() != null? process.getLocation(): new String[0]);
-			key = new HKey(location,time, category/*, location*/);
-			this.cubeBuilder=cubeBuilder;
+			final HLocation location = new HLocation(process.getLocation() != null ? process.getLocation() : new String[0]);
+			key = new HKey(location, time, category/*, location*/);
+			this.cubeBuilder = cubeBuilder;
 		}
 
 		public HCubeBuilder getCubeBuilder() {
@@ -74,7 +72,7 @@ public final class ProcessEncoder {
 		public HKey getKey() {
 			return key;
 		}
-		
+
 	}
 
 	/**
@@ -83,10 +81,10 @@ public final class ProcessEncoder {
 	 * @return Liste des Cubes associés
 	 */
 	public List<Dual> encode(final KProcess process) {
-		final List<Dual> result = new ArrayList<Dual>();
+		final List<Dual> result = new ArrayList<>();
 		doEncode(process, Collections.unmodifiableList(new ArrayList<HCubeBuilder>()), result);
 		//---
-	
+
 		return result;
 	}
 
@@ -96,12 +94,12 @@ public final class ProcessEncoder {
 	 * @param result Liste des cubes résultat
 	 */
 	private static void doEncode(final KProcess process, final List<HCubeBuilder> parentBuilders, final List<Dual> allResultBuilders) {
-		//On aggrège les mesures dans un nouveau cube 
+		//On aggrège les mesures dans un nouveau cube
 		final HCubeBuilder localBuilder = encodeMeasures(process);
 		//On ajoute les durées du process dans ses parents
 		encodeSubDurations(process, parentBuilders);
 
-		allResultBuilders.add(new Dual(process,localBuilder));
+		allResultBuilders.add(new Dual(process, localBuilder));
 
 		//On recrée l'arbre des builders depuis la racine jusqu'à ce builder
 		final List<HCubeBuilder> localBuilders = new ArrayList<>(parentBuilders);
@@ -123,7 +121,7 @@ public final class ProcessEncoder {
 		final HCubeBuilder cubeBuilder = new HCubeBuilder();
 		//---
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
-			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
+			// Cas général : on ajoute la mesure sous forme de métric dans le cube
 			cubeBuilder.withMetric(new HMetricBuilder(measure.getKey()).withValue(measure.getValue()).build());
 		}
 		return cubeBuilder;
@@ -140,10 +138,10 @@ public final class ProcessEncoder {
 		final double duration = process.getDuration();
 		final Double subDuration = process.getMeasures().get(KProcess.SUB_DURATION);
 		for (final HCubeBuilder parentBuilder : parentBuilders) {
-			// Cas général : on ajoute la mesure sous forme de métric dans le cube 
+			// Cas général : on ajoute la mesure sous forme de métric dans le cube
 			parentBuilder.withMetric(new HMetricBuilder(process.getType()).withValue(duration).build());
 			if (subDuration != null) {
-				parentBuilder.withMetric( new HMetricBuilder("sub_" + process.getType()).withValue(subDuration).build());
+				parentBuilder.withMetric(new HMetricBuilder("sub_" + process.getType()).withValue(subDuration).build());
 			}
 		}
 	}

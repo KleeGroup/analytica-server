@@ -19,12 +19,10 @@ package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.analytica.server.ServerManager;
 import io.analytica.server.impl.ProcessEncoder.Dual;
-import io.analytica.server.plugins.processapi.rest.RestProcessNetApiPlugin;
 import io.vertigo.lang.Activeable;
 import io.vertigo.lang.Assertion;
 import io.vertigo.lang.Option;
@@ -55,7 +53,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	 * @param hcubeManager Manager de stockage des Cubes
 	 */
 	@Inject
-	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin, final QueryNetApiPlugin queryNetApiPlugin, final ProcessNetApiPlugin processNetApiPlugin ) {
+	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin, final QueryNetApiPlugin queryNetApiPlugin, final ProcessNetApiPlugin processNetApiPlugin) {
 		super();
 		Assertion.checkNotNull(hcubeManager);
 		Assertion.checkNotNull(processStorePlugin);
@@ -70,17 +68,20 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void push(final KProcess process) {
 		processStorePlugin.add(process);
 		//hcubeManager.push(process);
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(final String appName, final String type,final HQuery query) {
+	@Override
+	public HResult execute(final String appName, final String type, final HQuery query) {
 		return hcubeManager.getApp(appName).execute(type, query);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void start() {
 		asyncCubeStoreTimer = new Timer("pushProcessToHCube", true);
 		final TimerTask storeCubeTask = new StoreCubeTask();
@@ -88,6 +89,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop() {
 		asyncCubeStoreTimer.cancel();
 		asyncCubeStoreTimer = null;

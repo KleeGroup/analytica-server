@@ -74,6 +74,7 @@ public final class HDistributionBuilder implements Builder<HDistribution> {
 		return 10 * treshold;
 	}
 
+	@Override
 	public HDistribution build() {
 		return new HDistribution(data);
 	}
