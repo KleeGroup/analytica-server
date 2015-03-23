@@ -23,9 +23,11 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.analytica.server.ServerManager;
-import io.vertigo.kernel.lang.Activeable;
-import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.Option;
+import io.analytica.server.impl.ProcessEncoder.Dual;
+import io.analytica.server.plugins.processapi.rest.RestProcessNetApiPlugin;
+import io.vertigo.lang.Activeable;
+import io.vertigo.lang.Assertion;
+import io.vertigo.lang.Option;
 
 import java.util.List;
 import java.util.Timer;
@@ -44,6 +46,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private Timer asyncCubeStoreTimer = null;
 	private final ProcessEncoder processEncoder;
 	private final Option<ProcessStatsPlugin> processStatsPlugin;
+	private final QueryNetApiPlugin queryNetApiPlugin;
+	private final ProcessNetApiPlugin processNetApiPlugin;
 
 	/**
 	 * Constructeur.
@@ -51,7 +55,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	 * @param hcubeManager Manager de stockage des Cubes
 	 */
 	@Inject
-	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin) {
+	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin, final QueryNetApiPlugin queryNetApiPlugin, final ProcessNetApiPlugin processNetApiPlugin ) {
 		super();
 		Assertion.checkNotNull(hcubeManager);
 		Assertion.checkNotNull(processStorePlugin);
@@ -61,6 +65,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		this.processStorePlugin = processStorePlugin;
 		processEncoder = new ProcessEncoder();
 		this.processStatsPlugin = processStatsPlugin;
+		this.queryNetApiPlugin = queryNetApiPlugin;
+		this.processNetApiPlugin = processNetApiPlugin;
 	}
 
 	/** {@inheritDoc} */
@@ -70,8 +76,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	/** {@inheritDoc} */
-	public HResult execute(final String appName, final HQuery query) {
-		return hcubeManager.execute(appName, query);
+	public HResult execute(final String appName, final String type,final HQuery query) {
+		return hcubeManager.getApp(appName).execute(type, query);
 	}
 
 	/** {@inheritDoc} */
@@ -101,12 +107,12 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private int storeNextProcessesAsCube() {
 		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 500);
 		for (final Identified<KProcess> process : nextProcesses) {
-			final List<HCube> cubes = processEncoder.encode(process.getData());
+			final List<Dual> duals = processEncoder.encode(process.getData());
 			if (processStatsPlugin.isDefined()) {
 				processStatsPlugin.get().merge(process.getData());
 			}
-			for (final HCube cube : cubes) {
-				hcubeManager.push(process.getData().getAppName(), cube);
+			for (final Dual dual : duals) {
+				hcubeManager.getApp(process.getData().getAppName()).push(process.getData().getType(), dual.getKey(), dual.getCubeBuilder().build());
 			}
 			lastProcessIdStored = process.getKey();
 		}

@@ -11,7 +11,6 @@
 	<artifactId>analytica-hcube-impl</artifactId>
 	<packaging>jar</packaging>
 	<name>analytica-hcube-impl</name>
-	
 	<dependencies>
 		<dependency>
 			<groupId>io.analytica</groupId>
@@ -22,8 +21,7 @@
 		<dependency>
 			<groupId>io.vertigo</groupId>
 			<artifactId>vertigo-core</artifactId>
-			<version>0.6.3-SNAPSHOT</version>
-			<!-- version>${vertigo.version}</version-->
+			<version>${vertigo.version}</version>
 		</dependency>
 	<!-- 	
 		<dependency>

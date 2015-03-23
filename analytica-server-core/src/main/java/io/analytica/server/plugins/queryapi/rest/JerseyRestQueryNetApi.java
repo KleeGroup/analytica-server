@@ -20,15 +20,17 @@ package io.analytica.server.plugins.queryapi.rest;
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.analytica.server.ServerManager;
-import io.vertigo.kernel.Home;
-import io.vertigo.kernel.di.injector.Injector;
+import io.vertigo.core.Home;
+import io.vertigo.core.di.injector.Injector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,16 +70,16 @@ public class JerseyRestQueryNetApi {
 	 * Constructeur simple, pour instanciation par Jersey.
 	 */
 	public JerseyRestQueryNetApi() {
-		new Injector().injectMembers(this, Home.getComponentSpace());
+		Injector.injectMembers(this, Home.getComponentSpace());
 	}
 
 	@GET
 	@Path("/timeLine/{type}{subcategories:(/.+?)?}")
 	//le type est obligatoire les sous catégories (séparées par /) sont optionnelles
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
+	public String getTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas, @QueryParam("appName") final String appName) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, false);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
 		final List<TimedDataSerie> dataSeries = Utils.loadDataSeriesByTime(result, dataKeys);
 		return gson.toJson(dataSeries);
@@ -86,9 +88,9 @@ public class JerseyRestQueryNetApi {
 	@GET
 	@Path("/categoryLine/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
+	public String getAggregatedDataByCategory(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas, @QueryParam("appName") final String appName) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, true);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
 		final List<DataSerie> dataSeries = Utils.loadDataSeriesByCategory(result, dataKeys);
 		return gson.toJson(dataSeries);
@@ -97,9 +99,9 @@ public class JerseyRestQueryNetApi {
 	@GET
 	@Path("/metricLine/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAggregatedDataByTimeAndCategory(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas) {
+	public String getAggregatedDataByTimeAndCategory(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas, @QueryParam("appName") final String appName) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, true);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 		final List<String> dataKeys = Arrays.asList(datas.split(";"));
 		final List<DataSerie> dataSeries = Utils.loadDataSeriesByCategory(result, dataKeys);
 		return gson.toJson(dataSeries);
@@ -108,31 +110,41 @@ public class JerseyRestQueryNetApi {
 	@GET
 	@Path("/categories")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getCategories() {
-		return gson.toJson(cubeManager.getCategoryDictionary().getAllRootCategories());
+	public String getCategories( @QueryParam("appName") final String appName) {
+		
+		return gson.toJson(cubeManager.getApp(appName).getSelector().findCategories(new HCategorySelection("*")));
 	}
 
 	@GET
 	@Path("/categories/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getCategories(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories) {
-		final HCategory hCategory = subCategories.isEmpty() ? new HCategory(type) : new HCategory(type, subCategories.split("/"));
-		return gson.toJson(cubeManager.getCategoryDictionary().getAllSubCategories(hCategory));
+	public String getCategories(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @QueryParam("appName") final String appName) {
+		String[] subCategoriesArray=subCategories.split("/");
+		String[] categories = new String [subCategoriesArray.length+1];
+		categories[0]=type;	
+		System.arraycopy(subCategoriesArray, 0, categories, 1, subCategoriesArray.length);
+		
+		final HCategory hCategory = subCategories.isEmpty() ? new HCategory(type) : new HCategory(categories);
+		return gson.toJson(cubeManager.getApp(appName).getSelector().findCategories(new HCategorySelection(hCategory.getPath())));
 	}
 
 	@GET
 	@Path("/metrics/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getMetrics(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories) {
-		final HCategory hCategory = subCategories.isEmpty() ? new HCategory(type) : new HCategory(type, subCategories.split("/"));
+	public String getMetrics(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @QueryParam("appName") final String appName) {
+		String[] subCategoriesArray=subCategories.split("/");
+		String[] categories = new String [subCategoriesArray.length+1];
+		categories[0]=type;	
+		System.arraycopy(subCategoriesArray, 0, categories, 1, subCategoriesArray.length);
+		final HCategory hCategory = subCategories.isEmpty() ? new HCategory(type) : new HCategory(categories);
 		final HQuery query = Utils.createQuery("NOW-1m", "NOW", "Month", type, subCategories, false);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 		final Collection<HMetric> metrics = result.getSerie(hCategory).getMetrics();
 		final List<Map<String, Object>> metricsName = new ArrayList<>();
 		for (final HMetric metric : metrics) {
 			final Map<String, Object> metricName = new HashMap<>();
 			metricsName.add(metricName);
-			metricName.put("name", metric.getKey().getName());
+			metricName.put("name", metric.getName());
 			final List<String> values = new ArrayList<>();
 			metricName.put("type", values);
 			values.add("count");
@@ -142,7 +154,7 @@ public class JerseyRestQueryNetApi {
 			values.add("sum");
 			values.add("sqrSum");
 			values.add("stdDev");
-			if (metric.getKey().hasDistribution()) {
+			if (metric.hasDistribution()) {
 				values.add("clustered");
 			}
 		}
@@ -162,9 +174,9 @@ public class JerseyRestQueryNetApi {
 	@GET
 	@Path("/stackedDatas/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getAllCategoriesToStack(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+	public String getAllCategoriesToStack(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas, @QueryParam("appName") final String appName) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, true);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 
 		return gson.toJson(Utils.loadDataPointsStackedByCategory(result, datas));
 	}
@@ -172,9 +184,9 @@ public class JerseyRestQueryNetApi {
 	@GET
 	@Path("/tableSparkline/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getTableSparklineDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+	public String getTableSparklineDatas(@QueryParam("timeFrom") @DefaultValue("NOW-12h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW+2h") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas, @QueryParam("appName") final String appName) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, true);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 
 		return gson.toJson(Utils.getSparklinesTableDatas(result, datas));
 	}
@@ -182,18 +194,18 @@ public class JerseyRestQueryNetApi {
 	@GET
 	@Path("/tablePunchcard/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getPunchCardDatas(@QueryParam("timeFrom") @DefaultValue("NOW-240h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+	public String getPunchCardDatas(@QueryParam("timeFrom") @DefaultValue("NOW-240h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas, @QueryParam("appName") final String appName) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, false);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 		return gson.toJson(Utils.getPunchCardDatas(result, datas));
 	}
 
 	@GET
 	@Path("/faketablePunchcard/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getPunchCardFakeDatas(@QueryParam("timeFrom") @DefaultValue("NOW-240h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas) {
+	public String getPunchCardFakeDatas(@QueryParam("timeFrom") @DefaultValue("NOW-240h") final String timeFrom, @QueryParam("timeTo") @DefaultValue("NOW") final String timeTo, @DefaultValue("Hour") @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue("duration:count") @QueryParam("datas") final String datas, @QueryParam("appName") final String appName) {
 		final HQuery query = Utils.createQuery(timeFrom, timeTo, timeDim, type, subCategories, false);
-		final HResult result = serverManager.execute(query);
+		final HResult result = serverManager.execute(appName,type, query);
 		return gson.toJson(Utils.getPunchCardFakeDatas(result, datas));
 	}
 

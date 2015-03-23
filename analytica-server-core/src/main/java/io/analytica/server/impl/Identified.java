@@ -17,7 +17,7 @@
  */
 package io.analytica.server.impl;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 /**
  * Objet avec identifiant externalisé.

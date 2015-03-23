@@ -41,6 +41,11 @@
 			<groupId>org.glassfish.grizzly</groupId>
 			<artifactId>grizzly-http-server</artifactId> <!-- pour RestServerManager -->
 		</dependency>
+		<dependency>
+			<groupId>berkeleydb</groupId><!-- pour BerkeleyProcessStorePlugin -->
+			<artifactId>je</artifactId>
+			<version>3.2.76</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<!-- TODO make an autoexec jar, with included dependencies -->

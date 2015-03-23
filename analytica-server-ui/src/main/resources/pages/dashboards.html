@@ -101,10 +101,10 @@
 			<div class="panel-body">
 				<div class="chart bignumber" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SERVICE:count;SQL:count"}' 
-			    data-labels='{"duration:count":"Nb Pages","SQL:count":"Nb Sql", "SERVICE:count":"Nb Services"}'
+			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SERVICE:count;sql:count"}' 
+			    data-labels='{"duration:count":"Nb Pages","sql:count":"Nb Sql", "SERVICE:count":"Nb Services"}'
 			    data-colors='ANDROID'
-			    data-icons='{"duration:count":"fa fa-files-o", "SERVICE:count":"fa fa-cogs","SQL:count":"fa fa-download"}'></div>
+			    data-icons='{"duration:count":"fa fa-files-o", "SERVICE:count":"fa fa-cogs","sql:count":"fa fa-download"}'></div>
 			</div>
 		</div>
 	</div>
@@ -220,8 +220,8 @@
 			    { "label":"Temps Service", "data":"SERVICE:mean"},
 			    { "label":"Nb Recherche", "data":"SEARCH:count"},
 			    { "label":"Temps Recherche", "data":"SEARCH:mean"},
-			    { "label":"Nb Sql", "data":"SQL:count"},
-			    { "label":"Temps Sql", "data":"SQL:mean"},
+			    { "label":"Nb Sql", "data":"sql:count"},
+			    { "label":"Temps Sql", "data":"sql:mean"},
 			    { "label":"Erreur %", "data":"ERROR:mean"}]'></div>
 			</div>
 		</div>

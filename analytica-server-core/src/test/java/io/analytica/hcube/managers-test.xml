@@ -18,11 +18,11 @@
     if not, see <http://www.gnu.org/licenses>
 
 -->
-<modules>
+<config>
 	<module name="analytica">
 		<component api="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
 			<plugin class="io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin">
 			</plugin>
 		</component>
 	</module>
-</modules>
+</config>

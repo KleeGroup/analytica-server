@@ -17,8 +17,8 @@
  */
 package io.analytica.uiswing.collector;
 
-import io.vertigo.kernel.exception.VRuntimeException;
-import io.vertigo.kernel.lang.Assertion;
+import java.lang.RuntimeException;
+import io.vertigo.lang.Assertion;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -84,7 +84,7 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 			}
 		}
 		if (methodStatsNode == null) {
-			throw new VRuntimeException("methodStatsNode ne doit pas être null");
+			throw new RuntimeException("methodStatsNode ne doit pas être null");
 		}
 		return methodStatsNode.getProcessStats();
 	}

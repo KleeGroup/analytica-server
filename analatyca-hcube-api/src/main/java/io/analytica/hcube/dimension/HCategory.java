@@ -31,16 +31,18 @@ import java.util.regex.Pattern;
  * @author npiedeloup, pchretien
  */
 public final class HCategory {
-	public static final Pattern NAME_REGEX = Pattern.compile("[a-z][a-zA-Z]*");
+	public static final Pattern CATEGORY_REGEX = Pattern.compile("[^\\\\]+");
 	private static char SEPARATOR = '/';
 	private final String[] categoryTerms;
+
+
 	private final String categoryPath;
 
 	public HCategory(final String... categoryTerms) {
 		Assertion.checkNotNull(categoryTerms);
 		for (final String categoryTerm : categoryTerms) {
-			if (!NAME_REGEX.matcher(categoryTerm).matches()) {
-				throw new IllegalArgumentException("categoryTerm " + categoryTerm + " must match regex :" + NAME_REGEX);
+			if (!CATEGORY_REGEX.matcher(categoryTerm).matches()) {
+				throw new IllegalArgumentException("categoryTerm " + categoryTerm + " must match regex :" + CATEGORY_REGEX);
 			}
 		}
 		//---------------------------------------------------------------------
@@ -93,5 +95,9 @@ public final class HCategory {
 	@Override
 	public final String toString() {
 		return categoryPath;
+	}
+	
+	public String[] getCategoryTerms() {
+		return categoryTerms;
 	}
 }

@@ -20,9 +20,9 @@ package io.analytica.museum;
 import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
 import io.analytica.hcube.HCubeManager;
-import io.vertigo.kernel.Home;
-import io.vertigo.kernel.lang.Assertion;
-import io.vertigo.kernel.lang.DateBuilder;
+import io.vertigo.core.Home;
+import io.vertigo.lang.Assertion;
+import io.vertigo.util.DateBuilder;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -32,9 +32,9 @@ import java.util.GregorianCalendar;
  * @author statchum
  */
 public final class Museum {
-	public static final String APP_NAME = "MUSEUM";
-	private static final String QOS = "QOS";
-	private static final String HEALTH = "HEALTH";
+	public static final String APP_NAME = "museum";
+	private static final String QOS = "qos";
+	private static final String HEALTH = "health";
 	private final PageListener pageListener;
 
 	private long pages = 0;
@@ -76,7 +76,6 @@ public final class Museum {
 	private void checkMemory(final long day) {
 		final HCubeManager cubeManager = Home.getComponentSpace().resolve(HCubeManager.class);
 		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			cubeManager.size(APP_NAME);
 			System.gc();
 			//---
 			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
@@ -84,10 +83,10 @@ public final class Museum {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max   mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
-				System.out.println(">>>> cubes count =" + cubeManager.size(APP_NAME));
+				System.out.println(">>>> cubes count =" + cubeManager.getApp(APP_NAME).size(null));//AT THIS MOMEMNT type is not implemented in the size function
 				System.out.println(">>>> pages       =" + pages);
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.size(APP_NAME)) + " octets");
+				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.getApp(APP_NAME).size(null)) + " octets");
 				try {
 					Thread.sleep(1000 * 20); //20s
 				} catch (InterruptedException e) {
@@ -128,8 +127,8 @@ public final class Museum {
 	private void addVisitorScenario(final Date startVisit) {
 		//System.out.println("scenario [" + startVisit.getDay() + ", " + startVisit.getHours() + "] >>" + startVisit);
 		//On ne CODE pas un scenario, on le déclare.
-		final KProcess visiteur = new KProcessBuilder(APP_NAME, startVisit, 0, "SESSION")//
-				.setMeasure("SESSION HTTP", 1) //1 session
+		final KProcess visiteur = new KProcessBuilder(APP_NAME, "session", startVisit, 0)//
+				.setMeasure("sessionHttp", 1) //1 session
 				.build();
 		//On notifie le listener
 		pageListener.onPage(visiteur);
@@ -218,13 +217,13 @@ public final class Museum {
 		final double perfs = Math.min(100, StatsUtil.random(100, 1.4 - nbVisitsHour / 50));
 		final double health = Math.min(100, StatsUtil.random(100, 1.5 - nbVisitsHour / 50));
 
-		final KProcess qosProcess = new KProcessBuilder(APP_NAME, dateHour, 0, QOS)//
-				.setMeasure("Activity", activity)//
-				.setMeasure("ActivityMax", 100)//
-				.setMeasure("Performance", perfs)//
-				.setMeasure("PerformanceMax", 100)//
-				.setMeasure("Health", health)//
-				.setMeasure("HealthMax", 100)//
+		final KProcess qosProcess = new KProcessBuilder(APP_NAME, QOS, dateHour, 0)//
+				.setMeasure("activity", activity)//
+				.setMeasure("activityMax", 100)//
+				.setMeasure("performance", perfs)//
+				.setMeasure("performanceMax", 100)//
+				.setMeasure("health", health)//
+				.setMeasure("healthMax", 100)//
 				.build();
 		pageListener.onPage(qosProcess);
 	}
@@ -232,10 +231,11 @@ public final class Museum {
 	private void loadHealthInfos(final Date dateHour, final double nbVisitsHour) {
 		for (int min = 0; min < 60; min += 6) {
 			final Date dateMinute = new DateBuilder(dateHour).addMinutes(min).toDateTime();
-			final KProcess healthProcess = new KProcessBuilder(APP_NAME, dateMinute, 0, HEALTH, "physical")//
-					.setMeasure("CPU", Math.min(100, 5 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 1) : 0)))//
-					.setMeasure("RAM", Math.min(3096, 250 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 10) : 0)))//
-					.setMeasure("IO", 10 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 5) : 0))//
+			final KProcess healthProcess = new KProcessBuilder(APP_NAME,HEALTH, dateMinute, 0)//
+					.withCategory(new String[]{ "physical"})
+					.setMeasure("cpu", Math.min(100, 5 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 1) : 0)))//
+					.setMeasure("ram", Math.min(3096, 250 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 10) : 0)))//
+					.setMeasure("io", 10 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 5) : 0))//
 					.build();
 			pageListener.onPage(healthProcess);
 		}

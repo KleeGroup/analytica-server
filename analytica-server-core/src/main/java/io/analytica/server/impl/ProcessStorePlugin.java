@@ -18,7 +18,7 @@
 package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
-import io.vertigo.kernel.component.Plugin;
+import io.vertigo.lang.Plugin;
 
 import java.util.List;
 

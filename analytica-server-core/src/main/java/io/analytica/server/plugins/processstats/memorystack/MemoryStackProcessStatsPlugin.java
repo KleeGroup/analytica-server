@@ -19,7 +19,7 @@ package io.analytica.server.plugins.processstats.memorystack;
 
 import io.analytica.api.KProcess;
 import io.analytica.server.impl.ProcessStatsPlugin;
-import io.vertigo.kernel.lang.Activeable;
+import io.vertigo.lang.Activeable;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;

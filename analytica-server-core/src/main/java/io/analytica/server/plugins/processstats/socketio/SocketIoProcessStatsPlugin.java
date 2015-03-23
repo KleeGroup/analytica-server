@@ -20,8 +20,8 @@ package io.analytica.server.plugins.processstats.socketio;
 import io.analytica.api.KProcess;
 import io.analytica.server.impl.ProcessStatsPlugin;
 import io.socket.SocketIO;
-import io.vertigo.kernel.lang.Activeable;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.lang.Activeable;
+import io.vertigo.lang.Assertion;
 
 import java.net.MalformedURLException;
 

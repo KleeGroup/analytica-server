@@ -19,10 +19,11 @@ package io.analytica.server.plugins.processstore.berkeley;
 
 import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Date;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
@@ -96,7 +97,9 @@ final class KProcessBinding extends TupleBinding {
 		final String appName = ti.readString();
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(appName, startDate, duration, type, names);
+//		final KProcessBuilder processBuilder = new KProcessBuilder(appName, startDate, duration, type, names);
+		// TODO Qui est names????
+		final KProcessBuilder processBuilder = new KProcessBuilder(appName,type, startDate, duration);
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {
@@ -110,7 +113,7 @@ final class KProcessBinding extends TupleBinding {
 				final String mdName = ti.readString();
 				final String mdValue = ti.readString();
 				//Passer par un NS
-				processBuilder.setMetaData(mdName, mdValue);
+				processBuilder.withMetaData(mdName, mdValue);
 			} else if ("SubProcess".equals(subInfoType)) {
 				final KProcess subProcess = doEntryToProcessV3(ti);
 				processBuilder.addSubProcess(subProcess);
@@ -127,8 +130,8 @@ final class KProcessBinding extends TupleBinding {
 		to.writeString(PROCESS_BINDING_V3);//Marqueur de version
 		to.writeString(process.getType());
 
-		to.writeInt(process.getSubTypes().length);
-		for (final String namePart : process.getSubTypes()) {
+		to.writeInt(process.getCategoryTerms().length);
+		for (final String namePart : process.getCategoryTerms()) {
 			to.writeString(namePart);
 		}
 
@@ -143,10 +146,12 @@ final class KProcessBinding extends TupleBinding {
 				to.writeDouble(measure.getValue());
 			}
 		}
-		for (final Entry<String, String> metaData : process.getMetaDatas().entrySet()) {
+		for (final Entry<String, Set<String>> entry : process.getMetaDatas().entrySet()) {
 			to.writeString("MetaData");
-			to.writeString(metaData.getKey());
-			to.writeString(metaData.getValue());
+			to.writeString(entry.getKey());
+			for(String metaData :entry.getValue()){
+			to.writeString(metaData);
+			}
 		}
 		for (final KProcess subProcess : process.getSubProcesses()) {
 			to.writeString("SubProcess");
@@ -168,7 +173,8 @@ final class KProcessBinding extends TupleBinding {
 		final String appName = "mainSystem"; //pas de systemName et systemLocation en v2
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(appName, startDate, duration, type, names);
+		final KProcessBuilder processBuilder = new KProcessBuilder(appName, type, startDate, duration);
+		processBuilder.withCategory(names);
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {
@@ -182,7 +188,7 @@ final class KProcessBinding extends TupleBinding {
 				final String mdName = ti.readString();
 				final String mdValue = ti.readString();
 				//Passer par un NS
-				processBuilder.setMetaData(mdName, mdValue);
+				processBuilder.withMetaData(mdName, mdValue);
 			} else if ("SubProcess".equals(subInfoType)) {
 				final KProcess subProcess = doEntryToProcessV2(ti);
 				processBuilder.addSubProcess(subProcess);
@@ -201,7 +207,8 @@ final class KProcessBinding extends TupleBinding {
 		final String appName = "mainSystem"; //pas de systemName et systemLocation en v1
 		final Date startDate = new Date(ti.readLong());
 		final Double duration = ti.readDouble();
-		final KProcessBuilder processBuilder = new KProcessBuilder(appName, startDate, duration, type, name.split("/"));
+		final KProcessBuilder processBuilder = new KProcessBuilder(appName, type, startDate, duration);
+		processBuilder.withCategory(name.split("/"));
 		while (ti.available() > 0) {
 			final String subInfoType = ti.readString();
 			if ("Measure".equals(subInfoType)) {
@@ -213,7 +220,7 @@ final class KProcessBinding extends TupleBinding {
 				final String mdName = ti.readString();
 				final String mdValue = ti.readString();
 				//Passer par un NS
-				processBuilder.setMetaData(mdName, mdValue);
+				processBuilder.withMetaData(mdName, mdValue);
 			} else if ("SubProcess".equals(subInfoType)) {
 				final KProcess subProcess = doEntryToProcessV1(ti);
 				processBuilder.addSubProcess(subProcess);

@@ -17,9 +17,9 @@
  */
 package io.analytica.ui;
 
-import io.vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
-import io.vertigo.kernel.di.configurator.ModuleConfigBuilder;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.config.AppConfigBuilder;
+import io.vertigo.core.config.ModuleConfigBuilder;
+import io.vertigo.lang.Assertion;
 
 import java.util.Properties;
 
@@ -57,10 +57,10 @@ public class Starter extends io.analytica.server.Starter {
 	 * @param componentSpaceConfigBuilder Builder de la configuration de l'environnement
 	 */
 	@Override
-	protected void appendOtherModules(final Properties properties, final ComponentSpaceConfigBuilder componentSpaceConfigBuilder) {
-		super.appendOtherModules(properties, componentSpaceConfigBuilder);
+	protected void appendOtherModules(final Properties properties, final AppConfigBuilder appConfigBuilder) {
+		super.appendOtherModules(properties, appConfigBuilder);
 		//---------------------------------------------------------------------
-		final ModuleConfigBuilder moduleConfigBuilder = componentSpaceConfigBuilder.beginModule("analytica-ui");
+		final ModuleConfigBuilder moduleConfigBuilder = appConfigBuilder.beginModule("analytica-ui");
 		moduleConfigBuilder.beginComponent(AnalyticaUiManager.class, AnalyticaUiManagerImpl.class) //
 				.endComponent();
 		moduleConfigBuilder.endModule();

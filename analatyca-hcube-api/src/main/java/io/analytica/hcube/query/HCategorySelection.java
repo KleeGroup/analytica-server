@@ -24,7 +24,7 @@ import io.vertigo.lang.Assertion;
  * Selection de catégories permettant de définir un ensemble de positions sur un niveau donné.
  * exemple :
  * - toutes les catégories racine  : new HCategorySelection()
- * - toutes les sous-catégories de SQL, select : HCategorySelection(new HCategoryPosition("SQL", "select"), true);
+ * - toutes les sous-catégories de sql, select : HCategorySelection(new HCategoryPosition("sql", "select"), true);
  *
  * @author npiedeloup, pchretien
  */

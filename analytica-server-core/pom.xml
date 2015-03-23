@@ -24,7 +24,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.analytica</groupId>
-			<artifactId>analytica-server-hcube</artifactId>
+			<artifactId>analytica-hcube-impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

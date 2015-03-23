@@ -20,7 +20,7 @@ package io.analytica.server;
 import io.analytica.api.KProcess;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
-import io.vertigo.kernel.component.Manager;
+import io.vertigo.lang.Component;
 
 /**
  * Serveur de Analytica.
@@ -29,7 +29,7 @@ import io.vertigo.kernel.component.Manager;
  * @author pchretien, npiedeloup
  * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
-public interface ServerManager extends Manager {
+public interface ServerManager extends Component {
 	/**
 	 * Add a process.
 	 * @param process Process to push
@@ -41,5 +41,5 @@ public interface ServerManager extends Manager {
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 */
-	HResult execute(final String appName, HQuery query);
+	HResult execute(final String appName,final String type, HQuery query);
 }

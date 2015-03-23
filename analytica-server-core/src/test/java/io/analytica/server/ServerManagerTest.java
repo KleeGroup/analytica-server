@@ -26,8 +26,8 @@ import io.analytica.api.KProcessBuilder;
 import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
-import io.analytica.hcube.cube.HMetricKey;
 import io.analytica.hcube.dimension.HCategory;
+import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -58,8 +59,8 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	private static final String APP_NAME = "MY_PTREETY_APP";
 
 	private static final String MONTANT = "MONTANT";
-	private static final HMetricKey MONTANT_KEY = new HMetricKey(MONTANT, false);
-	private static final String PROCESS_SQL = "SQL";
+	private static final String MONTANT_KEY = MONTANT;
+	private static final String PROCESS_SQL = "sql";
 
 	@Inject
 	private ServerManager serverManager;
@@ -84,22 +85,21 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testSimpleProcess() {
-		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, date, 100, PROCESS_SQL, "select article")//
+		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME,PROCESS_SQL, date, 100).withCategory(new String[]{ "select article"})//
 				.incMeasure(MONTANT, price)//
 				.build();
 		serverManager.push(selectProcess1);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
-				.on(HTimeDimension.Day)//
-				.from(date)//
-				.to(date)//
-				.with("SQL").build();
+				.between(HTimeDimension.Day,date,date)//
+				.whereCategoryMatches("sql")//
+				.build();
 
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
-		final HResult result = serverManager.execute(APP_NAME, daySqlQuery);
+		final HResult result = serverManager.execute(APP_NAME,"sql", daySqlQuery);
 		Assert.assertEquals(1, result.getAllCategories().size());
 
-		final List<HCube> cubes = result.getSerie(processSQLCategory).getCubes();
+		final  Map<HTime, HCube> cubes = result.getSerie(processSQLCategory).getCubes();
 		Assert.assertEquals(1, cubes.size());
 		//
 		final HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);

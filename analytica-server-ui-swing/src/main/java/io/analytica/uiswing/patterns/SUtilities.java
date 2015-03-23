@@ -17,9 +17,9 @@
  */
 package io.analytica.uiswing.patterns;
 
-import io.vertigo.kernel.exception.VRuntimeException;
-import io.vertigo.kernel.exception.VUserException;
-import io.vertigo.kernel.lang.MessageText;
+import java.lang.RuntimeException;
+import io.vertigo.lang.VUserException;
+import io.vertigo.lang.MessageText;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -72,7 +72,7 @@ public class SUtilities {
 	 * @param throwable java.lang.Throwable
 	 */
 	public static void handleException(final Throwable throwable) {
-		if (throwable instanceof OutOfMemoryError || throwable instanceof VRuntimeException || throwable instanceof Error || throwable instanceof UnmarshalException || throwable instanceof ConnectException) {
+		if (throwable instanceof OutOfMemoryError || throwable instanceof RuntimeException || throwable instanceof Error || throwable instanceof UnmarshalException || throwable instanceof ConnectException) {
 			// note : SAssertion hérite de Error et est donc considérée aussi comme erreur système
 			handleError(throwable);
 
@@ -100,11 +100,11 @@ public class SUtilities {
 	public static void handleError(final Throwable throwable) {
 		throwable.printStackTrace();
 		// l'affichage des erreurs systèmes aux utilisateurs est encapsulée avec le message "Veuillez contacter..."
-		if (throwable instanceof VRuntimeException && exceptionContains(throwable, "[Erreur SQL]")) {
+		if (throwable instanceof RuntimeException && exceptionContains(throwable, "[Erreur sql]")) {
 			if (exceptionContains(throwable, "ORA-01089")) {
 				// gestion erreurs oracle "ORA-01089: immediate shutdown in progess - no operations are permitted"
 				// pour afficher un message plus lisible
-				handleThrowable(new VRuntimeException("Veuillez contacter un administrateur.\n(" + "La base de données SAE est en train de s'arrêter.)", throwable.getCause()), true);
+				handleThrowable(new RuntimeException("Veuillez contacter un administrateur.\n(" + "La base de données SAE est en train de s'arrêter.)", throwable.getCause()), true);
 			} else {
 				// dans kasper.model.ServiceProviderSQL.handleException, kasper masque la sqlexception
 				// par une KSystemException et remplace le message oracle par la requête sql à l'origine de l'erreur
@@ -114,13 +114,13 @@ public class SUtilities {
 				while (t != null && t.getCause() != null && t.getCause() != t && !(t instanceof SQLException)) {
 					t = t.getCause();
 				}
-				handleThrowable(new VRuntimeException("Veuillez contacter un administrateur.\n(" + t.toString() + ')', throwable), true);
+				handleThrowable(new RuntimeException("Veuillez contacter un administrateur.\n(" + t.toString() + ')', throwable), true);
 			}
 		} else if (throwable instanceof OutOfMemoryError) {
 			handleThrowable(new Exception("L'application ne dispose pas de suffisamment de mémoire pour fonctionner, elle va s'arrêter", throwable), true);
 			System.exit(2);
 		} else {
-			handleThrowable(new VRuntimeException("Veuillez contacter un administrateur.\n(" + throwable.toString() + ')', throwable), true);
+			handleThrowable(new RuntimeException("Veuillez contacter un administrateur.\n(" + throwable.toString() + ')', throwable), true);
 		}
 	}
 

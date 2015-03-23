@@ -7539,7 +7539,7 @@ $.extend(Datepicker.prototype, {
 
 		if (!inst.inline) {
 			showAnim = $.datepicker._get(inst, "showAnim");
-			duration = $.datepicker._get(inst, "duration");
+			duration = $.datepicker._get(inst, "HMDURATION");
 			inst.dpDiv.zIndex($(input).zIndex()+1);
 			$.datepicker._datepickerShowing = true;
 
@@ -7652,7 +7652,7 @@ $.extend(Datepicker.prototype, {
 
 		if (this._datepickerShowing) {
 			showAnim = this._get(inst, "showAnim");
-			duration = this._get(inst, "duration");
+			duration = this._get(inst, "HMDURATION");
 			postProcess = function() {
 				$.datepicker._tidyDialog(inst);
 			};

@@ -18,9 +18,9 @@
 package io.analytica.restserver.impl;
 
 import io.analytica.restserver.RestServerManager;
-import io.vertigo.kernel.exception.VRuntimeException;
-import io.vertigo.kernel.lang.Activeable;
-import io.vertigo.kernel.lang.Assertion;
+import java.lang.RuntimeException;
+import io.vertigo.lang.Activeable;
+import io.vertigo.lang.Assertion;
 
 import java.io.IOException;
 import java.net.URI;
@@ -129,7 +129,7 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 				httpServer = doStartServer();
 			}
 		} catch (final IOException e) {
-			throw new VRuntimeException("Erreur de lancement du Server Web Analytica.");
+			throw new RuntimeException("Erreur de lancement du Server Web Analytica.");
 		}
 	}
 

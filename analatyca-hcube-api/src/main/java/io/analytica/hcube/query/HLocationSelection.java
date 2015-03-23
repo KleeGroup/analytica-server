@@ -36,7 +36,8 @@ public final class HLocationSelection {
 		Assertion.checkNotNull(location);
 		// ---------------------------------------------------------------------
 		if (pattern.endsWith("*")) {
-			return location.getPath().startsWith(pattern.substring(pattern.length()));
+			// TODO A REFAIRE 
+//			return location.getPath().startsWith(pattern.substring(pattern.length()));
 		}
 		return location.getPath().equals(pattern);
 	}

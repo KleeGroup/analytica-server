@@ -102,10 +102,12 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 	}
 
 	public List<HLocation> findLocations(final String appName, final HLocationSelection locationSelection) {
+		// TODO THIS IS NOT AN IMPLEMENTATION!!
 		return Collections.emptyList();
 	}
 
 	public synchronized long size(final String appName, final String type) {
+		// TODO type is not used!!!
 		//XXXX
 		//XXXX
 		//XXXX

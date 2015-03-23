@@ -17,7 +17,7 @@
  */
 package io.analytica.ui.colors;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.awt.Color;
 import java.util.ArrayList;

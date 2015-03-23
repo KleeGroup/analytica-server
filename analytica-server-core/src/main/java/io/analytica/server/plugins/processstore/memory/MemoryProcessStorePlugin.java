@@ -20,7 +20,7 @@ package io.analytica.server.plugins.processstore.memory;
 import io.analytica.api.KProcess;
 import io.analytica.server.impl.Identified;
 import io.analytica.server.impl.ProcessStorePlugin;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.List;

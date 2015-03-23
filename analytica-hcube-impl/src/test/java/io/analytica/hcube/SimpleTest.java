@@ -77,7 +77,8 @@ public final class SimpleTest {
 				.withMetric(workingHours)
 				.build();
 
-		app.push("PAGES", new HKey(new HLocation("myServer"), time, new HCategory("www")), cube);
+		String[] locationS = {"myServer"};
+		app.push("PAGES", new HKey(new HLocation(locationS), time, new HCategory("www")), cube);
 
 		final HQuery query = new HQueryBuilder()
 				.between(HTimeDimension.SixMinutes, "NOW", "NOW")

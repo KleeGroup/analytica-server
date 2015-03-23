@@ -17,7 +17,7 @@
  */
 package io.analytica.museum;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.util.Random;
 

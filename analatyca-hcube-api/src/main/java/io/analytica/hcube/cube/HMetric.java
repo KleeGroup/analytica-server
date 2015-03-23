@@ -75,6 +75,7 @@ public final class HMetric {
 		return Double.NaN;
 	}
 
+
 	public double get(final HCounterType dataType) {
 		Assertion.checkNotNull(dataType);
 		//---------------------------------------------------------------------
@@ -116,6 +117,10 @@ public final class HMetric {
 		return distribution;
 	}
 
+	public boolean hasDistribution(){
+		return this.distribution!=null;
+	}
+	
 	@Override
 	public String toString() {
 		return "{ count:" + count + ", mean:" + getMean() + ", min:" + get(HCounterType.min) + ", max:" + get(HCounterType.max) + (distribution == null ? " " : ", distribution:" + getDistribution()) + "}";

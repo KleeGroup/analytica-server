@@ -20,6 +20,7 @@ package io.analytica.hcube.cube;
 import io.vertigo.core.Home;
 import io.vertigo.lang.Assertion;
 import io.vertigo.lang.Builder;
+import io.vertigo.util.StringUtil;
 
 /**
  * Builder permettant de contruire une metric.
@@ -40,10 +41,25 @@ public final class HMetricBuilder implements Builder<HMetric> {
 	 * Constructeur.
 	 * @param metricName Nom de la metric
 	 */
-	public HMetricBuilder(final String metricName) {
+	public HMetricBuilder(final String metricName){
+		this(metricName, true);
+	}
+	public HMetricBuilder(final HMetric hMetric){
+		this(hMetric.getName(), false);
+	}
+	private HMetricBuilder(final String metricName, final boolean toCamel) {
 		Assertion.checkNotNull(metricName);
+		final String camelMetricName;
+		if(toCamel){
+			camelMetricName = "HM_"+StringUtil.camelToConstCase(metricName);
+		}
+		else{
+			camelMetricName = metricName;
+		}
+	
+		
 		//---------------------------------------------------------------------
-		this.metricDefinition = Home.getDefinitionSpace().resolve(metricName, HMetricDefinition.class);
+		this.metricDefinition = Home.getDefinitionSpace().resolve(camelMetricName, HMetricDefinition.class);
 		distributionBuilder = metricDefinition.hasDistribution() ? new HDistributionBuilder() : null;
 	}
 
@@ -85,6 +101,9 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		return this;
 	}
 
+	public String getName(){
+		return this.metricDefinition.getName();
+	}
 	/**
 	 * Construction de la Metric du cube.
 	 * @return Metric du cube

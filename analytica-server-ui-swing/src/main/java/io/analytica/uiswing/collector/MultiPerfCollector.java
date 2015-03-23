@@ -17,7 +17,7 @@
  */
 package io.analytica.uiswing.collector;
 
-import io.vertigo.kernel.exception.VRuntimeException;
+import java.lang.RuntimeException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 					} else if (collectorResults instanceof ProcessStatsTree) {
 						results = new ProcessStatsTree();
 					} else {
-						throw new VRuntimeException("Type de ProcessStatsCollection inconnu : " + collectorResults.getClass().getName());
+						throw new RuntimeException("Type de ProcessStatsCollection inconnu : " + collectorResults.getClass().getName());
 					}
 				}
 				results.merge(collectorResults);

@@ -17,7 +17,7 @@
  */
 package io.analytica.server.impl;
 
-import io.vertigo.kernel.component.Plugin;
+import io.vertigo.lang.Plugin;
 
 /**
  * Plugin gérant l'api reseau de reception des process.

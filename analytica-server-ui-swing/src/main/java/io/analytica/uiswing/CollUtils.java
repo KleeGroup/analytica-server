@@ -17,8 +17,8 @@
  */
 package io.analytica.uiswing;
 
-import io.vertigo.kernel.exception.VRuntimeException;
-import io.vertigo.kernel.lang.Assertion;
+import java.lang.RuntimeException;
+import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -279,7 +279,7 @@ public class CollUtils {
 		try {
 			return BeanUtils.getValue(object, propertyName);
 		} catch (final Throwable throwable) {
-			throw new VRuntimeException(throwable.toString(), throwable);
+			throw new RuntimeException(throwable.toString(), throwable);
 		}
 	}
 }

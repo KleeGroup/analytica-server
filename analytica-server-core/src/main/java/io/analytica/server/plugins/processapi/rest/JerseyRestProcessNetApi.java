@@ -19,8 +19,8 @@ package io.analytica.server.plugins.processapi.rest;
 
 import io.analytica.api.KProcess;
 import io.analytica.server.ServerManager;
-import io.vertigo.kernel.Home;
-import io.vertigo.kernel.di.injector.Injector;
+import io.vertigo.core.Home;
+import io.vertigo.core.di.injector.Injector;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -50,7 +50,7 @@ public final class JerseyRestProcessNetApi {
 	 * Constructeur simple pour instanciation par jersey.
 	 */
 	public JerseyRestProcessNetApi() {
-		new Injector().injectMembers(this, Home.getComponentSpace());
+		Injector.injectMembers(this, Home.getComponentSpace());
 	}
 
 	/**

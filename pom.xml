@@ -22,7 +22,7 @@
 		<module>analytica-server-core</module>
 		<module>analytica-server-ui</module>
 		<module>analytica-server-ui-swing</module>
-	    <module>analatyca-hcube-api</module>
+	    <module>analytica-hcube-api</module>
 	    <module>analytica-hcube-impl</module>
   </modules>
 

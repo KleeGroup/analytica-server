@@ -55,7 +55,7 @@ public final class Utils {
 		final Signal signal = new Signal();
 		Assertion.notNull(result);
 		// ---------------------------------------------------------------------
-		final HMetricKey metricKey = new HMetricKey("duration", true);
+		final HMetricKey metricKey = new HMetricKey("HMDURATION", true);
 		final HCounterType counterType = HCounterType.mean;
 		final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 
@@ -83,7 +83,7 @@ public final class Utils {
 
 		// ---------------------------------------------------------------------
 		final String[] type = datas.split(":");
-		final HMetricKey metricKey = new HMetricKey("duration", true);
+		final HMetricKey metricKey = new HMetricKey("HMDURATION", true);
 		final HCounterType counterType = HCounterType.valueOf(type[1]);
 		//		final HCounterType counterType = HCounterType.count;
 		final Map<String, Double> valueByCategory = new HashMap<>();
@@ -333,7 +333,7 @@ public final class Utils {
 		final Signal signal = new Signal();
 		Assertion.notNull(result);
 		// ---------------------------------------------------------------------
-		final HMetricKey metricKey = new HMetricKey("duration", true);
+		final HMetricKey metricKey = new HMetricKey("HMDURATION", true);
 		final HCounterType counterType = HCounterType.mean;
 		final List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 

@@ -51,7 +51,7 @@ public final class HCubeBuilder implements Builder<HCube> {
 		//---------------------------------------------------------------------
 		HMetricBuilder metricBuilder = metricBuilders.get(metricName);
 		if (metricBuilder == null) {
-			metricBuilder = new HMetricBuilder(metric.getName());
+			metricBuilder = new HMetricBuilder(metric);
 			metricBuilders.put(metricName, metricBuilder);
 		}
 		//On ajoute metric

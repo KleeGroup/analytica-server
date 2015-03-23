@@ -23,6 +23,7 @@ import io.analytica.hcube.cube.HMetricBuilder;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
 import io.vertigo.lang.Assertion;
+import io.vertigo.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,7 +81,7 @@ public final class HSerie {
 			for (final HMetric metric : cube.getMetrics()) {
 				HMetricBuilder metricBuilder = metricBuilders.get(metric.getName());
 				if (metricBuilder == null) {
-					metricBuilder = new HMetricBuilder(metric.getName());
+					metricBuilder = new HMetricBuilder(metric);
 					metricBuilders.put(metric.getName(), metricBuilder);
 				}
 				metricBuilder.withMetric(metric);

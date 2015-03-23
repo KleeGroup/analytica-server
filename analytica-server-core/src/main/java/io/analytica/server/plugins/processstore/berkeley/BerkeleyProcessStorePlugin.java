@@ -20,7 +20,7 @@ package io.analytica.server.plugins.processstore.berkeley;
 import io.analytica.api.KProcess;
 import io.analytica.server.impl.Identified;
 import io.analytica.server.impl.ProcessStorePlugin;
-import io.vertigo.kernel.lang.Activeable;
+import io.vertigo.lang.Activeable;
 
 import java.io.File;
 import java.io.FileFilter;

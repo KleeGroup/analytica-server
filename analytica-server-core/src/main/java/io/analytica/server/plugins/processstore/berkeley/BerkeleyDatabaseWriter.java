@@ -37,6 +37,10 @@ final class BerkeleyDatabaseWriter {
 		return (KProcess) processBinding.entryToObject(process);
 	}
 
+	public BerkeleyDatabaseWriter(){
+		System.out.println("Constructeur BerkeleyDatabaseWriter");
+	}
+	
 	DatabaseEntry writeProcess(final KProcess process) {
 		final DatabaseEntry resultKey = new DatabaseEntry();
 		if (process != null) {

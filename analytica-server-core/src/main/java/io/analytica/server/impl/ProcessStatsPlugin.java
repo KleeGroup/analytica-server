@@ -18,7 +18,7 @@
 package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
-import io.vertigo.kernel.component.Plugin;
+import io.vertigo.lang.Plugin;
 
 /**
  * Plugin gérant des statistiques sur les process.

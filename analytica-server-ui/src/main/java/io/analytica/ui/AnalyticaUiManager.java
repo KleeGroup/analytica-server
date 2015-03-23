@@ -20,11 +20,11 @@
  */
 package io.analytica.ui;
 
-import io.vertigo.kernel.component.Manager;
+import io.vertigo.lang.Component;
 
 /**
  * @author statchum
  */
-public interface AnalyticaUiManager extends Manager {
+public interface AnalyticaUiManager extends Component {
 	//
 }

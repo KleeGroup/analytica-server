@@ -17,13 +17,14 @@
  */
 package io.analytica.restserver;
 
-import io.vertigo.kernel.component.Manager;
+import io.vertigo.lang.Component;
+
 
 /**
  * Manager serveur HTTP REST.
  * @author npiedeloup
  */
-public interface RestServerManager extends Manager {
+public interface RestServerManager extends Component {
 
 	/**
 	 * Ajoute une classe gérant une ressource Web (préfixée par un @Path).

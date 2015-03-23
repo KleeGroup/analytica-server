@@ -29,12 +29,13 @@ import io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlu
 import io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin;
 import io.analytica.server.plugins.processstore.memory.MemoryProcessStorePlugin;
 import io.analytica.server.plugins.queryapi.rest.RestQueryNetApiPlugin;
-import io.vertigo.kernel.Home;
-import io.vertigo.kernel.di.configurator.ComponentConfigBuilder;
-import io.vertigo.kernel.di.configurator.ComponentSpaceConfig;
-import io.vertigo.kernel.di.configurator.ComponentSpaceConfigBuilder;
-import io.vertigo.kernel.di.configurator.ModuleConfigBuilder;
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.core.Home;
+import io.vertigo.core.Home.App;
+import io.vertigo.core.config.AppConfig;
+import io.vertigo.core.config.AppConfigBuilder;
+import io.vertigo.core.config.ComponentConfigBuilder;
+import io.vertigo.core.config.ModuleConfigBuilder;
+import io.vertigo.lang.Assertion;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,6 +63,7 @@ public class Starter implements Runnable {
 	private final Class<?> relativeRootClass;
 	private final String propertiesFileName;
 	private boolean started;
+	private App app;
 
 	/**
 	 * @param propertiesFileName Fichier de propriétés
@@ -117,8 +119,8 @@ public class Starter implements Runnable {
 		// Initialisation de l'état de l'application
 		final Properties properties = new Properties();
 		appendFileProperties(properties, propertiesFileName, relativeRootClass);
-		final ComponentSpaceConfig componentSpaceConfig = createComponentSpaceConfig(properties);
-		Home.start(componentSpaceConfig);
+		final AppConfig appConfig = createComponentSpaceConfig(properties);
+		app = new App(appConfig);
 		started = true;
 	}
 
@@ -126,8 +128,8 @@ public class Starter implements Runnable {
 	 * @param properties Propriétés de l'environnement.
 	 * @return ComponentSpaceConfig configuration de l'environnement
 	 */
-	protected final ComponentSpaceConfig createComponentSpaceConfig(final Properties properties) {
-		final ComponentSpaceConfigBuilder componentSpaceConfigBuilder = new ComponentSpaceConfigBuilder() //
+	protected final AppConfig createComponentSpaceConfig(final Properties properties) {
+		final AppConfigBuilder componentSpaceConfigBuilder = new AppConfigBuilder() //
 				.withSilence(SILENCE);
 		appendModuleAnalytica(properties, componentSpaceConfigBuilder);
 		appendOtherModules(properties, componentSpaceConfigBuilder);
@@ -139,12 +141,12 @@ public class Starter implements Runnable {
 	 * @param properties  Propriétés de l'environnement.
 	 * @param componentSpaceConfigBuilder Builder de la configuration de l'environnement
 	 */
-	protected void appendOtherModules(final Properties properties, final ComponentSpaceConfigBuilder componentSpaceConfigBuilder) {
+	protected void appendOtherModules(final Properties properties, final AppConfigBuilder appConfigBuilder) {
 		//Possibilité d'ajouter d'autres modules à la conf.
 	}
 
-	private final void appendModuleAnalytica(final Properties properties, final ComponentSpaceConfigBuilder componentSpaceConfigBuilder) {
-		final ModuleConfigBuilder moduleConfigBuilder = componentSpaceConfigBuilder.beginModule("analytica");
+	private final void appendModuleAnalytica(final Properties properties, final AppConfigBuilder appConfigBuilder) {
+		final ModuleConfigBuilder moduleConfigBuilder = appConfigBuilder.beginModule("analytica");
 		if (properties.containsKey(REST_API_PORT) || properties.containsKey(REST_API_PATH)) {
 			moduleConfigBuilder.beginComponent(RestServerManager.class, RestServerManagerImpl.class) //
 					.withParam("apiPath", properties.getProperty(REST_API_PATH, "/rest/")) //
@@ -195,7 +197,7 @@ public class Starter implements Runnable {
 	 */
 	public final void stop() {
 		if (started) {
-			Home.stop();
+			app.close();
 			started = false;
 		}
 	}
@@ -243,6 +245,7 @@ public class Starter implements Runnable {
 	private static final String translateFileName(final String fileName, final Class<?> relativeRootClass) {
 		Assertion.checkArgNotEmpty(fileName);
 		//---------------------------------------------------------------------
+		System.out.println(relativeRootClass.getResource(relativeRootClass.getSimpleName()+".class").getPath().toString());
 		if (fileName.startsWith(".")) {
 			//soit en relatif
 			return "/" + getRelativePath(relativeRootClass) + "/" + fileName.replace("./", "");
@@ -256,6 +259,7 @@ public class Starter implements Runnable {
 	}
 
 	private static final String getRelativePath(final Class<?> relativeRootClass) {
+		
 		return relativeRootClass.getPackage().getName().replace('.', '/');
 	}
 }

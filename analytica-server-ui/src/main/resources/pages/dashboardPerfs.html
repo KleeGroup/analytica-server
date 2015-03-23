@@ -100,8 +100,8 @@
 			<div class="panel-body">
 			    <div class="chart flotchart linechart" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:mean;SQL:mean;SEARCH:mean"}' 
-			    data-labels='{"duration:mean":"Page", "SQL:mean":"Sql", "SEARCH:mean":"Recherches"}'></div>				
+			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Hour", "datas":"duration:mean;sql:mean;SEARCH:mean"}' 
+			    data-labels='{"duration:mean":"Page", "sql:mean":"Sql", "SEARCH:mean":"Recherches"}'></div>				
 			</div>
 		</div>
 	</div>
@@ -131,10 +131,10 @@
 			<div class="panel-body">
 				<div class="chart bignumber" 
 			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SERVICE:count;SQL:count"}' 
-			    data-labels='{"duration:count":"Nb Pages","SQL:count":"Nb Sql", "SERVICE:count":"Nb Services"}'
+			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SERVICE:count;sql:count"}' 
+			    data-labels='{"duration:count":"Nb Pages","sql:count":"Nb Sql", "SERVICE:count":"Nb Services"}'
 			    data-colors='ANDROID'
-			    data-icons='{"duration:count":"fa fa-files-o", "SERVICE:count":"fa fa-cogs","SQL:count":"fa fa-download"}'></div>
+			    data-icons='{"duration:count":"fa fa-files-o", "SERVICE:count":"fa fa-cogs","sql:count":"fa fa-download"}'></div>
 			</div>
 		</div>
 	</div>

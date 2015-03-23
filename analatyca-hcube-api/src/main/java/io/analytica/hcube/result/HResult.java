@@ -21,6 +21,7 @@ import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.query.HQuery;
 import io.vertigo.lang.Assertion;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,4 +83,5 @@ public final class HResult {
 		Assertion.checkNotNull(serie, "category {0} not in resultSet : ", category);
 		return serie;
 	}
+	
 }

@@ -17,7 +17,7 @@
  */
 package io.analytica.server.plugins.processstore.berkeley;
 
-import io.vertigo.kernel.lang.Assertion;
+import io.vertigo.lang.Assertion;
 
 import java.io.File;
 import java.util.HashMap;

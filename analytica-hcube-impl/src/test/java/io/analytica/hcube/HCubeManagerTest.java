@@ -420,7 +420,8 @@ public final class HCubeManagerTest {
 	}
 
 	private final HCategory category = new HCategory("welcome");
-	final HLocation location = new HLocation("myServer");
+	String[] locationS = {"myServer"};
+	final HLocation location = new HLocation(locationS);
 
 	private void populateData(final Date startDate, final int days) {
 		final long start = System.currentTimeMillis();
