@@ -24,8 +24,8 @@ import io.vertigo.core.Home;
 import io.vertigo.lang.Assertion;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -33,7 +33,9 @@ import javax.inject.Inject;
  * @author pchretien, npiedeloup
  */
 public final class HCubeManagerImpl implements HCubeManager {
+
 	private final HCubeStorePlugin cubeStore;
+	private final Map<String, HApp> APPS;
 
 	/**
 	 * Constructeur.
@@ -44,26 +46,22 @@ public final class HCubeManagerImpl implements HCubeManager {
 		Assertion.checkNotNull(cubeStorePlugin);
 		//-----------------------------------------------------------------
 		cubeStore = cubeStorePlugin;
-
-		APP = new HAppImp(cubeStore, "MY-APP");
+		APPS = new HashMap<>();
 		Home.getDefinitionSpace().register(HMetricDefinition.class);
 
 	}
 
-	public Set<String> getAppNames() {
-		return cubeStore.getAppNames();
-	}
-
-	private final HApp APP;
-
 	@Override
-	public Set<HApp> getApps() {
-		return Collections.singleton(APP);
+	public Map<String, HApp> getApps() {
+		return APPS;
 	}
 
 	@Override
 	public HApp getApp(final String appName) {
-		return APP;
+		if (!APPS.containsKey(appName)) {
+			APPS.put(appName, new HAppImp(cubeStore, appName));
+		}
+		return APPS.get(appName);
 	}
 
 	@Override
