@@ -31,6 +31,7 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 	//Map de ProcessStatsNode
 	private final Map<String, ProcessStatsNode> methodStatsRoot = new HashMap<>();
 
+	@Override
 	public Map<String, ProcessStatsNode> getResults() {
 		return methodStatsRoot;
 	}
@@ -89,6 +90,7 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 		return methodStatsNode.getProcessStats();
 	}
 
+	@Override
 	public void merge(final ProcessStatsCollection other) {
 		Assertion.checkNotNull(other);
 		Assertion.checkArgument(other instanceof ProcessStatsTree, "On ne peut merger que des ProcessStatsCollection de même type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());

@@ -69,6 +69,7 @@ public class SObserverObjectPanel extends SObjectPanel implements Observer {
 	 * @param observable Observable
 	 * @param object java.lang.Object
 	 */
+	@Override
 	public void update(final Observable observable, final Object object) {
 		//sae.client.log.ClientLog.fine("updateObserver reçu dans " + getClass() + " pour " + observable);
 		setObject(observable);

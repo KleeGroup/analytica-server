@@ -38,11 +38,13 @@ public class RGBBezierSpline implements RGBInterpolation {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void setMainColors(final Color[] mainColors) {
 		this.mainColors = mainColors;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public List<Color> getColors(final int nbColors) {
 		final List<Color> result = new ArrayList<>(nbColors);
 		for (float i = 0; i < nbColors; i++) {

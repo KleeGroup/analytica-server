@@ -41,6 +41,7 @@ public class Client {
 	 * Inner class that will handle the notifications.
 	 */
 	public static class ClientListener implements NotificationListener {
+		@Override
 		public void handleNotification(final Notification notification, final Object handback) {
 			echo("\nReceived notification:");
 			echo("\tClassName: " + notification.getClass().getName());

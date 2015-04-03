@@ -45,6 +45,7 @@
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+		<lucene.version>5.0.0</lucene.version>
 	</properties>
 
 	<build>

@@ -17,18 +17,20 @@
     if not, see <http://www.gnu.org/licenses>
 
 -->
-<modules>
+<config>
 	<module name="analytica">
 	<component api="ServerManager" class="io.analytica.server.impl.ServerManagerImpl" >
        <plugin class="io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
-        	<param name="dbPath" value="d:/analytica/db-test" />
+        	<param name="dbPath" value="g:/analytica/db-test" />
         </plugin>
+        
          <!-- <plugin name="ProcessEncoderPlugin" class="io.analytica.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
         </plugin>  -->       
      </component>
      <component api="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
-			<plugin class="io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin">
-			</plugin>
+			<!--  <plugin class="io.analytica.hcube.plugin.store.lucene.LuceneHCubeStorePlugin">
+        		<param name="path" value="g:/analytica/lucene" />
+        	</plugin>-->
 		</component>
 	</module>
-</modules>
+</config>

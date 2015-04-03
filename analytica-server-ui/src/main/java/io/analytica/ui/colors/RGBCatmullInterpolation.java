@@ -27,6 +27,7 @@ import java.awt.Color;
 public class RGBCatmullInterpolation extends AbstractRGBPointToPointInterpolation {
 
 	/** {@inheritDoc} */
+	@Override
 	public String getInterpolationCode() {
 		return "CATMULL";
 	}

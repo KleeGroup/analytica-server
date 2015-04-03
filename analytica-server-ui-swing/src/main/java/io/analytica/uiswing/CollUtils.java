@@ -196,6 +196,7 @@ public class CollUtils {
 				return value;
 			}
 
+			@Override
 			public int compareTo(final Object object2) {
 				String propertyName;
 				Object value;

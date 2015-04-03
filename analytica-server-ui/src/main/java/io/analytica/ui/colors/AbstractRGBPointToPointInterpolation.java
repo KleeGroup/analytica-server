@@ -34,11 +34,13 @@ abstract class AbstractRGBPointToPointInterpolation implements RGBInterpolation 
 	private Color[] mainColors;
 
 	/** {@inheritDoc} */
+	@Override
 	public void setMainColors(final Color[] mainColors) {
 		this.mainColors = mainColors;
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public List<Color> getColors(final int nbColors) {
 		Assertion.checkNotNull(mainColors, "Les couleurs principales n'ont pas été settées.");
 		//---------------------------------------------------------------------

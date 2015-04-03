@@ -65,7 +65,7 @@ public final class SimpleTest {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws HCubeStoreException {
 		final HTime time = new HTime(new Date(), HTimeDimension.Minute);
 		//--------
 		final HMetric workingHours = new HMetricBuilder(HM_PERF)
@@ -77,8 +77,8 @@ public final class SimpleTest {
 				.withMetric(workingHours)
 				.build();
 
-		String[] locationS = {"myServer"};
-		app.push("PAGES", new HKey(new HLocation(locationS), time, new HCategory("www")), cube);
+		String[] locationS = { "myServer" };
+		app.push(new HKey(new HLocation(locationS), time, new HCategory("www")), cube, "Test-key");
 
 		final HQuery query = new HQueryBuilder()
 				.between(HTimeDimension.SixMinutes, "NOW", "NOW")

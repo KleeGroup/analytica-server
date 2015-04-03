@@ -58,6 +58,7 @@ public final class SocketIoProcessStatsPlugin implements ProcessStatsPlugin, Act
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void merge(final KProcess process) {
 		final long time = process.getStartDate().getTime();
 		final double duration = process.getDuration() / 2000 * 300;
@@ -73,6 +74,7 @@ public final class SocketIoProcessStatsPlugin implements ProcessStatsPlugin, Act
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void start() {
 		try {
 			socket = new SocketIO(socketIoUrl);
@@ -83,6 +85,7 @@ public final class SocketIoProcessStatsPlugin implements ProcessStatsPlugin, Act
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop() {
 		socket.disconnect();
 	}

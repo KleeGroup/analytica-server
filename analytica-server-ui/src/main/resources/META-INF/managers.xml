@@ -1,6 +1,6 @@
 <?xml version =	'1.0' encoding = 'ISO-8859-1'?>
 <!-- Utilisé en exécution -->
-<modules>
+<config>
 	<module name="analytica">
 		<component api="ServerManager"
 			class="io.analytica.server.impl.ServerManagerImpl">
@@ -21,4 +21,4 @@
 			</plugin>
 		</component>
 	</module>
-</modules>
+</config>

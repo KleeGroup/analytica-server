@@ -30,26 +30,32 @@ public class PerfProcessCollector implements PerfCollector {
 		return PROCESS_STATS_MAP_PAR_MODULE.get(moduleName);
 	}
 
+	@Override
 	public void onProcessStart(final String moduleName, final String processeId, final Object obj, final Object[] params) {
 		//rien
 	}
 
+	@Override
 	public void onProcessFinish(final String moduleName, final String processeId, final Object obj, final Object[] params, final Object ret, final long duration, final boolean success) {
 		getProcessStatsByModule(moduleName).addRequest(processeId, duration);
 	}
 
+	@Override
 	public void onProcessError(final String moduleName, final String processId, final Object obj, final Object[] params, final Throwable throwable) {
 		//rien
 	}
 
+	@Override
 	public ProcessStatsCollection getResults(final String moduleName) {
 		return getProcessStatsByModule(moduleName);
 	}
 
+	@Override
 	public void clearResults(final String moduleName) {
 		PROCESS_STATS_MAP_PAR_MODULE.remove(moduleName);
 	}
 
+	@Override
 	public Map<String, ProcessStatsCollection> getResults() {
 		final Map<String, ProcessStatsCollection> results = new HashMap<>();
 		for (final String key : PROCESS_STATS_MAP_PAR_MODULE.keySet()) {
@@ -58,10 +64,12 @@ public class PerfProcessCollector implements PerfCollector {
 		return results;
 	}
 
+	@Override
 	public void clearResults() {
 		PROCESS_STATS_MAP_PAR_MODULE.clear();
 	}
 
+	@Override
 	public StringBuffer print(final StringBuffer out) {
 		for (final Map.Entry<String, ProcessStatsMap> entry : PROCESS_STATS_MAP_PAR_MODULE.entrySet()) {
 			out.append(entry.getKey()).append("\n");

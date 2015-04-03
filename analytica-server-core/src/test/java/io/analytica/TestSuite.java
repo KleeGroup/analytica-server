@@ -17,7 +17,7 @@
  */
 package io.analytica;
 
-import io.analytica.hcube.HCubeManagerTest;
+import io.analytica.hcube.HCubeManagerMemoryTest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -30,7 +30,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * @version $Id: TestSuite.java,v 1.6 2012/10/16 12:42:39 npiedeloup Exp $
  */
 @RunWith(Suite.class)
-@SuiteClasses({ HCubeManagerTest.class //
+@SuiteClasses({ HCubeManagerMemoryTest.class //
 })
 public final class TestSuite {
 	// the class remains completely empty, 

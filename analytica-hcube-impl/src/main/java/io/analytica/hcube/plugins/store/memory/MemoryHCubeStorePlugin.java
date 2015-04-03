@@ -17,6 +17,7 @@
  */
 package io.analytica.hcube.plugins.store.memory;
 
+import io.analytica.hcube.HCubeStoreException;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
@@ -49,9 +50,8 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 
 	/** {@inheritDoc} */
 	@Override
-	public synchronized void push(final String appName, final String type, final HKey key, final HCube cube) {
+	public synchronized void push(final String appName, final HKey key, final HCube cube, String processKey) {
 		Assertion.checkArgNotEmpty(appName);
-		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(key);
 		Assertion.checkNotNull(cube);
 		//---------------------------------------------------------------------
@@ -72,9 +72,10 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 		appCategoryStore.addCategory(key.getCategory());
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @throws HCubeStoreException */
 	@Override
-	public synchronized List<HSerie> execute(final String appName, final String type, final HQuery query, final HSelector selector) {
+	public synchronized List<HSerie> execute(final String appName, final String type, final HQuery query, final HSelector selector) throws HCubeStoreException {
 		Assertion.checkArgNotEmpty(appName);
 		Assertion.checkArgNotEmpty(type);
 		Assertion.checkNotNull(query);
@@ -125,6 +126,18 @@ public final class MemoryHCubeStorePlugin implements HCubeStorePlugin {
 			return 0;
 		}
 		return appCubeStore.size();
+	}
+
+	@Override
+	public void pushBulk(String appName, Map<HKey, HCube> data, String lasProcessKey) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getLastCubeKey(String appName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

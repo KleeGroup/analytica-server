@@ -6,6 +6,8 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HSelector;
 import io.analytica.hcube.result.HResult;
 
+import java.util.Map;
+
 /**
  * An app is defined by its name.
  *
@@ -21,9 +23,13 @@ public interface HApp {
 	 * if key exists then the cube is merged else the cube is added.
 	 * @param cube HCube to add or merge
 	 */
-	void push(String type, HKey key, HCube cube);
+	void push(HKey key, HCube cube, String processKey) throws HCubeStoreException;
 
-	long size(String type);
+	void pushBulk(Map<HKey, HCube> data, String lasProcessKey) throws HCubeStoreException;
 
-	HResult execute(final String type, final HQuery query);
+	long size(String type) throws HCubeStoreException;
+
+	HResult execute(final String type, final HQuery query) throws HCubeStoreException;
+
+	String getLastReceivedHCubeId() throws HCubeStoreException;
 }

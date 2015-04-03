@@ -41,6 +41,7 @@ final class Pages {
 	private static final String SEARCH_PROCESS = "search";
 
 	private static class HomePage implements PageBuilder {
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 40, 5, 40, 5, 40, 5, 40);
 
@@ -63,6 +64,7 @@ final class Pages {
 	}
 
 	private static class SearchArtistPage implements PageBuilder {
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 50, 150, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10);
 
@@ -103,6 +105,7 @@ final class Pages {
 	}
 
 	private static class SearchOeuvrePage implements PageBuilder {
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 50, 250, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10);
 
@@ -143,6 +146,7 @@ final class Pages {
 	}
 
 	private static class ImageOeuvrePage implements PageBuilder {
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 5, 15);
 
@@ -154,6 +158,7 @@ final class Pages {
 	}
 
 	private static class ImageArtistPage implements PageBuilder {
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 5, 10);
 
@@ -169,6 +174,7 @@ final class Pages {
 		private static final String[] artistsA = "vinci;monet;picasso;renoir;rubens".split(";");
 		private static final String[] artistsB = "bazille;bonnard;munch;signac;hopper;cézanne;bacon;johnes;rothko;warhol".split(";");
 
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 20, 5, 20);
 			final String artist = getArtist();
@@ -196,6 +202,7 @@ final class Pages {
 		private static final String[] oeuvresC = "Achille Emperaire;Nature morte à la bouilloire;La Pendule noire;Pastorale ou l'Idylle;La Maison du pendu;Autoportrait;Madame Cézanne dans un fauteuil rouge;Pont de Maincy;Cour de ferme à Auvers;Pommes et biscuits;Plateau de la montagne Sainte Victoire;L'Estaque, vue du golfe de Marseille;Vase de fleurs et pommes;Les Collines de Meyreuil;Gardanne le soir, Vue de la colline des frères;Gardanne, Vue de Saint André;Les rideaux;Payannet et la Sainte-Victoire. Environs de Gardanne;L'aqueduc;Marronniers et ferme du Jas de Bouffon;Pont sur la Marne à Créteil;La table de cuisine (Nature morte au panier);Mardi-gras;Madame Cézanne sur une chaise jaune;Les Joueurs de cartes;Les baigneurs;Baigneurs;Femme à la cafetière;Le Garçon au gilet rouge;Les Grandes Baigneuses;Oignons et bouteille;Joachim Gasquet;Paysan à la blouse bleue;Pommes et oranges;Nature morte aux oignons;Fumeur accoudé;Oignons et bouteille;Le fumeur;Le rocher rouge;Le château noir;Montagne Sainte Victoire;Rocher de Bibemus;Vieille Femme au rosaire;La Montagne Sainte-Victoire et le Château Noir"
 				.split(";");
 
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 50, 5, 20);
 			final String oeuvre = getOeuvre();
@@ -220,6 +227,7 @@ final class Pages {
 		private static final String[] museums = "Musée du Louvre,Paris;Musée d'Orsay,Paris;The Metropolitan Museum of Art,New York;Pushkin Museum,Moscow;Courtauld Institute Galleries,London".split(";");
 		private static final String[] annees = "1954;1966;1970;1982;1991;2002;2005;2007;2008;2009;2010;2011;2011;2012;2012;2012;2013;2013;2013;2013".split(";");
 
+		@Override
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 20, 5, 50, 5, 40);
 			final String[] expositionInfos = getExposition().split(",");// [Musée,Ville,Année]

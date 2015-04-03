@@ -32,10 +32,8 @@ import java.util.regex.Pattern;
  */
 public final class HCategory {
 	public static final Pattern CATEGORY_REGEX = Pattern.compile("[^\\\\]+");
-	private static char SEPARATOR = '/';
+	private final static String SEPARATOR = ".";
 	private final String[] categoryTerms;
-
-
 	private final String categoryPath;
 
 	public HCategory(final String... categoryTerms) {
@@ -57,6 +55,12 @@ public final class HCategory {
 		}
 		this.categoryTerms = categoryTerms.clone();
 		this.categoryPath = sb.toString();
+	}
+
+	public HCategory(final String categoryPath) {
+		Assertion.checkNotNull(categoryPath);
+		categoryTerms = categoryPath.split(SEPARATOR);
+		this.categoryPath = categoryPath;
 	}
 
 	/**
@@ -96,7 +100,7 @@ public final class HCategory {
 	public final String toString() {
 		return categoryPath;
 	}
-	
+
 	public String[] getCategoryTerms() {
 		return categoryTerms;
 	}

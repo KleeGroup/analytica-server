@@ -33,18 +33,22 @@ public class SLabel extends JLabel implements MViewAdaptee {
 	private static final long serialVersionUID = -3406323890345345345L;
 
 	private class LabelAdapter implements MView {
+		@Override
 		public String getModelName() {
 			return "text";
 		}
 
+		@Override
 		public MViewAdaptee getAdaptee() {
 			return SLabel.this;
 		}
 
+		@Override
 		public Object getModel() {
 			return getText();
 		}
 
+		@Override
 		public void setModel(final Object model) {
 			MAssertion.preCondition(model == null || model instanceof String, "Dans SLabel.LabelAdapter.setModel, le model n'est pas null ou une instance de String");
 			setText((String) model);
@@ -76,6 +80,7 @@ public class SLabel extends JLabel implements MViewAdaptee {
 		super(icon);
 	}
 
+	@Override
 	public MView getView() {
 		if (view == null) {
 			view = new LabelAdapter();

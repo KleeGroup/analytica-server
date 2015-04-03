@@ -6,17 +6,29 @@ import java.util.regex.Pattern;
 
 public final class HLocation {
 	public static final Pattern NAME_REGEX = Pattern.compile("[a-z][a-zA-Z]*");
-	private final String[] location;
+	private final static String SEPARATOR = ".";
+	private final String[] locationTerms;
+	private final String locationPath;
 
-	public HLocation(final String[] location) {
-		Assertion.checkNotNull(location);
-//		Assertion.checkState(location.length!=0, "");
-		// TODO A REIMPLEMENTER
-//		if (!NAME_REGEX.matcher(location).matches()) {
-//			throw new IllegalArgumentException("location " + location + " must match regex :" + NAME_REGEX);
-//		}
-		//---------------------------------------------------------------------
-		this.location = location;
+	public HLocation(final String... locationTerms) {
+		Assertion.checkNotNull(locationTerms);
+		for (final String locationTerm : locationTerms) {
+			if (!NAME_REGEX.matcher(locationTerm).matches()) {
+				throw new IllegalArgumentException("locationTerm" + locationTerm + " must match regex :" + NAME_REGEX);
+			}
+		}
+		//--------------------------------
+		final StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (final String locationTerm : locationTerms) {
+			if (!first) {
+				sb.append(SEPARATOR);
+			}
+			sb.append(locationTerm);
+			first = false;
+		}
+		this.locationTerms = locationTerms.clone();
+		this.locationPath = sb.toString();
 	}
 
 	public HLocation drillUp() {
@@ -25,7 +37,7 @@ public final class HLocation {
 
 	@Override
 	public int hashCode() {
-		return location.hashCode();
+		return locationTerms.hashCode();
 	}
 
 	@Override
@@ -33,12 +45,16 @@ public final class HLocation {
 		if (value == this) {
 			return true;
 		} else if (value instanceof HLocation) {
-			return location.equals(((HLocation) value).location);
+			return locationPath.equals(((HLocation) value).locationPath);
 		}
 		return false;
 	}
 
-	public String[] getPath() {
-		return location;
+	public String getPath() {
+		return locationPath;
+	}
+
+	public String[] getlocationTerms() {
+		return locationTerms;
 	}
 }

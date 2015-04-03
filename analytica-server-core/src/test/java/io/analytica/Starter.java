@@ -82,6 +82,7 @@ public final class Starter implements Runnable {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void run() {
 		try {
 			start();

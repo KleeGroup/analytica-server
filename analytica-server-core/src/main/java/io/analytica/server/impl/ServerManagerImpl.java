@@ -19,6 +19,9 @@ package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
 import io.analytica.hcube.HCubeManager;
+import io.analytica.hcube.HCubeStoreException;
+import io.analytica.hcube.cube.HCube;
+import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.analytica.server.ServerManager;
@@ -27,11 +30,15 @@ import io.vertigo.lang.Activeable;
 import io.vertigo.lang.Assertion;
 import io.vertigo.lang.Option;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.inject.Inject;
+
+import org.apache.log4j.Logger;
 
 /**
  * Manager Serveur d'Analytica.
@@ -39,6 +46,7 @@ import javax.inject.Inject;
  * @version $Id: ServerManagerImpl.java,v 1.22 2013/01/14 16:35:19 npiedeloup Exp $
  */
 public final class ServerManagerImpl implements ServerManager, Activeable {
+	public static long convertionTime = 0;
 	private final HCubeManager hcubeManager;
 	private final ProcessStorePlugin processStorePlugin;
 	private Timer asyncCubeStoreTimer = null;
@@ -46,6 +54,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private final Option<ProcessStatsPlugin> processStatsPlugin;
 	private final QueryNetApiPlugin queryNetApiPlugin;
 	private final ProcessNetApiPlugin processNetApiPlugin;
+	static final Logger logger = Logger.getLogger(ServerManagerImpl.class);
+	private static final int NB_PROCESS_A_TRAITER = 5000;
 
 	/**
 	 * Constructeur.
@@ -74,9 +84,10 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		//hcubeManager.push(process);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+	 * @throws HCubeStoreException */
 	@Override
-	public HResult execute(final String appName, final String type, final HQuery query) {
+	public HResult execute(final String appName, final String type, final HQuery query) throws HCubeStoreException {
 		return hcubeManager.getApp(appName).execute(type, query);
 	}
 
@@ -84,8 +95,10 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	@Override
 	public void start() {
 		asyncCubeStoreTimer = new Timer("pushProcessToHCube", true);
+		hcubeManager.getApps();
 		final TimerTask storeCubeTask = new StoreCubeTask();
-		asyncCubeStoreTimer.schedule(storeCubeTask, 1000, 250); //X processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
+		storeCubeTask.run();
+		asyncCubeStoreTimer.schedule(storeCubeTask, 2500, 2500); //X processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
 	}
 
 	/** {@inheritDoc} */
@@ -96,29 +109,53 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	private class StoreCubeTask extends TimerTask {
+
+		public StoreCubeTask() {
+		}
+
 		/** {@inheritDoc} */
 		@Override
 		public void run() {
-			storeNextProcessesAsCube();
+			try {
+				storeNextProcessesAsCube();
+			} catch (final HCubeStoreException e) {
+				logger.error("Erreur lors du chargement des données depuis Berkley", e);
+			}
 		}
 	}
 
-	private String lastProcessIdStored = null;
+	/** {@inheritDoc}
+	 * @throws HCubeStoreException */
+	int storeNextProcessesAsCube() throws HCubeStoreException {
+		final List<String> processStoreApps = processStorePlugin.getApps();
+		int numberOfProcessesTreated = 0;
+		for (final String appName : processStoreApps) {
+			final Map<HKey, HCube> hCubes = new HashMap<>();
+			final long startBerkley = System.currentTimeMillis();
+			final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(hcubeManager.getApp(appName).getLastReceivedHCubeId(), NB_PROCESS_A_TRAITER);
+			final long startToCube = System.currentTimeMillis();
+			for (final Identified<KProcess> process : nextProcesses) {
+				final List<Dual> duals = processEncoder.encode(process.getData());
+				if (processStatsPlugin.isDefined()) {
+					processStatsPlugin.get().merge(process.getData());
+				}
+				for (final Dual dual : duals) {
+					hCubes.put(dual.getKey(), dual.getCubeBuilder().build());
+				}
+			}
+			if (nextProcesses.size() > 0) {
+				final String currentLastReceivedHCubeId = nextProcesses.get(nextProcesses.size() - 1).getKey();
+				final long startLucene = System.currentTimeMillis();
+				hcubeManager.getApp(appName).pushBulk(hCubes, currentLastReceivedHCubeId);
+				numberOfProcessesTreated += nextProcesses.size();
+				final long end = System.currentTimeMillis();
+				System.out.println("Berkley time =" + (startToCube - startBerkley));
+				System.out.println("To Cube time =" + (startLucene - startToCube));
+				System.out.println("Lucene  time =" + (end - startLucene));
+			}
 
-	/** {@inheritDoc} */
-	private int storeNextProcessesAsCube() {
-		final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(lastProcessIdStored, 500);
-		for (final Identified<KProcess> process : nextProcesses) {
-			final List<Dual> duals = processEncoder.encode(process.getData());
-			if (processStatsPlugin.isDefined()) {
-				processStatsPlugin.get().merge(process.getData());
-			}
-			for (final Dual dual : duals) {
-				hcubeManager.getApp(process.getData().getAppName()).push(process.getData().getType(), dual.getKey(), dual.getCubeBuilder().build());
-			}
-			lastProcessIdStored = process.getKey();
 		}
-		return nextProcesses.size();
+		return numberOfProcessesTreated;
 	}
 }
 

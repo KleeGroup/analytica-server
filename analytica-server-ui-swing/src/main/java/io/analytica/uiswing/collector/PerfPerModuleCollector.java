@@ -37,10 +37,12 @@ public class PerfPerModuleCollector implements PerfCollector {
 		return threadStats;
 	}
 
+	@Override
 	public void onProcessStart(final String moduleName, final String processeId, final Object obj, final Object[] params) {
 		getThreadStats().startProcess(processeId, moduleName);
 	}
 
+	@Override
 	public void onProcessFinish(final String moduleName, final String processId, final Object obj, final Object[] params, final Object ret, final long duration, final boolean success) {
 		final String firstProcess = getThreadStats().getFirstProcess(); //il faut la récupérer avant le finish
 		final long tempsRestant = getThreadStats().finishProcess(duration, processId, moduleName);
@@ -51,20 +53,24 @@ public class PerfPerModuleCollector implements PerfCollector {
 		PROCESS_STATS_TREE.addRequest(firstProcess, moduleName, processId, tempsRestant);
 	}
 
+	@Override
 	public void onProcessError(final String moduleName, final String processId, final Object obj, final Object[] params, final Throwable throwable) {
 		//rien
 	}
 
+	@Override
 	public Map getResults() {
 		final Map result = new HashMap();
 		result.put(RATIO_PER_MODULE_NAME, PROCESS_STATS_TREE);
 		return result;
 	}
 
+	@Override
 	public void clearResults() {
 		PROCESS_STATS_TREE.getResults().clear();
 	}
 
+	@Override
 	public ProcessStatsCollection getResults(final String moduleName) {
 		if (RATIO_PER_MODULE_NAME.equals(moduleName)) {
 			return PROCESS_STATS_TREE;
@@ -72,6 +78,7 @@ public class PerfPerModuleCollector implements PerfCollector {
 		return null;
 	}
 
+	@Override
 	public void clearResults(final String moduleName) {
 		getResults(moduleName).getResults().clear();
 	}
@@ -134,6 +141,7 @@ public class PerfPerModuleCollector implements PerfCollector {
 		//		}
 	}
 
+	@Override
 	public StringBuffer print(final StringBuffer out) {
 		return out;
 	}

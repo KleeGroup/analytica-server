@@ -24,6 +24,7 @@ import io.vertigo.lang.Activeable;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,11 +52,28 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 	public BerkeleyProcessStorePlugin(@Named("dbPath") final String dbPath) {
 		this.dbPath = new File(dbPath);
 		databases = new HashMap<>();
-		//database = new BerkeleyDatabase(new File(dbPath));
+		String[] currentApps = this.dbPath.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
+		for (String appName : currentApps) {
+			BerkeleyDatabase database = new BerkeleyDatabase(new File(this.dbPath.getAbsolutePath() + File.separator + appName));
+			database.open(false);
+			databases.put(appName, database);
+		}
 		writer = new BerkeleyDatabaseWriter();
 	}
 
 	/** {@inheritDoc} */
+	@Override
+	public List<String> getApps() {
+		return new ArrayList<>(databases.keySet());
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void add(final KProcess process) {
 		final BerkeleyDatabase database = obtainDatabase(process.getAppName());
 		final long key = database.getSequenceNextVal();
@@ -77,11 +95,13 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void start() {
 		//database.open(false);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop() {
 		for (final BerkeleyDatabase database : databases.values()) {
 			database.close();
@@ -89,9 +109,11 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public List<Identified<KProcess>> getProcess(final String lastKeyString, final Integer maxRow) {
 		final List<String> systemNames = new ArrayList<>();
 		for (final File databaseDirectory : dbPath.listFiles(new FileFilter() {
+			@Override
 			public boolean accept(final File pathname) {
 				return pathname.isDirectory();
 			}

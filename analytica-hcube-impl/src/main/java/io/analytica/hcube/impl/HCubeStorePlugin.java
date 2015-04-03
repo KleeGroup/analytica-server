@@ -17,6 +17,7 @@
  */
 package io.analytica.hcube.impl;
 
+import io.analytica.hcube.HCubeStoreException;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
@@ -29,6 +30,7 @@ import io.analytica.hcube.result.HSerie;
 import io.vertigo.lang.Plugin;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,26 +39,40 @@ import java.util.Set;
  * @author npiedeloup
  */
 public interface HCubeStorePlugin extends Plugin {
+	static final String DELIMITER = ".";
+
 	Set<String> getAppNames();
 
-	List<HCategory> findCategories(String appName, final HCategorySelection categorySelection);
+	List<HCategory> findCategories(String appName, final HCategorySelection categorySelection) throws HCubeStoreException;
 
-	List<HLocation> findLocations(String appName, final HLocationSelection locationSelection);
+	List<HLocation> findLocations(String appName, final HLocationSelection locationSelection) throws HCubeStoreException;
 
 	/**
 	 * Ajout d'un cube.
 	 * @param cube HCube à ajouter
 	 *
 	 */
-	void push(String appName, final String type, HKey key, HCube cube);
+	void push(String appName, HKey key, HCube cube, String processKey) throws HCubeStoreException;
+
+	/**
+	 * Methode permetant d'inserer un ensemble des HCubes dans Lucene. 
+	 * */
+	void pushBulk(String appName, Map<HKey, HCube> data, String lasProcessKey) throws HCubeStoreException;
+
+	/**
+	 * Recuperation de la clé du dernier cube inseré. Attention!! Cette clé ne correspond pas à HKey mais
+	 * a la clée donnée par le ProcessStorePlugin.
+	 * */
+	String getLastCubeKey(String appName) throws HCubeStoreException;
 
 	/**
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
+	 * @throws HCubeStoreException 
 	 */
-	List<HSerie> execute(String appName, final String type, final HQuery query, final HSelector selector);
+	List<HSerie> execute(String appName, final String type, final HQuery query, final HSelector selector) throws HCubeStoreException;
 
-	long size(String appName, final String type);
+	long size(String appName, final String type) throws HCubeStoreException;
 
 }

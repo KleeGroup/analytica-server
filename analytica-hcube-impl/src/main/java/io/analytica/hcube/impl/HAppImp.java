@@ -1,6 +1,7 @@
 package io.analytica.hcube.impl;
 
 import io.analytica.hcube.HApp;
+import io.analytica.hcube.HCubeStoreException;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
@@ -15,6 +16,7 @@ import io.analytica.hcube.result.HResult;
 import io.vertigo.lang.Assertion;
 
 import java.util.List;
+import java.util.Map;
 
 final class HAppImp implements HApp {
 	private final HCubeStorePlugin cubeStore;
@@ -36,12 +38,12 @@ final class HAppImp implements HApp {
 			}
 
 			@Override
-			public List<HCategory> findCategories(final HCategorySelection categorySelection) {
+			public List<HCategory> findCategories(final HCategorySelection categorySelection) throws HCubeStoreException {
 				return cubeStore.findCategories(appName, categorySelection);
 			}
 
 			@Override
-			public List<HLocation> findLocations(final HLocationSelection locationSelection) {
+			public List<HLocation> findLocations(final HLocationSelection locationSelection) throws HCubeStoreException {
 				return cubeStore.findLocations(appName, locationSelection);
 			}
 
@@ -54,21 +56,24 @@ final class HAppImp implements HApp {
 		return selector;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @throws HCubeStoreException */
 	@Override
-	public HResult execute(final String type, final HQuery query) {
+	public HResult execute(final String type, final HQuery query) throws HCubeStoreException {
 		return new HResult(query, selector.findCategories(query.getCategorySelection()), cubeStore.execute(appName, type, query, selector));
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @throws HCubeStoreException */
 	@Override
-	public void push(final String type, final HKey key, final HCube cube) {
-		cubeStore.push(appName, type, key, cube);
+	public void push(final HKey key, final HCube cube, String processKey) throws HCubeStoreException {
+		cubeStore.push(appName, key, cube, processKey);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @throws HCubeStoreException */
 	@Override
-	public long size(final String type) {
+	public long size(final String type) throws HCubeStoreException {
 		return cubeStore.size(appName, type);
 	}
 
@@ -76,5 +81,19 @@ final class HAppImp implements HApp {
 	@Override
 	public String getAppName() {
 		return appName;
+	}
+
+	/** {@inheritDoc} 
+	 * @throws HCubeStoreException */
+	@Override
+	public void pushBulk(Map<HKey, HCube> data, String lasProcessKey) throws HCubeStoreException {
+		cubeStore.pushBulk(appName, data, lasProcessKey);
+	}
+
+	/** {@inheritDoc} 
+	 * @throws HCubeStoreException */
+	@Override
+	public String getLastReceivedHCubeId() throws HCubeStoreException {
+		return cubeStore.getLastCubeKey(appName);
 	}
 }

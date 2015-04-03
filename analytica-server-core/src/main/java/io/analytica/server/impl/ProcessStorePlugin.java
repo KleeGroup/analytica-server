@@ -42,4 +42,9 @@ public interface ProcessStorePlugin extends Plugin {
 	 * @return Liste des process suivant
 	 */
 	List<Identified<KProcess>> getProcess(final String lastId, final Integer maxRow);
+
+	/**
+	 * Liste tous les applications disponible dans le store
+	 * */
+	List<String> getApps();
 }

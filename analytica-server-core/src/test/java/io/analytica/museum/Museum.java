@@ -20,6 +20,7 @@ package io.analytica.museum;
 import io.analytica.api.KProcess;
 import io.analytica.api.KProcessBuilder;
 import io.analytica.hcube.HCubeManager;
+import io.analytica.hcube.HCubeStoreException;
 import io.vertigo.core.Home;
 import io.vertigo.lang.Assertion;
 import io.vertigo.util.DateBuilder;
@@ -45,7 +46,7 @@ public final class Museum {
 		this.pageListener = pageListener;
 	}
 
-	public void load(final int days, final int visitsByDay) {
+	public void load(final int days, final int visitsByDay) throws HCubeStoreException {
 		Assertion.checkArgument(days >= 0, "days must be >= 0");
 		//---------------------------------------------------------------------	
 		//Toutes les visites sur 3h, 100visites par heures
@@ -73,14 +74,14 @@ public final class Museum {
 		System.out.println("=============");
 	}
 
-	private void checkMemory(final long day) {
+	private void checkMemory(final long day) throws HCubeStoreException {
 		final HCubeManager cubeManager = Home.getComponentSpace().resolve(HCubeManager.class);
-		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+		if ((Runtime.getRuntime().freeMemory() * 10 / Runtime.getRuntime().maxMemory()) < 1) {
 			System.gc();
 			//---
-			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+			if ((Runtime.getRuntime().freeMemory() * 10 / Runtime.getRuntime().maxMemory()) < 1) {
 				System.out.println();
-				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
+				System.out.println(">>>> free mem =" + Runtime.getRuntime().freeMemory());
 				System.out.println(">>>> max   mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
 				System.out.println(">>>> cubes count =" + cubeManager.getApp(APP_NAME).size(null));//AT THIS MOMEMNT type is not implemented in the size function
@@ -231,8 +232,8 @@ public final class Museum {
 	private void loadHealthInfos(final Date dateHour, final double nbVisitsHour) {
 		for (int min = 0; min < 60; min += 6) {
 			final Date dateMinute = new DateBuilder(dateHour).addMinutes(min).toDateTime();
-			final KProcess healthProcess = new KProcessBuilder(APP_NAME,HEALTH, dateMinute, 0)//
-					.withCategory(new String[]{ "physical"})
+			final KProcess healthProcess = new KProcessBuilder(APP_NAME, HEALTH, dateMinute, 0)//
+					.withCategory(new String[] { "physical" })
 					.setMeasure("cpu", Math.min(100, 5 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 1) : 0)))//
 					.setMeasure("ram", Math.min(3096, 250 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 10) : 0)))//
 					.setMeasure("io", 10 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 5) : 0))//

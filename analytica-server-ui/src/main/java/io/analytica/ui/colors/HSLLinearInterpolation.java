@@ -29,6 +29,7 @@ import java.awt.Color;
  */
 public class HSLLinearInterpolation extends AbstractRGBPointToPointInterpolation {
 	/** {@inheritDoc} */
+	@Override
 	public String getInterpolationCode() {
 		return "HSL";
 	}

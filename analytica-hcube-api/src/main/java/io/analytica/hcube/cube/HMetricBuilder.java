@@ -60,6 +60,10 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		}
 
 		//---------------------------------------------------------------------
+		if(!Home.getDefinitionSpace().containsKey(camelMetricName)){
+			Home.getDefinitionSpace().put(new HMetricDefinition(camelMetricName, true), HMetricDefinition.class);
+		}
+		
 		metricDefinition = Home.getDefinitionSpace().resolve(camelMetricName, HMetricDefinition.class);
 		distributionBuilder = metricDefinition.hasDistribution() ? new HDistributionBuilder() : null;
 	}

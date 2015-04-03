@@ -21,7 +21,7 @@ import io.analytica.hcube.cube.HMetricDefinition;
 import io.vertigo.lang.Component;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * time oriented database .
@@ -39,7 +39,7 @@ public interface HCubeManager extends Component {
 
 	//	void registerApp(HAppConfig);
 
-	Set<HApp> getApps();
+	Map<String, HApp> getApps();
 
 	HApp getApp(String appName);
 }

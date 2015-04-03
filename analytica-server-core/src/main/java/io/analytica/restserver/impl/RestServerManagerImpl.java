@@ -36,6 +36,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.apache.log4j.Logger;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
+import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 
@@ -153,10 +154,13 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 		rc.getProperties().put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, com.sun.jersey.api.container.filter.GZIPContentEncodingFilter.class.getName());
 		rc.getProperties().put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, com.sun.jersey.api.container.filter.GZIPContentEncodingFilter.class.getName());
 		final HttpServer grizzlyServer = GrizzlyServerFactory.createHttpServer(baseUri, rc);
-
+		
 		// Add the CLStaticHttpHandler to serve static resources
 		for (final Map.Entry<String, List<String>> entry : pathsPerContext.entrySet()) {
 			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
+		}
+		for (Map.Entry<HttpHandler, String[]>set : grizzlyServer.getServerConfiguration().getHttpHandlers().entrySet()) {
+			System.out.println(set.getKey()+" "+ set.getValue());
 		}
 		for (final NetworkListener listener : grizzlyServer.getListeners()) {
 			//if false, local files (html, etc.) can be modified without restarting the server

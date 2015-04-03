@@ -33,38 +33,40 @@ public enum HTimeDimension {
 	/**
 	 * Année.
 	 */
-	Year(null, "YYYY"),
+	Year(null, "YYYY", "Year"),
 	/**
 	 * Mois.
 	 */
-	Month(Year, "YYYY/MM"),
+	Month(Year, "YYYY/MM", "Month"),
 	/**
 	 * Jour.
 	 */
-	Day(Month, "YYYY/MM/dd"),
+	Day(Month, "YYYY/MM/dd", "Day"),
 	/**
 	 * Heure.
 	 */
-	Hour(Day, "YYYY/MM/dd/hh"),
+	Hour(Day, "YYYY/MM/dd/hh", "Hour"),
 	/**
 	 * 6 Minutes.
 	 */
-	SixMinutes(Hour, "YYYY/MM-dd::mm"),
+	SixMinutes(Hour, "YYYY/MM-dd::mm", "SixMinutes"),
 	/**
 	 * Minute.
 	 */
-	Minute(SixMinutes, "YYYY/MM-dd:mm");
+	Minute(SixMinutes, "YYYY/MM-dd:mm", "Minute");
 
 	private final HTimeDimension upTimeDimension;
 	private final String pattern;
+	private final String label;
 
 	/**
 	 * Constructeur.
 	 * @param upTimeDimension Niveau supérieur
 	 */
-	HTimeDimension(final HTimeDimension upTimeDimension, final String pattern) {
+	HTimeDimension(final HTimeDimension upTimeDimension, final String pattern, final String label) {
 		this.upTimeDimension = upTimeDimension;
 		this.pattern = pattern;
+		this.label = label;
 	}
 
 	/**
@@ -147,6 +149,10 @@ public enum HTimeDimension {
 		return new HTime(nextDate, this);
 	}
 
+	public String getLabel(){
+		return this.label;
+	}
+	
 	public String format(final Date date) {
 		Assertion.checkNotNull(date);
 		//---------------------------------------------------------------------

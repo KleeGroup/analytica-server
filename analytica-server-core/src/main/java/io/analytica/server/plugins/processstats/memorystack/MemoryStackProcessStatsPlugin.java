@@ -46,11 +46,13 @@ import com.google.gson.Gson;
 public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, Activeable, LastProcessMXBean {
 	private final LimitedDelayQueue processQueue = new LimitedDelayQueue(24 * 60); //24h
 
+	@Override
 	public void merge(final KProcess process) {
 		processQueue.add(process);
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void start() {
 		try {
 			// Get the Platform MBean Server
@@ -66,6 +68,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void stop() {
 		try {
 			// Get the Platform MBean Server
@@ -80,6 +83,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public String getLastProcessesJson() {
 		final List<KProcess> processes = new ArrayList<>(processQueue);
 		return new Gson().toJson(processes);

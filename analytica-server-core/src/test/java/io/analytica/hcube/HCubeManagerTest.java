@@ -122,7 +122,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	//-------------------------------------------------------------------------
 	@Test
-	public void testDictionnary() {
+	public void testDictionnary() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)
 				.withCategory(new String[] { "select * from article" })//
 				.incMeasure(MONTANT, price)//
@@ -153,7 +153,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testSimpleProcess() {
+	public void testSimpleProcess() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
 				.withCategory(new String[] { "select article" })//
 				.incMeasure(MONTANT, price)//
@@ -187,7 +187,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testSimpleProcessMultiSubCategrories() {
+	public void testSimpleProcessMultiSubCategrories() throws HCubeStoreException {
 		final KProcess selectProcess3 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
 				.withCategory(new String[] { "select article", "id=12" })//
 				.incMeasure(MONTANT, price)//
@@ -233,7 +233,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testSimpleProcessWithAllTimeDimensions() {
+	public void testSimpleProcessWithAllTimeDimensions() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
 				.withCategory(new String[] { "select article" })//
 				.incMeasure(MONTANT, price)//
@@ -283,9 +283,10 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	 * les sous processus possèdent deux mesures
 	 *  - Poids des articles (25 kg) par sous processus
 	 *  - Prix des articles 10€
+	 * @throws HCubeStoreException 
 	 */
 	@Test
-	public void testCompositeProcess() {
+	public void testCompositeProcess() throws HCubeStoreException {
 		//for (int i = 0; i < 60 * 24; i++) {
 
 		final int nbSelect = 12;
@@ -354,9 +355,10 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	 * les sous processus possèdent deux mesures
 	 *  - Poids des articles (25 kg) par sous processus
 	 *  - Prix des articles 10€
+	 * @throws HCubeStoreException 
 	 */
 	@Test
-	public void testDeepCompositeProcess() {
+	public void testDeepCompositeProcess() throws HCubeStoreException {
 		//for (int i = 0; i < 60 * 24; i++) {
 
 		final int nbService = 5;
@@ -429,7 +431,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testSimpleProcessWithMultiIncMeasure() {
+	public void testSimpleProcessWithMultiIncMeasure() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
 				.withCategory(new String[] { "select article" })//
 				.incMeasure(MONTANT, price)//
@@ -453,7 +455,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testMultiProcesses() {
+	public void testMultiProcesses() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
 				.withCategory(new String[] { "select article#1" })//
 				.incMeasure(MONTANT, price)//
@@ -499,7 +501,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testMultiThread() throws InterruptedException {
+	public void testMultiThread() throws InterruptedException, HCubeStoreException {
 		final ExecutorService workersPool = Executors.newFixedThreadPool(20);
 		for (int i = 0; i < 50; i++) {
 			workersPool.execute(new Runnable() {
@@ -509,7 +511,12 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 							.withCategory(new String[] { "select", "article" })//
 							.incMeasure(MONTANT, price)//
 							.build();
-					pushProcess(selectProcess1);
+					try {
+						pushProcess(selectProcess1);
+					} catch (HCubeStoreException e) {
+						System.out.println(e.getStackTrace());
+						System.exit(-1);
+					}
 				}
 			});
 		}
@@ -531,7 +538,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testHCube() {
+	public void testHCube() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
 				.withCategory(new String[] { "select article#1" })//
 				.incMeasure(MONTANT, price)//
@@ -571,7 +578,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	}
 
 	@Test
-	public void testDistributionProcess() {
+	public void testDistributionProcess() throws HCubeStoreException {
 		pushProcess(createSqlProcess(0)); //<=0
 		pushProcess(createSqlProcess(1)); //<=1
 		pushProcess(createSqlProcess(2)); //<=2
@@ -619,13 +626,18 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	//On charge 10 jours à 50 visites par jourDURATION
 			public
-			void testMuseum() {
-		final int days = 50;
-		final int visitsByDay = 200;
+			void testMuseum() throws HCubeStoreException {
+		final int days = 2;
+		final int visitsByDay = 2;
 		new Museum(new PageListener() {
 			@Override
 			public void onPage(final KProcess process) {
-				pushProcess(process);
+				try {
+					pushProcess(process);
+				} catch (HCubeStoreException e) {
+					System.out.println(e.getStackTrace());
+					System.exit(-1);
+				}
 			}
 		}).load(days, visitsByDay);
 
@@ -648,10 +660,10 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//---------------------------------------------------------------------
 	}
 
-	private void pushProcess(final KProcess process) {
+	private void pushProcess(final KProcess process) throws HCubeStoreException {
 		final List<Dual> duals = processEncoder.encode(process);
 		for (final Dual dual : duals) {
-			hcubeManager.getApp(process.getAppName()).push(process.getType(), dual.getKey(), dual.getCubeBuilder().build());
+			hcubeManager.getApp(process.getAppName()).push(dual.getKey(), dual.getCubeBuilder().build(), "TOTO");
 		}
 	}
 

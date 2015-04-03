@@ -1,5 +1,6 @@
 package io.analytica.hcube.plugins.store.memory;
 
+import io.analytica.hcube.HCubeStoreException;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetric;
@@ -78,7 +79,7 @@ final class AppCubeStore {
 		System.out.println("memStore : " + store.size() + " cubes");
 	}
 
-	List<HSerie> findAll(final HQuery query, final HSelector selector) {
+	List<HSerie> findAll(final HQuery query, final HSelector selector) throws HCubeStoreException {
 		Assertion.checkNotNull(query);
 		Assertion.checkNotNull(selector);
 		//---------------------------------------------------------------------

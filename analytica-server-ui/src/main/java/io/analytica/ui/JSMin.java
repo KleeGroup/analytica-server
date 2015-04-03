@@ -98,7 +98,7 @@ public class JSMin {
 									return ' ';
 								}
 								break;
-							case EOF:
+								default:
 								throw new UnterminatedCommentException();
 						}
 					}
@@ -159,6 +159,8 @@ public class JSMin {
 					}
 					theB = next();
 				}
+			default:
+				break;
 		}
 	}
 

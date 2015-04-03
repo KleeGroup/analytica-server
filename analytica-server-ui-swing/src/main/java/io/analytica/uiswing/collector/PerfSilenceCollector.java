@@ -22,34 +22,42 @@ import java.util.Map;
 
 public class PerfSilenceCollector implements PerfCollector {
 
+	@Override
 	public final void clearResults(final String moduleName) {
 		//rien
 	}
 
+	@Override
 	public final void clearResults() {
 		//rien
 	}
 
+	@Override
 	public final ProcessStatsCollection getResults(final String moduleName) {
 		return null;
 	}
 
+	@Override
 	public final Map getResults() {
 		return Collections.emptyMap();
 	}
 
+	@Override
 	public final void onProcessError(final String moduleName, final String processId, final Object obj, final Object[] params, final Throwable throwable) {
 		//rien
 	}
 
+	@Override
 	public final void onProcessFinish(final String moduleName, final String processId, final Object obj, final Object[] params, final Object ret, final long duration, final boolean success) {
 		//rien
 	}
 
+	@Override
 	public final void onProcessStart(final String moduleName, final String processId, final Object obj, final Object[] params) {
 		//rien
 	}
 
+	@Override
 	public StringBuffer print(final StringBuffer out) {
 		return out;
 	}

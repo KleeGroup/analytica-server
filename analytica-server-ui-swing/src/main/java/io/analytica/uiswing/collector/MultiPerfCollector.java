@@ -35,12 +35,14 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 
 	private final List<PerfCollector> listPerfCollector = new ArrayList<>();
 
+	@Override
 	public void clearResults() {
 		for (final PerfCollector perfCollector : listPerfCollector) {
 			perfCollector.clearResults();
 		}
 	}
 
+	@Override
 	public Map<String, ProcessStatsCollection> getResults() {
 		final Map<String, ProcessStatsCollection> results = new HashMap<>();
 		Map<String, ProcessStatsCollection> collectorResults;
@@ -57,12 +59,14 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 		return results;
 	}
 
+	@Override
 	public void clearResults(final String moduleName) {
 		for (final PerfCollector perfCollector : listPerfCollector) {
 			perfCollector.clearResults(moduleName);
 		}
 	}
 
+	@Override
 	public ProcessStatsCollection getResults(final String moduleName) {
 		ProcessStatsCollection results = null;
 		ProcessStatsCollection collectorResults;
@@ -84,18 +88,21 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 		return results;
 	}
 
+	@Override
 	public void onProcessError(final String moduleName, final String processId, final Object obj, final Object[] params, final Throwable throwable) {
 		for (final PerfCollector perfCollector : listPerfCollector) {
 			perfCollector.onProcessError(moduleName, processId, obj, params, throwable);
 		}
 	}
 
+	@Override
 	public void onProcessFinish(final String moduleName, final String processId, final Object obj, final Object[] params, final Object ret, final long duration, final boolean success) {
 		for (final PerfCollector perfCollector : listPerfCollector) {
 			perfCollector.onProcessFinish(moduleName, processId, obj, params, ret, duration, success);
 		}
 	}
 
+	@Override
 	public void onProcessStart(final String moduleName, final String processId, final Object obj, final Object[] params) {
 		for (final PerfCollector perfCollector : listPerfCollector) {
 			perfCollector.onProcessStart(moduleName, processId, obj, params);
@@ -106,6 +113,7 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 		listPerfCollector.add(perfCollector);
 	}
 
+	@Override
 	public StringBuffer print(final StringBuffer out) {
 		for (final PerfCollector perfCollector : listPerfCollector) {
 			perfCollector.print(out);

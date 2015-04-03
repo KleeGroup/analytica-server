@@ -44,11 +44,13 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public void add(final KProcess process) {
 		processQueue.add(new Identified<>(String.valueOf(sequence++), process));
 	}
 
 	/** {@inheritDoc} */
+	@Override
 	public List<Identified<KProcess>> getProcess(final String lastKey, final Integer maxRow) {
 		Assertion.checkNotNull(maxRow);
 		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
@@ -63,5 +65,11 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 			process = processQueue.poll();
 		}
 		return processes;
+	}
+
+	@Override
+	public List<String> getApps() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

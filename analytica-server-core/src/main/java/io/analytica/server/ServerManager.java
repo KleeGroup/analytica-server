@@ -18,6 +18,7 @@
 package io.analytica.server;
 
 import io.analytica.api.KProcess;
+import io.analytica.hcube.HCubeStoreException;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.vertigo.lang.Component;
@@ -40,6 +41,7 @@ public interface ServerManager extends Component {
 	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
 	 * @param query Paramètres de la requete
 	 * @return cube virtuel, constitué d'une liste de cubes
+	 * @throws HCubeStoreException 
 	 */
-	HResult execute(final String appName,final String type, HQuery query);
+	HResult execute(final String appName, final String type, HQuery query) throws HCubeStoreException;
 }

@@ -28,6 +28,7 @@ public class ProcessStatsMap implements ProcessStatsCollection<ProcessStats> {
 
 	private final Map<String, ProcessStats> processStatsMap = new HashMap<>(); //Map key:nom de process  value:ProcessStats
 
+	@Override
 	public Map<String, ProcessStats> getResults() {
 		return processStatsMap;
 	}
@@ -41,6 +42,7 @@ public class ProcessStatsMap implements ProcessStatsCollection<ProcessStats> {
 		processStats.addHit(duration);
 	}
 
+	@Override
 	public void merge(final ProcessStatsCollection<ProcessStats> other) {
 		Assertion.checkNotNull(other);
 		Assertion.checkArgument(other instanceof ProcessStatsMap, "On ne peut merger que des ProcessStatsCollection de même type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());

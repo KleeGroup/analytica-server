@@ -19,7 +19,7 @@ package io.analytica.server;
 
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
+import io.analytica.hcube.plugin.store.lucene.LuceneHCubeStorePlugin;
 import io.analytica.restserver.RestServerManager;
 import io.analytica.restserver.impl.RestServerManagerImpl;
 import io.analytica.server.impl.ServerManagerImpl;
@@ -41,6 +41,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
+
+import com.google.gson.GsonBuilder;
 
 /**
  * Charge et démarre un environnement.
@@ -158,10 +160,8 @@ public class Starter implements Runnable {
 			serverConfigBuilder.beginPlugin(BerkeleyProcessStorePlugin.class) //
 					.withParam("dbPath", properties.getProperty(PROCESS_STORE_PATH)) //
 					.endPlugin();
-		} else {
-			serverConfigBuilder.beginPlugin(MemoryProcessStorePlugin.class) //
-					.endPlugin();
-		}
+		} 	
+		
 		if (TYPE_API_REST.equals(properties.getProperty(PROCESS_API, TYPE_API_NONE))) {
 			serverConfigBuilder.beginPlugin(RestProcessNetApiPlugin.class) //
 					.endPlugin();
@@ -173,11 +173,9 @@ public class Starter implements Runnable {
 		serverConfigBuilder.endComponent();
 
 		final ComponentConfigBuilder hCubeConfigBuilder = moduleConfigBuilder.beginComponent(HCubeManager.class, HCubeManagerImpl.class);
-		if (properties.containsKey(CUBE_STORE_PATH)) {
-			throw new UnsupportedOperationException("Cube persistent store not yet supported");
-		}
 
-		hCubeConfigBuilder.beginPlugin(MemoryHCubeStorePlugin.class) //
+		hCubeConfigBuilder.beginPlugin(LuceneHCubeStorePlugin.class) //
+		.withParam("path", properties.getProperty(CUBE_STORE_PATH)) //
 				.endPlugin();
 		if (properties.containsKey(SOCKET_IO_URL)) {
 			hCubeConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class) //
