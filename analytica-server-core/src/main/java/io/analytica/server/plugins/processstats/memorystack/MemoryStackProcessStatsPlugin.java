@@ -94,13 +94,17 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 	 * @author npiedeloup
 	 * @version $Id: $
 	 */
-	private static class LimitedDelayQueue extends LinkedList<KProcess> {
+	static class LimitedDelayQueue extends LinkedList<KProcess> {
 
 		private static final long serialVersionUID = -6085444623815188157L;
 		private final int delayMinute;
 
 		public LimitedDelayQueue(final int delayMinute) {
 			this.delayMinute = delayMinute;
+		}
+
+		public int getDelayMinute() {
+			return delayMinute;
 		}
 
 		/** {@inheritDoc} */

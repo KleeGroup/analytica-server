@@ -29,8 +29,6 @@ import java.util.Map;
  * @author pchretien, npiedeloup
  */
 public interface HCubeManager extends Component {
-	void register(HMetricDefinition metricDefinition);
-
 	Collection<HMetricDefinition> getMetricDefinitions();
 
 	HMetricDefinition getMetricDefinition(String name);

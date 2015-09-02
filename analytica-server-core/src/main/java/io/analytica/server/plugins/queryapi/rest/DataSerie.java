@@ -36,4 +36,12 @@ public final class DataSerie {
 		this.category = category;
 		this.values = values;
 	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public Map<String, String> getValues() {
+		return values;
+	}
 }

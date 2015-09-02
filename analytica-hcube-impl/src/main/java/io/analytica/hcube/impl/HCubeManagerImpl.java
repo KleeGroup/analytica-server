@@ -47,8 +47,6 @@ public final class HCubeManagerImpl implements HCubeManager {
 		//-----------------------------------------------------------------
 		cubeStore = cubeStorePlugin;
 		APPS = new HashMap<>();
-		Home.getDefinitionSpace().register(HMetricDefinition.class);
-
 	}
 
 	@Override
@@ -62,11 +60,6 @@ public final class HCubeManagerImpl implements HCubeManager {
 			APPS.put(appName, new HAppImp(cubeStore, appName));
 		}
 		return APPS.get(appName);
-	}
-
-	@Override
-	public void register(final HMetricDefinition metricDefinition) {
-		Home.getDefinitionSpace().put(metricDefinition, HMetricDefinition.class);
 	}
 
 	@Override

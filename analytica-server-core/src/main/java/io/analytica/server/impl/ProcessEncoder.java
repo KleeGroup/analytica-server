@@ -131,7 +131,6 @@ public final class ProcessEncoder {
 	 * Transforme le Process de premier niveau en un cube.
 	 * @param process
 	 * @param parentCubeBuilders
-	 * @return HCubeBuilder le cubeBuilder du process
 	 */
 	private static void encodeSubDurations(final KProcess process, final List<HCubeBuilder> parentBuilders) {
 		//On remonte les durée au parent

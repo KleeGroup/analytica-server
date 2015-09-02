@@ -54,16 +54,15 @@ public final class HMetricBuilder implements Builder<HMetric> {
 		final String camelMetricName;
 		if (toCamel) {
 			camelMetricName = "HM_" + StringUtil.camelToConstCase(metricName);
-		}
-		else {
+		} else {
 			camelMetricName = metricName;
 		}
 
 		//---------------------------------------------------------------------
-		if(!Home.getDefinitionSpace().containsKey(camelMetricName)){
-			Home.getDefinitionSpace().put(new HMetricDefinition(camelMetricName, true), HMetricDefinition.class);
+		if (!Home.getDefinitionSpace().containsDefinitionName(camelMetricName)) {
+			Home.getDefinitionSpace().put(new HMetricDefinition(camelMetricName, true));
 		}
-		
+
 		metricDefinition = Home.getDefinitionSpace().resolve(camelMetricName, HMetricDefinition.class);
 		distributionBuilder = metricDefinition.hasDistribution() ? new HDistributionBuilder() : null;
 	}

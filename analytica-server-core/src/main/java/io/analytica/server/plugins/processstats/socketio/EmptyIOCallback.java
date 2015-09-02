@@ -27,6 +27,7 @@ final class EmptyIOCallback implements IOCallback {
 
 	@Override
 	public void onMessage(final String data, final IOAcknowledge ack) {
+		//
 	}
 
 	@Override
@@ -37,10 +38,12 @@ final class EmptyIOCallback implements IOCallback {
 
 	@Override
 	public void onDisconnect() {
+		//		
 	}
 
 	@Override
 	public void onConnect() {
+		//
 	}
 
 	@Override
@@ -50,5 +53,6 @@ final class EmptyIOCallback implements IOCallback {
 
 	@Override
 	public void onMessage(final JSONObject json, final IOAcknowledge ack) {
+		//
 	}
 }

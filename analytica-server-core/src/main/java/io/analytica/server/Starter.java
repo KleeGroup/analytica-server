@@ -27,7 +27,6 @@ import io.analytica.server.plugins.processapi.rest.RestProcessNetApiPlugin;
 import io.analytica.server.plugins.processstats.memorystack.MemoryStackProcessStatsPlugin;
 import io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlugin;
 import io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin;
-import io.analytica.server.plugins.processstore.memory.MemoryProcessStorePlugin;
 import io.analytica.server.plugins.queryapi.rest.RestQueryNetApiPlugin;
 import io.vertigo.core.Home.App;
 import io.vertigo.core.config.AppConfig;
@@ -41,8 +40,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
-
-import com.google.gson.GsonBuilder;
 
 /**
  * Charge et démarre un environnement.
@@ -160,8 +157,8 @@ public class Starter implements Runnable {
 			serverConfigBuilder.beginPlugin(BerkeleyProcessStorePlugin.class) //
 					.withParam("dbPath", properties.getProperty(PROCESS_STORE_PATH)) //
 					.endPlugin();
-		} 	
-		
+		}
+
 		if (TYPE_API_REST.equals(properties.getProperty(PROCESS_API, TYPE_API_NONE))) {
 			serverConfigBuilder.beginPlugin(RestProcessNetApiPlugin.class) //
 					.endPlugin();
@@ -175,7 +172,7 @@ public class Starter implements Runnable {
 		final ComponentConfigBuilder hCubeConfigBuilder = moduleConfigBuilder.beginComponent(HCubeManager.class, HCubeManagerImpl.class);
 
 		hCubeConfigBuilder.beginPlugin(LuceneHCubeStorePlugin.class) //
-		.withParam("path", properties.getProperty(CUBE_STORE_PATH)) //
+				.withParam("path", properties.getProperty(CUBE_STORE_PATH)) //
 				.endPlugin();
 		if (properties.containsKey(SOCKET_IO_URL)) {
 			hCubeConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class) //

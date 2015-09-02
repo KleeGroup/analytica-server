@@ -32,4 +32,12 @@ public final class TimedDataSerie {
 		this.time = time;
 		this.values = values;
 	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public Map<String, String> getValues() {
+		return values;
+	}
 }

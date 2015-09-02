@@ -37,7 +37,7 @@ public class VirtualDatas {
 
 	private static final String PAGE_PROCESS = "PAGE";
 	private static final String SQL_PROCESS = "sql";
-	private static final String SEARCH_PROCESS = "search";
+	//	private static final String SEARCH_PROCESS = "search";
 
 	private static final double NB_VISIT_DAILY_MAX = 10;
 
@@ -169,8 +169,8 @@ public class VirtualDatas {
 		//		final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess sqlProcess = new KProcessBuilder(APP_NAME,SQL_PROCESS, dateVisite, 80).withCategory(new String[]{"select*from news"}).build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME,PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[]{"home", "homePage"}).addSubProcess(sqlProcess).build();
+		final KProcess sqlProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory(new String[] { "select*from news" }).build();
+		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[] { "home", "homePage" }).addSubProcess(sqlProcess).build();
 		serverManager.push(pageProcess);
 	}
 
@@ -178,8 +178,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(APP_NAME,SQL_PROCESS, dateVisite, 80).withCategory(new String[]{"find oeuvres"}).build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME,PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[]{"search"}).addSubProcess(searchProcess).build();
+		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory(new String[] { "find oeuvres" }).build();
+		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[] { "search" }).addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Recherche " + dateVisite);
 
@@ -189,8 +189,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(APP_NAME,SQL_PROCESS, dateVisite, 80).withCategory(new String[]{"select 1 from oeuvres"}).build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME,PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[]{"oeuvre"}).addSubProcess(searchProcess).build();
+		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory(new String[] { "select 1 from oeuvres" }).build();
+		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[] { "oeuvre" }).addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Consultation " + dateVisite);
 

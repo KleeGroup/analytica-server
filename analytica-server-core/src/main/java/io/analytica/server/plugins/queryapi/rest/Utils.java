@@ -21,7 +21,6 @@ import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.dimension.HCategory;
-import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.query.HQuery;
@@ -38,7 +37,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 /**
  * @author statchum, npiedeloup
@@ -46,57 +44,56 @@ import java.util.TreeSet;
  */
 public final class Utils {
 	private static final String METRIC_KEY_HISTO = "histo";
-//	private static final String METRIC_KEY_DURATION="HMDURATION";
+	//	private static final String METRIC_KEY_DURATION="HMDURATION";
 	private static final String METRIC_KEY_CLUSTERED = "clustered";
 	private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-	
-//	TODO NOT USED. ERASE IF NOT NECESSARY	
-//	/**
-//	 * Charge Les données d'un graphe mono série.
-//	 * @param Les données à transformer.
-//	 * @return La liste de poins retravaillée.
-//	 */
-//	public static List<DataPoint> loadDataPointsMonoSerie(final HResult result, final String datas) {
-//		Assertion.checkNotNull(result);
-//		// ---------------------------------------------------------------------
-//	
-//		final HCounterType counterType = HCounterType.mean;
-//		final List<DataPoint> dataPoints = new ArrayList<>();
-//
-//		for (final HCategory category : result.getAllCategories()) {
-//	
-//			for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-//				HCube cube=entry.getValue();
-//				HTime time=entry.getKey();
-//				final HMetric metric = cube.getMetric(METRIC_KEY_DURATION);
-//
-//				if (metric != null) {
-//					final double val = metric.get(counterType);
-//					final String value = Double.isNaN(val) ? null : String.valueOf(val);
-//					final DataPoint dataPoint = new DataPoint(time.inMillis(), value);
-//
-//					if (dataPoint.getValue() != null) {
-//						dataPoints.add(dataPoint);
-//					}
-//				}
-//			}
-//		}
-//		return dataPoints;
-//	}
+	//	TODO NOT USED. ERASE IF NOT NECESSARY	
+	//	/**
+	//	 * Charge Les données d'un graphe mono série.
+	//	 * @param Les données à transformer.
+	//	 * @return La liste de poins retravaillée.
+	//	 */
+	//	public static List<DataPoint> loadDataPointsMonoSerie(final HResult result, final String datas) {
+	//		Assertion.checkNotNull(result);
+	//		// ---------------------------------------------------------------------
+	//	
+	//		final HCounterType counterType = HCounterType.mean;
+	//		final List<DataPoint> dataPoints = new ArrayList<>();
+	//
+	//		for (final HCategory category : result.getAllCategories()) {
+	//	
+	//			for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+	//				HCube cube=entry.getValue();
+	//				HTime time=entry.getKey();
+	//				final HMetric metric = cube.getMetric(METRIC_KEY_DURATION);
+	//
+	//				if (metric != null) {
+	//					final double val = metric.get(counterType);
+	//					final String value = Double.isNaN(val) ? null : String.valueOf(val);
+	//					final DataPoint dataPoint = new DataPoint(time.inMillis(), value);
+	//
+	//					if (dataPoint.getValue() != null) {
+	//						dataPoints.add(dataPoint);
+	//					}
+	//				}
+	//			}
+	//		}
+	//		return dataPoints;
+	//	}
 
 	public static List<TimedDataSerie> loadDataSeriesByTime(final HResult result, final List<String> dataKeys/*ex "{duration:mean","ERROR:mean"}*/) {
 		Assertion.checkNotNull(result);
 		// ---------------------------------------------------------------------
-		final List<TimedDataSerie> dataSeries = new ArrayList<TimedDataSerie>();
-		
+		final List<TimedDataSerie> dataSeries = new ArrayList<>();
+
 		for (final HCategory category : result.getAllCategories()) { //Normalement une seule categorie
-			for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-				HCube cube = entry.getValue();
-				HTime time = entry.getKey();
+			for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+				final HCube cube = entry.getValue();
+				final HTime time = entry.getKey();
 				final Map<String, String> values = new HashMap<>();
 				for (final String dataKey : dataKeys) {
-					final String[] metricKey = dataKey.split(":");			
+					final String[] metricKey = dataKey.split(":");
 					final HMetric hMetric = cube.getMetric(metricKey[0]);
 					if (hMetric != null) {
 						final String val = getMetricValue(metricKey, hMetric, null);
@@ -124,9 +121,9 @@ public final class Utils {
 				if (isMetricHistory(metricKey)) {
 					String sep = "";
 					final StringBuilder sb = new StringBuilder();
-					
-					for (Map.Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
-						HCube cube = entry.getValue();
+
+					for (final Map.Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
+						final HCube cube = entry.getValue();
 						final HMetric hMetric = cube.getMetric(metricKey[0]);
 						final String val = getMetricValue(metricKey, hMetric, "null");
 						sb.append(sep).append(val);
@@ -164,8 +161,8 @@ public final class Utils {
 				if (isMetricHistory(metricKey)) {
 					String sep = "";
 					final StringBuilder sb = new StringBuilder();
-					for (Map.Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
-						HCube cube = entry.getValue();
+					for (final Map.Entry<HTime, HCube> entry : serie.getCubes().entrySet()) {
+						final HCube cube = entry.getValue();
 						final HMetric hMetric = cube.getMetric(metricKey[0]);
 						final String val = getMetricValue(metricKey, hMetric, "null");
 						sb.append(sep).append(val);
@@ -197,7 +194,7 @@ public final class Utils {
 
 	public static HQuery createQuery(final String from, final String to, final String timeDimension, final String type, final String subCategories, final boolean children) {
 		final HQueryBuilder queryBuilder = new HQueryBuilder()//
-				.between(HTimeDimension.valueOf(timeDimension),from,to);
+				.between(HTimeDimension.valueOf(timeDimension), from, to);
 		final String[] subCategoriesArray;
 		if (subCategories.startsWith("/")) {
 			subCategoriesArray = subCategories.substring(1).split("/"); //remove the first / before split
@@ -206,11 +203,11 @@ public final class Utils {
 		}
 		// TODO a verifier 
 		queryBuilder.whereCategoryMatches(subCategories);
-//		if (children) {
-//			queryBuilder.whereCategoryMatches(pattern)withChildren(type, subCategoriesArray);
-//		} else {
-//			queryBuilder.with(type, subCategoriesArray);
-//		}
+		//		if (children) {
+		//			queryBuilder.whereCategoryMatches(pattern)withChildren(type, subCategoriesArray);
+		//		} else {
+		//			queryBuilder.with(type, subCategoriesArray);
+		//		}
 		// @formatter:on
 		return queryBuilder.build();
 	}
@@ -219,7 +216,6 @@ public final class Utils {
 	 * Charge des données pour un graphe multi série.
 	 * @param result
 	 * @param dataKeys
-	 * @return
 	 */
 	@Deprecated
 	public static Map<String, List<DataPoint>> loadDataPointsMultiSerie(final HResult result, final List<String> dataKeys) {
@@ -232,9 +228,9 @@ public final class Utils {
 			dataPoints = new ArrayList<>();
 			final String[] metricKey = dataKey.split(":");
 			for (final HCategory category : result.getAllCategories()) { //Normalement une seule categorie
-				for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-					HCube cube = entry.getValue();
-					HTime time = entry.getKey();
+				for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+					final HCube cube = entry.getValue();
+					final HTime time = entry.getKey();
 					final HMetric hMetric = cube.getMetric(metricKey[0]);
 					final String val = getMetricValue(metricKey, hMetric, null);
 					final DataPoint dPoint = new DataPoint(time.inMillis(), val);
@@ -252,31 +248,31 @@ public final class Utils {
 		if (hMetric == null) {
 			return nullString;
 		}
-		double val=0;
+		double val = 0;
 		boolean isLongValue = false; //used for rounding : with or without decimals
 		if (metricKey.length > 1) {
 			if (METRIC_KEY_CLUSTERED.equals(metricKey[1])) {
 				// TODO NO CLUSTER IMPLEMENTATION
-//				isLongValue = true;
-//				Assertion.checkNotNull(hMetric.getClusteredValues(), "Metric ''{0}'' isn''t clustered)", Arrays.asList(metricKey));
-//				Assertion.checkArgument(metricKey.length == 3, "Clustered metric ''{0}'' must include its threshold value (exemple : ''duration:clustered:200'', you can add + or - for min and max value )", Arrays.asList(metricKey));
-//				final String threshold = metricKey[2];
-//				final boolean isMax = threshold.endsWith("+");
-//				final boolean isMin = threshold.endsWith("-");
-//				final Double thresholdValue = Double.parseDouble(isMax || isMin ? threshold.substring(0, threshold.length() - 1) : threshold);
-//				final Map<Double, Long> clusteredValues = hMetric.getClusteredValues();
-//				double sum = 0;
-//				for (final Map.Entry<Double, Long> entry : clusteredValues.entrySet()) {
-//					if (entry.getKey().equals(thresholdValue)) {
-//						sum += entry.getValue();
-//					}
-//					if (isMin && entry.getKey().compareTo(thresholdValue) < 0) {
-//						sum += entry.getValue();
-//					} else if (isMax && entry.getKey().compareTo(thresholdValue) > 0) {
-//						sum += entry.getValue();
-//					}
-//				}
-//				val = sum;
+				//				isLongValue = true;
+				//				Assertion.checkNotNull(hMetric.getClusteredValues(), "Metric ''{0}'' isn''t clustered)", Arrays.asList(metricKey));
+				//				Assertion.checkArgument(metricKey.length == 3, "Clustered metric ''{0}'' must include its threshold value (exemple : ''duration:clustered:200'', you can add + or - for min and max value )", Arrays.asList(metricKey));
+				//				final String threshold = metricKey[2];
+				//				final boolean isMax = threshold.endsWith("+");
+				//				final boolean isMin = threshold.endsWith("-");
+				//				final Double thresholdValue = Double.parseDouble(isMax || isMin ? threshold.substring(0, threshold.length() - 1) : threshold);
+				//				final Map<Double, Long> clusteredValues = hMetric.getClusteredValues();
+				//				double sum = 0;
+				//				for (final Map.Entry<Double, Long> entry : clusteredValues.entrySet()) {
+				//					if (entry.getKey().equals(thresholdValue)) {
+				//						sum += entry.getValue();
+				//					}
+				//					if (isMin && entry.getKey().compareTo(thresholdValue) < 0) {
+				//						sum += entry.getValue();
+				//					} else if (isMax && entry.getKey().compareTo(thresholdValue) > 0) {
+				//						sum += entry.getValue();
+				//					}
+				//				}
+				//				val = sum;
 			} else {
 				final HCounterType counterType = HCounterType.valueOf(metricKey[1]);
 				isLongValue = counterType == HCounterType.count;
@@ -314,9 +310,9 @@ public final class Utils {
 		final String dataKey = datas;
 		for (final HCategory category : result.getAllCategories()) {
 			dataPoints = new ArrayList<>();
-			for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-				HCube cube = entry.getValue();
-				HTime time = entry.getKey();
+			for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+				final HCube cube = entry.getValue();
+				final HTime time = entry.getKey();
 				final String[] metricKey = dataKey.split(":");
 				final HMetric hMetric = cube.getMetric(metricKey[0]);
 				double val = 0;
@@ -363,12 +359,11 @@ public final class Utils {
 	 * @param category
 	 * @param result
 	 * @param string
-	 * @return
 	 */
 	private static String getStringList(final HCategory category, final HResult result, final String dataKey) {
 		final StringBuilder stringBuilder = new StringBuilder();
-		for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-			HCube cube = entry.getValue();
+		for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+			final HCube cube = entry.getValue();
 			final String[] metricKey = dataKey.split(":");
 			final HMetric hMetric = cube.getMetric(metricKey[0]);
 			double val = 0;
@@ -400,8 +395,8 @@ public final class Utils {
 	public static Map<String, Map<Long, Double>> getMetricByDayAndHour(final HResult result, final String dataKey) {
 
 		for (final HCategory category : result.getAllCategories()) {
-			for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-				HCube cube = entry.getValue();
+			for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+				final HCube cube = entry.getValue();
 				final String[] metricKey = dataKey.split(":");
 				final HMetric hMetric = cube.getMetric(metricKey[0]);
 				double val = 0;
@@ -451,9 +446,9 @@ public final class Utils {
 		final String[] metricKey = dataKey.split(":");
 
 		for (final HCategory category : result.getAllCategories()) {
-			for (Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-				HCube cube = entry.getValue();
-				HTime time = entry.getKey();
+			for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+				final HCube cube = entry.getValue();
+				final HTime time = entry.getKey();
 				final HMetric hMetric = cube.getMetric(metricKey[0]);
 				final Calendar date = Calendar.getInstance();
 				date.setTimeInMillis(time.inMillis());

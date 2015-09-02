@@ -52,8 +52,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private Timer asyncCubeStoreTimer = null;
 	private final ProcessEncoder processEncoder;
 	private final Option<ProcessStatsPlugin> processStatsPlugin;
-	private final QueryNetApiPlugin queryNetApiPlugin;
-	private final ProcessNetApiPlugin processNetApiPlugin;
+	//	private final QueryNetApiPlugin queryNetApiPlugin;
+	//	private final ProcessNetApiPlugin processNetApiPlugin;
 	static final Logger logger = Logger.getLogger(ServerManagerImpl.class);
 	private static final int NB_PROCESS_A_TRAITER = 5000;
 
@@ -73,8 +73,8 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		this.processStorePlugin = processStorePlugin;
 		processEncoder = new ProcessEncoder();
 		this.processStatsPlugin = processStatsPlugin;
-		this.queryNetApiPlugin = queryNetApiPlugin;
-		this.processNetApiPlugin = processNetApiPlugin;
+		//		this.queryNetApiPlugin = queryNetApiPlugin;
+		//		this.processNetApiPlugin = processNetApiPlugin;
 	}
 
 	/** {@inheritDoc} */
@@ -124,8 +124,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		}
 	}
 
-	/** {@inheritDoc}
-	 * @throws HCubeStoreException */
+	/** @throws HCubeStoreException */
 	int storeNextProcessesAsCube() throws HCubeStoreException {
 		final List<String> processStoreApps = processStorePlugin.getApps();
 		int numberOfProcessesTreated = 0;

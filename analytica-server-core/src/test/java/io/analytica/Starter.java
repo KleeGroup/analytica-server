@@ -18,15 +18,12 @@
 package io.analytica;
 
 import io.vertigo.boot.xml.XMLModulesBuilder;
-import io.vertigo.core.Home;
 import io.vertigo.core.Home.App;
 import io.vertigo.core.config.AppConfig;
 import io.vertigo.core.config.AppConfigBuilder;
 import io.vertigo.lang.Assertion;
 import io.vertigo.lang.Option;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -36,10 +33,10 @@ import java.util.Properties;
  * @author pchretien, npiedeloup
  */
 public final class Starter implements Runnable {
-	private static boolean SILENCE = true;
+	//	private static boolean SILENCE = true;
 	private final Class<?> relativeRootClass;
 	private final String managersXmlFileName;
-	private final Option<String> propertiesFileName;
+	//	private final Option<String> propertiesFileName;
 	private final Option<Properties> defaultProperties;
 	private final long timeToWait;
 	private boolean started;
@@ -58,7 +55,7 @@ public final class Starter implements Runnable {
 		Assertion.checkNotNull(defaultProperties);
 		//---------------------------------------------------------------------
 		this.managersXmlFileName = managersXmlFileName;
-		this.propertiesFileName = propertiesFileName;
+		//	this.propertiesFileName = propertiesFileName;
 		this.defaultProperties = defaultProperties;
 		this.timeToWait = timeToWait;
 		this.relativeRootClass = relativeRootClass;
@@ -70,7 +67,7 @@ public final class Starter implements Runnable {
 	 * @param args "Usage: java kasper.kernel.Starter managers.xml <conf.properties>"
 	 */
 	public static void main(final String[] args) {
-		final String usageMsg = "Usage: java "+Starter.class.getCanonicalName()+" managers.xml <conf.properties>";
+		final String usageMsg = "Usage: java " + Starter.class.getCanonicalName() + " managers.xml <conf.properties>";
 		Assertion.checkArgument(args.length >= 1 && args.length <= 2, usageMsg + " (" + args.length + ")");
 		Assertion.checkArgument(args[0].endsWith(".xml"), usageMsg + " (" + args[0] + ")");
 		Assertion.checkArgument(args.length == 1 || args[1].endsWith(".properties"), usageMsg + " (" + (args.length == 2 ? args[1] : "vide") + ")");
@@ -112,14 +109,14 @@ public final class Starter implements Runnable {
 			properties.putAll(defaultProperties.get());
 		}
 		final AppConfig appConfig = new AppConfigBuilder()
-		.withSilence(true)
-		.withModules(
+				.withSilence(true)
+				.withModules(
 						new XMLModulesBuilder()
-						.withEnvParams(properties)
-						.withXmlFileNames(relativeRootClass, managersXmlFileName)
-						.build()
-					)
-		.build();
+								.withEnvParams(properties)
+								.withXmlFileNames(relativeRootClass, managersXmlFileName)
+								.build()
+				)
+				.build();
 		app = new App(appConfig);
 		started = true;
 	}
@@ -134,27 +131,27 @@ public final class Starter implements Runnable {
 		}
 	}
 
-	/**
-	 * Charge le fichier properties.
-	 * Par defaut vide, mais il peut-être surchargé.
-	 * @param relativeRootClass Racine du chemin relatif, le cas echéant
-	 */
-	private static final void appendFileProperties(final Properties properties, final Option<String> propertiesFileName, final Class<?> relativeRootClass) {
-		//---------------------------------------------------------------------
-		if (propertiesFileName.isDefined()) {
-			final String fileName = translateFileName(propertiesFileName.get(), relativeRootClass);
-			try {
-				final InputStream in = createURL(fileName, relativeRootClass).openStream();
-				try {
-					properties.load(in);
-				} finally {
-					in.close();
-				}
-			} catch (final IOException e) {
-				throw new IllegalArgumentException("Impossible de charger le fichier de configuration des tests : " + fileName, e);
-			}
-		}
-	}
+	//	/**
+	//	 * Charge le fichier properties.
+	//	 * Par defaut vide, mais il peut-être surchargé.
+	//	 * @param relativeRootClass Racine du chemin relatif, le cas echéant
+	//	 */
+	//	private static final void appendFileProperties(final Properties properties, final Option<String> propertiesFileName, final Class<?> relativeRootClass) {
+	//		//---------------------------------------------------------------------
+	//		if (propertiesFileName.isDefined()) {
+	//			final String fileName = translateFileName(propertiesFileName.get(), relativeRootClass);
+	//			try {
+	//				final InputStream in = createURL(fileName, relativeRootClass).openStream();
+	//				try {
+	//					properties.load(in);
+	//				} finally {
+	//					in.close();
+	//				}
+	//			} catch (final IOException e) {
+	//				throw new IllegalArgumentException("Impossible de charger le fichier de configuration des tests : " + fileName, e);
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * Transforme le chemin vers un fichier local au test en une URL absolue.
