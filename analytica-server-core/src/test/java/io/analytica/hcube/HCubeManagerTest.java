@@ -23,7 +23,6 @@ import io.analytica.api.KProcessBuilder;
 import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
-import io.analytica.hcube.cube.HMetricDefinition;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
@@ -86,26 +85,26 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		//On se place au 10-10-2010  a 10h10
 		date = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRANCE).parse("10/10/2010 10:10");
 		processEncoder = new ProcessEncoder();
-		hcubeManager.register(new HMetricDefinition("HM_DURATION", true));
-		hcubeManager.register(new HMetricDefinition("HM_RAM", true));
-		hcubeManager.register(new HMetricDefinition("HM_IO", true));
-		hcubeManager.register(new HMetricDefinition("HM_CPU", true));
-		hcubeManager.register(new HMetricDefinition("HM_HEALTH", true));
-		hcubeManager.register(new HMetricDefinition("HM_HEALTH_MAX", true));
-		hcubeManager.register(new HMetricDefinition("HM_MONTANT", true));
-		hcubeManager.register(new HMetricDefinition("HM_PERFORMANCE_MAX", true));
-		hcubeManager.register(new HMetricDefinition("HM_PERFORMANCE", true));
-		hcubeManager.register(new HMetricDefinition("HM_ACTIVITY_MAX", true));
-		hcubeManager.register(new HMetricDefinition("HM_ACTIVITY", true));
-		hcubeManager.register(new HMetricDefinition("HM_SESSION_HTTP", true));
-		hcubeManager.register(new HMetricDefinition("HM_ERROR", true));
-		hcubeManager.register(new HMetricDefinition("HM_SUB_DURATION", true));
-		hcubeManager.register(new HMetricDefinition("HM_SERVICE", true));
-		hcubeManager.register(new HMetricDefinition("HM_SUB__SERVICE", true));
-		hcubeManager.register(new HMetricDefinition("HM_SQL", true));
-		hcubeManager.register(new HMetricDefinition("HM_SEARCH", true));
-		hcubeManager.register(new HMetricDefinition("HM_PAGE", true));
-		hcubeManager.register(new HMetricDefinition("HM_SUB__PAGE", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_DURATION", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_RAM", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_IO", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_CPU", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_HEALTH", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_HEALTH_MAX", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_MONTANT", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_PERFORMANCE_MAX", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_PERFORMANCE", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_ACTIVITY_MAX", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_ACTIVITY", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_SESSION_HTTP", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_ERROR", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_SUB_DURATION", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_SERVICE", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_SUB__SERVICE", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_SQL", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_SEARCH", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_PAGE", true));
+		//		hcubeManager.register(new HMetricDefinition("HM_SUB__PAGE", true));
 	}
 
 	//-------------------------------------------------------------------------
@@ -513,7 +512,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 							.build();
 					try {
 						pushProcess(selectProcess1);
-					} catch (HCubeStoreException e) {
+					} catch (final HCubeStoreException e) {
 						System.out.println(e.getStackTrace());
 						System.exit(-1);
 					}
@@ -634,7 +633,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 			public void onPage(final KProcess process) {
 				try {
 					pushProcess(process);
-				} catch (HCubeStoreException e) {
+				} catch (final HCubeStoreException e) {
 					System.out.println(e.getStackTrace());
 					System.exit(-1);
 				}

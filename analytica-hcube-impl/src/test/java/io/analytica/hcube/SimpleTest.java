@@ -32,7 +32,8 @@ import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
-import io.vertigo.core.Home;
+import io.vertigo.core.App;
+import io.vertigo.core.config.AppConfigBuilder;
 
 import java.util.Date;
 
@@ -53,15 +54,19 @@ public final class SimpleTest {
 	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 	private final HApp app = cubeManager.getApp(APP_NAME);
 
+	private App vapp;
+
 	@Before
 	public void before() {
 		final HMetricDefinition perf = new HMetricDefinition(HM_PERF, true);
-		cubeManager.register(perf);
+		//		cubeManager.register(perf);
+		vapp = new App(new AppConfigBuilder().build());
+
 	}
 
 	@After
 	public void after() {
-		Home.getDefinitionSpace().stop();
+		vapp.close();
 	}
 
 	@Test
@@ -77,7 +82,7 @@ public final class SimpleTest {
 				.withMetric(workingHours)
 				.build();
 
-		String[] locationS = { "myServer" };
+		final String[] locationS = { "myServer" };
 		app.push(new HKey(new HLocation(locationS), time, new HCategory("www")), cube, "Test-key");
 
 		final HQuery query = new HQueryBuilder()

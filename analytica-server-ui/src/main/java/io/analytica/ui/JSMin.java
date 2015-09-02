@@ -98,7 +98,7 @@ public class JSMin {
 									return ' ';
 								}
 								break;
-								default:
+							default:
 								throw new UnterminatedCommentException();
 						}
 					}
@@ -120,6 +120,7 @@ public class JSMin {
 		switch (d) {
 			case 1:
 				out.write(theA);
+				//$FALL-THROUGH$
 			case 2:
 				theA = theB;
 
@@ -140,6 +141,7 @@ public class JSMin {
 					}
 				}
 
+				//$FALL-THROUGH$
 			case 3:
 				theB = next();
 				if (theB == '/' && (theA == '(' || theA == ',' || theA == '=')) {
@@ -159,6 +161,7 @@ public class JSMin {
 					}
 					theB = next();
 				}
+				//$FALL-THROUGH$
 			default:
 				break;
 		}

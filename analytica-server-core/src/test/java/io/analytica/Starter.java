@@ -17,8 +17,6 @@
  */
 package io.analytica;
 
-import io.vertigo.boot.xml.XMLModulesBuilder;
-import io.vertigo.core.Home.App;
 import io.vertigo.core.config.AppConfig;
 import io.vertigo.core.config.AppConfigBuilder;
 import io.vertigo.lang.Assertion;
@@ -109,7 +107,7 @@ public final class Starter implements Runnable {
 			properties.putAll(defaultProperties.get());
 		}
 		final AppConfig appConfig = new AppConfigBuilder()
-				.withSilence(true)
+				.beginBoot().silently().endBoot()
 				.withModules(
 						new XMLModulesBuilder()
 								.withEnvParams(properties)

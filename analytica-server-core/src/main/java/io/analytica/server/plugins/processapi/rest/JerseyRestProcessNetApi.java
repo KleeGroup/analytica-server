@@ -20,7 +20,7 @@ package io.analytica.server.plugins.processapi.rest;
 import io.analytica.api.KProcess;
 import io.analytica.server.ServerManager;
 import io.vertigo.core.Home;
-import io.vertigo.core.di.injector.Injector;
+import io.vertigo.core.component.di.injector.Injector;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;

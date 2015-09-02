@@ -29,16 +29,16 @@ import java.io.OutputStream;
 
 final class Mimifier {
 
-	private static OutputStream out;
+	private static OutputStream myOut;
 
 	public static void mimifyAllIn(final File inputDir, final OutputStream out) throws IOException, UnterminatedRegExpLiteralException, UnterminatedCommentException, UnterminatedStringLiteralException {
 		JSMin jsmin;
 		InputStream in;
-		Mimifier.out = out;
+		Mimifier.myOut = out;
 
 		for (final File fileEntry : inputDir.listFiles()) {
 			if (fileEntry.isDirectory()) {
-				mimifyAllIn(fileEntry, Mimifier.out);
+				mimifyAllIn(fileEntry, Mimifier.myOut);
 			} else {
 				String ext = fileEntry.getName();
 				ext = ext.substring(ext.lastIndexOf("."));

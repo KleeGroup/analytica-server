@@ -85,9 +85,9 @@ public final class HCubeManagerLuceneTest {
 		final HMetricDefinition duration = new HMetricDefinition(HM_DURATION, true);
 		final HMetricDefinition weight = new HMetricDefinition(HM_WEIGHT, false);
 		final HMetricDefinition test = new HMetricDefinition(HM_TEST, true);
-		cubeManager.register(duration);
-		cubeManager.register(weight);
-		cubeManager.register(test);
+		//		cubeManager.register(duration);
+		//		cubeManager.register(weight);
+		//		cubeManager.register(test);
 	}
 
 	@After
@@ -112,12 +112,12 @@ public final class HCubeManagerLuceneTest {
 		final Date start = new Date();
 		//PAGES
 		final HQuery query1 = new HQueryBuilder()
-		.between(HTimeDimension.Hour, new DateBuilder(start).addHours(-3).toDateTime(), start)
-		.build();
+				.between(HTimeDimension.Hour, new DateBuilder(start).addHours(-3).toDateTime(), start)
+				.build();
 
 		final HQuery query2 = new HQueryBuilder()
-		.between(HTimeDimension.Hour, "NOW-3h", "NOW")
-		.build();
+				.between(HTimeDimension.Hour, "NOW-3h", "NOW")
+				.build();
 		//---
 		Assert.assertEquals(3, app.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
 		Assert.assertEquals(3, app.getSelector().findTimes(query2.getTimeSelection()).size()); //3 HOURS
@@ -129,8 +129,8 @@ public final class HCubeManagerLuceneTest {
 	@Test
 	public void testQuery2() {
 		final HQuery query = new HQueryBuilder()
-		.between(HTimeDimension.Hour, "NOW", "NOW+3d")
-		.build();
+				.between(HTimeDimension.Hour, "NOW", "NOW+3d")
+				.build();
 		//---
 		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
 	}
@@ -141,8 +141,8 @@ public final class HCubeManagerLuceneTest {
 	@Test(expected = Exception.class)
 	public void testQueryFail() {
 		new HQueryBuilder()
-		.between(HTimeDimension.Hour, "NOW", "NOW-3m")
-		.build();
+				.between(HTimeDimension.Hour, "NOW", "NOW-3m")
+				.build();
 	}
 
 	/*
@@ -177,8 +177,8 @@ public final class HCubeManagerLuceneTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()
-		.between(HTimeDimension.Hour, start, end)
-		.build();
+				.between(HTimeDimension.Hour, start, end)
+				.build();
 
 		final HResult result = app.execute(PAGES, query);
 
@@ -247,9 +247,9 @@ public final class HCubeManagerLuceneTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()
-		.between(HTimeDimension.SixMinutes, start, end)
-		//.whereCategoryEquals(PAGES)
-		.build();
+				.between(HTimeDimension.SixMinutes, start, end)
+				//.whereCategoryEquals(PAGES)
+				.build();
 
 		final HResult result = app.execute(PAGES, query);
 
@@ -284,23 +284,23 @@ public final class HCubeManagerLuceneTest {
 	@Test
 	public void testHistogram() {
 		final HMetric metric = new HMetricBuilder(HM_TEST)
-		.withValue(0)//<0
-		.withValue(1)//<1
-		.withValue(2)//<2
-		.withValue(3)//<5
-		.withValue(4)//<5
-		.withValue(5)//<5
-		.withValue(6)//<10
-		.withValue(7)//<10
-		.withValue(8)//<10
-		.withValue(9)//<10
-		.withValue(10)//<10
-		.withValue(11)//<20
-		.withValue(35)//<50
-		.withValue(455)//<500
-		.withValue(355)//<500
-		.withValue(111222333)//<200000000
-		.build();
+				.withValue(0)//<0
+				.withValue(1)//<1
+				.withValue(2)//<2
+				.withValue(3)//<5
+				.withValue(4)//<5
+				.withValue(5)//<5
+				.withValue(6)//<10
+				.withValue(7)//<10
+				.withValue(8)//<10
+				.withValue(9)//<10
+				.withValue(10)//<10
+				.withValue(11)//<20
+				.withValue(35)//<50
+				.withValue(455)//<500
+				.withValue(355)//<500
+				.withValue(111222333)//<200000000
+				.build();
 		final Map<Double, Long> histogram = metric.getDistribution().getData();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
@@ -332,7 +332,7 @@ public final class HCubeManagerLuceneTest {
 		Assert.assertEquals((start.getMonth() + 1) % 12, new Date(now.next().inMillis()).getMonth());
 		//---
 		now = new HTime(start, HTimeDimension.Year);
-		Assert.assertEquals((start.getYear() + 1), new Date(now.next().inMillis()).getYear());
+		Assert.assertEquals(start.getYear() + 1, new Date(now.next().inMillis()).getYear());
 	}
 
 	/**
@@ -420,15 +420,15 @@ public final class HCubeManagerLuceneTest {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(location, time, category);
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)
-		.withValue(100)//
-		.build();
+				.withValue(100)//
+				.build();
 		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)
-		.withValue(weightValue)
-		.build();
+				.withValue(weightValue)
+				.build();
 		final HCube cube = new HCubeBuilder()
-		.withMetric(durationMetric)
-		.withMetric(weightMetric)
-		.build();
+				.withMetric(durationMetric)
+				.withMetric(weightMetric)
+				.build();
 		app.push(key, cube, current.toString());
 	}
 
@@ -458,14 +458,14 @@ public final class HCubeManagerLuceneTest {
 					final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder()
-					.withMetric(durationMetricBuilder.build())
-					.withMetric(weightMetric)
-					.build();
+							.withMetric(durationMetricBuilder.build())
+							.withMetric(weightMetric)
+							.build();
 
 					app.push(key, cube, "TOTO");
 					//--
 					checkMemory(day);
-					if ((mc++) % (60 * 24 * 10) == 0) {
+					if (mc++ % (60 * 24 * 10) == 0) {
 						System.out.println(">>> day/hour/min = " + day + "/" + h + "/" + min + " in " + (System.currentTimeMillis() - start) + " ms");
 					}
 				}
@@ -475,17 +475,17 @@ public final class HCubeManagerLuceneTest {
 	}
 
 	private void checkMemory(final long day) throws HCubeStoreException {
-		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+		if (Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory() > 0.9) {
 			app.size(PAGES);
 			System.gc();
 			//---
-			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+			if (Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory() > 0.9) {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
 				System.out.println(">>>> cubes count =" + app.size(PAGES));
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / app.size(PAGES)) + " octets");
+				System.out.println(">>>> cube footprint =" + Runtime.getRuntime().maxMemory() / app.size(PAGES) + " octets");
 				try {
 					Thread.sleep(1000 * 20);
 				} catch (final InterruptedException e) {
@@ -500,8 +500,8 @@ public final class HCubeManagerLuceneTest {
 	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) throws HCubeStoreException {
 		//----
 		final HQuery query = new HQueryBuilder()
-		.between(timeDimension, start, end)
-		.build();
+				.between(timeDimension, start, end)
+				.build();
 
 		final HResult result = app.execute(PAGES, query);
 		Assert.assertEquals(query, result.getQuery());

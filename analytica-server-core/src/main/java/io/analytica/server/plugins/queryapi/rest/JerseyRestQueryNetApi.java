@@ -26,7 +26,7 @@ import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.result.HResult;
 import io.analytica.server.ServerManager;
 import io.vertigo.core.Home;
-import io.vertigo.core.di.injector.Injector;
+import io.vertigo.core.component.di.injector.Injector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,8 +119,8 @@ public class JerseyRestQueryNetApi {
 	@Path("/categories/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCategories(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @QueryParam("appName") final String appName) throws HCubeStoreException {
-		String[] subCategoriesArray = subCategories.split("/");
-		String[] categories = new String[subCategoriesArray.length + 1];
+		final String[] subCategoriesArray = subCategories.split("/");
+		final String[] categories = new String[subCategoriesArray.length + 1];
 		categories[0] = type;
 		System.arraycopy(subCategoriesArray, 0, categories, 1, subCategoriesArray.length);
 
@@ -132,8 +132,8 @@ public class JerseyRestQueryNetApi {
 	@Path("/metrics/{type}{subcategories:(/.+?)?}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMetrics(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @QueryParam("appName") final String appName) throws HCubeStoreException {
-		String[] subCategoriesArray = subCategories.split("/");
-		String[] categories = new String[subCategoriesArray.length + 1];
+		final String[] subCategoriesArray = subCategories.split("/");
+		final String[] categories = new String[subCategoriesArray.length + 1];
 		categories[0] = type;
 		System.arraycopy(subCategoriesArray, 0, categories, 1, subCategoriesArray.length);
 		final HCategory hCategory = subCategories.isEmpty() ? new HCategory(type) : new HCategory(categories);

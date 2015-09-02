@@ -36,7 +36,8 @@ import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
-import io.vertigo.core.Home;
+import io.vertigo.core.App;
+import io.vertigo.core.config.AppConfigBuilder;
 import io.vertigo.util.DateBuilder;
 
 import java.text.DateFormat;
@@ -67,21 +68,26 @@ public final class HCubeManagerMemoryTest {
 	private static final String PAGES = "PAGES";
 	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 
-	private final HApp app = cubeManager.getApp(APP_NAME);
+	private final HApp happ = cubeManager.getApp(APP_NAME);
+	private App app;
 
+	//	private App app
 	@Before
 	public void before() {
 		final HMetricDefinition duration = new HMetricDefinition(HM_DURATION, true);
 		final HMetricDefinition weight = new HMetricDefinition(HM_WEIGHT, false);
 		final HMetricDefinition test = new HMetricDefinition(HM_TEST, true);
-		cubeManager.register(duration);
-		cubeManager.register(weight);
-		cubeManager.register(test);
+		//		cubeManager.register(duration);
+		//		cubeManager.register(weight);
+		//		cubeManager.register(test);
+		app = new App(new AppConfigBuilder().build());
 	}
 
 	@After
 	public void after() {
-		Home.getDefinitionSpace().stop();
+		if (app != null) {
+			app.close();
+		}
 	}
 
 	//private final HCubeManager cubeManager = new HCubeManagerImpl(new LuceneHCubeStorePlugin());
@@ -109,10 +115,10 @@ public final class HCubeManagerMemoryTest {
 				.between(HTimeDimension.Hour, "NOW-3h", "NOW")
 				.build();
 		//---
-		Assert.assertEquals(3, app.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
-		Assert.assertEquals(3, app.getSelector().findTimes(query2.getTimeSelection()).size()); //3 HOURS
-		Assert.assertTrue(app.getSelector().findTimes(query1.getTimeSelection()).containsAll(app.getSelector().findTimes(query2.getTimeSelection())));
-		Assert.assertTrue(app.getSelector().findTimes(query2.getTimeSelection()).containsAll(app.getSelector().findTimes(query1.getTimeSelection())));
+		Assert.assertEquals(3, happ.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
+		Assert.assertEquals(3, happ.getSelector().findTimes(query2.getTimeSelection()).size()); //3 HOURS
+		Assert.assertTrue(happ.getSelector().findTimes(query1.getTimeSelection()).containsAll(happ.getSelector().findTimes(query2.getTimeSelection())));
+		Assert.assertTrue(happ.getSelector().findTimes(query2.getTimeSelection()).containsAll(happ.getSelector().findTimes(query1.getTimeSelection())));
 		Assert.assertEquals(query1.toString(), query2.toString());
 	}
 
@@ -122,7 +128,7 @@ public final class HCubeManagerMemoryTest {
 				.between(HTimeDimension.Hour, "NOW", "NOW+3d")
 				.build();
 		//---
-		Assert.assertEquals(3 * 24, app.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
+		Assert.assertEquals(3 * 24, happ.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
 	}
 
 	/*
@@ -145,12 +151,12 @@ public final class HCubeManagerMemoryTest {
 		final int days = 1;
 
 		//----
-		Assert.assertEquals(0, app.getSelector().findCategories(new HCategorySelection("*")).size());
+		Assert.assertEquals(0, happ.getSelector().findCategories(new HCategorySelection("*")).size());
 		//---
 		populateData(start, days);
 		//----
-		Assert.assertEquals(2, app.getSelector().findCategories(new HCategorySelection("*")).size());
-		Assert.assertEquals(1, app.getSelector().findCategories(new HCategorySelection("welcome")).size());
+		Assert.assertEquals(2, happ.getSelector().findCategories(new HCategorySelection("*")).size());
+		Assert.assertEquals(1, happ.getSelector().findCategories(new HCategorySelection("welcome")).size());
 	}
 
 	/**
@@ -170,7 +176,7 @@ public final class HCubeManagerMemoryTest {
 				.between(HTimeDimension.Hour, start, end)
 				.build();
 
-		final HResult result = app.execute(PAGES, query);
+		final HResult result = happ.execute(PAGES, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -241,7 +247,7 @@ public final class HCubeManagerMemoryTest {
 				//.whereCategoryEquals(PAGES)
 				.build();
 
-		final HResult result = app.execute(PAGES, query);
+		final HResult result = happ.execute(PAGES, query);
 
 		Assert.assertEquals(query, result.getQuery());
 
@@ -322,7 +328,7 @@ public final class HCubeManagerMemoryTest {
 		Assert.assertEquals((start.getMonth() + 1) % 12, new Date(now.next().inMillis()).getMonth());
 		//---
 		now = new HTime(start, HTimeDimension.Year);
-		Assert.assertEquals((start.getYear() + 1), new Date(now.next().inMillis()).getYear());
+		Assert.assertEquals(start.getYear() + 1, new Date(now.next().inMillis()).getYear());
 	}
 
 	/**
@@ -419,7 +425,7 @@ public final class HCubeManagerMemoryTest {
 				.withMetric(durationMetric)
 				.withMetric(weightMetric)
 				.build();
-		app.push(key, cube, current.toString());
+		happ.push(key, cube, current.toString());
 	}
 
 	private final HCategory category = new HCategory("welcome");
@@ -452,10 +458,10 @@ public final class HCubeManagerMemoryTest {
 							.withMetric(weightMetric)
 							.build();
 
-					app.push(key, cube, "TOTO");
+					happ.push(key, cube, "TOTO");
 					//--
 					checkMemory(day);
-					if ((mc++) % (60 * 24 * 10) == 0) {
+					if (mc++ % (60 * 24 * 10) == 0) {
 						System.out.println(">>> day/hour/min = " + day + "/" + h + "/" + min + " in " + (System.currentTimeMillis() - start) + " ms");
 					}
 				}
@@ -465,17 +471,17 @@ public final class HCubeManagerMemoryTest {
 	}
 
 	private void checkMemory(final long day) throws HCubeStoreException {
-		if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
-			app.size(PAGES);
+		if (Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory() > 0.9) {
+			happ.size(PAGES);
 			System.gc();
 			//---
-			if ((Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory()) > 0.9) {
+			if (Runtime.getRuntime().totalMemory() / Runtime.getRuntime().maxMemory() > 0.9) {
 				System.out.println(">>>> total mem =" + Runtime.getRuntime().totalMemory());
 				System.out.println(">>>> max  mem =" + Runtime.getRuntime().maxMemory());
 				System.out.println(">>>> mem total > 90% - days =" + day);
-				System.out.println(">>>> cubes count =" + app.size(PAGES));
+				System.out.println(">>>> cubes count =" + happ.size(PAGES));
 
-				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / app.size(PAGES)) + " octets");
+				System.out.println(">>>> cube footprint =" + Runtime.getRuntime().maxMemory() / happ.size(PAGES) + " octets");
 				try {
 					Thread.sleep(1000 * 20);
 				} catch (final InterruptedException e) {
@@ -493,7 +499,7 @@ public final class HCubeManagerMemoryTest {
 				.between(timeDimension, start, end)
 				.build();
 
-		final HResult result = app.execute(PAGES, query);
+		final HResult result = happ.execute(PAGES, query);
 		Assert.assertEquals(query, result.getQuery());
 		//Check : 1 category
 		Assert.assertEquals(2, result.getAllCategories().size());

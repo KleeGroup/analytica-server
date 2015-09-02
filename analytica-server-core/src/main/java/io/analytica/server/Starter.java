@@ -28,7 +28,7 @@ import io.analytica.server.plugins.processstats.memorystack.MemoryStackProcessSt
 import io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlugin;
 import io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin;
 import io.analytica.server.plugins.queryapi.rest.RestQueryNetApiPlugin;
-import io.vertigo.core.Home.App;
+import io.vertigo.core.App;
 import io.vertigo.core.config.AppConfig;
 import io.vertigo.core.config.AppConfigBuilder;
 import io.vertigo.core.config.ComponentConfigBuilder;
@@ -57,7 +57,6 @@ public class Starter implements Runnable {
 	private static final String PROCESS_API = "processApi";
 	private static final String QUERY_API = "queryApi";
 
-	private static boolean SILENCE = false;
 	private final Class<?> relativeRootClass;
 	private final String propertiesFileName;
 	private boolean started;
@@ -128,8 +127,8 @@ public class Starter implements Runnable {
 	 * @return ComponentSpaceConfig configuration de l'environnement
 	 */
 	protected final AppConfig createComponentSpaceConfig(final Properties properties) {
-		final AppConfigBuilder componentSpaceConfigBuilder = new AppConfigBuilder() //
-				.withSilence(SILENCE);
+		final AppConfigBuilder componentSpaceConfigBuilder = new AppConfigBuilder()
+				.beginBoot().silently().endBoot();
 		appendModuleAnalytica(properties, componentSpaceConfigBuilder);
 		appendOtherModules(properties, componentSpaceConfigBuilder);
 		return componentSpaceConfigBuilder.build();
@@ -148,42 +147,36 @@ public class Starter implements Runnable {
 		final ModuleConfigBuilder moduleConfigBuilder = appConfigBuilder.beginModule("analytica");
 		if (properties.containsKey(REST_API_PORT) || properties.containsKey(REST_API_PATH)) {
 			moduleConfigBuilder.beginComponent(RestServerManager.class, RestServerManagerImpl.class) //
-					.withParam("apiPath", properties.getProperty(REST_API_PATH, "/rest/")) //
-					.withParam("httpPort", properties.getProperty(REST_API_PORT, "8080")) //
+					.addParam("apiPath", properties.getProperty(REST_API_PATH, "/rest/"))
+					.addParam("httpPort", properties.getProperty(REST_API_PORT, "8080"))
 					.endComponent();
 		}
 		final ComponentConfigBuilder serverConfigBuilder = moduleConfigBuilder.beginComponent(ServerManager.class, ServerManagerImpl.class);
 		if (properties.containsKey(PROCESS_STORE_PATH)) {
-			serverConfigBuilder.beginPlugin(BerkeleyProcessStorePlugin.class) //
-					.withParam("dbPath", properties.getProperty(PROCESS_STORE_PATH)) //
+			moduleConfigBuilder.beginPlugin(BerkeleyProcessStorePlugin.class)
+					.addParam("dbPath", properties.getProperty(PROCESS_STORE_PATH))
 					.endPlugin();
 		}
 
 		if (TYPE_API_REST.equals(properties.getProperty(PROCESS_API, TYPE_API_NONE))) {
-			serverConfigBuilder.beginPlugin(RestProcessNetApiPlugin.class) //
-					.endPlugin();
+			moduleConfigBuilder.addPlugin(RestProcessNetApiPlugin.class);
 		}
 		if (TYPE_API_REST.equals(properties.getProperty(QUERY_API, TYPE_API_NONE))) {
-			serverConfigBuilder.beginPlugin(RestQueryNetApiPlugin.class) //
-					.endPlugin();
+			moduleConfigBuilder.addPlugin(RestQueryNetApiPlugin.class);
 		}
-		serverConfigBuilder.endComponent();
 
-		final ComponentConfigBuilder hCubeConfigBuilder = moduleConfigBuilder.beginComponent(HCubeManager.class, HCubeManagerImpl.class);
-
-		hCubeConfigBuilder.beginPlugin(LuceneHCubeStorePlugin.class) //
-				.withParam("path", properties.getProperty(CUBE_STORE_PATH)) //
+		moduleConfigBuilder.addComponent(HCubeManager.class, HCubeManagerImpl.class)
+				.beginPlugin(LuceneHCubeStorePlugin.class)
+				.addParam("path", properties.getProperty(CUBE_STORE_PATH))
 				.endPlugin();
 		if (properties.containsKey(SOCKET_IO_URL)) {
-			hCubeConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class) //
-					.withParam("socketIoUrl", properties.getProperty(SOCKET_IO_URL)) //
+			moduleConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class)
+					.addParam("socketIoUrl", properties.getProperty(SOCKET_IO_URL))
 					.endPlugin();
 		}
 		if (Boolean.parseBoolean(properties.getProperty(STACK_PROCESS_STATS, "false"))) {
-			hCubeConfigBuilder.beginPlugin(MemoryStackProcessStatsPlugin.class) //
-					.endPlugin();
+			moduleConfigBuilder.addPlugin(MemoryStackProcessStatsPlugin.class);
 		}
-		hCubeConfigBuilder.endComponent();
 		moduleConfigBuilder.endModule();
 	}
 

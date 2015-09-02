@@ -27,7 +27,6 @@ import io.analytica.hcube.HCubeStoreException;
 import io.analytica.hcube.cube.HCounterType;
 import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HMetric;
-import io.analytica.hcube.cube.HMetricDefinition;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
@@ -37,7 +36,6 @@ import io.analytica.hcube.result.HResult;
 import io.analytica.museum.Museum;
 import io.analytica.museum.PageListener;
 import io.analytica.museum.StatsUtil;
-import io.vertigo.core.Home;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,33 +68,33 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	private Date date;
 	private final int price = 8;
 
-	private void register(HMetricDefinition metricDefinition) {
-		Home.getDefinitionSpace().put(metricDefinition, HMetricDefinition.class);
-	}
+	//	private void register(HMetricDefinition metricDefinition) {
+	//		Home.getDefinitionSpace().put(metricDefinition, HMetricDefinition.class);
+	//	}
 
 	@Before
 	public void init() throws ParseException {
 		date = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRANCE).parse("08/05/2013 10:10");
-		register(new HMetricDefinition("HM_DURATION", true));
-		register(new HMetricDefinition("HM_RAM", true));
-		register(new HMetricDefinition("HM_IO", true));
-		register(new HMetricDefinition("HM_CPU", true));
-		register(new HMetricDefinition("HM_HEALTH", true));
-		register(new HMetricDefinition("HM_HEALTH_MAX", true));
-		register(new HMetricDefinition("HM_MONTANT", true));
-		register(new HMetricDefinition("HM_PERFORMANCE_MAX", true));
-		register(new HMetricDefinition("HM_PERFORMANCE", true));
-		register(new HMetricDefinition("HM_ACTIVITY_MAX", true));
-		register(new HMetricDefinition("HM_ACTIVITY", true));
-		register(new HMetricDefinition("HM_SESSION_HTTP", true));
-		register(new HMetricDefinition("HM_ERROR", true));
-		register(new HMetricDefinition("HM_SUB_DURATION", true));
-		register(new HMetricDefinition("HM_SERVICE", true));
-		register(new HMetricDefinition("HM_SUB__SERVICE", true));
-		register(new HMetricDefinition("HM_SQL", true));
-		register(new HMetricDefinition("HM_SEARCH", true));
-		register(new HMetricDefinition("HM_PAGE", true));
-		register(new HMetricDefinition("HM_SUB__PAGE", true));
+		//		register(new HMetricDefinition("HM_DURATION", true));
+		//		register(new HMetricDefinition("HM_RAM", true));
+		//		register(new HMetricDefinition("HM_IO", true));
+		//		register(new HMetricDefinition("HM_CPU", true));
+		//		register(new HMetricDefinition("HM_HEALTH", true));
+		//		register(new HMetricDefinition("HM_HEALTH_MAX", true));
+		//		register(new HMetricDefinition("HM_MONTANT", true));
+		//		register(new HMetricDefinition("HM_PERFORMANCE_MAX", true));
+		//		register(new HMetricDefinition("HM_PERFORMANCE", true));
+		//		register(new HMetricDefinition("HM_ACTIVITY_MAX", true));
+		//		register(new HMetricDefinition("HM_ACTIVITY", true));
+		//		register(new HMetricDefinition("HM_SESSION_HTTP", true));
+		//		register(new HMetricDefinition("HM_ERROR", true));
+		//		register(new HMetricDefinition("HM_SUB_DURATION", true));
+		//		register(new HMetricDefinition("HM_SERVICE", true));
+		//		register(new HMetricDefinition("HM_SUB__SERVICE", true));
+		//		register(new HMetricDefinition("HM_SQL", true));
+		//		register(new HMetricDefinition("HM_SEARCH", true));
+		//		register(new HMetricDefinition("HM_PAGE", true));
+		//		register(new HMetricDefinition("HM_SUB__PAGE", true));
 	}
 
 	private static void assertMetricEquals(final HMetric metric, final double count, final double sum, final double mean, final double min, final double max) {
