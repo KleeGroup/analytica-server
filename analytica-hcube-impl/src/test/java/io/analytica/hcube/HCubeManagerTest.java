@@ -28,8 +28,6 @@ import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
-import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
@@ -39,7 +37,7 @@ import io.analytica.hcube.result.HSerie;
 import io.vertigo.core.App;
 import io.vertigo.core.Home;
 import io.vertigo.core.component.di.injector.Injector;
-import io.vertigo.core.config.AppConfigBuilder;
+import io.vertigo.core.config.AppConfig;
 import io.vertigo.util.DateBuilder;
 
 import java.text.DateFormat;
@@ -77,7 +75,7 @@ public abstract class HCubeManagerTest {
 	private HApp happ;
 	private App app;
 
-	public abstract Class<? extends HCubeStorePlugin> getPluginClass();
+	public abstract AppConfig buildAppConfig();
 
 	@Before
 	public void before() {
@@ -87,12 +85,7 @@ public abstract class HCubeManagerTest {
 		//		cubeManager.register(duration);
 		//		cubeManager.register(weight);
 		//		cubeManager.register(test);
-		app = new App(new AppConfigBuilder()
-				.beginModule("analytica")
-				.addComponent(HCubeManager.class, HCubeManagerImpl.class)
-				.addPlugin(getPluginClass())
-				.endModule()
-				.build());
+		app = new App(buildAppConfig());
 		Injector.injectMembers(this, Home.getComponentSpace());
 		happ = cubeManager.getApp(APP_NAME);
 	}

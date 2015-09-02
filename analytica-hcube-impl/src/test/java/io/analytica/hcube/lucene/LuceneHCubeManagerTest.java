@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU General Public License along with this program;
  * if not, see <http://www.gnu.org/licenses>
  */
-package io.analytica.hcube.memory;
+package io.analytica.hcube.lucene;
 
 import io.analytica.hcube.HCubeManager;
 import io.analytica.hcube.HCubeManagerTest;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
+import io.analytica.hcube.plugin.store.lucene.LuceneHCubeStorePlugin;
 import io.vertigo.core.config.AppConfig;
 import io.vertigo.core.config.AppConfigBuilder;
 
@@ -31,13 +31,17 @@ import io.vertigo.core.config.AppConfigBuilder;
  *
  * @author pchretien
  */
-public final class MemoryHCubeManagerTest extends HCubeManagerTest {
+public final class LuceneHCubeManagerTest extends HCubeManagerTest {
+	private static final String LUCENE_FOLDER = "D:/analytica/lucene-test";
+
 	@Override
 	public AppConfig buildAppConfig() {
 		return new AppConfigBuilder()
 				.beginModule("analytica")
 				.addComponent(HCubeManager.class, HCubeManagerImpl.class)
-				.addPlugin(MemoryHCubeStorePlugin.class)
+				.beginPlugin(LuceneHCubeStorePlugin.class)
+				.addParam("path", LUCENE_FOLDER)
+				.endPlugin()
 				.endModule()
 				.build();
 	}
