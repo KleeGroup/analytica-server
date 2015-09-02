@@ -29,7 +29,7 @@ import io.analytica.hcube.dimension.HLocation;
 import io.analytica.hcube.dimension.HTime;
 import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
+import io.analytica.hcube.impl.HCubeStorePlugin;
 import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
@@ -37,6 +37,8 @@ import io.analytica.hcube.result.HPoint;
 import io.analytica.hcube.result.HResult;
 import io.analytica.hcube.result.HSerie;
 import io.vertigo.core.App;
+import io.vertigo.core.Home;
+import io.vertigo.core.component.di.injector.Injector;
 import io.vertigo.core.config.AppConfigBuilder;
 import io.vertigo.util.DateBuilder;
 
@@ -47,6 +49,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.inject.Inject;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -60,18 +64,21 @@ import org.junit.Test;
  *
  * @author pchretien
  */
-public final class HCubeManagerMemoryTest {
+public abstract class HCubeManagerTest {
 	private static final String HM_WEIGHT = "HM_WEIGHT";
 	private static final String HM_TEST = "HM_TEST";
 	private static final String HM_DURATION = "HM_DURATION";
 	private static final String APP_NAME = "MY_APP";
 	private static final String PAGES = "PAGES";
-	private final HCubeManager cubeManager = new HCubeManagerImpl(new MemoryHCubeStorePlugin());
 
-	private final HApp happ = cubeManager.getApp(APP_NAME);
+	@Inject
+	private HCubeManager cubeManager;
+
+	private HApp happ;
 	private App app;
 
-	//	private App app
+	public abstract Class<? extends HCubeStorePlugin> getPluginClass();
+
 	@Before
 	public void before() {
 		final HMetricDefinition duration = new HMetricDefinition(HM_DURATION, true);
@@ -80,7 +87,14 @@ public final class HCubeManagerMemoryTest {
 		//		cubeManager.register(duration);
 		//		cubeManager.register(weight);
 		//		cubeManager.register(test);
-		app = new App(new AppConfigBuilder().build());
+		app = new App(new AppConfigBuilder()
+				.beginModule("analytica")
+				.addComponent(HCubeManager.class, HCubeManagerImpl.class)
+				.addPlugin(getPluginClass())
+				.endModule()
+				.build());
+		Injector.injectMembers(this, Home.getComponentSpace());
+		happ = cubeManager.getApp(APP_NAME);
 	}
 
 	@After
@@ -90,7 +104,6 @@ public final class HCubeManagerMemoryTest {
 		}
 	}
 
-	//private final HCubeManager cubeManager = new HCubeManagerImpl(new LuceneHCubeStorePlugin());
 	@Test
 	public void testAppNames() throws ParseException, HCubeStoreException {
 		Assert.assertEquals(1, cubeManager.getApps().size());
@@ -416,7 +429,7 @@ public final class HCubeManagerMemoryTest {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(location, time, category);
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)
-				.withValue(100)//
+				.withValue(100)
 				.build();
 		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)
 				.withValue(weightValue)

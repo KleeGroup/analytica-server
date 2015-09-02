@@ -17,6 +17,7 @@
  */
 package io.analytica;
 
+import io.vertigo.core.App;
 import io.vertigo.core.config.AppConfig;
 import io.vertigo.core.config.AppConfigBuilder;
 import io.vertigo.lang.Assertion;
