@@ -18,7 +18,7 @@
 package io.analytica.hcube.lucene;
 
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.HCubeManagerTest;
+import io.analytica.hcube.AbstractHCubeManagerTest;
 import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugin.store.lucene.LuceneHCubeStorePlugin;
 import io.vertigo.core.config.AppConfig;
@@ -31,7 +31,7 @@ import io.vertigo.core.config.AppConfigBuilder;
  *
  * @author pchretien
  */
-public final class LuceneHCubeManagerTest extends HCubeManagerTest {
+public final class LuceneHCubeManagerTest extends AbstractHCubeManagerTest {
 	private static final String LUCENE_FOLDER = "D:/analytica/lucene-test";
 
 	@Override

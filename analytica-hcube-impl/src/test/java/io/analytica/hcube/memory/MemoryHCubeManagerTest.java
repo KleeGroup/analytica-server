@@ -18,7 +18,7 @@
 package io.analytica.hcube.memory;
 
 import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.HCubeManagerTest;
+import io.analytica.hcube.AbstractHCubeManagerTest;
 import io.analytica.hcube.impl.HCubeManagerImpl;
 import io.analytica.hcube.plugins.store.memory.MemoryHCubeStorePlugin;
 import io.vertigo.core.config.AppConfig;
@@ -31,7 +31,7 @@ import io.vertigo.core.config.AppConfigBuilder;
  *
  * @author pchretien
  */
-public final class MemoryHCubeManagerTest extends HCubeManagerTest {
+public final class MemoryHCubeManagerTest extends AbstractHCubeManagerTest {
 	@Override
 	public AppConfig buildAppConfig() {
 		return new AppConfigBuilder()

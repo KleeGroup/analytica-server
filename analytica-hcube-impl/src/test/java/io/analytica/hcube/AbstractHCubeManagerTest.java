@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ¨re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -62,7 +62,7 @@ import org.junit.Test;
  *
  * @author pchretien
  */
-public abstract class HCubeManagerTest {
+public abstract class AbstractHCubeManagerTest {
 	private static final String HM_WEIGHT = "HM_WEIGHT";
 	private static final String HM_TEST = "HM_TEST";
 	private static final String HM_DURATION = "HM_DURATION";
@@ -97,6 +97,7 @@ public abstract class HCubeManagerTest {
 		}
 	}
 
+	//private final HCubeManager cubeManager = new HCubeManagerImpl(new LuceneHCubeStorePlugin());
 	@Test
 	public void testAppNames() throws ParseException, HCubeStoreException {
 		Assert.assertEquals(1, cubeManager.getApps().size());
@@ -161,8 +162,8 @@ public abstract class HCubeManagerTest {
 		//---
 		populateData(start, days);
 		//----
-		Assert.assertEquals(2, happ.getSelector().findCategories(new HCategorySelection("*")).size());
 		Assert.assertEquals(1, happ.getSelector().findCategories(new HCategorySelection("welcome")).size());
+		Assert.assertEquals(2, happ.getSelector().findCategories(new HCategorySelection("*")).size());
 	}
 
 	/**
@@ -422,7 +423,7 @@ public abstract class HCubeManagerTest {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(location, time, category);
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)
-				.withValue(100)
+				.withValue(100)//
 				.build();
 		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)
 				.withValue(weightValue)
@@ -431,7 +432,7 @@ public abstract class HCubeManagerTest {
 				.withMetric(durationMetric)
 				.withMetric(weightMetric)
 				.build();
-		happ.push(key, cube, current.toString());
+		happ.push(key, cube, PAGES);
 	}
 
 	private final HCategory category = new HCategory("welcome");
@@ -464,7 +465,7 @@ public abstract class HCubeManagerTest {
 							.withMetric(weightMetric)
 							.build();
 
-					happ.push(key, cube, "TOTO");
+					happ.push(key, cube, PAGES);
 					//--
 					checkMemory(day);
 					if (mc++ % (60 * 24 * 10) == 0) {
@@ -512,7 +513,7 @@ public abstract class HCubeManagerTest {
 		//Check : 10*24 cubes per minute
 		final Map<HTime, HCube> cubes = result.getSerie(category).getCubes();
 		Assert.assertEquals(3, cubes.size());
-		//on vérifie
+		//on vï¿½rifie
 		final HTime startTime = new HTime(start, timeDimension);
 		assertMetricEquals(cubes.get(startTime), HM_WEIGHT, 0, 0, Double.NaN, Double.NaN, Double.NaN);
 		assertMetricEquals(cubes.get(startTime.next()), HM_WEIGHT, expectedCount, expectedSum, expectedSum / expectedCount, expectedMin, expectedMax);
