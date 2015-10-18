@@ -40,7 +40,7 @@
 
 
 	<properties>
-		<vertigo.version>0.8.2-snapshot</vertigo.version>
+		<vertigo.version>0.8.3</vertigo.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<jersey.version>1.17.1</jersey.version>

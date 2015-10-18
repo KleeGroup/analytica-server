@@ -22,7 +22,6 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
-import io.analytica.hcube.cube.HMetricDefinition;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HLocation;
@@ -79,9 +78,9 @@ public abstract class AbstractHCubeManagerTest {
 
 	@Before
 	public void before() {
-		final HMetricDefinition duration = new HMetricDefinition(HM_DURATION, true);
-		final HMetricDefinition weight = new HMetricDefinition(HM_WEIGHT, false);
-		final HMetricDefinition test = new HMetricDefinition(HM_TEST, true);
+		//		final HMetricDefinition duration = new HMetricDefinition(HM_DURATION, true);
+		//		final HMetricDefinition weight = new HMetricDefinition(HM_WEIGHT, false);
+		//		final HMetricDefinition test = new HMetricDefinition(HM_TEST, true);
 		//		cubeManager.register(duration);
 		//		cubeManager.register(weight);
 		//		cubeManager.register(test);
@@ -115,12 +114,12 @@ public abstract class AbstractHCubeManagerTest {
 		final Date start = new Date();
 		//PAGES
 		final HQuery query1 = new HQueryBuilder()
-				.between(HTimeDimension.Hour, new DateBuilder(start).addHours(-3).toDateTime(), start)
-				.build();
+		.between(HTimeDimension.Hour, new DateBuilder(start).addHours(-3).toDateTime(), start)
+		.build();
 
 		final HQuery query2 = new HQueryBuilder()
-				.between(HTimeDimension.Hour, "NOW-3h", "NOW")
-				.build();
+		.between(HTimeDimension.Hour, "NOW-3h", "NOW")
+		.build();
 		//---
 		Assert.assertEquals(3, happ.getSelector().findTimes(query1.getTimeSelection()).size()); //3 HOURS
 		Assert.assertEquals(3, happ.getSelector().findTimes(query2.getTimeSelection()).size()); //3 HOURS
@@ -132,8 +131,8 @@ public abstract class AbstractHCubeManagerTest {
 	@Test
 	public void testQuery2() {
 		final HQuery query = new HQueryBuilder()
-				.between(HTimeDimension.Hour, "NOW", "NOW+3d")
-				.build();
+		.between(HTimeDimension.Hour, "NOW", "NOW+3d")
+		.build();
 		//---
 		Assert.assertEquals(3 * 24, happ.getSelector().findTimes(query.getTimeSelection()).size()); //72 hours
 	}
@@ -144,8 +143,8 @@ public abstract class AbstractHCubeManagerTest {
 	@Test(expected = Exception.class)
 	public void testQueryFail() {
 		new HQueryBuilder()
-				.between(HTimeDimension.Hour, "NOW", "NOW-3m")
-				.build();
+		.between(HTimeDimension.Hour, "NOW", "NOW-3m")
+		.build();
 	}
 
 	/*
@@ -168,7 +167,7 @@ public abstract class AbstractHCubeManagerTest {
 
 	/**
 	 * data are collected during 10 days from 2012/12/12.
-	 * @throws HCubeStoreException 
+	 * @throws HCubeStoreException
 	 */
 	@Test
 	public void testLoadAndQuery() throws ParseException, HCubeStoreException {
@@ -180,8 +179,8 @@ public abstract class AbstractHCubeManagerTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()
-				.between(HTimeDimension.Hour, start, end)
-				.build();
+		.between(HTimeDimension.Hour, start, end)
+		.build();
 
 		final HResult result = happ.execute(PAGES, query);
 
@@ -238,7 +237,7 @@ public abstract class AbstractHCubeManagerTest {
 
 	/**
 	 * data are collected during 10 days from 2012/12/12.
-	 * @throws HCubeStoreException 
+	 * @throws HCubeStoreException
 	 */
 	@Test
 	public void testLoadAndQuery2() throws ParseException, HCubeStoreException {
@@ -250,9 +249,9 @@ public abstract class AbstractHCubeManagerTest {
 		populateData(start, days);
 		//----
 		final HQuery query = new HQueryBuilder()
-				.between(HTimeDimension.SixMinutes, start, end)
-				//.whereCategoryEquals(PAGES)
-				.build();
+		.between(HTimeDimension.SixMinutes, start, end)
+		//.whereCategoryEquals(PAGES)
+		.build();
 
 		final HResult result = happ.execute(PAGES, query);
 
@@ -287,23 +286,23 @@ public abstract class AbstractHCubeManagerTest {
 	@Test
 	public void testHistogram() {
 		final HMetric metric = new HMetricBuilder(HM_TEST)
-				.withValue(0)//<0
-				.withValue(1)//<1
-				.withValue(2)//<2
-				.withValue(3)//<5
-				.withValue(4)//<5
-				.withValue(5)//<5
-				.withValue(6)//<10
-				.withValue(7)//<10
-				.withValue(8)//<10
-				.withValue(9)//<10
-				.withValue(10)//<10
-				.withValue(11)//<20
-				.withValue(35)//<50
-				.withValue(455)//<500
-				.withValue(355)//<500
-				.withValue(111222333)//<200000000
-				.build();
+		.withValue(0)//<0
+		.withValue(1)//<1
+		.withValue(2)//<2
+		.withValue(3)//<5
+		.withValue(4)//<5
+		.withValue(5)//<5
+		.withValue(6)//<10
+		.withValue(7)//<10
+		.withValue(8)//<10
+		.withValue(9)//<10
+		.withValue(10)//<10
+		.withValue(11)//<20
+		.withValue(35)//<50
+		.withValue(455)//<500
+		.withValue(355)//<500
+		.withValue(111222333)//<200000000
+		.build();
 		final Map<Double, Long> histogram = metric.getDistribution().getData();
 
 		Assert.assertEquals(1, histogram.get(0d), 0);
@@ -341,7 +340,7 @@ public abstract class AbstractHCubeManagerTest {
 	/**
 	 * data are collected during 10 days from 2012/12/12.
 	 * @throws ParseException Date parsing error
-	 * @throws HCubeStoreException 
+	 * @throws HCubeStoreException
 	 */
 	@Test
 	public void testMergeOnHTime() throws ParseException, HCubeStoreException {
@@ -423,15 +422,15 @@ public abstract class AbstractHCubeManagerTest {
 		final HTime time = new HTime(current, HTimeDimension.Minute);
 		final HKey key = new HKey(location, time, category);
 		final HMetric durationMetric = new HMetricBuilder(HM_DURATION)
-				.withValue(100)//
-				.build();
+		.withValue(100)//
+		.build();
 		final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT)
-				.withValue(weightValue)
-				.build();
+		.withValue(weightValue)
+		.build();
 		final HCube cube = new HCubeBuilder()
-				.withMetric(durationMetric)
-				.withMetric(weightMetric)
-				.build();
+		.withMetric(durationMetric)
+		.withMetric(weightMetric)
+		.build();
 		happ.push(key, cube, PAGES);
 	}
 
@@ -461,9 +460,9 @@ public abstract class AbstractHCubeManagerTest {
 					final HMetric weightMetric = new HMetricBuilder(HM_WEIGHT).withValue(h).build();
 
 					final HCube cube = new HCubeBuilder()
-							.withMetric(durationMetricBuilder.build())
-							.withMetric(weightMetric)
-							.build();
+					.withMetric(durationMetricBuilder.build())
+					.withMetric(weightMetric)
+					.build();
 
 					happ.push(key, cube, PAGES);
 					//--
@@ -503,8 +502,8 @@ public abstract class AbstractHCubeManagerTest {
 	private void checkMergedMetric(final HTimeDimension timeDimension, final Date start, final Date end, final int expectedCount, final double expectedSum, final double expectedMin, final double expectedMax) throws HCubeStoreException {
 		//----
 		final HQuery query = new HQueryBuilder()
-				.between(timeDimension, start, end)
-				.build();
+		.between(timeDimension, start, end)
+		.build();
 
 		final HResult result = happ.execute(PAGES, query);
 		Assert.assertEquals(query, result.getQuery());

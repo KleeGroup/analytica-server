@@ -48,7 +48,7 @@ public final class Museum {
 
 	public void load(final int days, final int visitsByDay) throws HCubeStoreException {
 		Assertion.checkArgument(days >= 0, "days must be >= 0");
-		//---------------------------------------------------------------------	
+		//---------------------------------------------------------------------
 		//Toutes les visites sur 3h, 100visites par heures
 		final Calendar today = new GregorianCalendar();
 		today.set(Calendar.HOUR_OF_DAY, 0);
@@ -90,7 +90,7 @@ public final class Museum {
 				System.out.println(">>>> cube footprint =" + (Runtime.getRuntime().maxMemory() / cubeManager.getApp(APP_NAME).size(null)) + " octets");
 				try {
 					Thread.sleep(1000 * 20); //20s
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -129,58 +129,58 @@ public final class Museum {
 		//System.out.println("scenario [" + startVisit.getDay() + ", " + startVisit.getHours() + "] >>" + startVisit);
 		//On ne CODE pas un scenario, on le déclare.
 		final KProcess visiteur = new KProcessBuilder(APP_NAME, "session", startVisit, 0)//
-				.setMeasure("sessionHttp", 1) //1 session
-				.build();
+		.setMeasure("sessionHttp", 1) //1 session
+		.build();
 		//On notifie le listener
 		pageListener.onPage(visiteur);
 
 		addPages(startVisit, //
-				Pages.HOME,// 
-				Pages.ARTIST_SEARCH,// 
-				Pages.ARTIST,// 
-				Pages.IMAGE_ARTIST,// 
-				Pages.ARTIST,// 
-				Pages.IMAGE_ARTIST,// 
+				Pages.HOME,//
+				Pages.ARTIST_SEARCH,//
 				Pages.ARTIST,//
-				Pages.IMAGE_ARTIST,// 
+				Pages.IMAGE_ARTIST,//
+				Pages.ARTIST,//
+				Pages.IMAGE_ARTIST,//
+				Pages.ARTIST,//
+				Pages.IMAGE_ARTIST,//
 				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,// 
+				Pages.IMAGE_OEUVRE,//
 				Pages.ARTIST,//
-				Pages.IMAGE_ARTIST,// 
+				Pages.IMAGE_ARTIST,//
 				Pages.EXPOSITION,//
 				Pages.EXPOSITION,//
 				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,// 
+				Pages.IMAGE_OEUVRE,//
 				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,// 
+				Pages.IMAGE_OEUVRE,//
 				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,// 
+				Pages.IMAGE_OEUVRE,//
 				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,// 
-				Pages.ARTIST_SEARCH,// 
-				Pages.ARTIST,// 
-				Pages.IMAGE_ARTIST,// 
+				Pages.IMAGE_OEUVRE,//
+				Pages.ARTIST_SEARCH,//
 				Pages.ARTIST,//
-				Pages.IMAGE_ARTIST,//  
-				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,//  
+				Pages.IMAGE_ARTIST,//
 				Pages.ARTIST,//
-				Pages.IMAGE_ARTIST,//  
+				Pages.IMAGE_ARTIST,//
 				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,// 
-				Pages.OEUVRE_SEARCH,// 
-				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,//  
-				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,//  
-				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,//  
-				Pages.OEUVRE,//
-				Pages.IMAGE_OEUVRE,// 
-				Pages.EXPOSITION,// 
+				Pages.IMAGE_OEUVRE,//
 				Pages.ARTIST,//
-				Pages.IMAGE_ARTIST// 
-		);
+				Pages.IMAGE_ARTIST,//
+				Pages.OEUVRE,//
+				Pages.IMAGE_OEUVRE,//
+				Pages.OEUVRE_SEARCH,//
+				Pages.OEUVRE,//
+				Pages.IMAGE_OEUVRE,//
+				Pages.OEUVRE,//
+				Pages.IMAGE_OEUVRE,//
+				Pages.OEUVRE,//
+				Pages.IMAGE_OEUVRE,//
+				Pages.OEUVRE,//
+				Pages.IMAGE_OEUVRE,//
+				Pages.EXPOSITION,//
+				Pages.ARTIST,//
+				Pages.IMAGE_ARTIST//
+				);
 	}
 
 	private void addPages(final Date startVisit, final PageBuilder... pageBuilders) {
@@ -219,13 +219,13 @@ public final class Museum {
 		final double health = Math.min(100, StatsUtil.random(100, 1.5 - nbVisitsHour / 50));
 
 		final KProcess qosProcess = new KProcessBuilder(APP_NAME, QOS, dateHour, 0)//
-				.setMeasure("activity", activity)//
-				.setMeasure("activityMax", 100)//
-				.setMeasure("performance", perfs)//
-				.setMeasure("performanceMax", 100)//
-				.setMeasure("health", health)//
-				.setMeasure("healthMax", 100)//
-				.build();
+		.setMeasure("activity", activity)//
+		.setMeasure("activityMax", 100)//
+		.setMeasure("performance", perfs)//
+		.setMeasure("performanceMax", 100)//
+		.setMeasure("health", health)//
+		.setMeasure("healthMax", 100)//
+		.build();
 		pageListener.onPage(qosProcess);
 	}
 
@@ -233,11 +233,11 @@ public final class Museum {
 		for (int min = 0; min < 60; min += 6) {
 			final Date dateMinute = new DateBuilder(dateHour).addMinutes(min).toDateTime();
 			final KProcess healthProcess = new KProcessBuilder(APP_NAME, HEALTH, dateMinute, 0)//
-					.withCategory(new String[] { "physical" })
-					.setMeasure("cpu", Math.min(100, 5 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 1) : 0)))//
-					.setMeasure("ram", Math.min(3096, 250 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 10) : 0)))//
-					.setMeasure("io", 10 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 5) : 0))//
-					.build();
+			.withCategory("physical")
+			.setMeasure("cpu", Math.min(100, 5 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 1) : 0)))//
+			.setMeasure("ram", Math.min(3096, 250 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 10) : 0)))//
+			.setMeasure("io", 10 + (nbVisitsHour > 0 ? StatsUtil.random(nbVisitsHour, 5) : 0))//
+			.build();
 			pageListener.onPage(healthProcess);
 		}
 	}

@@ -16,7 +16,7 @@
  * if not, see <http://www.gnu.org/licenses>
  */
 /**
- * 
+ *
  */
 package io.analytica.server;
 
@@ -109,15 +109,15 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 
 	@Test
 	public void testSimpleProcess() throws HCubeStoreException {
-		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100).withCategory(new String[] { "select article" })//
+		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100).withCategory("select article")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		serverManager.push(selectProcess1);
 
 		final HQuery daySqlQuery = new HQueryBuilder()//
-				.between(HTimeDimension.Day, date, date)//
-				.whereCategoryMatches("sql")//
-				.build();
+		.between(HTimeDimension.Day, date, date)//
+		.whereCategoryMatches("sql")//
+		.build();
 
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 		final HResult result = serverManager.execute(APP_NAME, "sql", daySqlQuery);
@@ -175,15 +175,15 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	private String format(final double val) {
 		final String value = String.valueOf(Math.round(val * 100) / 100d);
 		if (value.indexOf('.') > value.length() - 3) {
-			return value + "0"; //it miss a 0 
+			return value + "0"; //it miss a 0
 		}
 		return value;
 	}
 
 	@Test
 	//On charge 10 jours à 50 visites par jourDURATION
-			public
-			void testMuseum() throws HCubeStoreException {
+	public
+	void testMuseum() throws HCubeStoreException {
 		final int days = 1;
 		final int visitsByDay = 1;
 		new Museum(new PageListener() {

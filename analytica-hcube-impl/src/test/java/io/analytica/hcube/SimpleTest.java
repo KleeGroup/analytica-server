@@ -21,7 +21,6 @@ import io.analytica.hcube.cube.HCube;
 import io.analytica.hcube.cube.HCubeBuilder;
 import io.analytica.hcube.cube.HMetric;
 import io.analytica.hcube.cube.HMetricBuilder;
-import io.analytica.hcube.cube.HMetricDefinition;
 import io.analytica.hcube.dimension.HCategory;
 import io.analytica.hcube.dimension.HKey;
 import io.analytica.hcube.dimension.HLocation;
@@ -58,7 +57,7 @@ public final class SimpleTest {
 
 	@Before
 	public void before() {
-		final HMetricDefinition perf = new HMetricDefinition(HM_PERF, true);
+		//		final HMetricDefinition perf = new HMetricDefinition(HM_PERF, true);
 		//		cubeManager.register(perf);
 		vapp = new App(new AppConfigBuilder().build());
 
@@ -74,21 +73,21 @@ public final class SimpleTest {
 		final HTime time = new HTime(new Date(), HTimeDimension.Minute);
 		//--------
 		final HMetric workingHours = new HMetricBuilder(HM_PERF)
-				.withValue(10)
-				.withValue(17)
-				.build();
+		.withValue(10)
+		.withValue(17)
+		.build();
 
 		final HCube cube = new HCubeBuilder()
-				.withMetric(workingHours)
-				.build();
+		.withMetric(workingHours)
+		.build();
 
 		final String[] locationS = { "myServer" };
 		app.push(new HKey(new HLocation(locationS), time, new HCategory("www")), cube, "Test-key");
 
 		final HQuery query = new HQueryBuilder()
-				.between(HTimeDimension.SixMinutes, "NOW", "NOW")
-				//	.whereCategoryEquals(PAGES)
-				.build();
+		.between(HTimeDimension.SixMinutes, "NOW", "NOW")
+		//	.whereCategoryEquals(PAGES)
+		.build();
 
 		final HResult result = app.execute("PAGES", query);
 		System.out.println(">>> " + result.getSerie(new HCategory("www")));

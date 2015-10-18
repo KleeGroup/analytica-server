@@ -45,20 +45,20 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 40, 5, 40, 5, 40, 5, 40);
 
-			return new KProcessBuilder(Museum.APP_NAME,PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8)).withCategory(new String[]{"home"})//
+			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8)).withCategory("home")//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory(new String[]{"CommunicationServices", "loadNews"})//
-						.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory(new String[]{ "select * from news"})
-						.endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory("CommunicationServices;loadNews")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory("select * from news")
 					.endSubProcess()//
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory(new String[]{  "ExpositionServices", "loadPushExpositions"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory(new String[]{  "select * from expositions where mise_en_avant = 1"}).endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory(new String[]{ "OeuvreServices", "loadPushOeuvres"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory(new String[]{  "select * from oeuvres where mise_en_avant = 1"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory("ExpositionServices;loadPushExpositions")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory("select * from expositions where mise_en_avant = 1").endSubProcess()//
+					.endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory("OeuvreServices;loadPushOeuvres")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory("select * from oeuvres where mise_en_avant = 1").endSubProcess()//
 					.endSubProcess()
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 7, 8)).withCategory(new String[]{  "OeuvreServices", "loadFavoriesOeuvres"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 8)).withCategory(new String[]{  "select * from oeuvres join oeu_usr where usr_id = #usr_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 7, 8)).withCategory("OeuvreServices;loadFavoriesOeuvres")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 8)).withCategory("select * from oeuvres join oeu_usr where usr_id = #usr_id#").endSubProcess()//
 					.endSubProcess().build();
 		}
 	}
@@ -68,37 +68,37 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 50, 150, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10);
 
-			return new KProcessBuilder(Museum.APP_NAME,"search", dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)).withCategory(new String[]{  "artists"})//
+			return new KProcessBuilder(Museum.APP_NAME, "search", dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)).withCategory("artists")//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1, 2) ).withCategory(new String[]{ "ArtistServices", "search"})//
-					.beginSubProcess(SEARCH_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory(new String[]{ "find artists"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory("ArtistServices;search")//
+					.beginSubProcess(SEARCH_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory("find artists").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(100, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(100, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(101, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(101, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 7, 8)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(102, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 8)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 7, 8)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(102, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 8)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 9, 10)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(103, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 10)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 9, 10)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(103, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 10)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 11, 12)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(104, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 12)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 11, 12)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(104, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 12)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 13, 14)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(105, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 14)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 13, 14)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(105, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 14)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 15, 16)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(106, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 16)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 15, 16)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(106, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 16)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 17, 18)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(107, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 18)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 17, 18)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(107, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 18)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 19, 20)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(108, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 20)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 19, 20)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(108, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 20)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
 					.build();
 		}
@@ -109,37 +109,37 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 50, 250, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10, 5, 10);
 
-			return new KProcessBuilder(Museum.APP_NAME, "search",dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)).withCategory(new String[]{  "oeuvres"})//
+			return new KProcessBuilder(Museum.APP_NAME, "search", dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)).withCategory("oeuvres")//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory(new String[]{ "OeuvreServices", "search"})//
-					.beginSubProcess(SEARCH_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory(new String[]{  "find oeuvres"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory("OeuvreServices;search")//
+					.beginSubProcess(SEARCH_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory("find oeuvres").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(200, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(200, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(201, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(201, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 7, 8)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(202, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 8)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 7, 8)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(202, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 8)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 9, 10)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(203, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 10)).withCategory(new String[]{"select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 9, 10)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(203, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 10)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 11, 12)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(204, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 12)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 11, 12)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(204, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 12)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 13, 14)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(205, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 14)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 13, 14)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(205, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 14)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 15, 16)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(206, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 16) ).withCategory(new String[]{"select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 15, 16)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(206, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 16)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 17, 18)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(207, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 18)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 17, 18)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(207, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 18)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(PAGE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 19, 20)).withCategory(new String[]{ "images", "oeuvres", String.valueOf(StatsUtil.random(208, 1))})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 20) ).withCategory(new String[]{"select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 19, 20)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(208, 1)))//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 20)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.endSubProcess()//
 					.build();
 		}
@@ -150,9 +150,9 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 5, 15);
 
-			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1)).withCategory(new String[]{"images", "oeuvres", String.valueOf(StatsUtil.random(200, 1))})//
+			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1)).withCategory("images;oeuvres;" + String.valueOf(StatsUtil.random(200, 1)))//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.build();
 		}
 	}
@@ -162,9 +162,9 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 5, 10);
 
-			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1)).withCategory(new String[]{ "images", "artists", String.valueOf(StatsUtil.random(100, 1))})//
+			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1)).withCategory("images;artists;" + String.valueOf(StatsUtil.random(100, 1)))//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1)).withCategory(new String[]{ "select data from blob where id = #id#"}).endSubProcess()//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1)).withCategory("select data from blob where id = #id#").endSubProcess()//
 					.build();
 		}
 	}
@@ -178,13 +178,13 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 20, 5, 20);
 			final String artist = getArtist();
-			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4)).withCategory(new String[]{  "artists", artist})//
+			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4)).withCategory("artists;" + artist)//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory(new String[]{  "ArtistServices", "loadArtist"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory(new String[]{  "select * from artists where art_id = #art_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory("ArtistServices;loadArtist")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory("select * from artists where art_id = #art_id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory(new String[]{  "OeuvreServices", "loadOeuvreByArtId"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory(new String[]{  "select * from oeuvres join oeu_art where art_id = #art_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory("OeuvreServices;loadOeuvreByArtId")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory("select * from oeuvres join oeu_art where art_id = #art_id#").endSubProcess()//
 					.endSubProcess().build();
 		}
 
@@ -206,13 +206,13 @@ final class Pages {
 		public KProcess createPage(final Date dateVisite) {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 50, 5, 20);
 			final String oeuvre = getOeuvre();
-			return new KProcessBuilder(Museum.APP_NAME,PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4)).withCategory(new String[]{ "oeuvres", oeuvre})//
+			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4)).withCategory("oeuvres;" + oeuvre)//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory(new String[]{  "OeuvreServices", "loadOeuvre"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory(new String[]{ "select * from oeuvres where oeu_id = #oeu_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory("OeuvreServices;loadOeuvre")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory("select * from oeuvres where oeu_id = #oeu_id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory(new String[]{  "ExpositionServices", "loadExpositionByOeuId"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory(new String[]{  "select * from expositions join exp_oeu where oeu_id = #oeu_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory("ExpositionServices;loadExpositionByOeuId")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory("select * from expositions join exp_oeu where oeu_id = #oeu_id#").endSubProcess()//
 					.endSubProcess().build();
 		}
 
@@ -232,16 +232,16 @@ final class Pages {
 			final int[] randomDurations = StatsUtil.randoms(getCoef(dateVisite), 100, 5, 20, 5, 50, 5, 40);
 			final String[] expositionInfos = getExposition().split(",");// [Musée,Ville,Année]
 
-			return new KProcessBuilder(Museum.APP_NAME,PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6)).withCategory(new String[]{ "exposition", expositionInfos[0], expositionInfos[1], expositionInfos[2]})//
+			return new KProcessBuilder(Museum.APP_NAME, PAGE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 0, 1, 2, 3, 4, 5, 6)).withCategory("exposition" + ";" + expositionInfos[0] + ";" + expositionInfos[1] + ";" + expositionInfos[2])//
 					.setMeasure(ERROR_MEASURE, StatsUtil.randomValue(1, 0.01, 100, 0))// 1% d'erreur
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory(new String[]{ "ExpositionServices", "loadExposition"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory(new String[]{ "select * from expositions where exp_id = #exp_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 1, 2)).withCategory("ExpositionServices;loadExposition")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 2)).withCategory("select * from expositions where exp_id = #exp_id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory(new String[]{ "OeuvreServices", "loadOeuvreByExpId"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory(new String[]{"select * from oeuvres join exp_oeu where exp_id = #exp_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 3, 4)).withCategory("OeuvreServices;loadOeuvreByExpId")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 4)).withCategory("select * from oeuvres join exp_oeu where exp_id = #exp_id#").endSubProcess()//
 					.endSubProcess()//
-					.beginSubProcess(SERVICE_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory(new String[]{ "ArtistServices", "loadArtistByExpId"})//
-					.beginSubProcess(SQL_PROCESS,dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory(new String[]{ "select * from artists join exp_art where exp_id = #exp_id#"}).endSubProcess()//
+					.beginSubProcess(SERVICE_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 5, 6)).withCategory("ArtistServices;loadArtistByExpId")//
+					.beginSubProcess(SQL_PROCESS, dateVisite, StatsUtil.sum(randomDurations, 6)).withCategory("select * from artists join exp_art where exp_id = #exp_id#").endSubProcess()//
 					.endSubProcess()//
 					.build();
 		}
@@ -256,7 +256,7 @@ final class Pages {
 	}
 
 	/**
-	 * Fournit le coef de charge 
+	 * Fournit le coef de charge
 	 * @param date Date
 	 * @return charge coef at this hour
 	 */

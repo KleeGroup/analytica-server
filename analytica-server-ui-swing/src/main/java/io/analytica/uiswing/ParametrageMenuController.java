@@ -167,11 +167,11 @@ public class ParametrageMenuController {
 	}
 
 	private void storeToPerfCollector(final KProcess process, final PerfCollector perfCollector) {
-		perfCollector.onProcessStart(process.getType(), Arrays.asList(process.getCategoryTerms()).toString(), null, null);
+		perfCollector.onProcessStart(process.getType(), Arrays.asList(process.getCategory()).toString(), null, null);
 		for (final KProcess subprocess : process.getSubProcesses()) {
 			storeToPerfCollector(subprocess, perfCollector);
 		}
-		perfCollector.onProcessFinish(process.getType(), Arrays.asList(process.getCategoryTerms()).toString(), null, null, null, Math.round(process.getMeasures().get(KProcess.DURATION)), true);
+		perfCollector.onProcessFinish(process.getType(), Arrays.asList(process.getCategory()).toString(), null, null, null, Math.round(process.getMeasures().get(KProcess.DURATION)), true);
 	}
 
 	private String getModuleLibelleByModuleName(final String moduleName) {
