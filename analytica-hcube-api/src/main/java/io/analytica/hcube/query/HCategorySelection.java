@@ -46,6 +46,9 @@ public final class HCategorySelection {
 		return category.getPath().equals(pattern);
 	}
 
+	public String getPattern(){
+		return this.pattern;
+	}
 	/** {@inheritDoc} */
 	@Override
 	public String toString() {

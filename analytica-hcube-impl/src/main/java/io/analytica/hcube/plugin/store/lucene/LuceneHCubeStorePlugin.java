@@ -36,6 +36,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Fields;
@@ -49,13 +50,21 @@ import org.apache.lucene.index.Terms;
 import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.TotalHitCountCollector;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.QueryBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,6 +81,7 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	private final StandardAnalyzer analyzer = new StandardAnalyzer();
 
 	private final String LUCENE_DOCUMENT_CATEGORY = "category";
+	private final String LUCENE_DOCUMENT_DATE="date";
 	private final String LUCENE_DOCUMENT_LOCATION = "location";
 	private final String LUCENE_SETTINGS = "settings";
 	private final String LUCENE_SETTINGS_VALUE = "settings_value";
@@ -114,7 +124,7 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		try (final IndexReader indexReader = DirectoryReader.open(getAppDirectory(appName))) {
 			final Fields fields = MultiFields.getFields(indexReader);
 			final Terms terms = fields.terms(LUCENE_DOCUMENT_CATEGORY);
-			final TermsEnum iterator = terms.iterator(null);
+			final TermsEnum iterator = terms.iterator();
 			BytesRef byteRef = null;
 			while ((byteRef = iterator.next()) != null) {
 				final String categoryPath = new String(byteRef.bytes, byteRef.offset, byteRef.length);
@@ -149,7 +159,7 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		try (final IndexReader indexReader = DirectoryReader.open(getAppDirectory(appName))) {
 			final Fields fields = MultiFields.getFields(indexReader);
 			final Terms terms = fields.terms(LUCENE_DOCUMENT_LOCATION);
-			final TermsEnum iterator = terms.iterator(null);
+			final TermsEnum iterator = terms.iterator();
 			BytesRef byteRef = null;
 			while ((byteRef = iterator.next()) != null) {
 				final String locationPath = new String(byteRef.bytes, byteRef.offset, byteRef.length);
@@ -207,7 +217,29 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 	 */
 	@Override
 	public List<HSerie> execute(final String appName, final String type, final HQuery query, final HSelector selector) {
-		// TODO Auto-generated method stub
+		//the type is not used because it is already in the category of the query
+		try(final IndexReader indexReader = createIndexSearcher(appName)){
+			final boolean minInclusive=true;
+			final boolean maxInclusive=true;
+			final IndexSearcher indexSearcher = new IndexSearcher(indexReader);
+			BooleanQuery booleanQuery = new BooleanQuery();
+			Query categoryQuery = new TermQuery(new Term(LUCENE_DOCUMENT_CATEGORY,query.getCategorySelection().getPattern()));
+			Query locationQuery = new TermQuery(new Term(LUCENE_DOCUMENT_LOCATION,query.getLocationSelection().getPattern()));
+			Query dateQuery = NumericRangeQuery.newLongRange(LUCENE_DOCUMENT_DATE, query.getTimeSelection().getMinTime().inMillis()/60000, query.getTimeSelection().getMaxTime().inMillis()/60000, minInclusive, maxInclusive);
+			booleanQuery.add(categoryQuery, Occur.MUST);
+			booleanQuery.add(locationQuery, Occur.MUST);
+			booleanQuery.add(dateQuery, Occur.MUST);
+			final TopScoreDocCollector collector = TopScoreDocCollector.create(2000);
+			indexSearcher.search(booleanQuery, collector);
+			final ScoreDoc[] hits = collector.topDocs().scoreDocs;
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (HCubeStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -250,6 +282,10 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		return new IndexWriter(getAppDirectory(appName), config);
 	}
 
+	private IndexReader createIndexSearcher(final String appName)throws IOException,HCubeStoreException{
+		return DirectoryReader.open(getAppDirectory(appName));
+	}
+	
 	private Directory getAppDirectory(final String appName) throws HCubeStoreException {
 		Assertion.checkArgNotEmpty(appName);
 		if (!appNames.contains(appName)) {
@@ -279,6 +315,7 @@ public class LuceneHCubeStorePlugin implements HCubeStorePlugin {
 		final Document doc = new Document();
 		final Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(key.getTime().inMillis());
+		doc.add(new LongField(LUCENE_DOCUMENT_DATE, key.getTime().inMillis()/60000, Field.Store.NO));
 		doc.add(new IntField(HTimeDimension.Year.getLabel(), calendar.get(Calendar.YEAR), Field.Store.NO));
 		doc.add(new IntField(HTimeDimension.Month.getLabel(), calendar.get(Calendar.MONTH), Field.Store.NO));
 		doc.add(new IntField(HTimeDimension.Day.getLabel(), calendar.get(Calendar.DAY_OF_MONTH), Field.Store.NO));

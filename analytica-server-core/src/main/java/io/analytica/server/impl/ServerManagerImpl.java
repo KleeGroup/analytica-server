@@ -131,7 +131,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		for (final String appName : processStoreApps) {
 			final Map<HKey, HCube> hCubes = new HashMap<>();
 			final long startBerkley = System.currentTimeMillis();
-			final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(hcubeManager.getApp(appName).getLastReceivedHCubeId(), NB_PROCESS_A_TRAITER);
+			final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(appName, hcubeManager.getApp(appName).getLastReceivedHCubeId(), NB_PROCESS_A_TRAITER);
 			final long startToCube = System.currentTimeMillis();
 			for (final Identified<KProcess> process : nextProcesses) {
 				final List<Dual> duals = processEncoder.encode(process.getData());

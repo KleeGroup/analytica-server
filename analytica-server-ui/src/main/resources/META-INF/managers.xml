@@ -9,7 +9,7 @@
 				<param name="dbPath" value="{analytica.db.path}" />
 			</plugin>
 		</component>
-		<component api="HCubeManager"
+		<!-- <component api="HCubeManager"
 			class="io.analytica.hcube.impl.HCubeManagerImpl">
 			<plugin
 				class="io.analytica.server.plugins.processstats.store.memory.MemoryCubeStorePlugin" />
@@ -19,6 +19,6 @@
 				class="io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlugin">
 				<param name="socketIoUrl" value="http://npiedeloup1:8090" />
 			</plugin>
-		</component>
+		</component> -->
 	</module>
 </config>

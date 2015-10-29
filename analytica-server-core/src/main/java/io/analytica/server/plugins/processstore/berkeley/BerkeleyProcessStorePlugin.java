@@ -33,6 +33,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
+
 import com.sleepycat.je.DatabaseEntry;
 
 /**
@@ -41,6 +43,7 @@ import com.sleepycat.je.DatabaseEntry;
  * @version $Id: $
  */
 public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Activeable {
+	private static final Logger LOG = Logger.getLogger(BerkeleyProcessStorePlugin.class);
 	private final File dbPath;
 	private final Map<String, BerkeleyDatabase> databases;
 	private final BerkeleyDatabaseWriter writer;
@@ -50,16 +53,17 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 	 */
 	@Inject
 	public BerkeleyProcessStorePlugin(@Named("dbPath") final String dbPath) {
+		System.out.println("Trying to start BerkleyDB at the path " + dbPath);
 		this.dbPath = new File(dbPath);
 		databases = new HashMap<>();
-		String[] currentApps = this.dbPath.list(new FilenameFilter() {
+		final String[] currentApps = this.dbPath.list(new FilenameFilter() {
 			@Override
-			public boolean accept(File current, String name) {
+			public boolean accept(final File current, final String name) {
 				return new File(current, name).isDirectory();
 			}
 		});
-		for (String appName : currentApps) {
-			BerkeleyDatabase database = new BerkeleyDatabase(new File(this.dbPath.getAbsolutePath() + File.separator + appName));
+		for (final String appName : currentApps) {
+			final BerkeleyDatabase database = new BerkeleyDatabase(new File(this.dbPath.getAbsolutePath() + File.separator + appName));
 			database.open(false);
 			databases.put(appName, database);
 		}
@@ -110,8 +114,10 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Identified<KProcess>> getProcess(final String lastKeyString, final Integer maxRow) {
+	public List<Identified<KProcess>> getProcess(final String appName, final String lastKeyString, final Integer maxRow) {
 		final List<String> systemNames = new ArrayList<>();
+		final List<Identified<KProcess>> processes = new ArrayList<>();
+
 		for (final File databaseDirectory : dbPath.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(final File pathname) {
@@ -120,9 +126,9 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 		})) {
 			systemNames.add(databaseDirectory.getName());
 		}
-		final String systemName = lastKeyString != null ? lastKeyString.split("-")[0] : systemNames.get(0);
+		final String systemName = appName;
 		final DatabaseEntry lastKey = lastKeyString != null ? writer.writeKey(Long.parseLong(lastKeyString.split("-")[1])) : new DatabaseEntry();
-		final List<Identified<KProcess>> processes = new ArrayList<>();
+
 		final BerkeleyDatabase database = obtainDatabase(systemName);
 		final Map<DatabaseEntry, DatabaseEntry> entries = database.next(lastKey, maxRow);
 		for (final Map.Entry<DatabaseEntry, DatabaseEntry> entry : entries.entrySet()) {

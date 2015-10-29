@@ -51,16 +51,16 @@ public final class ProcessEncoder {
 
 		private Dual(final KProcess process, final HCubeBuilder cubeBuilder) {
 			final HTime time = new HTime(process.getStartDate(), HTimeDimension.Minute);
-			final int nbOfCategoryTerms = process.getCategory() != null ? process.getCategory().length() : 0;
+			final int nbOfCategoryTerms = process.getCategory() != null ? process.getCategoryAsArray().length : 0;
 			final String[] categories = new String[nbOfCategoryTerms + 1];
 			categories[0] = process.getType();
 			if (nbOfCategoryTerms > 0) {
-				System.arraycopy(process.getCategory(), 0, categories, 1, nbOfCategoryTerms);
+				System.arraycopy(process.getCategoryAsArray(), 0, categories, 1, nbOfCategoryTerms);
 			}
 
 			final HCategory category = new HCategory(categories);
 			// TODO ETAPE 1 Utilisation du premier element du tableau
-			final HLocation location = new HLocation((String[]) (process.getLocation() != null ? process.getLocation() : new String[0]));
+			final HLocation location = new HLocation(process.getLocationAsArray() != null ? process.getLocationAsArray() : new String[0]);
 			key = new HKey(location, time, category/*, location*/);
 			this.cubeBuilder = cubeBuilder;
 		}

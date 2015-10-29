@@ -192,23 +192,18 @@ public final class Utils {
 		return metricKey.length > 2 && METRIC_KEY_HISTO.equals(metricKey[metricKey.length - 1]);
 	}
 
-	public static HQuery createQuery(final String from, final String to, final String timeDimension, final String type, final String subCategories, final boolean children) {
+	public static HQuery createQuery(final String from, final String to, final String timeDimension, final String type, final String subCategories, final boolean children,final String locations) {
 		final HQueryBuilder queryBuilder = new HQueryBuilder()//
 				.between(HTimeDimension.valueOf(timeDimension), from, to);
+		String categories="";
 		final String[] subCategoriesArray;
 		if (subCategories.startsWith("/")) {
-			subCategoriesArray = subCategories.substring(1).split("/"); //remove the first / before split
+			categories=type+subCategories;
 		} else {
-			subCategoriesArray = EMPTY_STRING_ARRAY;
+			categories=type+"/"+subCategories;
 		}
-		// TODO a verifier 
-		queryBuilder.whereCategoryMatches(subCategories);
-		//		if (children) {
-		//			queryBuilder.whereCategoryMatches(pattern)withChildren(type, subCategoriesArray);
-		//		} else {
-		//			queryBuilder.with(type, subCategoriesArray);
-		//		}
-		// @formatter:on
+		queryBuilder.whereCategoryMatches(categories);
+		queryBuilder.whereLocationMatches(locations);
 		return queryBuilder.build();
 	}
 

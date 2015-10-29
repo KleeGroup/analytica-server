@@ -26,6 +26,10 @@ import io.vertigo.lang.Assertion;
 public final class HLocationSelection {
 	private final String pattern;
 
+	public String getPattern() {
+		return pattern;
+	}
+
 	public HLocationSelection(final String pattern) {
 		Assertion.checkNotNull(pattern);
 		// ---------------------------------------------------------------------

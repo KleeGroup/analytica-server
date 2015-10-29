@@ -30,8 +30,6 @@ import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
-import io.analytica.museum.Museum;
-import io.analytica.museum.PageListener;
 import io.analytica.server.impl.ProcessEncoder;
 import io.analytica.server.impl.ProcessEncoder.Dual;
 import io.vertigo.util.DateBuilder;
@@ -622,42 +620,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(1000d), 1);
 	}
 
-	@Test
-	//On charge 10 jours à 50 visites par jourDURATION
-			public
-			void testMuseum() throws HCubeStoreException {
-		final int days = 2;
-		final int visitsByDay = 2;
-		new Museum(new PageListener() {
-			@Override
-			public void onPage(final KProcess process) {
-				try {
-					pushProcess(process);
-				} catch (final HCubeStoreException e) {
-					System.out.println(e.getStackTrace());
-					System.exit(-1);
-				}
-			}
-		}).load(days, visitsByDay);
-
-		//---------------------------------------------------------------------
-		final HCategory pageCategory = new HCategory("PAGE");
-		final Calendar today = new GregorianCalendar();
-		today.set(Calendar.HOUR_OF_DAY, 0);
-		today.set(Calendar.MINUTE, 0);
-		today.set(Calendar.SECOND, 0);
-
-		final HQuery hourQuery = new HQueryBuilder()//
-				.between(HTimeDimension.Hour, today.getTime(), new DateBuilder(today.getTime()).addDays(1).build())//
-				.whereCategoryMatches("PAGE")//
-				.build();
-		final Map<HTime, HCube> cubes = hcubeManager.getApp(Museum.APP_NAME).execute(pageCategory.getPath(), hourQuery).getSerie(pageCategory).getCubes();
-		Assert.assertEquals(24, cubes.size());
-		//cube 0==>10h00, 1==>11h etc
-		//final HMetric montantMetric = cubes.get(5).getMetric(DURATION);
-		//assertMetricEquals(montantMetric, 1, 1, 1, 1, 1);
-		//---------------------------------------------------------------------
-	}
+	
 
 	private void pushProcess(final KProcess process) throws HCubeStoreException {
 		final List<Dual> duals = processEncoder.encode(process);

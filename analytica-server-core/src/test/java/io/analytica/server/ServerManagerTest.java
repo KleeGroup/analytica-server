@@ -33,9 +33,6 @@ import io.analytica.hcube.dimension.HTimeDimension;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
-import io.analytica.museum.Museum;
-import io.analytica.museum.PageListener;
-import io.analytica.museum.StatsUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -140,7 +137,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	public void testRandom() {
 		final SortedMap<Long, Integer> counts = new TreeMap<>();
 		for (int i = 0; i < 10000; i++) {
-			final long result = StatsUtil.random(5, 1);
+			final long result =((long) (Math.random()*5))+1;
 			final int count = counts.containsKey(result) ? counts.get(result) : 0;
 			counts.put(result, count + 1);
 		}
@@ -151,7 +148,7 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 	public void testRandom2() {
 		final SortedMap<Long, Integer> counts = new TreeMap<>();
 		for (int i = 0; i < 10000; i++) {
-			final long result = StatsUtil.randomValue(100, 1, 100, 0);
+			final long result = ((long)(Math.random()*2))*100;
 			final int count = counts.containsKey(result) ? counts.get(result) : 0;
 			counts.put(result, count + 1);
 		}
@@ -178,20 +175,5 @@ public class ServerManagerTest extends AbstractTestCaseJU4Rule {
 			return value + "0"; //it miss a 0
 		}
 		return value;
-	}
-
-	@Test
-	//On charge 10 jours à 50 visites par jourDURATION
-	public
-	void testMuseum() throws HCubeStoreException {
-		final int days = 1;
-		final int visitsByDay = 1;
-		new Museum(new PageListener() {
-			@Override
-			public void onPage(final KProcess process) {
-				serverManager.push(process);
-			}
-		}).load(days, visitsByDay);
-		//Thread.sleep(1000000000);
 	}
 }
