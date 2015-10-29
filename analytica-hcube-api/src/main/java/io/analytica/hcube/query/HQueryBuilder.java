@@ -100,14 +100,6 @@ public final class HQueryBuilder implements Builder<HQuery> {
 			return new Date(System.currentTimeMillis() + deltaMs);
 		}
 		throw new RuntimeException("time must be NOW or NOW+999f or NOW-999f where f is h|d|m");
-
-		//		final SimpleDateFormat sdf = new SimpleDateFormat(dimension.getPattern());
-		//
-		//		try {
-		//			return sdf.parse(timeStr);
-		//		} catch (final ParseException e) {
-		//			throw new RuntimeException("Erreur de format de date (" + timeStr + "). Format attendu :" + sdf.toPattern());
-		//		}
 	}
 
 	/**

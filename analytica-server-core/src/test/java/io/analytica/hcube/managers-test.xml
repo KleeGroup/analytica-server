@@ -20,10 +20,10 @@
 -->
 <config>
 	<module name="analytica">
-		<component api="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
-			<!--  <plugin class="io.analytica.hcube.plugin.store.lucene.LuceneHCubeStorePlugin">
+		<!--<component api="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
+			  <plugin class="io.analytica.hcube.plugin.store.lucene.LuceneHCubeStorePlugin">
         		<param name="path" value="g:/analytica/lucene" />
-        	</plugin>-->
-		</component>
+        	</plugin>
+		</component>-->
 	</module>
 </config>

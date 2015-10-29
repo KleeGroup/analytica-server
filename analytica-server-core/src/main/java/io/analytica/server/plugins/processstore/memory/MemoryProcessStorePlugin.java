@@ -18,8 +18,8 @@
 package io.analytica.server.plugins.processstore.memory;
 
 import io.analytica.api.KProcess;
-import io.analytica.server.impl.Identified;
-import io.analytica.server.impl.ProcessStorePlugin;
+import io.analytica.server.store.Identified;
+import io.analytica.server.store.ProcessStorePlugin;
 import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Identified<KProcess>> getProcess(final String lastKey, final Integer maxRow) {
+	public List<Identified<KProcess>> getProcess(final String appName, final String lastKey, final Integer maxRow) {
 		Assertion.checkNotNull(maxRow);
 		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
 		//---------------------------------------------------------------------

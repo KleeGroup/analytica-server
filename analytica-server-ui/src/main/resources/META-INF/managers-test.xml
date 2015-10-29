@@ -16,10 +16,10 @@
 
 
 	<module name="analytica">
-		<manager name="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
+		<!-- <manager name="HCubeManager" class="io.analytica.hcube.impl.HCubeManagerImpl">
 		        <plugin name="CubeStorePlugin" class="io.analytica.server.plugins.processstats.store.memory.MemoryCubeStorePlugin"/>
 		   	    <plugin name="ProcessStatsPlugin" class="io.analytica.server.plugins.processstats.memorystack.MemoryStackProcessStatsPlugin"/>
-        </manager>
+        </manager> -->
 		<manager name="ServerManager" class="io.analytica.server.impl.ServerManagerImpl" >
 	        <plugin name="ProcessStorePlugin" class="io.analytica.server.plugins.processstore.memory.MemoryProcessStorePlugin"/>
 	     </manager>

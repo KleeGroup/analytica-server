@@ -63,6 +63,38 @@ public final class HCategory {
 		this.categoryPath = categoryPath;
 	}
 
+	public HCategory(final String type, final String subCategories, final String separator){
+		Assertion.checkNotNull(type);
+		Assertion.checkNotNull(separator);
+		if(subCategories == null){
+			categoryTerms=new String[]{type};
+			categoryPath=type;
+		}
+		else{
+			final String[] subCategoriesArray = subCategories.split(separator);
+			categoryTerms = new String[subCategoriesArray.length + 1];
+			categoryTerms[0] = type;
+			System.arraycopy(subCategoriesArray, 0, categoryTerms, 1, subCategoriesArray.length);
+			
+			for (final String categoryTerm : categoryTerms) {
+				if (!CATEGORY_REGEX.matcher(categoryTerm).matches()) {
+					throw new IllegalArgumentException("categoryTerm " + categoryTerm + " must match regex :" + CATEGORY_REGEX);
+				}
+			}
+			//---------------------------------------------------------------------
+			final StringBuilder sb = new StringBuilder();
+			boolean first = true;
+			for (final String categoryTerm : categoryTerms) {
+				if (!first) {
+					sb.append(SEPARATOR);
+				}
+				sb.append(categoryTerm);
+				first = false;
+			}
+			this.categoryPath = sb.toString();
+		}
+	}
+	
 	/**
 	 * @return Upper HCategory  or null.
 	 */

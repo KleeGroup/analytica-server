@@ -114,8 +114,8 @@
 			<div class="panel-body">
 				<div class="chart objective" 
 			    data-url="rest/query/categoryLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-2h", "timeTo":"NOW", "timeDim":"Hour", "datas":"sub-duration:mean;duration:mean"}' 
-			    data-labels='{"sub-duration:mean":"Temps sous-jacent","duration:mean":"Temps",
+			    data-query='{"timeFrom":"NOW-2h", "timeTo":"NOW", "timeDim":"Hour", "datas":"sub_duration:mean;duration:mean"}' 
+			    data-labels='{"sub_duration:mean":"Temps sous-jacent","duration:mean":"Temps",
 			    			 "search":"Recherches",
 			    			 "exposition":"Expositions",
 			    			 "artists":"Artistes",
@@ -215,7 +215,7 @@
 			    { "label":"Page", "data":"name", "content":"<a href=\"dashboards.html?subcategory=$name\">$name</a>"},
 			    { "label":"Nb hits", "data":"duration:count:histo", "content":"<span class=\"inlinebar\">$duration:count:histo</span>"},
 			    { "label":"Temps moyen", "data":"duration:mean"},
-			    { "label":"Temps sous-jacent", "data":"sub-duration:mean"},
+			    { "label":"Temps sous-jacent", "data":"sub_duration:mean"},
 			    { "label":"Nb Service", "data":"SERVICE:count"},
 			    { "label":"Temps Service", "data":"SERVICE:mean"},
 			    { "label":"Nb Recherche", "data":"SEARCH:count"},

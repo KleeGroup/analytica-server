@@ -18,9 +18,9 @@
 package io.analytica.server;
 
 import io.analytica.api.KProcess;
-import io.analytica.hcube.HCubeStoreException;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HResult;
+import io.analytica.server.aggregator.ProcessAggregatorException;
+import io.analytica.server.aggregator.ProcessAggregatorQuery;
+import io.analytica.server.aggregator.ProcessAggregatorResult;
 import io.vertigo.lang.Component;
 
 /**
@@ -43,5 +43,5 @@ public interface ServerManager extends Component {
 	 * @return cube virtuel, constitué d'une liste de cubes
 	 * @throws HCubeStoreException 
 	 */
-	HResult execute(final String appName, final String type, HQuery query) throws HCubeStoreException;
+	ProcessAggregatorResult execute(ProcessAggregatorQuery aggregatorQuery) throws ProcessAggregatorException;
 }
