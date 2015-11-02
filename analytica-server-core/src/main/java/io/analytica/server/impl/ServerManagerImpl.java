@@ -129,5 +129,3 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		return numberOfProcessesTreated;
 	}
 }
-
-
