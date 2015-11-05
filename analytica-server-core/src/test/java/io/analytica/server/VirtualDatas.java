@@ -16,7 +16,7 @@
  * if not, see <http://www.gnu.org/licenses>
  */
 /**
- * 
+ *
  */
 package io.analytica.server;
 
@@ -164,13 +164,13 @@ public class VirtualDatas {
 			}
 
 		}
-	*/
+	 */
 	private void addHomePage(final Date dateVisite, final double processDuration) {
 		//		final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess sqlProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory(new String[] { "select*from news" }).build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[] { "home", "homePage" }).addSubProcess(sqlProcess).build();
+		final KProcess sqlProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("select*from news").build();
+		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("home;omePage").addSubProcess(sqlProcess).build();
 		serverManager.push(pageProcess);
 	}
 
@@ -178,8 +178,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory(new String[] { "find oeuvres" }).build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[] { "search" }).addSubProcess(searchProcess).build();
+		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("find oeuvres").build();
+		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("search").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Recherche " + dateVisite);
 
@@ -189,8 +189,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory(new String[] { "select 1 from oeuvres" }).build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory(new String[] { "oeuvre" }).addSubProcess(searchProcess).build();
+		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("select 1 from oeuvres").build();
+		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("oeuvre").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Consultation " + dateVisite);
 
@@ -207,7 +207,7 @@ public class VirtualDatas {
 
 	/**
 	 * Calcul la prochaine valeur aléatoire gaussienne entre X +/- 20% + X*(coef-1).
-	 * 
+	 *
 	 * @param value
 	 *            valeur moyenne
 	 * @param coef

@@ -51,7 +51,7 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Identified<KProcess>> getProcess(final String lastKey, final Integer maxRow) {
+	public List<Identified<KProcess>> getProcess(final String appName, final String lastKey, final Integer maxRow) {
 		Assertion.checkNotNull(maxRow);
 		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
 		//---------------------------------------------------------------------

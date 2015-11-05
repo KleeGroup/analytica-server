@@ -30,8 +30,6 @@ import io.analytica.hcube.query.HCategorySelection;
 import io.analytica.hcube.query.HQuery;
 import io.analytica.hcube.query.HQueryBuilder;
 import io.analytica.hcube.result.HResult;
-import io.analytica.museum.Museum;
-import io.analytica.museum.PageListener;
 import io.analytica.server.impl.ProcessEncoder;
 import io.analytica.server.impl.ProcessEncoder.Dual;
 import io.vertigo.util.DateBuilder;
@@ -123,20 +121,20 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testDictionnary() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)
-				.withCategory(new String[] { "select * from article" })//
+				.withCategory("select * from article")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess1);
 
 		//On crée un processs identique (même catégorie)
 		final KProcess selectProcess2 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select * from article" })//
+				.withCategory("select * from article")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess2);
 
 		final KProcess selectProcess3 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select * from user" })//
+				.withCategory("select * from user")//
 				.build();
 		pushProcess(selectProcess3);
 		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
@@ -146,7 +144,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		Assert.assertEquals(1, rootCategories.size());
 		Assert.assertEquals(processSQLCategory, rootCategories.iterator().next());
 		//--- On vérifie les sous-catégories.
-		// TODO PAS DE SUBCATEGORIES 
+		// TODO PAS DE SUBCATEGORIES
 		//		final List<HCategory> categories = hcubeManager.getApp(APP_NAME).getSelector()..findAllSubCategories(APP_NAME, processSQLCategory);
 		//		Assert.assertEquals(2, categories.size());
 	}
@@ -154,13 +152,13 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testSimpleProcess() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article" })//
+				.withCategory("select article")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess1);
 
 		final KProcess selectProcess2 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "insert article" })//
+				.withCategory("insert article")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess2);
@@ -188,23 +186,23 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testSimpleProcessMultiSubCategrories() throws HCubeStoreException {
 		final KProcess selectProcess3 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article", "id=12" })//
+				.withCategory("select article;id=12")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess3);
 		final KProcess selectProcess4 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article", "id=13" })//
+				.withCategory("select article;id=13")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess4);
 		final KProcess selectProcess5 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "insert article", "id=12" })//
+				.withCategory("insert article;id=12")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess5);
 
 		final KProcess selectProcess6 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "insert article", "id=13" })//
+				.withCategory("insert article;id=13")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess6);
@@ -234,7 +232,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testSimpleProcessWithAllTimeDimensions() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article" })//
+				.withCategory("select article")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess1);
@@ -282,7 +280,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	 * les sous processus possèdent deux mesures
 	 *  - Poids des articles (25 kg) par sous processus
 	 *  - Prix des articles 10€
-	 * @throws HCubeStoreException 
+	 * @throws HCubeStoreException
 	 */
 	@Test
 	public void testCompositeProcess() throws HCubeStoreException {
@@ -295,9 +293,9 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		for (int i = 0; i < nbSelect; i++) {
 			selectDate = new DateBuilder(selectDate).addHours(1).toDateTime();
 			kProcessBuilder//
-					.withCategory(new String[] { "get articles" })
+					.withCategory("get articles")
 					.beginSubProcess(PROCESS_SQL, selectDate, 100)//
-					.withCategory(new String[] { "select article" })
+					.withCategory("select article")
 					.incMeasure(POIDS, 25)//
 					.incMeasure(MONTANT, price);
 		}
@@ -354,7 +352,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	 * les sous processus possèdent deux mesures
 	 *  - Poids des articles (25 kg) par sous processus
 	 *  - Prix des articles 10€
-	 * @throws HCubeStoreException 
+	 * @throws HCubeStoreException
 	 */
 	@Test
 	public void testDeepCompositeProcess() throws HCubeStoreException {
@@ -367,16 +365,16 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		final int dureeRequete = 75 + nbService * dureeService;
 
 		final KProcessBuilder kProcessBuilder = new KProcessBuilder(APP_NAME, PROCESS_REQUEST, date, dureeRequete)
-				.withCategory(new String[] { "articles.html" });
+				.withCategory("articles.html");
 		Date selectDate = date;
 		for (int i = 0; i < nbService; i++) {
 			selectDate = new DateBuilder(selectDate).addHours(1).toDateTime();
-			final KProcessBuilder serviceProcessBuilder = kProcessBuilder.beginSubProcess(PROCESS_SERVICES, selectDate, dureeService).withCategory(new String[] { "get articles" });//
+			final KProcessBuilder serviceProcessBuilder = kProcessBuilder.beginSubProcess(PROCESS_SERVICES, selectDate, dureeService).withCategory("get articles");//
 			for (int j = 0; j < nbSelect; j++) {
 				selectDate = new DateBuilder(selectDate).addMinutes(1).toDateTime();
 				serviceProcessBuilder//
 						.beginSubProcess(PROCESS_SQL, selectDate, dureeSelect)//
-						.withCategory(new String[] { "select article" })//
+						.withCategory("select article")//
 						.incMeasure(POIDS, 25)//
 						.incMeasure(MONTANT, price)//
 						.endSubProcess();
@@ -432,7 +430,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testSimpleProcessWithMultiIncMeasure() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article" })//
+				.withCategory("select article")//
 				.incMeasure(MONTANT, price)//
 				.incMeasure(MONTANT, price)//
 				.incMeasure(MONTANT, price)//
@@ -456,19 +454,19 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testMultiProcesses() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article#1" })//
+				.withCategory("select article#1")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess1);
 
 		final KProcess selectProcess2 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article#2" })//
+				.withCategory("select article#2")//
 				//.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess2);
 
 		final KProcess selectProcess3 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article#3" })//
+				.withCategory("select article#3")//
 				.incMeasure(MONTANT, price * 3)//
 				.build();
 		pushProcess(selectProcess3);
@@ -507,7 +505,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 				@Override
 				public void run() {
 					final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-							.withCategory(new String[] { "select", "article" })//
+							.withCategory("select;article")//
 							.incMeasure(MONTANT, price)//
 							.build();
 					try {
@@ -539,20 +537,20 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 	@Test
 	public void testHCube() throws HCubeStoreException {
 		final KProcess selectProcess1 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article#1" })//
+				.withCategory("select article#1")//
 				.incMeasure(MONTANT, price)//
 				.build();
 		pushProcess(selectProcess1);
 
 		final KProcess selectProcess2 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article#2" })//
+				.withCategory("select article#2")//
 				.incMeasure(MONTANT, price * 3)//
 				.incMeasure(POIDS, 50)//
 				.build();
 		pushProcess(selectProcess2);
 
 		final KProcess selectProcess3 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
-				.withCategory(new String[] { "select article#3" })//
+				.withCategory("select article#3")//
 				.incMeasure(POIDS, 70)//
 				.build();
 		pushProcess(selectProcess3);
@@ -571,7 +569,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 
 	private KProcess createSqlProcess(final int duration) {
 		return new KProcessBuilder(APP_NAME, PROCESS_SQL, date, duration)//
-				.withCategory(new String[] { "select article" })//
+				.withCategory("select article")//
 				.incMeasure(MONTANT, price)//
 				.build();
 	}
@@ -622,42 +620,7 @@ public final class HCubeManagerTest extends AbstractTestCaseJU4Rule {
 		Assert.assertEquals(1, durationMetric.getDistribution().getData().get(1000d), 1);
 	}
 
-	@Test
-	//On charge 10 jours à 50 visites par jourDURATION
-			public
-			void testMuseum() throws HCubeStoreException {
-		final int days = 2;
-		final int visitsByDay = 2;
-		new Museum(new PageListener() {
-			@Override
-			public void onPage(final KProcess process) {
-				try {
-					pushProcess(process);
-				} catch (final HCubeStoreException e) {
-					System.out.println(e.getStackTrace());
-					System.exit(-1);
-				}
-			}
-		}).load(days, visitsByDay);
-
-		//---------------------------------------------------------------------
-		final HCategory pageCategory = new HCategory("PAGE");
-		final Calendar today = new GregorianCalendar();
-		today.set(Calendar.HOUR_OF_DAY, 0);
-		today.set(Calendar.MINUTE, 0);
-		today.set(Calendar.SECOND, 0);
-
-		final HQuery hourQuery = new HQueryBuilder()//
-				.between(HTimeDimension.Hour, today.getTime(), new DateBuilder(today.getTime()).addDays(1).build())//
-				.whereCategoryMatches("PAGE")//
-				.build();
-		final Map<HTime, HCube> cubes = hcubeManager.getApp(Museum.APP_NAME).execute(pageCategory.getPath(), hourQuery).getSerie(pageCategory).getCubes();
-		Assert.assertEquals(24, cubes.size());
-		//cube 0==>10h00, 1==>11h etc
-		//final HMetric montantMetric = cubes.get(5).getMetric(DURATION);
-		//assertMetricEquals(montantMetric, 1, 1, 1, 1, 1);
-		//---------------------------------------------------------------------
-	}
+	
 
 	private void pushProcess(final KProcess process) throws HCubeStoreException {
 		final List<Dual> duals = processEncoder.encode(process);

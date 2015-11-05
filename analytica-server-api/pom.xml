@@ -8,16 +8,14 @@
 		<relativePath>../analytica-server-parent</relativePath>
 	</parent>
 
-	<artifactId>analytica-hcube-api</artifactId>
+	<artifactId>analytica-server-api</artifactId>
 	<packaging>jar</packaging>
-	<name>analytica-hcube-impl</name>
-	
+	<name>analytica-server-api</name>
 	<dependencies>
-	
 		<dependency>
-			<groupId>io.vertigo</groupId>
-			<artifactId>vertigo-core</artifactId>
-			<version>${vertigo.version}</version>
+			<groupId>io.analytica</groupId>
+			<artifactId>analytica-agent-api</artifactId>
+			<version>1.3.2</version>
 		</dependency>
 	</dependencies>
 </project>

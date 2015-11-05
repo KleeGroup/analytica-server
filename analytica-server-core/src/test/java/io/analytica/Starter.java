@@ -17,9 +17,9 @@
  */
 package io.analytica;
 
+import io.vertigo.boot.xml.XMLAppConfigBuilder;
 import io.vertigo.core.App;
 import io.vertigo.core.config.AppConfig;
-import io.vertigo.core.config.AppConfigBuilder;
 import io.vertigo.lang.Assertion;
 import io.vertigo.lang.Option;
 
@@ -107,15 +107,18 @@ public final class Starter implements Runnable {
 		if (defaultProperties.isDefined()) {
 			properties.putAll(defaultProperties.get());
 		}
-		final AppConfig appConfig = new AppConfigBuilder()
-				.beginBoot().silently().endBoot()
-				.withModules(
-						new XMLModulesBuilder()
-								.withEnvParams(properties)
-								.withXmlFileNames(relativeRootClass, managersXmlFileName)
-								.build()
-				)
-				.build();
+
+		final String[] managersXml;
+		if (properties.containsKey("boot.applicationConfiguration")) {
+			managersXml = properties.getProperty("boot.applicationConfiguration").split(";");
+			properties.remove("boot.applicationConfiguration");
+		} else {
+			managersXml = new String[] { managersXmlFileName };
+		}
+		final AppConfig appConfig = new XMLAppConfigBuilder()
+				.withModules(getClass(), properties, managersXmlFileName)
+				.beginBoot().silently().endBoot().build();
+
 		app = new App(appConfig);
 		started = true;
 	}
@@ -165,7 +168,7 @@ public final class Starter implements Runnable {
 		try {
 			return new URL(absoluteFileName);
 		} catch (final MalformedURLException e) {
-			//Si fileName non trouvé, on recherche dans le classPath 
+			//Si fileName non trouvé, on recherche dans le classPath
 			final URL url = relativeRootClass.getResource(absoluteFileName);
 			Assertion.checkNotNull(url, "Impossible de récupérer le fichier [" + absoluteFileName + "]");
 			return url;
@@ -180,7 +183,7 @@ public final class Starter implements Runnable {
 			return "/" + getRelativePath(relativeRootClass) + "/" + fileName.replace("./", "");
 		}
 
-		//soit en absolu		
+		//soit en absolu
 		if (fileName.startsWith("/")) {
 			return fileName;
 		}

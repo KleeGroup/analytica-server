@@ -41,7 +41,7 @@ public interface ProcessStorePlugin extends Plugin {
 	 * @param maxRow Nombre de ligne max
 	 * @return Liste des process suivant
 	 */
-	List<Identified<KProcess>> getProcess(final String lastId, final Integer maxRow);
+	List<Identified<KProcess>> getProcess(final String appName, final String lastId, final Integer maxRow);
 
 	/**
 	 * Liste tous les applications disponible dans le store
