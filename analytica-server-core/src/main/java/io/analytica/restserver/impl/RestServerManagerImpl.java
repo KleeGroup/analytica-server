@@ -39,6 +39,7 @@ import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
+import org.glassfish.grizzly.http.server.StaticHttpHandler;
 
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.ClassNamesResourceConfig;
@@ -157,7 +158,9 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 		
 		// Add the CLStaticHttpHandler to serve static resources
 		for (final Map.Entry<String, List<String>> entry : pathsPerContext.entrySet()) {
-			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
+			StaticHttpHandler handler = new StaticHttpHandler(entry.getValue().toArray(new String[entry.getValue().size()]));
+			grizzlyServer.getServerConfiguration().addHttpHandler(handler,entry.getKey());
+//			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
 		}
 		for (Map.Entry<HttpHandler, String[]>set : grizzlyServer.getServerConfiguration().getHttpHandlers().entrySet()) {
 			System.out.println(set.getKey()+" "+ set.getValue());

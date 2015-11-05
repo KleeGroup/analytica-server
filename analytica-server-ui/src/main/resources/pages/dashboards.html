@@ -79,10 +79,10 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-dashboard"></i> Qualité de Service</h5></div>
 			<div class="panel-body">
 				<div class="chart objective" 
-			    data-url="rest/query/timeLine/QOS" 
-			    data-query='{"timeFrom":"NOW-1h", "timeTo":"NOW", "timeDim":"Hour", "datas":"Activity:mean;ActivityMax:mean;Performance:mean;PerformanceMax:mean;Health:mean;HealthMax:mean"}' 
-			    data-labels='{"Activity:mean":"Activity","Performance:mean":"Performances","Health:mean":"Health"}'
-			    data-icons='{"Activity:mean":"glyphicon glyphicon-fire","Performance:mean":"fa fa-clock-o","Health:mean":"glyphicon glyphicon-heart-empty"}'
+			    data-url="rest/query/timeLine/qos" 
+			    data-query='{"timeFrom":"NOW() - 10d", "timeTo":"NOW()", "timeDim":"24h","appName":"museum","location":"*", "datas":"activity:mean;activitymax:mean;performance:mean;performancemax:mean;health:mean;healthmax:mean"}' 
+			    data-labels='{"activity:mean":"activity","performance:mean":"performances","health:mean":"health"}'
+			    data-icons='{"activity:mean":"glyphicon glyphicon-fire","performance:mean":"fa fa-clock-o","health:mean":"glyphicon glyphicon-heart-empty"}'
 			    data-colors='RED2GREEN'></div>
 			</div>
 		</div>
@@ -100,9 +100,9 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution du nombre d'appel</h5></div>
 			<div class="panel-body">
 				<div class="chart bignumber" 
-			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-90m", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count;SERVICE:count;sql:count"}' 
-			    data-labels='{"duration:count":"Nb Pages","sql:count":"Nb Sql", "SERVICE:count":"Nb Services"}'
+			    data-url="rest/query/timeLine/WEB" 
+			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:count;SERVICECount:count;DBCount:count"}' 
+			    data-labels='{"duration:count":"Nb Pages","DBCount:count":"Nb Sql", "SERVICECount:count":"Nb Services"}'
 			    data-colors='ANDROID'
 			    data-icons='{"duration:count":"fa fa-files-o", "SERVICE:count":"fa fa-cogs","sql:count":"fa fa-download"}'></div>
 			</div>
@@ -113,7 +113,7 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Objectifs par modules</h5></div>
 			<div class="panel-body">
 				<div class="chart objective" 
-			    data-url="rest/query/categoryLine/PAGE" 
+			    data-url="rest/query/categoryLine/page" 
 			    data-query='{"timeFrom":"NOW-2h", "timeTo":"NOW", "timeDim":"Hour", "datas":"sub_duration:mean;duration:mean"}' 
 			    data-labels='{"sub_duration:mean":"Temps sous-jacent","duration:mean":"Temps",
 			    			 "search":"Recherches",
@@ -139,8 +139,8 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Activit&eacute; : Visites</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart linechart" 
-			    data-url="rest/query/timeLine/PAGE/home" 
-			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count"}'
+			    data-url="rest/query/timeLine/WEB" 
+			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:count"}'
 			    data-colors='RED2GREEN'></div>
 			</div>
 		</div>
@@ -150,41 +150,44 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Activit&eacute; : Requètes</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart linechart" 
-			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:count"}'
+			    data-url="rest/query/timeLine/DB" 
+			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:count"}'
 			    data-colors='RED2GREEN'></div>
 			</div>
 		</div>
 	</div>
+	
 	<div class="col-md-6">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Performance</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart linechart" 
-			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:mean"}'></div>
+			    data-url="rest/query/timeLine/WEB" 
+			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:mean"}'></div>
 			</div>
 		</div>
 	</div>
+	
 	<div class="col-md-6">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Santé</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart linechart" 
-			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-6h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"ERROR:mean"}'
+			    data-url="rest/query/timeLine/WEB" 
+			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"USER_ERROR:count"}'
 			    data-colors='GREEN2BLUE'></div>
 			</div>
 		</div>
 	</div>
 	
+	 
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Répartition des pages</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart barchart" 
-			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-1d", "timeTo":"NOW", "timeDim":"Day", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-url="rest/query/timeLine/page" 
+			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
 			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
 			    data-colors='iHEAT'></div>
 			</div>
@@ -195,21 +198,23 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution de la répartition des tps de réponse</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart stakedareachart" 
-			    data-url="rest/query/timeLine/PAGE" 
-			    data-query='{"timeFrom":"NOW-3h", "timeTo":"NOW", "timeDim":"SixMinutes", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
+			    data-url="rest/query/timeLine/page" 
+			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
 			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
 			    data-colors='iHEAT'></div>
 			</div>
 		</div>
 	</div>
+	 
 	</div> <!-- /row -->
+	
 	<div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-primary panel-h2">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-list"></i> Informations détaillées</h5></div>
 			<div class="panel-body">
 				<div class="datatable" 
-			    data-url="rest/query/categoryLine/PAGE/$subcategory" 
+			    data-url="rest/query/categoryLine/page/$subcategory" 
 			    data-query='{"timeFrom":"NOW-12h", "timeTo":"NOW", "timeDim":"Hour" }'
 			    data-columns='[
 			    { "label":"Page", "data":"name", "content":"<a href=\"dashboards.html?subcategory=$name\">$name</a>"},
@@ -226,7 +231,9 @@
 			</div>
 		</div>
 	</div>
-	</div> <!-- /row -->
+	</div>
+	
+	 <!-- /row -->
 	<!-- <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-primary panel-h1">
@@ -562,9 +569,9 @@
 	</div>
 </div> <!-- container-fluid -->
 		<!-- start: JavaScript--> 
-	<script src="static/js/jquery-1.10.2.min.js"></script>
+	<script src="static/js/jquery-1.11.3.js"></script>
 	<!-- <script src="js/jquery-migrate-1.0.0.min.js"></script> -->
-	<script src="static/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="static/js/jquery-ui-1.11.3.min.js"></script>
 	<!-- <script src="js/jquery.ui.touch-punch.js"></script>
 	<script src="js/modernizr.js"></script> -->
 	<script src="static/js/bootstrap.min.js"></script>

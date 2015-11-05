@@ -19,6 +19,7 @@ package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
 import io.analytica.server.ServerManager;
+import io.analytica.server.aggregator.ProcessAggregatorDto;
 import io.analytica.server.aggregator.ProcessAggregatorException;
 import io.analytica.server.aggregator.ProcessAggregatorPlugin;
 import io.analytica.server.aggregator.ProcessAggregatorQuery;
@@ -68,8 +69,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		this.processAggregatorPlugin = processAggregatorPlugin;
 		this.processStorePlugin = processStorePlugin;
 		this.processStatsPlugin = processStatsPlugin;
-		//		this.queryNetApiPlugin = queryNetApiPlugin;
-		//		this.processNetApiPlugin = processNetApiPlugin;
 	}
 
 	/** {@inheritDoc} */
@@ -111,11 +110,6 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		}
 	}
 	
-	@Override
-	public ProcessAggregatorResult execute(ProcessAggregatorQuery aggregatorQuery) throws ProcessAggregatorException {
-		return processAggregatorPlugin.execute(aggregatorQuery);
-	}	
-	
 	int storeNexProcesses() throws ProcessAggregatorException{
 		final List<String> processStoreApps = processStorePlugin.getApps();
 		int numberOfProcessesTreated = 0;
@@ -127,5 +121,35 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 			}
 		}
 		return numberOfProcessesTreated;
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> findAllLocations(String appName)
+			throws ProcessAggregatorException {
+		return processAggregatorPlugin.findAllLocations(appName);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> findAllTypes(final String appName)
+			throws ProcessAggregatorException {
+		return processAggregatorPlugin.findAllTypes(appName);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> findAllCategories(String appName)
+			throws ProcessAggregatorException {
+		return processAggregatorPlugin.findAllCategories(appName);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> findCategories(String appName, String type,String subCategories, String location)throws ProcessAggregatorException {
+		return processAggregatorPlugin.findCategories(appName,type,subCategories,location);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom,
+			String timeTo, String timeDim, String type, String subCategories,
+			String location,Map<String, String> datas) throws ProcessAggregatorException {
+		return processAggregatorPlugin.getTimeLine(appName,timeFrom,timeTo,timeDim,type,subCategories,location,datas);
 	}
 }

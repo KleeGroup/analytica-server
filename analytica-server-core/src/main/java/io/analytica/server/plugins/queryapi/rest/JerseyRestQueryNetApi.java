@@ -23,6 +23,7 @@ import io.analytica.server.aggregator.ProcessAggregatorQuery;
 import io.analytica.server.aggregator.ProcessAggregatorResult;
 import io.vertigo.core.Home;
 import io.vertigo.core.component.di.injector.Injector;
+import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,12 +75,7 @@ public class JerseyRestQueryNetApi {
 	//le type est obligatoire les sous catégories (séparées par /) sont optionnelles
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas, @QueryParam("appName") final String appName, @QueryParam("location") final String location) throws ProcessAggregatorException {
-		final ProcessAggregatorQuery aggregatorQuery = Utils.createQuery(appName,timeFrom, timeTo, timeDim, type, subCategories, false,location);
-		final ProcessAggregatorResult aggregatorResult = serverManager.execute(aggregatorQuery);
-		final List<String> dataKeys = Arrays.asList(datas.split(";"));
-//		final List<TimedDataSerie> dataSeries = Utils.loadDataSeriesByTime(aggregatorResult, dataKeys);
-		return "";
-//		return gson.toJson(dataSeries);
+		return gson.toJson(serverManager.getTimeLine(appName,timeFrom,timeTo,timeDim,type,subCategories.startsWith("/", 0)?subCategories.substring(1):subCategories,location,flatDatas(datas)));
 	}
 
 //	@GET
@@ -104,27 +100,33 @@ public class JerseyRestQueryNetApi {
 //		return gson.toJson(dataSeries);
 //	}
 //
-//	@GET
-//	@Path("/categories")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String getCategories(@QueryParam("appName") final String appName, @QueryParam("location") final String location) throws HCubeStoreException {
-//		return gson.toJson(cubeManager.getApp(appName).getSelector().findCategories(new HCategorySelection("*")));
-//	}
+	@GET
+	@Path("/all_categories")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getCategories(@QueryParam("appName") final String appName) throws ProcessAggregatorException {
+		return gson.toJson(serverManager.findAllCategories(appName));
+	}
+	
+	@GET
+	@Path("/all_types")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTypes(@QueryParam("appName") final String appName) throws ProcessAggregatorException {
+		return gson.toJson(serverManager.findAllTypes(appName));
+	}
 //
-//	@GET
-//	@Path("/locations")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String getLocations(@QueryParam("appName") final String appName) throws HCubeStoreException {
-//		return gson.toJson(cubeManager.getApp(appName).getSelector().findLocations(new HLocationSelection("*")));
-//	}
-//	
-//	@GET
-//	@Path("/categories/{type}{subcategories:(/.+?)?}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public String getCategories(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @QueryParam("appName") final String appName, @QueryParam("location") final String location) throws HCubeStoreException {
-//		final HCategory hCategory = new HCategory(type,subCategories,SEPARATOR);
-//		return gson.toJson(cubeManager.getApp(appName).getSelector().findCategories(new HCategorySelection(hCategory.getPath())));
-//	}
+	@GET
+	@Path("/all_locations")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getLocations(@QueryParam("appName") final String appName) throws ProcessAggregatorException {
+		return gson.toJson(serverManager.findAllLocations(appName));
+	}
+	
+	@GET
+	@Path("/categories/{type}{subcategories:(/.+?)?}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getCategories(@PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @QueryParam("appName") final String appName, @QueryParam("location") final String location) throws ProcessAggregatorException {
+		return gson.toJson(serverManager.findCategories(appName,type,subCategories.startsWith("/", 0)?subCategories.substring(1):subCategories,location));
+	}
 //
 //	@GET
 //	@Path("/metrics/{type}{subcategories:(/.+?)?}")
@@ -201,6 +203,19 @@ public class JerseyRestQueryNetApi {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getVersion() {
 		return "1.3.2";
+	}
+	
+	private Map<String/*metric*/,String/*aggregationRule*/> flatDatas(final String datas){
+		Map<String,String> flatData = new HashMap<String, String>();
+		
+		String[] metricsAndRules = datas.split(";");
+		Assertion.checkArgument(metricsAndRules!=null && metricsAndRules.length>0,"Error parsing the datas. No rule found in "+datas);
+		for (String metricAndRule : metricsAndRules) {
+			String[] values = metricAndRule.split(":");
+			Assertion.checkArgument(values!=null && values.length==2,"Error parsing the datas + "+datas);
+			flatData.put(values[0], values[1]);
+		}
+		return flatData;
 	}
 
 }
