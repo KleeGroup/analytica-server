@@ -17,10 +17,16 @@
  */
 package io.analytica.server;
 
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.JsonElement;
+
 import io.analytica.api.KProcess;
-import io.analytica.hcube.HCubeStoreException;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HResult;
+import io.analytica.server.aggregator.ProcessAggregatorDto;
+import io.analytica.server.aggregator.ProcessAggregatorException;
+import io.analytica.server.aggregator.ProcessAggregatorQuery;
+import io.analytica.server.aggregator.ProcessAggregatorResult;
 import io.vertigo.lang.Component;
 
 /**
@@ -37,11 +43,13 @@ public interface ServerManager extends Component {
 	 */
 	void push(KProcess process);
 
-	/**
-	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
-	 * @param query Paramètres de la requete
-	 * @return cube virtuel, constitué d'une liste de cubes
-	 * @throws HCubeStoreException 
-	 */
-	HResult execute(final String appName, final String type, HQuery query) throws HCubeStoreException;
+	List<ProcessAggregatorDto> findAllLocations(final String appName) throws ProcessAggregatorException;
+	
+	List<ProcessAggregatorDto> findAllTypes(final String appName) throws ProcessAggregatorException;
+	
+	List<ProcessAggregatorDto> findAllCategories(final String appName)throws ProcessAggregatorException;
+
+	List<ProcessAggregatorDto> findCategories(String appName, String type,String subCategories, String location) throws ProcessAggregatorException;
+
+	List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom, String timeTo, String timeDim, String type, String subCategories, String location, Map<String, String> datas)throws ProcessAggregatorException;
 }

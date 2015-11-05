@@ -3,7 +3,7 @@
   <parent>
     <artifactId>analytica-server-parent</artifactId>
     <groupId>io.analytica</groupId>
-    <version>1.3.2</version>
+    <version>1.3.3</version>
     <relativePath>../analytica-server-parent/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -82,7 +82,7 @@
     </dependency>
   </dependencies>
   <properties>
-    <agent.version>1.3.1</agent.version>
+    <agent.version>1.3.2</agent.version>
   </properties>
 </project>
 

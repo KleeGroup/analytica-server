@@ -18,8 +18,8 @@
 package io.analytica.server.plugins.processstore.memory;
 
 import io.analytica.api.KProcess;
-import io.analytica.server.impl.Identified;
-import io.analytica.server.impl.ProcessStorePlugin;
+import io.analytica.server.store.Identified;
+import io.analytica.server.store.ProcessStorePlugin;
 import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;

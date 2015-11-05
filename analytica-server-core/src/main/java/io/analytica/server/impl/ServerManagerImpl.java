@@ -18,14 +18,14 @@
 package io.analytica.server.impl;
 
 import io.analytica.api.KProcess;
-import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.HCubeStoreException;
-import io.analytica.hcube.cube.HCube;
-import io.analytica.hcube.dimension.HKey;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HResult;
 import io.analytica.server.ServerManager;
-import io.analytica.server.impl.ProcessEncoder.Dual;
+import io.analytica.server.aggregator.ProcessAggregatorDto;
+import io.analytica.server.aggregator.ProcessAggregatorException;
+import io.analytica.server.aggregator.ProcessAggregatorPlugin;
+import io.analytica.server.aggregator.ProcessAggregatorQuery;
+import io.analytica.server.aggregator.ProcessAggregatorResult;
+import io.analytica.server.store.Identified;
+import io.analytica.server.store.ProcessStorePlugin;
 import io.vertigo.lang.Activeable;
 import io.vertigo.lang.Assertion;
 import io.vertigo.lang.Option;
@@ -47,13 +47,10 @@ import org.apache.log4j.Logger;
  */
 public final class ServerManagerImpl implements ServerManager, Activeable {
 	public static long convertionTime = 0;
-	private final HCubeManager hcubeManager;
 	private final ProcessStorePlugin processStorePlugin;
+	private final ProcessAggregatorPlugin processAggregatorPlugin;
 	private Timer asyncCubeStoreTimer = null;
-	private final ProcessEncoder processEncoder;
 	private final Option<ProcessStatsPlugin> processStatsPlugin;
-	//	private final QueryNetApiPlugin queryNetApiPlugin;
-	//	private final ProcessNetApiPlugin processNetApiPlugin;
 	static final Logger logger = Logger.getLogger(ServerManagerImpl.class);
 	private static final int NB_PROCESS_A_TRAITER = 5000;
 
@@ -63,39 +60,28 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	 * @param hcubeManager Manager de stockage des Cubes
 	 */
 	@Inject
-	public ServerManagerImpl(final HCubeManager hcubeManager, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin, final QueryNetApiPlugin queryNetApiPlugin, final ProcessNetApiPlugin processNetApiPlugin) {
+	public ServerManagerImpl(final ProcessAggregatorPlugin processAggregatorPlugin, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin, final QueryNetApiPlugin queryNetApiPlugin, final ProcessNetApiPlugin processNetApiPlugin) {
 		super();
-		Assertion.checkNotNull(hcubeManager);
+		Assertion.checkNotNull(processAggregatorPlugin);
 		Assertion.checkNotNull(processStorePlugin);
 		Assertion.checkNotNull(processStatsPlugin);
 		//-----------------------------------------------------------------
-		this.hcubeManager = hcubeManager;
+		this.processAggregatorPlugin = processAggregatorPlugin;
 		this.processStorePlugin = processStorePlugin;
-		processEncoder = new ProcessEncoder();
 		this.processStatsPlugin = processStatsPlugin;
-		//		this.queryNetApiPlugin = queryNetApiPlugin;
-		//		this.processNetApiPlugin = processNetApiPlugin;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void push(final KProcess process) {
 		processStorePlugin.add(process);
-		//hcubeManager.push(process);
 	}
 
-	/** {@inheritDoc}
-	 * @throws HCubeStoreException */
-	@Override
-	public HResult execute(final String appName, final String type, final HQuery query) throws HCubeStoreException {
-		return hcubeManager.getApp(appName).execute(type, query);
-	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void start() {
 		asyncCubeStoreTimer = new Timer("pushProcessToHCube", true);
-		hcubeManager.getApps();
 		final TimerTask storeCubeTask = new StoreCubeTask();
 		storeCubeTask.run();
 		asyncCubeStoreTimer.schedule(storeCubeTask, 2500, 2500); //X processes toutes les 250ms.. pour la vrai vie ok, pour les tests unitaires pas suffisant
@@ -117,162 +103,53 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 		@Override
 		public void run() {
 			try {
-				storeNextProcessesAsCube();
-			} catch (final HCubeStoreException e) {
+				storeNexProcesses();
+			} catch (final ProcessAggregatorException e) {
 				logger.error("Erreur lors du chargement des données depuis Berkley", e);
 			}
 		}
 	}
-
-	/** @throws HCubeStoreException */
-	int storeNextProcessesAsCube() throws HCubeStoreException {
+	
+	int storeNexProcesses() throws ProcessAggregatorException{
 		final List<String> processStoreApps = processStorePlugin.getApps();
 		int numberOfProcessesTreated = 0;
 		for (final String appName : processStoreApps) {
-			final Map<HKey, HCube> hCubes = new HashMap<>();
-			final long startBerkley = System.currentTimeMillis();
-			final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(appName, hcubeManager.getApp(appName).getLastReceivedHCubeId(), NB_PROCESS_A_TRAITER);
-			final long startToCube = System.currentTimeMillis();
+			final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(appName, processAggregatorPlugin.getLastInsertedProcess(appName), NB_PROCESS_A_TRAITER);
 			for (final Identified<KProcess> process : nextProcesses) {
-				final List<Dual> duals = processEncoder.encode(process.getData());
-				if (processStatsPlugin.isDefined()) {
-					processStatsPlugin.get().merge(process.getData());
-				}
-				for (final Dual dual : duals) {
-					hCubes.put(dual.getKey(), dual.getCubeBuilder().build());
-				}
+				processAggregatorPlugin.push(process);
+				numberOfProcessesTreated++;
 			}
-			if (nextProcesses.size() > 0) {
-				final String currentLastReceivedHCubeId = nextProcesses.get(nextProcesses.size() - 1).getKey();
-				final long startLucene = System.currentTimeMillis();
-				hcubeManager.getApp(appName).pushBulk(hCubes, currentLastReceivedHCubeId);
-				numberOfProcessesTreated += nextProcesses.size();
-				final long end = System.currentTimeMillis();
-				System.out.println("Berkley time =" + (startToCube - startBerkley));
-				System.out.println("To Cube time =" + (startLucene - startToCube));
-				System.out.println("Lucene  time =" + (end - startLucene));
-			}
-
 		}
 		return numberOfProcessesTreated;
 	}
+
+	@Override
+	public List<ProcessAggregatorDto> findAllLocations(String appName)
+			throws ProcessAggregatorException {
+		return processAggregatorPlugin.findAllLocations(appName);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> findAllTypes(final String appName)
+			throws ProcessAggregatorException {
+		return processAggregatorPlugin.findAllTypes(appName);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> findAllCategories(String appName)
+			throws ProcessAggregatorException {
+		return processAggregatorPlugin.findAllCategories(appName);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> findCategories(String appName, String type,String subCategories, String location)throws ProcessAggregatorException {
+		return processAggregatorPlugin.findCategories(appName,type,subCategories,location);
+	}
+
+	@Override
+	public List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom,
+			String timeTo, String timeDim, String type, String subCategories,
+			String location,Map<String, String> datas) throws ProcessAggregatorException {
+		return processAggregatorPlugin.getTimeLine(appName,timeFrom,timeTo,timeDim,type,subCategories,location,datas);
+	}
 }
-
-//
-//	private void storeAsCube(final KProcess process) {
-//		//Encode le process et ses sous process
-//		final List<Cube> cubes = encoderPlugin.encode(process);
-//		for (final Cube cube : cubes) {
-//			cubeStorePlugin.merge(cube);
-//		}
-//		System.out.println(cubeStorePlugin);
-//	}
-
-//
-//	/** {@inheritDoc} */
-//	public List<Data> getData(final Query query) {
-//		return null;
-
-/*		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, true);
-		if (aggregatedCubes.isEmpty()) {
-			return Collections.emptyList(); //TODO npi que faire si pas de ligne, l'aggregation devrait retourner toujours une ligne, non ?
-		}
-		//---------------------------------------------------------------------
-		Assertion.postcondition(aggregatedCubes.size() == 1, "La liste de cube doit être agrégée sur tout les axes, il doit dont y avoir un seul élément dans la liste (size:{0})", aggregatedCubes.size());
-		//---------------------------------------------------------------------
-		final Cube aggregatedCube = aggregatedCubes.get(0);
-		//On convertit le cube en liste de Data : 1 par metrics
-		final List<Data> datas = new ArrayList<Data>(query.getKeys().size());
-		for (final DataKey dataKey : query.getKeys()) {
-			//		if (dataKey.getType() == DataType.metaData) {
-			//				final List<String> metaDataValues = new ArrayList<String>();
-			//				for (final MetaData metaData : aggregatedCube.getMetaData(dataKey.getName())) {
-			//					metaDataValues.add(metaData.getValue());
-			//				}
-			//datas.add(new Data(dataKey, metaDataValues));
-			//			} else {
-			datas.add(new Data(dataKey, getCubeValue(aggregatedCube, dataKey)));
-			//			}
-		}
-		return datas;*/
-//	}
-//
-//	/** {@inheritDoc} */
-//	public List<DataSet<Date, ?>> getDataTimeLine(final Query query) {
-//		return null;
-/*		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, false, true);
-		//On convertit la liste de cube en liste de DataSet : 1 par metrics
-		return convertToDataSet(aggregatedCubes, true, query.getKeys());*/
-//}
-
-////	/** {@inheritDoc} */
-////	public List<DataSet<String, ?>> getDataWhatLine(final Query query) {
-////		return null;
-////		/*
-//		final List<Cube> aggregatedCubes = cubeStorePlugin.load(query, true, false);
-//		//On convertit la liste de cube en liste de DataSet : 1 par metrics
-//		return convertToDataSet(aggregatedCubes, false, query.getKeys());
-//		*/
-//	}
-
-//	private <X> List<DataSet<X, ?>> convertToDataSet(final List<Cube> aggregatedCubes, final boolean dateAsLabels, final List<DataKey> metrics) {
-//		final List<X> labels = new ArrayList<X>(aggregatedCubes.size());
-//		final Map<DataKey, List<Double>> valuesMap = new HashMap<DataKey, List<Double>>();
-//		//		final Map<DataKey, List<Set<String>>> metaDatasMap = new HashMap<DataKey, List<Set<String>>>();
-//		//1- on prépare les listes de valeurs et de metaData
-//		for (final DataKey dataKey : metrics) {
-//			//			if (dataKey.getType() == DataType.metaData) {
-//			//				metaDatasMap.put(dataKey, new ArrayList<Set<String>>());
-//			//			} else {
-//			valuesMap.put(dataKey, new ArrayList<Double>());
-//			//			}
-//		}
-//		//2- On parcour les cubes et on remplit les données
-//		for (final Cube cube : aggregatedCubes) {
-//			//Si la liste des cubes est limité on peut éviter ce if,
-//			//mais il reste intéréssant de remplir les labels au même endroit que les valeurs
-//			if (dateAsLabels) {
-//				labels.add((X) cube.getPosition().getTime().getValue());
-//			} else {
-//				labels.add((X) cube.getPosition().getWhat().getValue());
-//			}
-//			for (final DataKey dataKey : metrics) {
-//				//if (dataKey.getType() == DataType.metaData) {
-//				//					final List<Set<String>> metadatas = metaDatasMap.get(dataKey);
-//				//					final Set<String> values = new HashSet<String>();
-//				//					for (final MetaData metaData : cube.getMetaData(dataKey.getName())) {
-//				//						values.add(metaData.getValue());
-//				//					}
-//				//					metadatas.add(values);
-//				//} else {
-//				final List<Double> values = valuesMap.get(dataKey);
-//				values.add(getCubeValue(cube, dataKey));
-//				//}
-//			}
-//		}
-//
-//		//3- On crée les DataSet
-//		final List<DataSet<X, ?>> datas = new ArrayList<DataSet<X, ?>>(metrics.size());
-//		for (final DataKey dataKey : metrics) {
-//			//			if (dataKey.getType() == DataType.metaData) {
-//			//				datas.add(new DataSet<X, Set<String>>(dataKey, labels, metaDatasMap.get(dataKey)));
-//			//			} else {
-//			datas.add(new DataSet<X, Double>(dataKey, labels, valuesMap.get(dataKey)));
-//			//			}
-//		}
-//		return datas;
-//	}
-
-//	private double getCubeValue(final Cube cube, final DataKey dataKey) {
-//		final Metric metric = cube.getMetric(dataKey.getMetricKey());
-//		//Assertion.checkNotNull(metric,"La metric {0} n''a pas été trouvée dans le cube {1}", dataKey.getName(), cube.getKey());
-//		//---------------------------------------------------------------------
-//		if (metric == null) { //la metric peut-être null sur certain cube (exemple 'CACHE_HIT' n'est présent que sur quelques cubes)
-//			return Double.NaN;
-//		}
-//		return metric.get(dataKey.getType());
-//	}
-//
-
-//	/** {@inheritDoc} */
-

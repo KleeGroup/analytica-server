@@ -17,11 +17,9 @@
  */
 package io.analytica.server;
 
-import io.analytica.hcube.HCubeManager;
-import io.analytica.hcube.impl.HCubeManagerImpl;
-import io.analytica.hcube.plugin.store.lucene.LuceneHCubeStorePlugin;
 import io.analytica.restserver.RestServerManager;
 import io.analytica.restserver.impl.RestServerManagerImpl;
+import io.analytica.server.aggregator.impl.influxDB.InfluxDBProcessAggregatorPlugin;
 import io.analytica.server.impl.ServerManagerImpl;
 import io.analytica.server.plugins.processapi.rest.RestProcessNetApiPlugin;
 import io.analytica.server.plugins.processstats.memorystack.MemoryStackProcessStatsPlugin;
@@ -57,7 +55,13 @@ public class Starter implements Runnable {
 	private static final String TYPE_API_REST = "REST";
 	private static final String PROCESS_API = "processApi";
 	private static final String QUERY_API = "queryApi";
-
+	
+	private static final String AGGREGATOR_HTTP_ADRESSE = "aggregatorHttpAdresse";
+	private static final String AGGREGATOR_HTTP_PORT = "aggregatorHttpPort";
+	private static final String AGGREGATOR_USERNAME = "aggregatorUsername";
+	private static final String AGGREGATOR_PASSWORD = "aggregatorPassword";
+	private static final String AGGREGATOR_MIN_SIZE = "aggregatorCacheMinSize";
+	
 	private final Class<?> relativeRootClass;
 	private final String propertiesFileName;
 	private boolean started;
@@ -147,11 +151,18 @@ public class Starter implements Runnable {
 		if (TYPE_API_REST.equals(properties.getProperty(QUERY_API, TYPE_API_NONE))) {
 			moduleConfigBuilder.addPlugin(RestQueryNetApiPlugin.class);
 		}
-
-		moduleConfigBuilder.addComponent(HCubeManager.class, HCubeManagerImpl.class)
-				.beginPlugin(LuceneHCubeStorePlugin.class)
-				.addParam("path", properties.getProperty(CUBE_STORE_PATH))
-				.endPlugin();
+		moduleConfigBuilder.beginPlugin(InfluxDBProcessAggregatorPlugin.class)
+		.addParam("httpAddresse", properties.getProperty(AGGREGATOR_HTTP_ADRESSE))
+		.addParam("port", properties.getProperty(AGGREGATOR_HTTP_PORT))
+		.addParam("username", properties.getProperty(AGGREGATOR_USERNAME))
+		.addParam("password", properties.getProperty(AGGREGATOR_PASSWORD))
+		.addParam("flushMinSize", properties.getProperty(AGGREGATOR_MIN_SIZE))
+		.endPlugin();
+		
+//		moduleConfigBuilder.addComponent(HCubeManager.class, HCubeManagerImpl.class)
+//				.beginPlugin(LuceneHCubeStorePlugin.class)
+//				.addParam("path", properties.getProperty(CUBE_STORE_PATH))
+//				.endPlugin();
 		if (properties.containsKey(SOCKET_IO_URL)) {
 			moduleConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class)
 					.addParam("socketIoUrl", properties.getProperty(SOCKET_IO_URL))
