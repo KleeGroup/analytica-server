@@ -35,8 +35,8 @@ public final class AnalyticaUiManagerImpl implements AnalyticaUiManager {
 	 */
 	@Inject
 	public AnalyticaUiManagerImpl(final RestServerManager restServerManager) {
-		restServerManager.addStaticPath("src/main/resources/static", "/static/");
-		restServerManager.addStaticPath("src/main/resources/pages", "/");
+		restServerManager.addStaticPath("/static/", "/static/");
+		restServerManager.addStaticPath("/pages/", "/");
 	}
 
 }

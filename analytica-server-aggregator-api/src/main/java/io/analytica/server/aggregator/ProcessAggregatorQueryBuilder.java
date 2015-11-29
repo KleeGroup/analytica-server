@@ -1,18 +1,16 @@
 package io.analytica.server.aggregator;
 
-import java.util.Date;
-
-
-import io.vertigo.lang.Assertion;
+import selector.ProcessAggregatorDataSelectorBuilder;
+import selector.ProcessAggregatorDataSelectorType;
 
 public class ProcessAggregatorQueryBuilder {
 	private ProcessAggregatorDataRange aggregatorDataRange;
-	private String categories;
-	private String locations;
-	private String applicationName;
+	private ProcessAggregatorDataFilter aggregatorDataFilter;
+	private ProcessAggregatorDataSelectorBuilder aggregatorDataSelectorBuilder;
 	
 	public ProcessAggregatorQueryBuilder(final String applicationName){
-		this.applicationName=applicationName;
+		aggregatorDataFilter = new ProcessAggregatorDataFilter(applicationName);
+		aggregatorDataSelectorBuilder = new ProcessAggregatorDataSelectorBuilder();
 	}
 	
 	public ProcessAggregatorQueryBuilder withDateRange(final String dimention, final String timeFrom , final String timeTo){
@@ -21,10 +19,19 @@ public class ProcessAggregatorQueryBuilder {
 	}
 	
 	public ProcessAggregatorQueryBuilder withLocations(final String locations){
-		this.locations=locations;
+		aggregatorDataFilter.withLocations(locations);
 		return this;
 	}
 	
+	public ProcessAggregatorQueryBuilder withSelectors(final String selectors){
+		aggregatorDataSelectorBuilder.withSimpleSelector(selectors);
+		return this;
+	}
+	
+	public ProcessAggregatorQueryBuilder withSelectors(final String dataName, final ProcessAggregatorDataSelectorType dataSelectorType){
+		aggregatorDataSelectorBuilder.withAggregatedSelector(dataName, dataSelectorType);
+		return this;
+	}
 	public ProcessAggregatorQueryBuilder withCategories(final String type, final String subCategories){
 		final StringBuilder sb = new StringBuilder();
 		sb.append(type);
@@ -32,12 +39,22 @@ public class ProcessAggregatorQueryBuilder {
 			sb.append(ProcessAggregatorQuery.SEPARATOR);
 		} 
 		sb.append(subCategories);
-		this.categories = sb.toString();
+		aggregatorDataFilter.withCategories(sb.toString());
+		return this;
+	}
+	
+	public ProcessAggregatorQueryBuilder withCategories(final String subCategories){
+		aggregatorDataFilter.withCategories(subCategories);
+		return this;
+	}
+	
+	public ProcessAggregatorQueryBuilder withType(final String type){
+		aggregatorDataFilter.withType(type);
 		return this;
 	}
 	
 	public ProcessAggregatorQuery build(){
-		return new ProcessAggregatorQuery(applicationName, locations, categories, aggregatorDataRange);
+		return new ProcessAggregatorQuery(aggregatorDataFilter, aggregatorDataSelectorBuilder.build(), aggregatorDataRange);
 	}
 	
 	

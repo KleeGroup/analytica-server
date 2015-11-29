@@ -20,8 +20,8 @@ package io.analytica.server.impl;
 import io.vertigo.lang.Plugin;
 
 /**
- * Plugin gérant l'api reseau de requetage des cubes.
- * Plugin proposant une API pour la méthode execute(HQuery) du ServerManager.
+ * InfluxDBProcessAggregatorPlugin gérant l'api reseau de requetage des cubes.
+ * InfluxDBProcessAggregatorPlugin proposant une API pour la méthode execute(HQuery) du ServerManager.
  * @author npiedeloup
  * @version $Id: QueryNetApiPlugin.java,v 1.1 2012/05/11 17:12:17 npiedeloup Exp $
  */

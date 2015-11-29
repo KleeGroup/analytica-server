@@ -18,7 +18,7 @@
 package io.analytica.server.plugins.processstats.memorystack;
 
 /**
- * Plugin gérant le stockage des process.
+ * InfluxDBProcessAggregatorPlugin gérant le stockage des process.
  * @author npiedeloup
  * @version $Id: ProcessStorePlugin.java,v 1.2 2012/04/06 16:06:46 npiedeloup Exp $
  */

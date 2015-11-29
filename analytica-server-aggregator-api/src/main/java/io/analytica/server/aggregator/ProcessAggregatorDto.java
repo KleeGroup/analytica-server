@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class ProcessAggregatorDto {
 	
-	private String time;
+	private Long time;
 	private String category;
 	private Map<String,String> values;
 	
@@ -21,7 +21,7 @@ public class ProcessAggregatorDto {
 	}
 	
 
-	public void setTime(String time) {
+	public void setTime(Long time) {
 		this.time = time;
 	}
 
@@ -29,7 +29,7 @@ public class ProcessAggregatorDto {
 		this.category = category;
 	}
 
-	public String getTime() {
+	public Long getTime() {
 		return time;
 	}
 

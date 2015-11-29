@@ -21,7 +21,7 @@ import io.analytica.api.KProcess;
 import io.vertigo.lang.Plugin;
 
 /**
- * Plugin gérant des statistiques sur les process.
+ * InfluxDBProcessAggregatorPlugin gérant des statistiques sur les process.
  * @author npiedeloup
  * @version $Id: CubeStorePlugin.java,v 1.1 2012/03/22 09:16:40 npiedeloup Exp $
  */

@@ -46,7 +46,7 @@ import com.sun.jersey.api.core.ClassNamesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 
 /**
- * Plugin gérant l'api reseau en REST avec jersey.
+ * InfluxDBProcessAggregatorPlugin gérant l'api reseau en REST avec jersey.
  * @author npiedeloup
  */
 public final class RestServerManagerImpl implements RestServerManager, Activeable {
@@ -159,8 +159,8 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 		// Add the CLStaticHttpHandler to serve static resources
 		for (final Map.Entry<String, List<String>> entry : pathsPerContext.entrySet()) {
 			StaticHttpHandler handler = new StaticHttpHandler(entry.getValue().toArray(new String[entry.getValue().size()]));
-			grizzlyServer.getServerConfiguration().addHttpHandler(handler,entry.getKey());
-//			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
+//			grizzlyServer.getServerConfiguration().addHttpHandler(handler,entry.getKey());
+			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
 		}
 		for (Map.Entry<HttpHandler, String[]>set : grizzlyServer.getServerConfiguration().getHttpHandlers().entrySet()) {
 			System.out.println(set.getKey()+" "+ set.getValue());

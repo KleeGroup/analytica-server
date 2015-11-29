@@ -18,15 +18,11 @@
 package io.analytica.server;
 
 import java.util.List;
-import java.util.Map;
 
-import com.google.gson.JsonElement;
 
 import io.analytica.api.KProcess;
 import io.analytica.server.aggregator.ProcessAggregatorDto;
 import io.analytica.server.aggregator.ProcessAggregatorException;
-import io.analytica.server.aggregator.ProcessAggregatorQuery;
-import io.analytica.server.aggregator.ProcessAggregatorResult;
 import io.vertigo.lang.Component;
 
 /**
@@ -51,5 +47,5 @@ public interface ServerManager extends Component {
 
 	List<ProcessAggregatorDto> findCategories(String appName, String type,String subCategories, String location) throws ProcessAggregatorException;
 
-	List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom, String timeTo, String timeDim, String type, String subCategories, String location, Map<String, String> datas)throws ProcessAggregatorException;
+	List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom, String timeTo, String timeDim, String type, String subCategories, String location, String datas)throws ProcessAggregatorException;
 }

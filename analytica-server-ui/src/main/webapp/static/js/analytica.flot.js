@@ -140,7 +140,7 @@ function getSparkBarOptions(dataQuery, datas, timedSeries, dataColors) {
 		},
 		grid: {
 			show: false,
-			hoverable: false,
+			hoverable: true,
 		},
 		legend: {
 		    show: false,
@@ -159,7 +159,11 @@ function getLineOptions(dataQuery,  datas, timedSeries, dataColors) {
 				radius:1,
 				fill:false
 			}
-		}};
+		},
+		legend: {
+		    show: true,
+		},
+		crosshair: { mode: "x" }};
 	return options;
 }
 
@@ -182,13 +186,15 @@ function getSparkLineOptions(dataQuery, datas, timedSeries, dataColors) {
 		},yaxis: {
 			ticks : [],
 		},
+		crosshair: { mode: "xy" },
 		grid: {
 			show: false,
-			hoverable: false,
+			hoverable: true,
+			  autoHighlight: false,
 			borderWidth:1
 		},
 		legend: {
-		    show: false
+		    show: true
 		}};
 		return options;
 }
@@ -204,15 +210,20 @@ function getStakedAreaOptions(dataQuery, timedSeries, dataColors) {
 			},
 			stack: true
 		},
-		tooltipsFunction : function(plot) {
-			var previousPoint = null;
-			return showTooltipsFunction(previousPoint, plot, false, false);
-		}};
+		crosshair: { mode: "x" },
+		grid: {
+			show: true,
+			hoverable: true
+		},
+		legend: {
+		    show: true
+		}
+		};
 		return options;
 }
 
 
-/** Conversion de données servers Map<NomMetric, <date, value>> en données Flot.
+/** Conversion de donnï¿½es servers Map<NomMetric, <date, value>> en donnï¿½es Flot.
  * function toFlotData(datas, dataLabels) {
 	
 	var newSeries = new Array();
@@ -314,7 +325,7 @@ function showTooltipsFunction(previousPoint, plot, showAllValues, showSameValue)
 }
 
 
-/** Conversion de données servers List<date, Map<NomMetric, value>> en données Flot.*/
+/** Conversion de donnï¿½es servers List<date, Map<NomMetric, value>> en donnï¿½es Flot.*/
 function toFlotData(datas, metrics, allMetrics, dataLabels, timedSeries) {
 	_endsWith = function(string, suffix) {
 	    return string.indexOf(suffix, string.length - suffix.length) !== -1;

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.analytica</groupId>
 		<artifactId>analytica-server-parent</artifactId>
-		<version>1.3.3</version>
+		<version>1.3.4</version>
 		<relativePath>../analytica-server-parent</relativePath>
 	</parent>
 
@@ -13,7 +13,7 @@
 	<name>analytica-server-core</name>
 
 	<properties>
-		<agent.version>1.3.2</agent.version>
+		<agent.version>1.3.3</agent.version>
 	</properties>
 	
 	<dependencies>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>io.analytica</groupId>
 			<artifactId>analytica-server-aggregator-influxDB-impl</artifactId>
-			<version>1.3.3</version>
+			<version>1.3.4</version>
 		</dependency>
 		<!-- <dependency>
 			<groupId>io.analytica</groupId>

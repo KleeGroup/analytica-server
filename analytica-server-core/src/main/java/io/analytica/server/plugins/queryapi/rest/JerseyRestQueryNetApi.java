@@ -19,18 +19,8 @@ package io.analytica.server.plugins.queryapi.rest;
 
 import io.analytica.server.ServerManager;
 import io.analytica.server.aggregator.ProcessAggregatorException;
-import io.analytica.server.aggregator.ProcessAggregatorQuery;
-import io.analytica.server.aggregator.ProcessAggregatorResult;
 import io.vertigo.core.Home;
 import io.vertigo.core.component.di.injector.Injector;
-import io.vertigo.lang.Assertion;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
@@ -51,7 +41,6 @@ import com.google.gson.GsonBuilder;
  */
 @Path("/query")
 public class JerseyRestQueryNetApi {
-	private static final String SEPARATOR = "/";
 	private final String dTimeTo = "NOW+1h";
 	private final String dTimeFrom = "NOW-8h";
 	private final String dTimeDim = "Minute";
@@ -75,7 +64,7 @@ public class JerseyRestQueryNetApi {
 	//le type est obligatoire les sous catégories (séparées par /) sont optionnelles
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas, @QueryParam("appName") final String appName, @QueryParam("location") final String location) throws ProcessAggregatorException {
-		return gson.toJson(serverManager.getTimeLine(appName,timeFrom,timeTo,timeDim,type,subCategories.startsWith("/", 0)?subCategories.substring(1):subCategories,location,flatDatas(datas)));
+		return gson.toJson(serverManager.getTimeLine(appName,timeFrom,timeTo,timeDim,type,subCategories.startsWith("/", 0)?subCategories.substring(1):subCategories,location,datas));
 	}
 
 //	@GET
@@ -202,20 +191,20 @@ public class JerseyRestQueryNetApi {
 	@Path("/version")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getVersion() {
-		return "1.3.2";
+		return "1.3.4";
 	}
 	
-	private Map<String/*metric*/,String/*aggregationRule*/> flatDatas(final String datas){
-		Map<String,String> flatData = new HashMap<String, String>();
-		
-		String[] metricsAndRules = datas.split(";");
-		Assertion.checkArgument(metricsAndRules!=null && metricsAndRules.length>0,"Error parsing the datas. No rule found in "+datas);
-		for (String metricAndRule : metricsAndRules) {
-			String[] values = metricAndRule.split(":");
-			Assertion.checkArgument(values!=null && values.length==2,"Error parsing the datas + "+datas);
-			flatData.put(values[0], values[1]);
-		}
-		return flatData;
-	}
+//	private Map<String/*metric*/,String/*aggregationRule*/> flatDatas(final String datas){
+//		Map<String,String> flatData = new HashMap<String, String>();
+//		k
+//		String[] metricsAndRules = datas.split(";");
+//		Assertion.checkArgument(metricsAndRules!=null && metricsAndRules.length>0,"Error parsing the datas. No rule found in "+datas);
+//		for (String metricAndRule : metricsAndRules) {
+//			String[] values = metricAndRule.split(":");
+//			Assertion.checkArgument(values!=null && values.length==2,"Error parsing the datas + "+datas);
+//			flatData.put(values[0], values[1]);
+//		}
+//		return flatData;
+//	}
 
 }

@@ -23,7 +23,7 @@ import io.analytica.server.impl.ProcessNetApiPlugin;
 import javax.inject.Inject;
 
 /**
- * Plugin gérant l'api reseau en REST avec jersey.
+ * InfluxDBProcessAggregatorPlugin gérant l'api reseau en REST avec jersey.
  * @author npiedeloup
  * @version $Id: RestNetApiPlugin.java,v 1.3 2012/10/16 12:39:27 npiedeloup Exp $
  */

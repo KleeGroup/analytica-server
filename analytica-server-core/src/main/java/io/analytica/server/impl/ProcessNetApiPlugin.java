@@ -20,8 +20,8 @@ package io.analytica.server.impl;
 import io.vertigo.lang.Plugin;
 
 /**
- * Plugin gérant l'api reseau de reception des process.
- * Plugin proposant une API pour la méthode PUSH du ServerManager.
+ * InfluxDBProcessAggregatorPlugin gérant l'api reseau de reception des process.
+ * InfluxDBProcessAggregatorPlugin proposant une API pour la méthode PUSH du ServerManager.
  * @author npiedeloup
  * @version $Id: ProcessNetApiPlugin.java,v 1.1 2012/05/11 17:12:17 npiedeloup Exp $
  */

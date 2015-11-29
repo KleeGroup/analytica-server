@@ -19,7 +19,6 @@ package io.analytica.server.plugins.queryapi.rest;
 
 import io.analytica.server.aggregator.ProcessAggregatorQuery;
 import io.analytica.server.aggregator.ProcessAggregatorQueryBuilder;
-import io.analytica.server.aggregator.ProcessAggregatorResult;
 import io.vertigo.lang.Assertion;
 
 import java.util.ArrayList;

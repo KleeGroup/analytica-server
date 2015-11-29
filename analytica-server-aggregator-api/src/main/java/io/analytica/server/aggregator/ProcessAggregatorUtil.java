@@ -15,6 +15,7 @@ public class ProcessAggregatorUtil {
 	public static final String MEAN="Mean";
 	public static final String MAX="Max";
 	public static final String MIN="Min";
+	public static final String ALL="All";
 	
 	public static List<KProcess> flatProcess(KProcess process){
 		List<KProcessBuilder> processBuilders= new ArrayList<KProcessBuilder>();
@@ -50,7 +51,6 @@ public class ProcessAggregatorUtil {
 	
 	private static Map<String,Double> getMinMaxMeanCountMetrics(final String name, final List<Double> metrics){
 		Map<String,Double> minMaxMeanCount = new HashMap<String, Double>();
-		if(!metrics.isEmpty()){
 			int count = metrics.size();
 			double sum = metrics.get(0);
 			double min = metrics.get(0);
@@ -70,7 +70,7 @@ public class ProcessAggregatorUtil {
 			minMaxMeanCount.put(name+MIN,  min);
 			minMaxMeanCount.put(name+MAX,  max);
 			minMaxMeanCount.put(name+MEAN,  sum/(double)count);
-		}
+			minMaxMeanCount.put(name+ALL, sum);
 		return minMaxMeanCount;
 	}
 	private static void sumMeasures(Map<String,List<Double>> measuresInto, Map<String,List<Double>> measuresFrom){
