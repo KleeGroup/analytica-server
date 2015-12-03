@@ -25,6 +25,7 @@ function showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColo
 	var options = $.extend(defaultChartOptions, chartOptions);
 	var plot = $.plot(elem, flotDatas, options);
 	elem.bind("plothover", options.tooltipsFunction(plot));
+	elem.bind("plotleave", options.leavePlotFunction(plot));
 }
 
 function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, dataColors) {
@@ -44,7 +45,10 @@ function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, da
 			},
 			tooltipsFunction : function(plot) {
 				var previousPoint = null;
-				return showTooltipsFunction(previousPoint, plot, false, true);
+				return showTooltipsFunctionBeta(previousPoint, plot, false, true);
+			},
+			leavePlotFunction : function(plot){
+				executeLeavePlotFunction(plot);
 			}
 		};
 		if(timedSeries) {
@@ -153,13 +157,9 @@ function getLineOptions(dataQuery,  datas, timedSeries, dataColors) {
 		series: {
 			lines: {
 				show: true,
-			},
-			points: { 
-				show:true,
-				radius:1,
-				fill:false
 			}
 		},
+		
 		legend: {
 		    show: true,
 		},
@@ -277,6 +277,76 @@ function showPieTooltipsFunction(previousPoint, plot, showAllValues, showSameVal
 			$("#tooltip").remove();
 			previousPoint = null;
 		}
+	}
+	return showTooltips;
+}
+
+function executeLeavePlotFunction(plot){
+	$("#tooltip").remove();
+	plot.unhighlight();
+	return;
+}
+function checkIfPosInPlot(pos,plot){
+	var x = pos.x;
+	var y = pos.y;
+	var xMin = plot.getAxes().xaxis.min;
+	var xMax = plot.getAxes().xaxis.max;
+	var yMin = plot.getAxes().yaxis.min;
+	var yMax = plot.getAxes().yaxis.max;
+	if(xMin<=x && x <= xMax && yMin <= y && y <= yMax){
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+function showTooltipsFunctionBeta(previousPoint, plot, showAllValues, showSameValue) {
+	/** Fonction de tooltip Flot.*/
+	
+	showTooltips = function (event, pos, item) {
+		if(!checkIfPosInPlot(pos,plot)){
+			executeLeavePlotFunction(plot);
+		}
+		else{
+			$("#tooltip").remove();
+			plot.unhighlight();
+			if(plot.getData() && plot.getData().length > 0 && plot.getData()[0].data.length > 1){
+				var x = pos.x;
+				var y = pos.y;
+				var delta=parseInt((plot.getData()[0].data[1][0] - plot.getData()[0].data[0][0])/2,10)+1;
+				var content = "";
+				var selectedX = null;
+				for(var i=0; i<plot.getData().length;i++) {
+					var serie = plot.getData()[i];
+					var serieDatapoints = serie.datapoints;
+					content += "<div>";
+					var otherY = null;
+					for(var j=0; j < serieDatapoints.points.length; j+=serieDatapoints.pointsize) {
+						if(serieDatapoints.points[j] - delta <= x && serieDatapoints.points[j] + delta> x)  {
+							selectedX=serieDatapoints.points[j];
+							otherY = serieDatapoints.pointsize>2?serieDatapoints.points[j+1]-serieDatapoints.points[j+2]:serieDatapoints.points[j+1];
+							if(otherY>0){
+								plot.highlight(i,j/serieDatapoints.pointsize);
+							}
+							break;
+						}
+					}
+					//if we found a data at the same x
+					//and we draw all series in tooltip or the data get the same Y (ie : one hide the other in chart)
+					//then we render all datas
+					if(serie.label) {
+						content += "<span class='serie' style='color:"+serie.color+"'>"+serie.label+"</span> : ";
+					}
+					content += "<span class='yvalue'>" + serie.yaxis.tickFormatter(otherY,serie.yaxis) + "</span>";
+					content += "</div>";
+				}
+				content = "<span class='xvalue'>" +plot.getData()[0].xaxis.tickFormatter(selectedX,plot.getData()[0].xaxis) + "</span><br/> " + content;
+				analyticaTools.showTooltip(pos.pageX, pos.pageY, content, plot.getData()[0].color);
+			}else{
+				executeLeavePlotFunction(plot);
+			}
+		}
+
 	}
 	return showTooltips;
 }
