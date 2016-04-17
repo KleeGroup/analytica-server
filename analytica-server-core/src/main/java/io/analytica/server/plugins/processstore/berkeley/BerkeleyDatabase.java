@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -81,7 +81,7 @@ final class BerkeleyDatabase {
 			try {
 				final OperationStatus status = db.put(transaction, key, data);
 				if (!OperationStatus.SUCCESS.equals(status)) {
-					throw new DatabaseException("la sauvegarde a ÈchouÈe");
+					throw new DatabaseException("la sauvegarde a √©chou√©e");
 				}
 				transaction.commit();
 				committed = true;
@@ -97,7 +97,7 @@ final class BerkeleyDatabase {
 
 	//	private Cursor openCursor() {
 	//		try {
-	//			System.out.println(">>> Open cursor : " + db.count() + " Èlements");
+	//			System.out.println(">>> Open cursor : " + db.count() + " √©lements");
 	//			return db.openCursor(null, null); //pas de TX=readOnly et cursorConfig default
 	//		} catch (final DatabaseException e) {
 	//			throw new KRuntimeException(e);
@@ -114,7 +114,7 @@ final class BerkeleyDatabase {
 
 	Map<DatabaseEntry, DatabaseEntry> next(final DatabaseEntry lastKey, final Integer maxRow) {
 		Assertion.checkNotNull(maxRow);
-		Assertion.checkArgument(maxRow >= 1, "MaxRow doit Ítre strictement positif");
+		Assertion.checkArgument(maxRow >= 1, "MaxRow doit √©tre strictement positif");
 		//---------------------------------------------------------------------
 		try {
 			final Map<DatabaseEntry, DatabaseEntry> result = new LinkedHashMap<>(maxRow);
@@ -124,13 +124,13 @@ final class BerkeleyDatabase {
 				final DatabaseEntry theKey;
 				final DatabaseEntry theData = new DatabaseEntry();
 
-				if (lastKey.getSize() == 0) { //si lastKey est null, on veut le premier ÈlÈment
+				if (lastKey.getSize() == 0) { //si lastKey est null, on veut le premier √©l√©ment
 					theKey = new DatabaseEntry();
 				} else {
-					//Si on a dej‡ un lastKey, on repositionne le cursor dessus, puis on fait next()
+					//Si on a dej√© un lastKey, on repositionne le cursor dessus, puis on fait next()
 					theKey = new DatabaseEntry(lastKey.getData());
 					final OperationStatus status = cursor.getSearchKey(theKey, theData, null);
-					Assertion.checkState(OperationStatus.SUCCESS.equals(status), "L'ancien document n'a pas ÈtÈ retrouvÈ : {0}", lastKey);
+					Assertion.checkState(OperationStatus.SUCCESS.equals(status), "L'ancien document n'a pas √©t√© retrouv√© : {0}", lastKey);
 				}
 				while (result.size() < maxRow && cursor.getNext(theKey, theData, null).equals(OperationStatus.SUCCESS)) {
 					result.put(new DatabaseEntry(theKey.getData()), new DatabaseEntry(theData.getData()));
@@ -163,16 +163,16 @@ final class BerkeleyDatabase {
 			if (OperationStatus.SUCCESS.equals(status)) {
 				return theData;
 			}
-			return null; //pas trouvÈ
+			return null; //pas trouv√©
 		} catch (final DatabaseException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	/**
-	 * @param indexKey ClÈ de l'index
-	 * @param index Index ‡ utiliser
-	 * @return DonnÈes de la dataBase rÈcupÈrer par l'index
+	 * @param indexKey Cl√© de l'index
+	 * @param index Index √© utiliser
+	 * @return Donn√©es de la dataBase r√©cup√©rer par l'index
 	 */
 	DatabaseEntry getByIndex(final DatabaseEntry indexKey, final Indexes index) {
 		if (USE_INDEXES) {
@@ -186,7 +186,7 @@ final class BerkeleyDatabase {
 				throw new RuntimeException(e);
 			}
 		}
-		//Pas trouvÈ
+		//Pas trouv√©
 		return null;
 	}
 
@@ -211,9 +211,9 @@ final class BerkeleyDatabase {
 			myEnvConfig.setTransactional(!readOnly);
 			myDbConfig.setTransactional(!readOnly);
 
-			//On limite l'utilisation du cache ‡ 20% de la mÈmoire globale.
+			//On limite l'utilisation du cache √© 20% de la m√©moire globale.
 			myEnvConfig.setCachePercent(20);
-			//CHECKME On limite l'utilisation du cache ‡ 200Mo
+			//CHECKME On limite l'utilisation du cache √© 200Mo
 			//myEnvConfig.setCacheSize(200 * 1000 * 1000);
 
 			// Open the environment

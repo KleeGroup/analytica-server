@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -30,8 +30,8 @@ import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
 /**
- * Classe qui pour un DtObject permet de lire/écrire un tuple.
- * Le binding est indépendant de la DtDefinition.
+ * Classe qui pour un DtObject permet de lire/Ã©crire un tuple.
+ * Le binding est indÃ©pendant de la DtDefinition.
  *
  * @author pchretien
  * @version $Id: KProcessBinding.java,v 1.9 2012/11/08 17:07:40 pchretien Exp $
@@ -63,7 +63,7 @@ final class KProcessBinding extends TupleBinding {
 		if (version.startsWith(PROCESS_BINDING_PREFIX)) {
 			return version;
 		}
-		return PROCESS_BINDING_V1;//La v1 ne précisait pas sa version on la déduit
+		return PROCESS_BINDING_V1;//La v1 ne prÃ©cisait pas sa version on la dÃ©duit
 	}
 
 	/** {@inheritDoc} */
@@ -105,7 +105,7 @@ final class KProcessBinding extends TupleBinding {
 				final KProcess subProcess = doEntryToProcessV1(ti);
 				processBuilder.addSubProcess(subProcess,false);
 			} else if ("P-END".equals(subInfoType)) {
-				break; //on a terminé
+				break; //on a terminÃ©
 			} else {
 				//On laisse tomber.
 			}

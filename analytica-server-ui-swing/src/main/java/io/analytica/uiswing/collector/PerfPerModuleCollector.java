@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -44,9 +44,9 @@ public class PerfPerModuleCollector implements PerfCollector {
 
 	@Override
 	public void onProcessFinish(final String moduleName, final String processId, final Object obj, final Object[] params, final Object ret, final long duration, final boolean success) {
-		final String firstProcess = getThreadStats().getFirstProcess(); //il faut la récupérer avant le finish
+		final String firstProcess = getThreadStats().getFirstProcess(); //il faut la rÃ©cupÃ©rer avant le finish
 		final long tempsRestant = getThreadStats().finishProcess(duration, processId, moduleName);
-		if (getThreadStats().getProcessQueueSize() == 0) { //Si on vient de tout dépiler, on enregistre le total
+		if (getThreadStats().getProcessQueueSize() == 0) { //Si on vient de tout dÃ©piler, on enregistre le total
 			PROCESS_STATS_TREE.addRequest(firstProcess, null, null, duration);
 		}
 		PROCESS_STATS_TREE.addRequest(firstProcess, moduleName, null, tempsRestant);

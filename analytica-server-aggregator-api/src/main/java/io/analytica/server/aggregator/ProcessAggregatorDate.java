@@ -88,7 +88,7 @@ public class ProcessAggregatorDate {
 				return delta * 60 * 1000L;
 
 			default:
-				throw new RuntimeException("La durée doit préciser l'unité de temps utilisée : d=jour, h=heure, m=minute");
+				throw new RuntimeException("La durÃ©e doit prÃ©ciser l'unitÃ© de temps utilisÃ©e : d=jour, h=heure, m=minute");
 		}
 	}
 

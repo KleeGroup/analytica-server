@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -23,9 +23,9 @@ import java.util.Map;
 public interface ProcessStatsCollection<P extends Serializable> extends Serializable {
 
 	/**
-	 * Retourne une map, ou la clé est le nom d'une méthode.
-	 * La valeur et la technique a utiliser pour traiter les résultats dépends de l'implémentation.
-	 * Mais dans tous les cas les données statistiques sont dans des ProcessStats
+	 * Retourne une map, ou la clÃ© est le nom d'une mÃ©thode.
+	 * La valeur et la technique a utiliser pour traiter les rÃ©sultats dÃ©pends de l'implÃ©mentation.
+	 * Mais dans tous les cas les donnÃ©es statistiques sont dans des ProcessStats
 	 * @return Map
 	 */
 	Map<String, P> getResults();

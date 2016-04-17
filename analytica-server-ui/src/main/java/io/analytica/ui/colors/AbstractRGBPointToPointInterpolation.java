@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * Classe abstraire d'interpolation de couleur.
- * Permet de rÈaliser une interpolation en implÈmentant seulement l'interpolation ‡ partir de 4 points clÈs et le ratio entre la couleur 2 et 3.
+ * Permet de r√©aliser une interpolation en impl√©mentant seulement l'interpolation √© partir de 4 points cl√©s et le ratio entre la couleur 2 et 3.
  * 	C1-----C2----|--C3-----C4
  * @author npiedeloup
  * @version $Id: $
@@ -42,7 +42,7 @@ abstract class AbstractRGBPointToPointInterpolation implements RGBInterpolation 
 	/** {@inheritDoc} */
 	@Override
 	public List<Color> getColors(final int nbColors) {
-		Assertion.checkNotNull(mainColors, "Les couleurs principales n'ont pas ÈtÈ settÈes.");
+		Assertion.checkNotNull(mainColors, "Les couleurs principales n'ont pas √©t√© sett√©es.");
 		//---------------------------------------------------------------------
 		int startJ = 0;
 		final List<Color> interpolatedColor = new ArrayList<>();
@@ -62,7 +62,7 @@ abstract class AbstractRGBPointToPointInterpolation implements RGBInterpolation 
 				final Color color = colorInterpolation(j / nbInterpolatedColorDegree, c1, c2, c3, c4);
 				interpolatedColor.add(color);
 			}
-			startJ = 1; //on ne refait pas le premier point (dej‡ atteint)
+			startJ = 1; //on ne refait pas le premier point (dej√© atteint)
 		}
 		final List<Color> result = new ArrayList<>();
 		for (int i = 0; i < nbColors; i++) {
@@ -73,13 +73,13 @@ abstract class AbstractRGBPointToPointInterpolation implements RGBInterpolation 
 	}
 
 	/**
-	 * Fournit l'interpolation d'une couleur en fonction de quatre points clÈs, et une position (ratio entre 0 et 1) entre la couleur 2 et 3.
+	 * Fournit l'interpolation d'une couleur en fonction de quatre points cl√©s, et une position (ratio entre 0 et 1) entre la couleur 2 et 3.
 	 * @param t ratio entre 0 et 1 (0 pour c2 et 1 pour c3)
-	 * @param c1 couleur clÈ 1
-	 * @param c2 couleur clÈ 2
-	 * @param c3 couleur clÈ 3
-	 * @param c4 couleur clÈ 4
-	 * @return couleur interpolÈe.
+	 * @param c1 couleur cl√© 1
+	 * @param c2 couleur cl√© 2
+	 * @param c3 couleur cl√© 3
+	 * @param c4 couleur cl√© 4
+	 * @return couleur interpol√©e.
 	 */
 	protected abstract Color colorInterpolation(final double t, final Color c1, final Color c2, final Color c3, final Color c4);
 }

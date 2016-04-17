@@ -40,11 +40,11 @@
 
 
 	<properties>
-		<vertigo.version>0.8.3</vertigo.version>
+		<vertigo.version>0.9.1</vertigo.version>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<jersey.version>1.19</jersey.version>
-		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<lucene.version>5.3.1</lucene.version>
 	</properties>
 
@@ -126,7 +126,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin><!--Config pour d�ployer les sources et la javadoc :http://stackoverflow.com/questions/4725668/how-to-deploy-snapshot-with-sources-and-javadoc -->
+			<plugin><!--Config pour déployer les sources et la javadoc :http://stackoverflow.com/questions/4725668/how-to-deploy-snapshot-with-sources-and-javadoc -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>2.2.1</version>

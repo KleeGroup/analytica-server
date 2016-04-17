@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -28,7 +28,7 @@ public interface PerfCollector {
 	void onProcessFinish(String moduleName, String processId, Object obj, Object[] params, Object ret, long duration, boolean success);
 
 	/**
-	 * Retourne une map dont la clé est le nom d'un module
+	 * Retourne une map dont la clÃ© est le nom d'un module
 	 * et la valeur une MethodStatsCollection
 	 * @return Map
 	 */

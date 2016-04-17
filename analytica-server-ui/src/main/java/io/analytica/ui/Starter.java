@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -17,28 +17,28 @@
  */
 package io.analytica.ui;
 
-import io.vertigo.core.config.AppConfigBuilder;
-import io.vertigo.core.config.ModuleConfigBuilder;
+import io.vertigo.app.config.AppConfigBuilder;
+import io.vertigo.app.config.ModuleConfigBuilder;
 import io.vertigo.lang.Assertion;
 
 import java.util.Properties;
 
 /**
- * Charge et démarre un environnement.
+ * Charge et dÃ©marre un environnement.
  * @author pchretien, npiedeloup
  */
 public class Starter extends io.analytica.server.Starter {
 
 	/**
-	 * @param propertiesFileName Fichier de propriétés
-	 * @param relativeRootClass Racine du chemin relatif, le cas echéant
+	 * @param propertiesFileName Fichier de propriÃ©tÃ©s
+	 * @param relativeRootClass Racine du chemin relatif, le cas echÃ©ant
 	 */
 	public Starter(final String propertiesFileName, final Class<?> relativeRootClass) {
 		super(propertiesFileName, relativeRootClass);
 	}
 
 	/**
-	 * Lance l'environnement et attend indéfiniment.
+	 * Lance l'environnement et attend indÃ©finiment.
 	 * @param args "Usage: java kasper.kernel.Starter managers.xml <conf.properties>"
 	 */
 	public static void main(final String[] args) {
@@ -52,8 +52,8 @@ public class Starter extends io.analytica.server.Starter {
 	}
 
 	/**
-	 * Ajoute d'autre modules à la configuration de l'environnement.
-	 * @param properties Propriétés de l'environnement.
+	 * Ajoute d'autre modules Ã© la configuration de l'environnement.
+	 * @param properties PropriÃ©tÃ©s de l'environnement.
 	 * @param componentSpaceConfigBuilder Builder de la configuration de l'environnement
 	 */
 	@Override

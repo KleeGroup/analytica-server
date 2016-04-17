@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -19,7 +19,7 @@ package io.analytica.server.plugins.queryapi.rest;
 
 import io.analytica.server.ServerManager;
 import io.analytica.server.aggregator.ProcessAggregatorException;
-import io.vertigo.core.Home;
+import io.vertigo.app.Home;
 import io.vertigo.core.component.di.injector.Injector;
 
 import javax.inject.Inject;
@@ -56,12 +56,12 @@ public class JerseyRestQueryNetApi {
 	 * Constructeur simple, pour instanciation par Jersey.
 	 */
 	public JerseyRestQueryNetApi() {
-		Injector.injectMembers(this, Home.getComponentSpace());
+		Injector.injectMembers(this, Home.getApp().getComponentSpace());
 	}
 
 	@GET
 	@Path("/timeLine/{type}{subcategories:(/.+?)?}")
-	//le type est obligatoire les sous catégories (séparées par /) sont optionnelles
+	//le type est obligatoire les sous catÃ©gories (sÃ©parÃ©es par /) sont optionnelles
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getTimeLine(@QueryParam("timeFrom") @DefaultValue(dTimeFrom) final String timeFrom, @QueryParam("timeTo") @DefaultValue(dTimeTo) final String timeTo, @DefaultValue(dTimeDim) @QueryParam("timeDim") final String timeDim, @PathParam("type") final String type, @PathParam("subcategories") final String subCategories, @DefaultValue(dDatas) @QueryParam("datas") final String datas, @QueryParam("appName") final String appName, @QueryParam("location") final String location) throws ProcessAggregatorException {
 		return gson.toJson(serverManager.getTimeLine(appName,timeFrom,timeTo,timeDim,type,subCategories.startsWith("/", 0)?subCategories.substring(1):subCategories,location,datas));

@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -20,7 +20,7 @@ package io.analytica.server.store;
 import io.vertigo.lang.Assertion;
 
 /**
- * Objet avec identifiant externalisé.
+ * Objet avec identifiant externalisÃ©.
  * @author npiedeloup
  * @param <T> Type de la data
  */
@@ -30,8 +30,8 @@ public final class Identified<T> {
 
 	/**
 	 * Constructeur.
-	 * @param key Clée unique
-	 * @param data Données
+	 * @param key ClÃ©e unique
+	 * @param data DonnÃ©es
 	 */
 	public Identified(final String key, final T data) {
 		Assertion.checkArgNotEmpty(key);
@@ -42,14 +42,14 @@ public final class Identified<T> {
 	}
 
 	/**
-	 * @return Clé unique
+	 * @return ClÃ© unique
 	 */
 	public String getKey() {
 		return key;
 	}
 
 	/**
-	 * @return Données
+	 * @return DonnÃ©es
 	 */
 	public T getData() {
 		return data;

@@ -3,7 +3,7 @@
 // * Analytica - beta version - Systems Monitoring Tool
 // *
 // * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
-// * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+// * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
 // *
 // * This program is free software; you can redistribute it and/or modify it under the terms
 // * of the GNU General Public License as published by the Free Software Foundation;
@@ -127,7 +127,7 @@
 //				.build();
 //		pushProcess(selectProcess1);
 //
-//		//On crée un processs identique (même catégorie)
+//		//On crÃ©e un processs identique (mÃ©me catÃ©gorie)
 //		final KProcess selectProcess2 = new KProcessBuilder(APP_NAME, PROCESS_SQL, date, 100)//
 //				.withCategory("select * from article")//
 //				.incMeasure(MONTANT, price)//
@@ -141,10 +141,10 @@
 //		final HCategory processSQLCategory = new HCategory(PROCESS_SQL);
 //		final List<HCategory> rootCategories = hcubeManager.getApp(APP_NAME).getSelector().findCategories(new HCategorySelection(processSQLCategory.getPath()));
 //
-//		//--- On vérifie la catégorie racine.
+//		//--- On vÃ©rifie la catÃ©gorie racine.
 //		Assert.assertEquals(1, rootCategories.size());
 //		Assert.assertEquals(processSQLCategory, rootCategories.iterator().next());
-//		//--- On vérifie les sous-catégories.
+//		//--- On vÃ©rifie les sous-catÃ©gories.
 //		// TODO PAS DE SUBCATEGORIES
 //		//		final List<HCategory> categories = hcubeManager.getApp(APP_NAME).getSelector()..findAllSubCategories(APP_NAME, processSQLCategory);
 //		//		Assert.assertEquals(2, categories.size());
@@ -277,10 +277,10 @@
 //	/**
 //	 * Test simple
 //	 * - d'un processus maitre : //services/get articles
-//	 * - consititué de n sous-processus : //sql/select article
-//	 * les sous processus possèdent deux mesures
+//	 * - consitituÃ© de n sous-processus : //sql/select article
+//	 * les sous processus possÃ©dent deux mesures
 //	 *  - Poids des articles (25 kg) par sous processus
-//	 *  - Prix des articles 10€
+//	 *  - Prix des articles 10Ã©
 //	 * @throws HCubeStoreException
 //	 */
 //	@Test
@@ -314,7 +314,7 @@
 //		//
 //		HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
 //		assertMetricEquals(montantMetric, nbSelect, price * nbSelect, price, price, price);
-//		//Durée
+//		//DurÃ©e
 //		HMetric durationMetric = cubes.get(0).getMetric(DURATION_KEY);
 //		assertMetricEquals(durationMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 //		//---------------------------------------------------------------------
@@ -337,22 +337,22 @@
 //
 //		cubes = hcubeManager.getApp(APP_NAME).execute(PROCESS_SQL, dayServiceslQuery).getSerie(servicesCategory).getCubes();
 //		Assert.assertEquals(1, cubes.size());
-//		//Vérification de la durée du process principal
+//		//VÃ©rification de la durÃ©e du process principal
 //		durationMetric = cubes.get(0).getMetric(DURATION_KEY);
 //		assertMetricEquals(durationMetric, 1, 2000, 2000, 2000, 2000);
-//		//Vérification de la durée des sous-process
+//		//VÃ©rification de la durÃ©e des sous-process
 //		final HMetric sqlMetric = cubes.get(0).getMetric(PROCESS_SQL);
 //		assertMetricEquals(sqlMetric, nbSelect, nbSelect * 100, 100, 100, 100);
 //	}
 //
 //	/**
-//	 * Test composite à 3 niveaux
+//	 * Test composite Ã© 3 niveaux
 //	 * - d'un processus maitre : //requete/get articles
-//	 * - consititué de n sous-processus : //services/get article
-//	 * - consititué de n sous-processus : //sql/select article
-//	 * les sous processus possèdent deux mesures
+//	 * - consitituÃ© de n sous-processus : //services/get article
+//	 * - consitituÃ© de n sous-processus : //sql/select article
+//	 * les sous processus possÃ©dent deux mesures
 //	 *  - Poids des articles (25 kg) par sous processus
-//	 *  - Prix des articles 10€
+//	 *  - Prix des articles 10Ã©
 //	 * @throws HCubeStoreException
 //	 */
 //	@Test
@@ -397,7 +397,7 @@
 //		//
 //		HMetric montantMetric = cubes.get(0).getMetric(MONTANT_KEY);
 //		assertMetricEquals(montantMetric, nbSelect * nbService, price * nbSelect * nbService, price, price, price);
-//		//Durée
+//		//DurÃ©e
 //		HMetric durationMetric = cubes.get(0).getMetric(DURATION_KEY);
 //		assertMetricEquals(durationMetric, nbSelect * nbService, nbService * nbSelect * 100, 100, 100, 100);
 //		//---------------------------------------------------------------------
@@ -420,10 +420,10 @@
 //
 //		cubes = hcubeManager.getApp(APP_NAME).execute(PROCESS_SQL, dayServiceslQuery).getSerie(servicesCategory).getCubes();
 //		Assert.assertEquals(1, cubes.size());
-//		//Vérification de la durée du process principal
+//		//VÃ©rification de la durÃ©e du process principal
 //		durationMetric = cubes.get(0).getMetric(DURATION_KEY);
 //		assertMetricEquals(durationMetric, nbService, nbService * dureeService, dureeService, dureeService, dureeService);
-//		//Vérification de la durée des sous-process
+//		//VÃ©rification de la durÃ©e des sous-process
 //		final HMetric sqlMetric = cubes.get(0).getMetric(PROCESS_SQL);
 //		assertMetricEquals(sqlMetric, nbService * nbSelect, nbService * nbSelect * 100, 100, 100, 100);
 //	}
@@ -520,7 +520,7 @@
 //		}
 //		workersPool.shutdown();
 //		workersPool.awaitTermination(30, TimeUnit.SECONDS); //On laisse 30 secondes pour vider la pile
-//		Assert.assertTrue("Les threads ne sont pas tous stoppés", workersPool.isTerminated());
+//		Assert.assertTrue("Les threads ne sont pas tous stoppÃ©s", workersPool.isTerminated());
 //
 //		final HQuery daySqlQuery = new HQueryBuilder()//
 //				.between(HTimeDimension.Day, date, date)//

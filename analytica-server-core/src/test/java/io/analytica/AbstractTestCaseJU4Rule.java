@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -17,7 +17,7 @@
  */
 package io.analytica;
 
-import io.vertigo.core.Home;
+import io.vertigo.app.Home;
 import io.vertigo.core.component.di.injector.Injector;
 import io.vertigo.lang.Container;
 import io.vertigo.lang.Option;
@@ -46,14 +46,14 @@ public abstract class AbstractTestCaseJU4Rule {
 	}
 
 	/**
-	 * @return fichier properties de paramétrage des managers (par defaut Option.none())
+	 * @return fichier properties de paramÃ©trage des managers (par defaut Option.none())
 	 */
 	protected Option<String> getPropertiesFileName() {
-		return Option.none(); //par défaut pas de properties
+		return Option.none(); //par dÃ©faut pas de properties
 	}
 
 	/**
-	 * JUnitRule représentant la resource de Container.
+	 * JUnitRule reprÃ©sentant la resource de Container.
 	 * @author npiedeloup
 	 * @version $Id: $
 	 */
@@ -111,11 +111,11 @@ public abstract class AbstractTestCaseJU4Rule {
 			}
 
 			/**
-			 * Fournit le container utilisé pour l'injection.
+			 * Fournit le container utilisÃ© pour l'injection.
 			 * @return Container de l'injection
 			 */
 			private Container getContainer() {
-				return Home.getComponentSpace();
+				return Home.getApp().getComponentSpace();
 			}
 		}
 	}

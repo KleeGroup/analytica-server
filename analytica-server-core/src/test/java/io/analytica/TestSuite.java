@@ -2,7 +2,7 @@
 // * Analytica - beta version - Systems Monitoring Tool
 // *
 // * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
-// * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+// * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
 // *
 // * This program is free software; you can redistribute it and/or modify it under the terms
 // * of the GNU General Public License as published by the Free Software Foundation;
@@ -24,7 +24,7 @@
 //import org.junit.runners.Suite.SuiteClasses;
 //
 ///**
-// * Test de l'implémentation standard.
+// * Test de l'implÃ©mentation standard.
 // *
 // * @author pchretien
 // * @version $Id: TestSuite.java,v 1.6 2012/10/16 12:42:39 npiedeloup Exp $
