@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -50,7 +50,7 @@ public class NodeStatsTree extends STree {
 	}
 
 	/**
-	 * Construit le modèle du <code>STree</code> à partir d'un arbre de règles.
+	 * Construit le modÃ©le du <code>STree</code> Ã© partir d'un arbre de rÃ©gles.
 	 *
 	 * @param arbre PmvArbre
 	 * @return TreeModel

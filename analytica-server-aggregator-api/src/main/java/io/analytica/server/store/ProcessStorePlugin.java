@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -23,21 +23,21 @@ import io.vertigo.lang.Plugin;
 import java.util.List;
 
 /**
- * Plugin gérant le stockage des process.
+ * Plugin gÃ©rant le stockage des process.
  * @author npiedeloup
  * @version $Id: ProcessStorePlugin.java,v 1.2 2012/04/06 16:06:46 npiedeloup Exp $
  */
 public interface ProcessStorePlugin extends Plugin {
 	/**
-	 * Ajout un processus identifié.
-	 * @param process processus identifié.
+	 * Ajout un processus identifiÃ©.
+	 * @param process processus identifiÃ©.
 	 */
 	void add(KProcess process);
 
 	/**
 	 * Liste des process suivant.
 	 * @param systemName Nom du system
-	 * @param lastId Dernier id de process chargé (exclus du resultat)
+	 * @param lastId Dernier id de process chargÃ© (exclus du resultat)
 	 * @param maxRow Nombre de ligne max
 	 * @return Liste des process suivant
 	 */

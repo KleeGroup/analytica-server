@@ -212,7 +212,7 @@ function getStakedAreaOptions(dataQuery, timedSeries, dataColors) {
 }
 
 
-/** Conversion de données servers Map<NomMetric, <date, value>> en données Flot.
+/** Conversion de donnÃ©es servers Map<NomMetric, <date, value>> en donnÃ©es Flot.
  * function toFlotData(datas, dataLabels) {
 	
 	var newSeries = new Array();
@@ -314,7 +314,7 @@ function showTooltipsFunction(previousPoint, plot, showAllValues, showSameValue)
 }
 
 
-/** Conversion de données servers List<date, Map<NomMetric, value>> en données Flot.*/
+/** Conversion de donnÃ©es servers List<date, Map<NomMetric, value>> en donnÃ©es Flot.*/
 function toFlotData(datas, metrics, allMetrics, dataLabels, timedSeries) {
 	_endsWith = function(string, suffix) {
 	    return string.indexOf(suffix, string.length - suffix.length) !== -1;

@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -19,7 +19,7 @@ package io.analytica.server.plugins.processapi.rest;
 
 import io.analytica.api.KProcess;
 import io.analytica.server.ServerManager;
-import io.vertigo.core.Home;
+import io.vertigo.app.Home;
 import io.vertigo.core.component.di.injector.Injector;
 
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 
 /**
- * Api REST avec jersey de dépot des process.
+ * Api REST avec jersey de dÃ©pot des process.
  * @author npiedeloup
  * @version $Id: JerseyRestNetApi.java,v 1.3 2012/10/16 12:39:27 npiedeloup Exp $
  */
@@ -50,7 +50,7 @@ public final class JerseyRestProcessNetApi {
 	 * Constructeur simple pour instanciation par jersey.
 	 */
 	public JerseyRestProcessNetApi() {
-		Injector.injectMembers(this, Home.getComponentSpace());
+		Injector.injectMembers(this, Home.getApp().getComponentSpace());
 	}
 
 	/**
@@ -78,7 +78,7 @@ public final class JerseyRestProcessNetApi {
 	}
 
 	/**
-	 * On n'utilise pas APPLICATION_JSON, car jackson est moins simple à mettre en place que Gson.
+	 * On n'utilise pas APPLICATION_JSON, car jackson est moins simple Ã© mettre en place que Gson.
 	 * @POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void add(final KProcess[] processes) {

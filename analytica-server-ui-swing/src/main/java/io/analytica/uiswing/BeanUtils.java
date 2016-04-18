@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -43,7 +43,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
- * Méthodes utilitaires pour manipuler les propriétés (getter/setter) des JavaBeans (ie tous les types d'objets).
+ * MÃ©thodes utilitaires pour manipuler les propriÃ©tÃ©s (getter/setter) des JavaBeans (ie tous les types d'objets).
  * @author Joe Walnes, OpenSymphony Group, http://www.opensymphony.com/)
  * @version $Id: BeanUtils.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
  */
@@ -71,12 +71,12 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Retourne la valeur d'une propriété d'un bean
+	 * Retourne la valeur d'une propriÃ©tÃ© d'un bean
 	 * (ex : "name" -> object.getName() ou "country.name" -> object.getCountry().getName()).
 	 * @return java.lang.Object
 	 * @param object java.lang.Object
 	 * @param propertyName java.lang.String
-	 * @throws java.lang.Throwable   Erreur d'introspection, de réflexion ou dans le getter
+	 * @throws java.lang.Throwable   Erreur d'introspection, de rÃ©flexion ou dans le getter
 	 */
 	public static Object getValue(final Object object, final String propertyName) throws Throwable {
 		if (propertyName == null || object == null || propertyName.length() == 0) {
@@ -104,7 +104,7 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Retourne les noms des propriétés d'un bean.
+	 * Retourne les noms des propriÃ©tÃ©s d'un bean.
 	 * @return java.lang.String[]
 	 * @param object java.lang.Object
 	 * @throws java.beans.IntrospectionException   Erreur dans l'introspection
@@ -137,34 +137,34 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Retourne une map contenant les noms et valeurs des propriétés d'un bean.
+	 * Retourne une map contenant les noms et valeurs des propriÃ©tÃ©s d'un bean.
 	 * @return java.util.Map
 	 * @param object java.lang.Object
-	 * @param allowedPropertyNames java.lang.String Si NON null, seules les propriétés spécifiées seront récupérées.
-	 * @throws java.lang.Throwable   Erreur d'introspection, de réflexion ou dans un getter
+	 * @param allowedPropertyNames java.lang.String Si NON null, seules les propriÃ©tÃ©s spÃ©cifiÃ©es seront rÃ©cupÃ©rÃ©es.
+	 * @throws java.lang.Throwable   Erreur d'introspection, de rÃ©flexion ou dans un getter
 	 */
 	public static Map getValues(final Object object, final String[] allowedPropertyNames) throws Throwable {
 		return getValues(object, allowedPropertyNames, null);
 	}
 
 	/**
-	 * Retourne une map contenant les noms et valeurs des propriétés d'un bean.
+	 * Retourne une map contenant les noms et valeurs des propriÃ©tÃ©s d'un bean.
 	 * @return java.util.Map
 	 * @param object java.lang.Object
-	 * @param allowedPropertyNames java.lang.String[] Si NON null, seules les propriétés spécifiées seront récupérées.
-	 * @param excludedPropertyNames java.lang.String[] Si NON null, les propriétés spécifiées ne seront pas récupérées.
-	 * @throws java.lang.Throwable   Erreur d'introspection, de réflexion ou dans un getter
+	 * @param allowedPropertyNames java.lang.String[] Si NON null, seules les propriÃ©tÃ©s spÃ©cifiÃ©es seront rÃ©cupÃ©rÃ©es.
+	 * @param excludedPropertyNames java.lang.String[] Si NON null, les propriÃ©tÃ©s spÃ©cifiÃ©es ne seront pas rÃ©cupÃ©rÃ©es.
+	 * @throws java.lang.Throwable   Erreur d'introspection, de rÃ©flexion ou dans un getter
 	 */
 	public static Map getValues(final Object object, final String[] allowedPropertyNames, final String[] excludedPropertyNames) throws Throwable {
 		return getValues(object, allowedPropertyNames, excludedPropertyNames, false);
 	}
 
 	/**
-	 * Retourne une map contenant les noms et valeurs des propriétés d'un bean.
+	 * Retourne une map contenant les noms et valeurs des propriÃ©tÃ©s d'un bean.
 	 * @param object Object
 	 * @param allowedPropertyNames String[]
 	 * @param excludedPropertyNames String[]
-	 * @param includeNullValues boolean indique si les propriétés dont la valeur est nulle doivent être incluses dans le résultat
+	 * @param includeNullValues boolean indique si les propriÃ©tÃ©s dont la valeur est nulle doivent Ã©tre incluses dans le rÃ©sultat
 	 * @return Map
 	 * @throws Throwable
 	 */
@@ -188,11 +188,11 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Définit des propriétés d'un bean en utilisant une map.
+	 * DÃ©finit des propriÃ©tÃ©s d'un bean en utilisant une map.
 	 * @param object java.lang.Object
 	 * @param valueMap java.util.Map
-	 * @param allowedPropertyNames Si NON null, seules les propriétés spécifiées seront définies.
-	 * @throws java.lang.Throwable   Erreur d'introspection, de réflexion ou dans un setter
+	 * @param allowedPropertyNames Si NON null, seules les propriÃ©tÃ©s spÃ©cifiÃ©es seront dÃ©finies.
+	 * @throws java.lang.Throwable   Erreur d'introspection, de rÃ©flexion ou dans un setter
 	 */
 	public static void setValues(final Object object, final Map valueMap, final String[] allowedPropertyNames) throws Throwable {
 		final Iterator entries = valueMap.entrySet().iterator();
@@ -210,24 +210,24 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Définit des propriétés d'un bean en utilisant les propriétés d'un bean.
-	 * Les beans peuvent êtres d'un type différent.
+	 * DÃ©finit des propriÃ©tÃ©s d'un bean en utilisant les propriÃ©tÃ©s d'un bean.
+	 * Les beans peuvent Ã©tres d'un type diffÃ©rent.
 	 * @param object The object to be manipulated.
 	 * @param src The object containing the properties to be copied.
-	 * @param allowedPropertyNames Si NON null, seules les propriétés spécifiées seront définies.
-	 * @throws java.lang.Throwable   Erreur d'introspection, de réflexion ou dans un getter ou setter
+	 * @param allowedPropertyNames Si NON null, seules les propriÃ©tÃ©s spÃ©cifiÃ©es seront dÃ©finies.
+	 * @throws java.lang.Throwable   Erreur d'introspection, de rÃ©flexion ou dans un getter ou setter
 	 */
 	public static void setValues(final Object object, final Object src, final String[] allowedPropertyNames) throws Throwable {
 		setValues(object, getValues(src, allowedPropertyNames), allowedPropertyNames);
 	}
 
 	/**
-	 * Décode un objet par désérialisation.
+	 * DÃ©code un objet par dÃ©sÃ©rialisation.
 	 * @return java.lang.Object
 	 * @param bytes byte[]
 	 * @see #encodeObject
 	 * @throws java.io.IOException   Erreur disque
-	 * @throws java.lang.ClassNotFoundException   Une classe à désarialisée n'a pu être trouvée
+	 * @throws java.lang.ClassNotFoundException   Une classe Ã© dÃ©sarialisÃ©e n'a pu Ã©tre trouvÃ©e
 	 */
 	public static Object decodeObject(final byte[] bytes) throws IOException, ClassNotFoundException {
 		final ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
@@ -238,7 +238,7 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Encode un objet par sérialisation.
+	 * Encode un objet par sÃ©rialisation.
 	 * @return byte[]
 	 * @param object java.lang.Object
 	 * @see #decodeObject
@@ -258,7 +258,7 @@ public class BeanUtils {
 	 * @return java.lang.Object
 	 * @param object java.lang.Object
 	 * @param propertyName java.lang.String
-	 * @throws java.lang.Throwable   Erreur d'introspection, de réflexion ou dans le getter
+	 * @throws java.lang.Throwable   Erreur d'introspection, de rÃ©flexion ou dans le getter
 	 */
 	protected static Object invokeProperty(final Object object, final String propertyName) throws Throwable {
 		if (object == null || propertyName == null || propertyName.length() == 0) {
@@ -270,7 +270,7 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Retourne un booléen suivant que le tableau contient une chaîne.
+	 * Retourne un boolÃ©en suivant que le tableau contient une chaÃ©ne.
 	 * @return boolean
 	 * @param string java.lang.String
 	 * @param array java.lang.String[]
@@ -294,7 +294,7 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Retourne un booléen suivant que le tableau contient une chaîne.
+	 * Retourne un boolÃ©en suivant que le tableau contient une chaÃ©ne.
 	 * @return boolean
 	 * @param string java.lang.String
 	 * @param array java.lang.String[]
@@ -304,19 +304,19 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Retourne le beanInfo d'une classe à partir du cache.
+	 * Retourne le beanInfo d'une classe Ã© partir du cache.
 	 * @return java.beans.BeanInfo
 	 * @param beanClass java.lang.Class
 	 * @throws java.beans.IntrospectionException   Erreur dans l'introspection
 	 */
 	protected static BeanInfo getBeanInfo(final Class beanClass) throws IntrospectionException {
 		if (BEAN_INFOS.size() > 300) {
-			BEAN_INFOS.clear(); // pour éviter une fuite mémoire potentielle
+			BEAN_INFOS.clear(); // pour Ã©viter une fuite mÃ©moire potentielle
 		}
 		BeanInfo result = (BeanInfo) BEAN_INFOS.get(beanClass);
 
 		if (result == null) {
-			// On veut tout le BeanInfo sauf Object (pas la propriété de getClass())
+			// On veut tout le BeanInfo sauf Object (pas la propriÃ©tÃ© de getClass())
 			result = Introspector.getBeanInfo(beanClass, Object.class);
 			BEAN_INFOS.put(beanClass, result);
 		}
@@ -325,18 +325,18 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Retourne le PropertyDescriptor d'une propriété.
+	 * Retourne le PropertyDescriptor d'une propriÃ©tÃ©.
 	 * @return java.beans.PropertyDescriptor
 	 * @param propertyName java.lang.String
 	 * @param beanClass java.lang.Class
 	 * @param isForSetter boolean
 	 * @throws java.beans.IntrospectionException   Erreur dans l'introspection
-	 * @throws java.lang.NoSuchMethodException   La méthode recherchée n'a pas été trouvée
+	 * @throws java.lang.NoSuchMethodException   La mÃ©thode recherchÃ©e n'a pas Ã©tÃ© trouvÃ©e
 	 */
 	public static PropertyDescriptor getPropertyDescriptor(final String propertyName, final Class beanClass, final boolean isForSetter) throws IntrospectionException, NoSuchMethodException {
 
 		// on pourrait faire new PropertyDescriptor(propertyName, beanClass)
-		// mais si jamais il a été défini des BeanInfo pour certaines classes, autant les utiliser.
+		// mais si jamais il a Ã©tÃ© dÃ©fini des BeanInfo pour certaines classes, autant les utiliser.
 
 		final PropertyDescriptor[] descriptors = getBeanInfo(beanClass).getPropertyDescriptors();
 
@@ -346,25 +346,25 @@ public class BeanUtils {
 			name = descriptors[i].getName();
 			if (name.equals(propertyName)) {
 				if (!isForSetter && descriptors[i].getReadMethod() == null) {
-					throw new NoSuchMethodException("Getter non trouvé pour l'attribut \"" + propertyName + "\" sur classe \"" + beanClass.getName() + '\"');
+					throw new NoSuchMethodException("Getter non trouvÃ© pour l'attribut \"" + propertyName + "\" sur classe \"" + beanClass.getName() + '\"');
 				}
 				if (isForSetter && descriptors[i].getWriteMethod() == null) {
-					throw new NoSuchMethodException("Setter non trouvé pour l'attribut \"" + propertyName + "\" sur classe \"" + beanClass.getName() + '\"');
+					throw new NoSuchMethodException("Setter non trouvÃ© pour l'attribut \"" + propertyName + "\" sur classe \"" + beanClass.getName() + '\"');
 				}
 
 				return descriptors[i];
 			}
 		}
-		throw new NoSuchMethodException("Aucune méthode trouvée pour l'attribut \"" + propertyName + "\" sur classe \"" + beanClass.getName() + '\"');
+		throw new NoSuchMethodException("Aucune mÃ©thode trouvÃ©e pour l'attribut \"" + propertyName + "\" sur classe \"" + beanClass.getName() + '\"');
 	}
 
 	/**
-	 * Définit la valeur d'une propriété d'un bean
+	 * DÃ©finit la valeur d'une propriÃ©tÃ© d'un bean
 	 * (ex : "name" -> object.setName(value) ou "country.name" -> object.getCountry().setName(value)).
 	 * @param object java.lang.Object
 	 * @param propertyName java.lang.String
 	 * @param value java.lang.Object
-	 * @throws java.lang.Throwable   Erreur d'introspection, de réflexion ou dans le setter
+	 * @throws java.lang.Throwable   Erreur d'introspection, de rÃ©flexion ou dans le setter
 	 */
 	public static void setValue(final Object object, final String propertyName, final Object value) throws Throwable {
 		if (propertyName == null || object == null || propertyName.length() == 0) {
@@ -399,7 +399,7 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Vide le cache des BeanInfos pour le recharger, par exemple après des modifications de classes en développement.
+	 * Vide le cache des BeanInfos pour le recharger, par exemple aprÃ©s des modifications de classes en dÃ©veloppement.
 	 */
 	public static void clearCache() {
 		BEAN_INFOS.clear();
@@ -420,8 +420,8 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Invoque une méthode par réflection sur l'objet spécifié et avec les arguments de méthode spécifiés.
-	 * <br>Si une InvocationTargetException survient, l'exception d'origine dans la méthode appelée est désencapsulée.
+	 * Invoque une mÃ©thode par rÃ©flection sur l'objet spÃ©cifiÃ© et avec les arguments de mÃ©thode spÃ©cifiÃ©s.
+	 * <br>Si une InvocationTargetException survient, l'exception d'origine dans la mÃ©thode appelÃ©e est dÃ©sencapsulÃ©e.
 	 * @param method java.lang.reflect.Method
 	 * @param object java.lang.Object
 	 * @param args java.lang.Object[]
@@ -439,7 +439,7 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Crée un proxy des interfaces spécifiées en paramètre.
+	 * CrÃ©e un proxy des interfaces spÃ©cifiÃ©es en paramÃ©tre.
 	 * @param classLoader java.lang.ClassLoader
 	 * @param interfaces java.lang.Class[]
 	 * @param invocationHandler java.lang.reflect.InvocationHandler
@@ -451,14 +451,14 @@ public class BeanUtils {
 	}
 
 	/**
-	 * Récupère l'ensemble des interfaces implémentées par cette class.
-	 * Cette méthode est utilisé pour la création dynamique des Proxy (sae.util.kanap).
+	 * RÃ©cupÃ©re l'ensemble des interfaces implÃ©mentÃ©es par cette class.
+	 * Cette mÃ©thode est utilisÃ© pour la crÃ©ation dynamique des Proxy (sae.util.kanap).
 	 * @param classe Class Class dont on veut les interfaces
 	 * @return Class[] Tableau des interfaces de cette classe (il peut y avoir des doublons)
 	 */
 	public static Class[] getAllInterfaces(final Class classe) {
 		if (CLASS_INTERFACES.size() > 150) {
-			CLASS_INTERFACES.clear(); // pour éviter une fuite mémoire potentielle
+			CLASS_INTERFACES.clear(); // pour Ã©viter une fuite mÃ©moire potentielle
 		}
 		Class[] arrayInterfaces = (Class[]) CLASS_INTERFACES.get(classe);
 		if (arrayInterfaces == null) {

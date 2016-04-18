@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -18,6 +18,7 @@
 package io.analytica.restserver.impl;
 
 import io.analytica.restserver.RestServerManager;
+import io.vertigo.core.param.ParamManager;
 import io.vertigo.lang.Activeable;
 import io.vertigo.lang.Assertion;
 
@@ -46,7 +47,7 @@ import com.sun.jersey.api.core.ClassNamesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 
 /**
- * Plugin gÈrant l'api reseau en REST avec jersey.
+ * InfluxDBProcessAggregatorPlugin g√©rant l'api reseau en REST avec jersey.
  * @author npiedeloup
  */
 public final class RestServerManagerImpl implements RestServerManager, Activeable {
@@ -60,6 +61,9 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	private final Timer delayedStarter = new Timer("RestServerDelayedStarter", true);
 	private RestartServerTask startServerTask;
 
+	@Inject
+	public ParamManager paramManager;
+	
 	/**
 	 * Constructeur.
 	 * @param apiPath Chemin racine des WebServices REST (commence et fini par / et autre que /)
@@ -68,8 +72,9 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	@Inject
 	public RestServerManagerImpl(@Named("apiPath") final String apiPath, @Named("httpPort") final int httpPort) {
 		Assertion.checkArgNotEmpty(apiPath);
-		Assertion.checkArgument(apiPath.startsWith("/") && apiPath.endsWith("/") && !apiPath.equals("/"), "La racine des WebServices (apiPath:{0}) doit commencer et finir par /, et Ítre diffÈrent de /", apiPath);
+		Assertion.checkArgument(apiPath.startsWith("/") && apiPath.endsWith("/") && !apiPath.equals("/"), "La racine des WebServices (apiPath:{0}) doit commencer et finir par /, et √©tre diff√©rent de /", apiPath);
 		//---------------------------------------------------------------------
+		String test = paramManager.getStringValue("restApiPath");
 		this.apiPath = apiPath;
 		this.httpPort = httpPort;
 	}
@@ -110,17 +115,17 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 		startServerTask.cancel();
 		startServerTask = null;
 		//On programme une fin pour maintenant.
-		//On Utilise le timer pour rester dans le mÍme Thread que le start.
-		//Le stop peut Ítre appellÈ plusieurs fois.
+		//On Utilise le timer pour rester dans le m√©me Thread que le start.
+		//Le stop peut √©tre appell√© plusieurs fois.
 		delayedStarter.schedule(new StopServerTask(), 0); //stop now
 	}
 
 	private void restart() {
 		if (startServerTask != null) {
-			startServerTask.cancel(); //Si on avait dÈj‡ une tache on l'annule
+			startServerTask.cancel(); //Si on avait d√©j√© une tache on l'annule
 		}
 		startServerTask = new RestartServerTask();
-		delayedStarter.schedule(startServerTask, 500); //start dans 500ms (sera prolongÈ si on redemande un dÈmarrage sd'ici l‡)
+		delayedStarter.schedule(startServerTask, 500); //start dans 500ms (sera prolong√© si on redemande un d√©marrage sd'ici l√©)
 	}
 
 	/**
@@ -159,8 +164,8 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 		// Add the CLStaticHttpHandler to serve static resources
 		for (final Map.Entry<String, List<String>> entry : pathsPerContext.entrySet()) {
 			StaticHttpHandler handler = new StaticHttpHandler(entry.getValue().toArray(new String[entry.getValue().size()]));
-			grizzlyServer.getServerConfiguration().addHttpHandler(handler,entry.getKey());
-//			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
+//			grizzlyServer.getServerConfiguration().addHttpHandler(handler,entry.getKey());
+			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
 		}
 		for (Map.Entry<HttpHandler, String[]>set : grizzlyServer.getServerConfiguration().getHttpHandlers().entrySet()) {
 			System.out.println(set.getKey()+" "+ set.getValue());
@@ -178,7 +183,7 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	}
 
 	/**
-	 * Tache de redÈmarrage du server.
+	 * Tache de red√©marrage du server.
 	 */
 	protected class RestartServerTask extends TimerTask {
 		/** {@inheritDoc} */

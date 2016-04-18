@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.RandomAccess;
 
 /**
- * Méthodes utilitaires pour manipuler et filtrer des collections.
+ * MÃ©thodes utilitaires pour manipuler et filtrer des collections.
  * @version $Id: CollUtils.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
  * @author evernat
  * @see java.util.Collections
@@ -52,14 +52,14 @@ public class CollUtils {
 	}
 
 	/**
-	 * Clone une liste de manière aussi performante que possible et synchronisée.
-	 * (ce clone est un shallow-clone et non un deep-clone : il ne clone pas les éléments).
+	 * Clone une liste de maniÃ©re aussi performante que possible et synchronisÃ©e.
+	 * (ce clone est un shallow-clone et non un deep-clone : il ne clone pas les Ã©lÃ©ments).
 	 * @return java.util.List
 	 * @param list java.util.Collection
 	 */
 	public static List cloneList(final Collection list) {
 		synchronized (list) {
-			// on construit par un clone une List de même type (ex : TypedArrayList), que la liste originale
+			// on construit par un clone une List de mÃ©me type (ex : TypedArrayList), que la liste originale
 			if (list instanceof ArrayList) {
 				return (List) ((ArrayList) list).clone();
 			} else if (list instanceof LinkedList) {
@@ -71,7 +71,7 @@ public class CollUtils {
 	}
 
 	/**
-	 * Recherche un objet dans une liste suivant la valeur d'une propriété.
+	 * Recherche un objet dans une liste suivant la valeur d'une propriÃ©tÃ©.
 	 * @return java.util.List
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
@@ -80,13 +80,13 @@ public class CollUtils {
 	 */
 	public static Object findInList(final Collection list, final String propertyName, final Object value) {
 		final List result = filterList(list, propertyName, value);
-		Assertion.checkState(!result.isEmpty(), "Aucune valeur trouvée");
-		Assertion.checkState(result.size() == 1, "Plus d'une valeur trouvée");
+		Assertion.checkState(!result.isEmpty(), "Aucune valeur trouvÃ©e");
+		Assertion.checkState(result.size() == 1, "Plus d'une valeur trouvÃ©e");
 		return result.get(0);
 	}
 
 	/**
-	 * Filtre une liste suivant les valeurs d'une propriété.
+	 * Filtre une liste suivant les valeurs d'une propriÃ©tÃ©.
 	 * @return java.util.List
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
@@ -98,7 +98,7 @@ public class CollUtils {
 	}
 
 	/**
-	 * Filtre une liste suivant les valeurs d'une propriété.
+	 * Filtre une liste suivant les valeurs d'une propriÃ©tÃ©.
 	 * @return java.util.List
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
@@ -122,7 +122,7 @@ public class CollUtils {
 	}
 
 	/**
-	 * Renvoie à partir d'une collection, une map dont les clés sont les valeurs d'une propriété.
+	 * Renvoie Ã© partir d'une collection, une map dont les clÃ©s sont les valeurs d'une propriÃ©tÃ©.
 	 * @return java.util.Map
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
@@ -162,7 +162,7 @@ public class CollUtils {
 	}
 
 	/**
-	 * Trie une collection suivant les propriétés fournies.
+	 * Trie une collection suivant les propriÃ©tÃ©s fournies.
 	 * @return java.util.List
 	 * @param list java.util.Collection
 	 * @param properties java.lang.String[]
@@ -209,11 +209,11 @@ public class CollUtils {
 						propertyName = props[i];
 						value = getValue(propertyName);
 						value2 = ((ComparisonWrapper) object2).getValue(propertyName);
-						// object2 est forcément un ComparisonWrapper
+						// object2 est forcÃ©ment un ComparisonWrapper
 
 						if (value == value2) {
 							comparison = 0;
-						} else if (value == null) { // null est avant tout le reste (par défaut)
+						} else if (value == null) { // null est avant tout le reste (par dÃ©faut)
 							comparison = sortNullFirst ? -1 : 1;
 						} else if (value2 == null) {
 							comparison = sortNullFirst ? 1 : -1;
@@ -225,10 +225,10 @@ public class CollUtils {
 									comparison = ((String) value).compareTo(value2.toString());
 								}
 							} else if (value instanceof Comparable && value.getClass() == value2.getClass()) {
-								// on évite les classes Comparable mais différentes
+								// on Ã©vite les classes Comparable mais diffÃ©rentes
 								// (ex: java.util.Date et java.sql.Timestamp)
 								comparison = ((Comparable) value).compareTo(value2);
-								// Number, Date, Character implémentent Comparable
+								// Number, Date, Character implÃ©mentent Comparable
 							} else if (value instanceof Calendar && value2 instanceof Calendar) {
 								comparison = ((Calendar) value).getTime().compareTo(((Calendar) value2).getTime());
 							} else if (value instanceof Date && value2 instanceof Date) {
@@ -251,7 +251,7 @@ public class CollUtils {
 				}
 
 				return 0;
-				// aucune des comparaisons n'a donné de différences
+				// aucune des comparaisons n'a donnÃ© de diffÃ©rences
 			}
 		}
 

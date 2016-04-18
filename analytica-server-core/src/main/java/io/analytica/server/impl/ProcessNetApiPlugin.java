@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -20,17 +20,17 @@ package io.analytica.server.impl;
 import io.vertigo.lang.Plugin;
 
 /**
- * Plugin gérant l'api reseau de reception des process.
- * Plugin proposant une API pour la méthode PUSH du ServerManager.
+ * Plugin gÃ©rant l'api reseau de reception des process.
+ * Plugin proposant une API pour la mÃ©thode PUSH du ServerManager.
  * @author npiedeloup
  * @version $Id: ProcessNetApiPlugin.java,v 1.1 2012/05/11 17:12:17 npiedeloup Exp $
  */
 public interface ProcessNetApiPlugin extends Plugin {
 
-	// Wrappe cette méthode :  
+	// Wrappe cette mÃ©thode :  
 	// /**
 	//	 * Ajout d'un process.
-	//	 * @param process Process à ajouter 
+	//	 * @param process Process Ã© ajouter 
 	//	 */
 	//	void push(KProcess process);
 }

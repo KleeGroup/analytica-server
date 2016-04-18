@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -17,9 +17,9 @@
  */
 package io.analytica;
 
-import io.vertigo.boot.xml.XMLAppConfigBuilder;
-import io.vertigo.core.App;
-import io.vertigo.core.config.AppConfig;
+import io.vertigo.app.App;
+import io.vertigo.app.config.AppConfig;
+import io.vertigo.app.config.xml.XMLAppConfigBuilder;
 import io.vertigo.lang.Assertion;
 import io.vertigo.lang.Option;
 
@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * Charge et dÈmarre un environnement.
+ * Charge et d√©marre un environnement.
  * @author pchretien, npiedeloup
  */
 public final class Starter implements Runnable {
@@ -43,10 +43,10 @@ public final class Starter implements Runnable {
 
 	/**
 	 * @param managersXmlFileName Fichier managers.xml
-	 * @param propertiesFileName Fichier de propriÈtÈs
-	 * @param relativeRootClass Racine du chemin relatif, le cas echÈant
-	 * @param defaultProperties PropriÈtÈs par dÈfaut (pouvant Ítre rÈcupÈrÈ de la ligne de commande par exemple)
-	 * @param timeToWait Temps d'attente, 0 signifie illimitÈ
+	 * @param propertiesFileName Fichier de propri√©t√©s
+	 * @param relativeRootClass Racine du chemin relatif, le cas ech√©ant
+	 * @param defaultProperties Propri√©t√©s par d√©faut (pouvant √©tre r√©cup√©r√© de la ligne de commande par exemple)
+	 * @param timeToWait Temps d'attente, 0 signifie illimit√©
 	 */
 	public Starter(final String managersXmlFileName, final Option<String> propertiesFileName, final Class<?> relativeRootClass, final Option<Properties> defaultProperties, final long timeToWait) {
 		Assertion.checkNotNull(managersXmlFileName);
@@ -62,7 +62,7 @@ public final class Starter implements Runnable {
 	}
 
 	/**
-	 * Lance l'environnement et attend indÈfiniment.
+	 * Lance l'environnement et attend ind√©finiment.
 	 * @param args "Usage: java kasper.kernel.Starter managers.xml <conf.properties>"
 	 */
 	public static void main(final String[] args) {
@@ -85,7 +85,7 @@ public final class Starter implements Runnable {
 
 			final Object lock = new Object();
 			synchronized (lock) {
-				lock.wait(timeToWait * 1000); //on attend le temps demandÈ et 0 => illimitÈ
+				lock.wait(timeToWait * 1000); //on attend le temps demand√© et 0 => illimit√©
 			}
 		} catch (final InterruptedException e) {
 			//rien arret normal
@@ -97,11 +97,11 @@ public final class Starter implements Runnable {
 	}
 
 	/**
-	 * DÈmarre l'application.
+	 * D√©marre l'application.
 	 */
 	public final void start() {
-		// CrÈation de l'Ètat de l'application
-		// Initialisation de l'Ètat de l'application
+		// Cr√©ation de l'√©tat de l'application
+		// Initialisation de l'√©tat de l'application
 		final URL xmlURL = createURL(managersXmlFileName, relativeRootClass);
 		final Properties properties = new Properties();
 		if (defaultProperties.isDefined()) {
@@ -135,8 +135,8 @@ public final class Starter implements Runnable {
 
 	//	/**
 	//	 * Charge le fichier properties.
-	//	 * Par defaut vide, mais il peut-Ítre surchargÈ.
-	//	 * @param relativeRootClass Racine du chemin relatif, le cas echÈant
+	//	 * Par defaut vide, mais il peut-√©tre surcharg√©.
+	//	 * @param relativeRootClass Racine du chemin relatif, le cas ech√©ant
 	//	 */
 	//	private static final void appendFileProperties(final Properties properties, final Option<String> propertiesFileName, final Class<?> relativeRootClass) {
 	//		//---------------------------------------------------------------------
@@ -157,8 +157,8 @@ public final class Starter implements Runnable {
 
 	/**
 	 * Transforme le chemin vers un fichier local au test en une URL absolue.
-	 * @param fileName Path du fichier : soit en absolu (commence par /), soit en relatif ‡ la racine
-	 * @param relativeRootClass Racine du chemin relatif, le cas echÈant
+	 * @param fileName Path du fichier : soit en absolu (commence par /), soit en relatif √© la racine
+	 * @param relativeRootClass Racine du chemin relatif, le cas ech√©ant
 	 * @return URL du fichier
 	 */
 	private static final URL createURL(final String fileName, final Class<?> relativeRootClass) {
@@ -168,9 +168,9 @@ public final class Starter implements Runnable {
 		try {
 			return new URL(absoluteFileName);
 		} catch (final MalformedURLException e) {
-			//Si fileName non trouvÈ, on recherche dans le classPath
+			//Si fileName non trouv√©, on recherche dans le classPath
 			final URL url = relativeRootClass.getResource(absoluteFileName);
-			Assertion.checkNotNull(url, "Impossible de rÈcupÈrer le fichier [" + absoluteFileName + "]");
+			Assertion.checkNotNull(url, "Impossible de r√©cup√©rer le fichier [" + absoluteFileName + "]");
 			return url;
 		}
 	}

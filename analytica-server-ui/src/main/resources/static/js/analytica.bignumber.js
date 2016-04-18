@@ -38,7 +38,7 @@ function showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcon
 		  .append($('<i/>', {class:tendanceArrow}));
 		
 		if(icon) {
-			//On ajoute l'icon avant le libellé, il n'y a pas la place avant le nombre
+			//On ajoute l'icon avant le libellÃ©, il n'y a pas la place avant le nombre
 			divTitle.append($('<i/>', {class:icon}));
 			divTitle.append('&nbsp;');
 		}

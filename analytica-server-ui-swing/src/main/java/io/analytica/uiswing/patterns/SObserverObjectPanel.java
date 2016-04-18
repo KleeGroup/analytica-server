@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -45,8 +45,8 @@ public class SObserverObjectPanel extends SObjectPanel implements Observer {
 	}
 
 	/**
-	 * Définit la valeur de la propriété object.
-	 * <br>Sur le setObject on désinscrit la vue de l'ancien objet et on l'inscrit sur le nouvel objet
+	 * DÃ©finit la valeur de la propriÃ©tÃ© object.
+	 * <br>Sur le setObject on dÃ©sinscrit la vue de l'ancien objet et on l'inscrit sur le nouvel objet
 	 * en tant qu'Observer.
 	 * @param object java.lang.Object
 	 */
@@ -63,7 +63,7 @@ public class SObserverObjectPanel extends SObjectPanel implements Observer {
 	}
 
 	/**
-	 * Signale que l'objet associé à ce Panel a envoyé une notification de modification.
+	 * Signale que l'objet associÃ© Ã© ce Panel a envoyÃ© une notification de modification.
 	 * On fait un setObject sur l'observable.
 	 * A surcharger si on veut un comportement plus fin.
 	 * @param observable Observable
@@ -71,7 +71,7 @@ public class SObserverObjectPanel extends SObjectPanel implements Observer {
 	 */
 	@Override
 	public void update(final Observable observable, final Object object) {
-		//sae.client.log.ClientLog.fine("updateObserver reçu dans " + getClass() + " pour " + observable);
+		//sae.client.log.ClientLog.fine("updateObserver reÃ©u dans " + getClass() + " pour " + observable);
 		setObject(observable);
 	}
 }

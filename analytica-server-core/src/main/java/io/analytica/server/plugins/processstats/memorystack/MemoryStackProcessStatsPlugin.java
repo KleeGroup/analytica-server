@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -34,8 +34,8 @@ import com.google.gson.Gson;
 /**
  * Stockage des process, et conservation statistique de l'arbre.
  * 
- * Transformation d'un Process constitué de sous-process.
- * Chaque Process (et donc sous process) est transformé en Cube avec :
+ * Transformation d'un Process constituÃ© de sous-process.
+ * Chaque Process (et donc sous process) est transformÃ© en Cube avec :
  * - une agregation des mesures de ce process
  * - une agregation des mesures des sous process 
  * 
@@ -78,7 +78,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 			// Unregister the processStorePlugin MBean
 			mbs.unregisterMBean(mbeanName);
 		} catch (final Throwable th) {
-			throw new RuntimeException("Erreur de dépublication JMX du LastProcessMXBean", th);
+			throw new RuntimeException("Erreur de dÃ©publication JMX du LastProcessMXBean", th);
 		}
 	}
 
@@ -90,7 +90,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 	}
 
 	/**
-	 * Liste de process limité en durée, seul les plus récents sont gardés. 
+	 * Liste de process limitÃ© en durÃ©e, seul les plus rÃ©cents sont gardÃ©s. 
 	 * @author npiedeloup
 	 * @version $Id: $
 	 */

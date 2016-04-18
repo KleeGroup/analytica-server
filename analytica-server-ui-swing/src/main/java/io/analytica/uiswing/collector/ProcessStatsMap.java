@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -45,7 +45,7 @@ public class ProcessStatsMap implements ProcessStatsCollection<ProcessStats> {
 	@Override
 	public void merge(final ProcessStatsCollection<ProcessStats> other) {
 		Assertion.checkNotNull(other);
-		Assertion.checkArgument(other instanceof ProcessStatsMap, "On ne peut merger que des ProcessStatsCollection de même type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
+		Assertion.checkArgument(other instanceof ProcessStatsMap, "On ne peut merger que des ProcessStatsCollection de mÃ©me type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
 		final Map<String, ProcessStats> otherResults = other.getResults();
 		ProcessStats otherProcessStats;
 		ProcessStats currentProcessStats;

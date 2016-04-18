@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -131,7 +131,7 @@ public class PerfCallStackCollector implements PerfCollector {
 				for (int i = 0; i < outTimeQueue.size(); i++) {
 					graphAppel.append("  ");
 				}
-				graphAppel.append("Finish ").append(processName).append("(").append(moduleName).append(") in ").append(newDuration).append("ms (").append(duration).append("ms réel)");
+				graphAppel.append("Finish ").append(processName).append("(").append(moduleName).append(") in ").append(newDuration).append("ms (").append(duration).append("ms rÃ©el)");
 			}
 
 			processQueue.remove(lastIndex);

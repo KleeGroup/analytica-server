@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -28,7 +28,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Implémentation mémoire du stockage des Process.
+ * ImplÃ©mentation mÃ©moire du stockage des Process.
  * @author npiedeloup
  * @version $Id: MemoryProcessStorePlugin.java,v 1.4 2012/04/06 16:09:35 npiedeloup Exp $
  */
@@ -53,7 +53,7 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 	@Override
 	public List<Identified<KProcess>> getProcess(final String appName, final String lastKey, final Integer maxRow) {
 		Assertion.checkNotNull(maxRow);
-		Assertion.checkArgument(maxRow >= 1, "MaxRow doit être strictement positif");
+		Assertion.checkArgument(maxRow >= 1, "MaxRow doit Ã©tre strictement positif");
 		//---------------------------------------------------------------------
 		final List<Identified<KProcess>> processes = new ArrayList<>();
 		Identified<KProcess> process = processQueue.poll();

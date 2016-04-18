@@ -2,7 +2,7 @@ function showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcon
 	colors = analyticaTools.getColors(dataColors, datas.length * dataMetrics.length/2 );
 	var colorIndex = 0;
 	for(var i = 0; i < datas.length; i++) {
-		for(var j = 0; j < dataMetrics.length; j+=2) { //Les métrics vont 2 par deux
+		for(var j = 0; j < dataMetrics.length; j+=2) { //Les mÃ©trics vont 2 par deux
 		var divGauge = $('<div/>', {class:'gauge'}).appendTo(elem);
 		var guid = analyticaTools.guid();
 		var processingPlaceholder = $('<canvas/>', {id:guid})
@@ -20,7 +20,7 @@ function showObjective(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcon
 		Processing.loadSketchFromSources(guid, ['static/pde/circleGauge.pde']);
 		
 		function getSetValueFunction(current, objective, d3color, divGauge) { return function(processing) {
-			var nbGauge = datas.length * (dataMetrics.length/2); //Les métrics vont 2 par deux
+			var nbGauge = datas.length * (dataMetrics.length/2); //Les mÃ©trics vont 2 par deux
 			var maxChartSize = 135;
 			var nbRow = 1;
 			var nbColumn = nbGauge;

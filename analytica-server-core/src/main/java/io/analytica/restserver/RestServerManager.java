@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -27,16 +27,16 @@ import io.vertigo.lang.Component;
 public interface RestServerManager extends Component {
 
 	/**
-	 * Ajoute une classe gérant une ressource Web (préfixée par un @Path).
-	 * @param handlerClass class gérant la resource Web.
+	 * Ajoute une classe gÃ©rant une ressource Web (prÃ©fixÃ©e par un @Path).
+	 * @param handlerClass class gÃ©rant la resource Web.
 	 */
 	void addResourceHandler(Class<?> handlerClass);
 
 	/**
 	 * Ajoute un classPath comme racine pour des fichiers static.
-	 * L'url d'accès sera préfixé par le context. 
-	 * @param classPath ClassPath racine des fichiers à proposer en static
-	 * @param context Préfix des urls de ces éléments
+	 * L'url d'accÃ©s sera prÃ©fixÃ© par le context. 
+	 * @param classPath ClassPath racine des fichiers Ã© proposer en static
+	 * @param context PrÃ©fix des urls de ces Ã©lÃ©ments
 	 */
 	void addStaticPath(final String classPath, String context);
 

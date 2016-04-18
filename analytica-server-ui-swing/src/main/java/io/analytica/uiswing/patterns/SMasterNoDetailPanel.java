@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -20,7 +20,7 @@ package io.analytica.uiswing.patterns;
 import mswing.patterns.MMasterPanel;
 
 /**
- * Maître-détail sans détail mais avec l'action 'imprimer'.
+ * MaÃ©tre-dÃ©tail sans dÃ©tail mais avec l'action 'imprimer'.
  * @version $Id: SMasterNoDetailPanel.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
  * @author emangin
  */
@@ -35,7 +35,7 @@ public class SMasterNoDetailPanel extends MMasterPanel {
 	}
 
 	/**
-	 * Retourne les actions par défaut pour ce masterPanel.
+	 * Retourne les actions par dÃ©faut pour ce masterPanel.
 	 * @return int
 	 */
 	@Override
@@ -49,11 +49,11 @@ public class SMasterNoDetailPanel extends MMasterPanel {
 	 */
 	@Override
 	protected void actionDelete() {
-		// on supprime (cela supprime un objet de la liste de manière synchronized)
+		// on supprime (cela supprime un objet de la liste de maniÃ©re synchronized)
 		synchronized (getList()) {
 			super.actionDelete();
 		}
-		// on ajuste les tailles des colonnes en fonction des données
+		// on ajuste les tailles des colonnes en fonction des donnÃ©es
 		getTable().adjustColumnWidths();
 	}
 }

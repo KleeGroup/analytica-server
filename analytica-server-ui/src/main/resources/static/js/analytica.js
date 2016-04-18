@@ -1,5 +1,5 @@
 /**
- * Charge les donn�es lors du chargement de la page.
+ * Charge les données lors du chargement de la page.
  **/
 function showCharts() {
 	$('div.chart').each(function () {
@@ -51,7 +51,7 @@ function notEmpty(datas) {
 	return false;
 }
 /**
- * Charge les donn�es lors du chargement de la page.
+ * Charge les données lors du chargement de la page.
  **/
 function showTables() {
 	$('div.datatable').each(function () {
@@ -235,7 +235,7 @@ analyticaTools = function() {
 			return;
 		} 
 		var mainColors
-		var interpolation = _interpolateHsl; //par d�faut interpolation HSL
+		var interpolation = _interpolateHsl; //par défaut interpolation HSL
 		if ("RAINBOW" == colorName || "iRAINBOW" == colorName) {
 			 mainColors = [ "#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#00FF00", "rgb(75, 0, 130)", "rgb(238, 130, 238)" ];
 		} else if ("SPECTRUM" == colorName || "iSPECTRUM" == colorName) {
@@ -261,7 +261,7 @@ analyticaTools = function() {
 		}
 		var resultColors;
 		var isCycle = mainColors[0] == mainColors[mainColors.length-1];
-		var resultColors = interpolation(mainColors, nbSeries + (isCycle ? 1 : 0)); //si les couleurs repr�sente un cycle, on exclue la derni�re couleur (qui est aussi la premi�re)
+		var resultColors = interpolation(mainColors, nbSeries + (isCycle ? 1 : 0)); //si les couleurs représente un cycle, on exclue la derniére couleur (qui est aussi la premiére)
 		return resultColors;
 	}
 	
@@ -314,7 +314,7 @@ analyticaTools = function() {
 				var color = colorInterpolation(j / nbInterpolatedColorDegree, c1, c2, c3, c4);
 				interpolatedColor.push(color);
 			}
-			startJ = 1; //on ne refait pas le premier point (dej� atteint)
+			startJ = 1; //on ne refait pas le premier point (dejé atteint)
 		}
 		var result = new Array();
 		for (var i = 0; i < nbColors; i++) {

@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -65,8 +65,8 @@ public class ProcessStats implements Serializable {
 	}
 
 	public long getDurationsEcartType() {
-		// formule ev (non exacte puisque qu'on ne connaît pas toutes les valeurs, mais estimation suffisante)
-		// rq : écart type (ou sigma) se dit standard deviation en anglais
+		// formule ev (non exacte puisque qu'on ne connaÃ©t pas toutes les valeurs, mais estimation suffisante)
+		// rq : Ã©cart type (ou sigma) se dit standard deviation en anglais
 		return Math.round(Math.sqrt((durationsSqrSum - (double) durationsSum * durationsSum / hits) / ((double) hits - 1)));
 
 		// formule nico (fausse car trop arrondie si n est faible)
@@ -102,7 +102,7 @@ public class ProcessStats implements Serializable {
 		if (other == null) {
 			return;
 		}
-		Assertion.checkState(processId.equals(other.processId), "On ne peut pas fusionner deux MethodStats qui ne portent pas sur la même méthode: can''t merge {0} in {1}", other.processId, processId);
+		Assertion.checkState(processId.equals(other.processId), "On ne peut pas fusionner deux MethodStats qui ne portent pas sur la mÃ©me mÃ©thode: can''t merge {0} in {1}", other.processId, processId);
 		hits += other.hits;
 		durationsMin = Math.min(durationsMin, other.durationsMin);
 		durationsMax = Math.max(durationsMax, other.durationsMax);

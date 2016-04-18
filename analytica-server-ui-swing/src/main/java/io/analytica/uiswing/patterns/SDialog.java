@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -25,7 +25,7 @@ import mswing.MDialog;
 /**
  * Dialog du SAE.
  * @version $Id: SDialog.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
- * @author Antoine Gérard
+ * @author Antoine GÃ©rard
  */
 public class SDialog extends MDialog {
 

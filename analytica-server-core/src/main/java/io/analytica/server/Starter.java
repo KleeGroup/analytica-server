@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidi�re - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidiére - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -26,11 +26,11 @@ import io.analytica.server.plugins.processstats.memorystack.MemoryStackProcessSt
 import io.analytica.server.plugins.processstats.socketio.SocketIoProcessStatsPlugin;
 import io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin;
 import io.analytica.server.plugins.queryapi.rest.RestQueryNetApiPlugin;
-import io.vertigo.core.App;
-import io.vertigo.core.config.AppConfig;
-import io.vertigo.core.config.AppConfigBuilder;
-import io.vertigo.core.config.ComponentConfigBuilder;
-import io.vertigo.core.config.ModuleConfigBuilder;
+import io.vertigo.app.App;
+import io.vertigo.app.config.AppConfig;
+import io.vertigo.app.config.AppConfigBuilder;
+import io.vertigo.app.config.ComponentConfigBuilder;
+import io.vertigo.app.config.ModuleConfigBuilder;
 import io.vertigo.lang.Assertion;
 
 import java.io.File;
@@ -68,8 +68,8 @@ public class Starter implements Runnable {
 	private App app;
 
 	/**
-	 * @param propertiesFileName Fichier de propri�t�s
-	 * @param relativeRootClass Racine du chemin relatif, le cas ech�ant
+	 * @param propertiesFileName Fichier de propriétés
+	 * @param relativeRootClass Racine du chemin relatif, le cas echéant
 	 */
 	public Starter(final String propertiesFileName, final Class<?> relativeRootClass) {
 		Assertion.checkNotNull(propertiesFileName);
@@ -80,7 +80,7 @@ public class Starter implements Runnable {
 	}
 
 	/**
-	 * Lance l'environnement et attend ind�finiment.
+	 * Lance l'environnement et attend indéfiniment.
 	 * @param args "Usage: java kasper.kernel.Starter managers.xml <conf.properties>"
 	 */
 	public static void main(final String[] args) {
@@ -102,7 +102,7 @@ public class Starter implements Runnable {
 		try (App app = new App(createAppConfig(properties))) {
 			final Object lock = new Object();
 			synchronized (lock) {
-				lock.wait(0); //on attend le temps demand� et 0 => illimit�
+				lock.wait(0); //on attend le temps demandé et 0 => illimité
 			}
 		} catch (final Exception e) {
 			e.printStackTrace();// TODO: handle exception
@@ -110,7 +110,7 @@ public class Starter implements Runnable {
 	}
 
 	/**
-	 * @param properties Propri�t�s de l'environnement.
+	 * @param properties Propriétés de l'environnement.
 	 * @return ComponentSpaceConfig configuration de l'environnement
 	 */
 	protected final AppConfig createAppConfig(final Properties properties) {
@@ -122,12 +122,12 @@ public class Starter implements Runnable {
 	}
 
 	/**
-	 * Ajoute d'autre modules � la configuration de l'environnement.
-	 * @param properties  Propri�t�s de l'environnement.
+	 * Ajoute d'autre modules é la configuration de l'environnement.
+	 * @param properties  Propriétés de l'environnement.
 	 * @param componentSpaceConfigBuilder Builder de la configuration de l'environnement
 	 */
 	protected void appendOtherModules(final Properties properties, final AppConfigBuilder appConfigBuilder) {
-		//Possibilit� d'ajouter d'autres modules � la conf.
+		//Possibilité d'ajouter d'autres modules é la conf.
 	}
 
 	private final void appendModuleAnalytica(final Properties properties, final AppConfigBuilder appConfigBuilder) {
@@ -186,8 +186,8 @@ public class Starter implements Runnable {
 
 	/**
 	 * Charge le fichier properties.
-	 * Par defaut vide, mais il peut-�tre surcharg�.
-	 * @param relativeRootClass Racine du chemin relatif, le cas ech�ant
+	 * Par defaut vide, mais il peut-étre surchargé.
+	 * @param relativeRootClass Racine du chemin relatif, le cas echéant
 	 */
 	private static final void appendFileProperties(final Properties properties, final String propertiesFileName, final Class<?> relativeRootClass) {
 		//---------------------------------------------------------------------
@@ -201,8 +201,8 @@ public class Starter implements Runnable {
 
 	/**
 	 * Transforme le chemin vers un fichier local au test en une URL absolue.
-	 * @param fileName Path du fichier : soit en absolu (commence par /), soit en relatif � la racine
-	 * @param relativeRootClass Racine du chemin relatif, le cas ech�ant
+	 * @param fileName Path du fichier : soit en absolu (commence par /), soit en relatif é la racine
+	 * @param relativeRootClass Racine du chemin relatif, le cas echéant
 	 * @return URL du fichier
 	 * @throws MalformedURLException
 	 */
@@ -213,7 +213,7 @@ public class Starter implements Runnable {
 		try {
 			return new URL(absoluteFileName);
 		} catch (final MalformedURLException e) {
-			//Si fileName non trouv�, on recherche dans le classPath
+			//Si fileName non trouvé, on recherche dans le classPath
 			final URL url = new File(fileName).toURI().toURL();
 
 			Assertion.checkNotNull(url, "Impossible de recuperer le fichier [" + absoluteFileName + "]");

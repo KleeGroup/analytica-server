@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -21,14 +21,14 @@ import io.analytica.api.KProcess;
 import io.vertigo.lang.Plugin;
 
 /**
- * Plugin gÈrant des statistiques sur les process.
+ * Plugin g√©rant des statistiques sur les process.
  * @author npiedeloup
  * @version $Id: CubeStorePlugin.java,v 1.1 2012/03/22 09:16:40 npiedeloup Exp $
  */
 public interface ProcessStatsPlugin extends Plugin {
 	/**
 	 * Enregistre un process.
-	 * Celui-ci sera mergÈ avec les autres process dÈj‡ enregistrÈs.
+	 * Celui-ci sera merg√© avec les autres process d√©j√© enregistr√©s.
 	 * @param process KProcess.
 	 */
 	void merge(KProcess process);

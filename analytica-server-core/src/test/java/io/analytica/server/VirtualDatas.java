@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -63,7 +63,7 @@ public class VirtualDatas {
 	// visitByHour represente finalement le nombre max de visites
 	public void loadVisitors(final Date startDate, final double visitorByHour) throws InterruptedException {
 
-		//Pics ‡ 10 h et ‡ 15h
+		//Pics √© 10 h et √© 15h
 		//final String d = startDate.toLocaleString();
 
 		//		for (int j = 0; j < 5; j++) {
@@ -84,12 +84,12 @@ public class VirtualDatas {
 			for (int h = 7; h < 19; h++) {
 
 				//final double coef = 1.5 + 0.25 * Math.sin((h - 8) * Math.PI / 2 / (6 * 30));
-				final double coef = 0.25 + 0.25 * Math.sin((h - 7 + 4.5) * Math.PI / 3); //varie de 0 ‡ 0.5
+				final double coef = 0.25 + 0.25 * Math.sin((h - 7 + 4.5) * Math.PI / 3); //varie de 0 √© 0.5
 				//if (h == 10 || h == 15) {
 				//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.6d);
 				//} else {
 				//	nbVisit = Math.round(NB_VISIT_DAILY_MAX * 0.2d);
-				nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% ‡ 60% en fonction de l'heure
+				nbVisit = random(Math.round(NB_VISIT_DAILY_MAX * 0.3d), coef * 2); // de 30% √© 60% en fonction de l'heure
 				//}
 				//System.out.println(h + "\t" + coef + "\t" + nbVisit);
 				for (int visit = 0; visit < nbVisit; visit++) {
@@ -106,7 +106,7 @@ public class VirtualDatas {
 	//final long nbVisit = (long) (Math.random() * hours * visitorByHour);
 	//		for (int visit = 0; visit < nbVisit; visit++) {
 	//			final Date dateVisite = new Date(startDate.getTime() - visit * 60 * 1000);
-	//			System.out.println("Date dÈbut de la visite ::" + dateVisite);
+	//			System.out.println("Date d√©but de la visite ::" + dateVisite);
 	//			addVisitorScenario(dateVisite, coef);
 	//		}
 	//		final int nbVisit = 0;
@@ -206,13 +206,13 @@ public class VirtualDatas {
 		}*/
 
 	/**
-	 * Calcul la prochaine valeur alÈatoire gaussienne entre X +/- 20% + X*(coef-1).
+	 * Calcul la prochaine valeur al√©atoire gaussienne entre X +/- 20% + X*(coef-1).
 	 *
 	 * @param value
 	 *            valeur moyenne
 	 * @param coef
 	 *            Coefficient
-	 * @return prochaine valeur alÈatoire suivant une gaussienne
+	 * @return prochaine valeur al√©atoire suivant une gaussienne
 	 */
 	private long random(final double value, final double coef) {
 		final long result = Math.round(nextGaussian(value, Math.round(value * 1.20)) + coef * value);
@@ -223,8 +223,8 @@ public class VirtualDatas {
 	private static final Random RANDOM = new Random();
 
 	private static long nextGaussian(final double moyenne, final double maxValue) {
-		Assertion.checkArgument(moyenne >= 1, "La moyenne doit Ítre supÈrieure ou Ègale ‡ 1");
-		Assertion.checkArgument(maxValue > moyenne, "La valeur max doit Ítre supÈrieure ‡ la moyenne");
+		Assertion.checkArgument(moyenne >= 1, "La moyenne doit √©tre sup√©rieure ou √©gale √© 1");
+		Assertion.checkArgument(maxValue > moyenne, "La valeur max doit √©tre sup√©rieure √© la moyenne");
 		long result = Math.round(RANDOM.nextGaussian() * maxValue / 5d + moyenne);
 		if (result < 0 || result > maxValue) {
 			result = nextGaussian(moyenne, maxValue);

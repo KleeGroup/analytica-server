@@ -62,14 +62,14 @@ function showDataTable(elem, datas, dataColumns, dataQuery) {
 		    },
 		    "oAria": {
 		        "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
-		        "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+		        "sSortDescending": ": activer pour trier la colonne par ordre dÃ©croissant"
 		    }
 		}
 	});	
 }
 
 
-/** Conversion de données servers List<date, Map<NomMetric, value>> en données DataTable.*/
+/** Conversion de donnÃ©es servers List<date, Map<NomMetric, value>> en donnÃ©es DataTable.*/
 function toDataTableDatas(datas, metrics) {
 	var newDatas = new Array();
 	for(var i = 0; i < datas.length; i++) {
