@@ -17,25 +17,19 @@
  */
 package io.analytica.ui;
 
-import io.vertigo.app.config.AppConfigBuilder;
-import io.vertigo.app.config.ModuleConfigBuilder;
+import io.analytica.restserver.impl.RestServerManagerImpl;
+import io.vertigo.app.App;
+import io.vertigo.core.component.di.injector.Injector;
 import io.vertigo.lang.Assertion;
 
-import java.util.Properties;
+import org.apache.log4j.Logger;
 
 /**
  * Charge et démarre un environnement.
  * @author pchretien, npiedeloup
  */
-public class Starter extends io.analytica.server.Starter {
+public class ServerUiStarter {
 
-	/**
-	 * @param propertiesFileName Fichier de propriétés
-	 * @param relativeRootClass Racine du chemin relatif, le cas echéant
-	 */
-	public Starter(final String propertiesFileName, final Class<?> relativeRootClass) {
-		super(propertiesFileName, relativeRootClass);
-	}
 
 	/**
 	 * Lance l'environnement et attend indéfiniment.
@@ -46,23 +40,16 @@ public class Starter extends io.analytica.server.Starter {
 		Assertion.checkArgument(args.length == 1, usageMsg + " ( conf attendue : " + args.length + ")");
 		Assertion.checkArgument(args[0].endsWith(".properties"), usageMsg + " ( .properties attendu : " + args[0] + ")");
 		//---------------------------------------------------------------------
-		final String propertiesFileName = args[0];
-		final Starter starter = new Starter(propertiesFileName, Starter.class);
-		starter.run();
+		try (App app = new App(AnalyticaServerUiConfigurator.config(args[0]))) {
+			
+			RestServerManagerImpl test = new RestServerManagerImpl("/test/",8080);
+			//	AppShell.startShell(5222);
+			System.in.read();
+			//Thread.sleep(1000 * 1000);
+		} catch (final Exception e) {
+			e.printStackTrace();
+			Logger.getLogger(ServerUiStarter.class).warn("an error occured when starting", e);
+		}
 	}
 
-	/**
-	 * Ajoute d'autre modules é la configuration de l'environnement.
-	 * @param properties Propriétés de l'environnement.
-	 * @param componentSpaceConfigBuilder Builder de la configuration de l'environnement
-	 */
-	@Override
-	protected void appendOtherModules(final Properties properties, final AppConfigBuilder appConfigBuilder) {
-		super.appendOtherModules(properties, appConfigBuilder);
-		//---------------------------------------------------------------------
-		final ModuleConfigBuilder moduleConfigBuilder = appConfigBuilder.beginModule("analytica-ui");
-		moduleConfigBuilder.beginComponent(AnalyticaUiManager.class, AnalyticaUiManagerImpl.class) //
-				.endComponent();
-		moduleConfigBuilder.endModule();
-	}
 }

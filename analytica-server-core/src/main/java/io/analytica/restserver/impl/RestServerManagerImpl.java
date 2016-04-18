@@ -18,6 +18,7 @@
 package io.analytica.restserver.impl;
 
 import io.analytica.restserver.RestServerManager;
+import io.vertigo.core.param.ParamManager;
 import io.vertigo.lang.Activeable;
 import io.vertigo.lang.Assertion;
 
@@ -60,6 +61,9 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	private final Timer delayedStarter = new Timer("RestServerDelayedStarter", true);
 	private RestartServerTask startServerTask;
 
+	@Inject
+	public ParamManager paramManager;
+	
 	/**
 	 * Constructeur.
 	 * @param apiPath Chemin racine des WebServices REST (commence et fini par / et autre que /)
@@ -70,6 +74,7 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 		Assertion.checkArgNotEmpty(apiPath);
 		Assertion.checkArgument(apiPath.startsWith("/") && apiPath.endsWith("/") && !apiPath.equals("/"), "La racine des WebServices (apiPath:{0}) doit commencer et finir par /, et étre différent de /", apiPath);
 		//---------------------------------------------------------------------
+		String test = paramManager.getStringValue("restApiPath");
 		this.apiPath = apiPath;
 		this.httpPort = httpPort;
 	}
