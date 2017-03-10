@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -77,7 +77,7 @@ public class ParametrageMenuController {
 
 			/* On fait les set/create necessaires */
 
-			/* On est obligé d'appeler la méthode init APRES avoir définit le controlleur
+			/* On est obligÃ© d'appeler la mÃ©thode init APRES avoir dÃ©finit le controlleur
 			         dans les vues car celles-ci font appel au controlleur pour s'afficher */
 			//courbeRdtMainPanel.init();
 
@@ -189,9 +189,9 @@ public class ParametrageMenuController {
 	private SMasterNoDetailPanel createStatMasterPanel(final String masterTitle, final List list, final boolean hasClient, final boolean hasPercentage) {
 		String[][] headers;
 		if (hasClient) {
-			headers = new String[][] { { "serverOrClient.processId", "Fonction" }, { "server.durationsSum", "Tps total srv" }, { "server.hits", "Exéc srv" }, { "server.durationsMin", "Tps min srv" }, { "server.durationsMean", "Tps moy srv" }, { "server.durationsMax", "Tps max srv" }, { "server.durationsLast", "Dernier tps srv" }, { "server.durationsEcartType", "Ecart type srv" }, { "server.durationsPercentageComparedToAllMethods", "Pct tps srv" }, { "client.durationsSum", "Tps total clt" }, { "client.hits", "Exéc clt" }, { "client.durationsMin", "Tps min clt" }, { "client.durationsMean", "Tps moy clt" }, { "client.durationsMax", "Tps max clt" }, { "client.durationsLast", "Dernier tps clt" }, { "client.durationsEcartType", "Ecart type clt" }, { "client.durationsPercentageComparedToAllMethods", "Pct tps clt" } };
+			headers = new String[][] { { "serverOrClient.processId", "Fonction" }, { "server.durationsSum", "Tps total srv" }, { "server.hits", "ExÃ©c srv" }, { "server.durationsMin", "Tps min srv" }, { "server.durationsMean", "Tps moy srv" }, { "server.durationsMax", "Tps max srv" }, { "server.durationsLast", "Dernier tps srv" }, { "server.durationsEcartType", "Ecart type srv" }, { "server.durationsPercentageComparedToAllMethods", "Pct tps srv" }, { "client.durationsSum", "Tps total clt" }, { "client.hits", "ExÃ©c clt" }, { "client.durationsMin", "Tps min clt" }, { "client.durationsMean", "Tps moy clt" }, { "client.durationsMax", "Tps max clt" }, { "client.durationsLast", "Dernier tps clt" }, { "client.durationsEcartType", "Ecart type clt" }, { "client.durationsPercentageComparedToAllMethods", "Pct tps clt" } };
 		} else {
-			headers = new String[][] { { "server.processId", "Fonction" }, { "server.durationsSum", "Tps total srv" }, { "server.hits", "Exéc srv" }, { "server.durationsMin", "Tps min srv" }, { "server.durationsMean", "Tps moy srv" }, { "server.durationsMax", "Tps max srv" }, { "server.durationsLast", "Dernier tps srv" }, { "server.durationsEcartType", "Ecart type srv" }, { "server.durationsPercentageComparedToAllMethods", "Pct tps srv" } };
+			headers = new String[][] { { "server.processId", "Fonction" }, { "server.durationsSum", "Tps total srv" }, { "server.hits", "ExÃ©c srv" }, { "server.durationsMin", "Tps min srv" }, { "server.durationsMean", "Tps moy srv" }, { "server.durationsMax", "Tps max srv" }, { "server.durationsLast", "Dernier tps srv" }, { "server.durationsEcartType", "Ecart type srv" }, { "server.durationsPercentageComparedToAllMethods", "Pct tps srv" } };
 		}
 		final SMasterNoDetailPanel masterPanel = new SMasterNoDetailPanel();
 		masterPanel.setMasterTitle(masterTitle);

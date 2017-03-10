@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -46,9 +46,9 @@ import io.analytica.hcube.result.HResult;
 public final class Utils {
 
 	/**
-	 * Charge Les données d'un graphe mono série.
-	 * @param Les données à transformer.
-	 * @return La liste de poins retravaillée.
+	 * Charge Les donnÃ©es d'un graphe mono sÃ©rie.
+	 * @param Les donnÃ©es Ã© transformer.
+	 * @return La liste de poins retravaillÃ©e.
 	 */
 	public static List<DataPoint> loadDataPointsMonoSerie(final HResult result, final String datas) {
 		final PerformanceManager manager = new PerformanceManager(1000, 0, 2);
@@ -120,7 +120,7 @@ public final class Utils {
 	}
 
 	/**
-	 * Charge des données pour un graphe multi série.
+	 * Charge des donnÃ©es pour un graphe multi sÃ©rie.
 	 * @param result
 	 * @param datas
 	 * @return

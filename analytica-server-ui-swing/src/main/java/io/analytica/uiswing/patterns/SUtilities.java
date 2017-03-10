@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -42,12 +42,12 @@ import mswing.MImageIconCache;
 import mswing.MUtilities;
 
 /**
- * Classe utilitaire pour la gestion d'exception et pour l'exÈcution en tests de composants Swing.
+ * Classe utilitaire pour la gestion d'exception et pour l'ex√©cution en tests de composants Swing.
  * @version $Id: SUtilities.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
  * @author Emeric Vernat
  */
 public class SUtilities {
-	// fichiers ‡ supprimer ‡ la fermeture de l'application (et aussi ‡ la relËve d'opÈrateur)
+	// fichiers √© supprimer √© la fermeture de l'application (et aussi √© la rel√©ve d'op√©rateur)
 	//	private static final List<String> TEMPORARY_FILES = new ArrayList<String>();
 	//	private static final Logger LOG = Logger.getLogger(SUtilities.class.getName());
 
@@ -56,7 +56,7 @@ public class SUtilities {
 	 * (private : pas d'instance)
 	 */
 	private SUtilities() {
-		//contructeur privÈ
+		//contructeur priv√©
 	}
 
 	/**
@@ -68,24 +68,24 @@ public class SUtilities {
 	}
 
 	/**
-	 * Trace l'exception et affiche une boÓte de dialogue d'erreur.
+	 * Trace l'exception et affiche une bo√©te de dialogue d'erreur.
 	 * @param throwable java.lang.Throwable
 	 */
 	public static void handleException(final Throwable throwable) {
 		if (throwable instanceof OutOfMemoryError || throwable instanceof RuntimeException || throwable instanceof Error || throwable instanceof UnmarshalException || throwable instanceof ConnectException) {
-			// note : SAssertion hÈrite de Error et est donc considÈrÈe aussi comme erreur systËme
+			// note : SAssertion h√©rite de Error et est donc consid√©r√©e aussi comme erreur syst√©me
 			handleError(throwable);
 
 		} else {
 			throwable.printStackTrace();
 			String message;
 			if (isOracleUserException(throwable)) {
-				// c'est une erreur fonctionnelle lancÈe dans une procÈdure stockÈe Oracle
-				// le message d'erreur ‡ afficher ‡ l'utilisateur est taggÈ par <text>message</text>
+				// c'est une erreur fonctionnelle lanc√©e dans une proc√©dure stock√©e Oracle
+				// le message d'erreur √© afficher √© l'utilisateur est tagg√© par <text>message</text>
 				message = extractOracleUserExceptionMessage(throwable);
 				handleThrowable(new VUserException(new MessageText(message, null)), false);
 			} else if (throwable instanceof RemoteException && exceptionContains(throwable, "Transaction timed out")) {
-				message = "Le dÈlai maximum pour effectuer l'opÈration a expirÈ.\nVeuillez relancer votre opÈration s'il y a lieu.";
+				message = "Le d√©lai maximum pour effectuer l'op√©ration a expir√©.\nVeuillez relancer votre op√©ration s'il y a lieu.";
 				handleThrowable(new VUserException(new MessageText(message, null)), false);
 			} else {
 				handleThrowable(throwable, false);
@@ -94,22 +94,22 @@ public class SUtilities {
 	}
 
 	/**
-	 * Trace l'exception et affiche une boÓte de dialogue d'erreur systËme.
+	 * Trace l'exception et affiche une bo√©te de dialogue d'erreur syst√©me.
 	 * @param throwable java.lang.Throwable
 	 */
 	public static void handleError(final Throwable throwable) {
 		throwable.printStackTrace();
-		// l'affichage des erreurs systËmes aux utilisateurs est encapsulÈe avec le message "Veuillez contacter..."
+		// l'affichage des erreurs syst√©mes aux utilisateurs est encapsul√©e avec le message "Veuillez contacter..."
 		if (throwable instanceof RuntimeException && exceptionContains(throwable, "[Erreur sql]")) {
 			if (exceptionContains(throwable, "ORA-01089")) {
 				// gestion erreurs oracle "ORA-01089: immediate shutdown in progess - no operations are permitted"
 				// pour afficher un message plus lisible
-				handleThrowable(new RuntimeException("Veuillez contacter un administrateur.\n(" + "La base de donnÈes SAE est en train de s'arrÍter.)", throwable.getCause()), true);
+				handleThrowable(new RuntimeException("Veuillez contacter un administrateur.\n(" + "La base de donn√©es SAE est en train de s'arr√©ter.)", throwable.getCause()), true);
 			} else {
 				// dans kasper.model.ServiceProviderSQL.handleException, kasper masque la sqlexception
-				// par une KSystemException et remplace le message oracle par la requÍte sql ‡ l'origine de l'erreur
-				// (horrible pour un utilisateur qui prÈfÈrerait le simple message oracle, qui lui peut Ítre lu ‡ un administrateur,
-				// "ORA-02291: violation de contrainte (SAE.FMC_REF_URGENCE_FK) d'intÈgritÈ - touche parent introuvable")
+				// par une KSystemException et remplace le message oracle par la requ√©te sql √© l'origine de l'erreur
+				// (horrible pour un utilisateur qui pr√©f√©rerait le simple message oracle, qui lui peut √©tre lu √© un administrateur,
+				// "ORA-02291: violation de contrainte (SAE.FMC_REF_URGENCE_FK) d'int√©grit√© - touche parent introuvable")
 				Throwable t = throwable;
 				while (t != null && t.getCause() != null && t.getCause() != t && !(t instanceof SQLException)) {
 					t = t.getCause();
@@ -117,7 +117,7 @@ public class SUtilities {
 				handleThrowable(new RuntimeException("Veuillez contacter un administrateur.\n(" + t.toString() + ')', throwable), true);
 			}
 		} else if (throwable instanceof OutOfMemoryError) {
-			handleThrowable(new Exception("L'application ne dispose pas de suffisamment de mÈmoire pour fonctionner, elle va s'arrÍter", throwable), true);
+			handleThrowable(new Exception("L'application ne dispose pas de suffisamment de m√©moire pour fonctionner, elle va s'arr√©ter", throwable), true);
 			System.exit(2);
 		} else {
 			handleThrowable(new RuntimeException("Veuillez contacter un administrateur.\n(" + throwable.toString() + ')', throwable), true);
@@ -125,8 +125,8 @@ public class SUtilities {
 	}
 
 	/**
-	 * Indique si le throwable est une erreur utilisateur remontÈe depuis une procÈdure stockÈe Oracle
-	 * (dans ce cas le message d'erreur ‡ afficher ‡ l'utilisateur est taggÈ comme suit : <text>message</text>).
+	 * Indique si le throwable est une erreur utilisateur remont√©e depuis une proc√©dure stock√©e Oracle
+	 * (dans ce cas le message d'erreur √© afficher √© l'utilisateur est tagg√© comme suit : <text>message</text>).
 	 * @param throwable Throwable
 	 * @return boolean
 	 */
@@ -136,8 +136,8 @@ public class SUtilities {
 	}
 
 	/**
-	 * Extrait le message d'erreur depuis un message d'erreur utilisateur remontÈe depuis une procÈdure stockÈe Oracle
-	 * (dans ce cas le message d'erreur ‡ afficher ‡ l'utilisateur est taggÈ comme suit : <text>message</text>).
+	 * Extrait le message d'erreur depuis un message d'erreur utilisateur remont√©e depuis une proc√©dure stock√©e Oracle
+	 * (dans ce cas le message d'erreur √© afficher √© l'utilisateur est tagg√© comme suit : <text>message</text>).
 	 * @param throwable Throwable
 	 * @return String
 	 */
@@ -148,7 +148,7 @@ public class SUtilities {
 	}
 
 	/**
-	 * Affiche la boÓte de dialogue d'erreur avec MSwing (sauf si il s'agit gÈnÈrateur d'image synoptique)
+	 * Affiche la bo√©te de dialogue d'erreur avec MSwing (sauf si il s'agit g√©n√©rateur d'image synoptique)
 	 * @param throwable Throwable
 	 * @param isSystemError boolean
 	 */
@@ -172,7 +172,7 @@ public class SUtilities {
 	}
 
 	/**
-	 * Retourne une imageIcon ‡ partir du cache, en la chargeant auparavant si elle n'y est pas dÈj‡.
+	 * Retourne une imageIcon √© partir du cache, en la chargeant auparavant si elle n'y est pas d√©j√©.
 	 * @return javax.swing.ImageIcon
 	 * @param iconName java.lang.String
 	 */
@@ -181,9 +181,9 @@ public class SUtilities {
 	}
 
 	/**
-	 * Retourne la fonte par dÈfaut des labels.
+	 * Retourne la fonte par d√©faut des labels.
 	 * <br>Cela est utile par exemple pour faire un deriveFont
-	 * (sans avoir ‡ instancier une fonte en spÈcifiant la taille).
+	 * (sans avoir √© instancier une fonte en sp√©cifiant la taille).
 	 * @return java.awt.Font
 	 */
 	public static Font getDefaultLabelFont() {
@@ -191,9 +191,9 @@ public class SUtilities {
 	}
 
 	/**
-	 * Retourne la fonte par dÈfaut des labels en style gras.
-	 * <br>Cela est utile par exemple pour Èviter de faire un deriveFont sur getDefaultLabelFont())
-	 * (donc sans avoir ‡ instancier une fonte avec un simple getDefaultLabelFont().deriveFont(BOLD)).
+	 * Retourne la fonte par d√©faut des labels en style gras.
+	 * <br>Cela est utile par exemple pour √©viter de faire un deriveFont sur getDefaultLabelFont())
+	 * (donc sans avoir √© instancier une fonte avec un simple getDefaultLabelFont().deriveFont(BOLD)).
 	 * @return java.awt.Font
 	 */
 	public static Font getDefaultLabelBoldFont() {
@@ -201,20 +201,20 @@ public class SUtilities {
 	}
 
 	/**
-	 * Retourne l'instance courante de la classe componentClass contenant l'ÈlÈment component.
-	 * <BR>Cette mÈthode peut-Ítre trËs utile pour rÈcupÈrer une rÈfÈrence
-	 * ‡ un parent ÈloignÈ (ancÍtre), en l'absence de rÈfÈrence directe du type attribut.
+	 * Retourne l'instance courante de la classe componentClass contenant l'√©l√©ment component.
+	 * <BR>Cette m√©thode peut-√©tre tr√©s utile pour r√©cup√©rer une r√©f√©rence
+	 * √© un parent √©loign√© (anc√©tre), en l'absence de r√©f√©rence directe du type attribut.
 	 *
-	 * <BR>Ex : un composant detailPanel dÈsire une rÈfÈrence sur son
+	 * <BR>Ex : un composant detailPanel d√©sire une r√©f√©rence sur son
 	 * internalFrame parente, alors l'instruction suivante suffit :
 	 * 		getAncestorOfClass(JInternalFrame.class, detailPanel)
 	 * <BR>Rq : si dans l'application il y a deux instances de cette frame
-	 * et deux instances du detailPanel, l'instance renvoyÈe serait bien
+	 * et deux instances du detailPanel, l'instance renvoy√©e serait bien
 	 * celle parente (ce qui n'est pas possible avec des singletons statiquesc
-	 * et beaucoup plus souple que l'Ècriture de rÈfÈrences directes).
+	 * et beaucoup plus souple que l'√©criture de r√©f√©rences directes).
 	 *
-	 * <BR>De plus, si aucune instance parente n'est trouvÈe mais qu'il y a un MMDetailDialog parent,
-	 * la recherche continue ‡ partir du MMasterDetailPanel liÈ.
+	 * <BR>De plus, si aucune instance parente n'est trouv√©e mais qu'il y a un MMDetailDialog parent,
+	 * la recherche continue √© partir du MMasterDetailPanel li√©.
 	 *
 	 * @return java.awt.Component
 	 * @param componentClass java.lang.Class
@@ -225,10 +225,10 @@ public class SUtilities {
 	}
 
 	/**
-	 * Retourne l'instance courante de Dialog ou Frame contenant l'ÈlÈment component.
-	 * <br>Cette mÈthode peut-Ítre trËs utile pour rÈcupÈrer une rÈfÈrence
-	 * ‡ un parent ÈloignÈ (ancÍtre) de type Dialog ou Frame en l'absence de rÈfÈrence directe du type attribut.
-	 * <br>Ex : un composant detailPanel dÈsire une rÈfÈrence sur sa dialog ou frame parente,
+	 * Retourne l'instance courante de Dialog ou Frame contenant l'√©l√©ment component.
+	 * <br>Cette m√©thode peut-√©tre tr√©s utile pour r√©cup√©rer une r√©f√©rence
+	 * √© un parent √©loign√© (anc√©tre) de type Dialog ou Frame en l'absence de r√©f√©rence directe du type attribut.
+	 * <br>Ex : un composant detailPanel d√©sire une r√©f√©rence sur sa dialog ou frame parente,
 	 * alors l'instruction suivante suffit :
 	 * 		getWindowForComponent(detailPanel)
 	 * @param component java.awt.Component
@@ -239,7 +239,7 @@ public class SUtilities {
 	}
 
 	/**
-	 * VÈrifie si une imprimante est configurÈe sur le poste.
+	 * V√©rifie si une imprimante est configur√©e sur le poste.
 	 * @return boolean
 	 */
 	public static boolean checkHasDefaultPrinter() {
@@ -250,8 +250,8 @@ public class SUtilities {
 	public static void cancelTimerTaskIfWindowDisposed(final TimerTask task, final Component attachedComponent) {
 		final Window window = SUtilities.getWindowForComponent(attachedComponent);
 		if (window == null || !window.isVisible()) {
-			// note : la task et donc la rÈfÈrence sont apparemment libÈrÈes lors de la prochaine exÈcution prÈvue,
-			// le component et la window (frame ou dialog) seront donc Èventuellement garbage collectÈs ‡ ce moment l‡
+			// note : la task et donc la r√©f√©rence sont apparemment lib√©r√©es lors de la prochaine ex√©cution pr√©vue,
+			// le component et la window (frame ou dialog) seront donc √©ventuellement garbage collect√©s √© ce moment l√©
 			task.cancel();
 		}
 	}

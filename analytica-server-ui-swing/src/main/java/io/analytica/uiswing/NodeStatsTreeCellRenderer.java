@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -30,7 +30,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class NodeStatsTreeCellRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = -7656915802248518075L;
-	private static final boolean COMPARE_TO_UPPER = false; //True pour comparer à l'élément supérieur et false pour la racine
+	private static final boolean COMPARE_TO_UPPER = false; //True pour comparer Ã© l'Ã©lÃ©ment supÃ©rieur et false pour la racine
 	private static final boolean COMPARE_TO_ROOT = !COMPARE_TO_UPPER;
 	private static final String TAB_SPACE = "     ";
 	private static final String MAX_TAB_SPACE = "                                                                                                    ";

@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -30,11 +30,11 @@ import mswing.print.MPrintInformations;
 
 /**
  * TabbedPane SAE (panel avec onglets).<br>
- * On ne laisse qu'un constructeur qui positionne TAB_PLACEMENT à TOP et TAB_LAYOUT_POLICY à SCROLL_TAB_LAYOUT,
- * comportement par défaut désiré dans le client SAE. <br>
- * De plus on définit une gestion des couleurs par défaut dans le SAE basés sur les propriétés
- * TabbedPane.passiveForeground, TabbedPane.activeForeground et TabbedPane.passiveBackground qui doivent être
- * initialisées par le client (sinon les couleurs par défaut sont utilisées : noir sur fond gris).
+ * On ne laisse qu'un constructeur qui positionne TAB_PLACEMENT Ã© TOP et TAB_LAYOUT_POLICY Ã© SCROLL_TAB_LAYOUT,
+ * comportement par dÃ©faut dÃ©sirÃ© dans le client SAE. <br>
+ * De plus on dÃ©finit une gestion des couleurs par dÃ©faut dans le SAE basÃ©s sur les propriÃ©tÃ©s
+ * TabbedPane.passiveForeground, TabbedPane.activeForeground et TabbedPane.passiveBackground qui doivent Ã©tre
+ * initialisÃ©es par le client (sinon les couleurs par dÃ©faut sont utilisÃ©es : noir sur fond gris).
  * @version $Id: STabbedPane.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
  * @author Antoine GERARD
  */
@@ -47,8 +47,8 @@ public class STabbedPane extends JTabbedPane implements MPrintInformations {
 
 	public STabbedPane() {
 		super(TOP, SCROLL_TAB_LAYOUT);
-		// on ajoute un change listener pour mettre à jour les couleurs à chaque changement de l'onglet ouvert.
-		// sinon le look and feel les changent à chaque sélection
+		// on ajoute un change listener pour mettre Ã© jour les couleurs Ã© chaque changement de l'onglet ouvert.
+		// sinon le look and feel les changent Ã© chaque sÃ©lection
 		addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(final ChangeEvent event) {
@@ -59,7 +59,7 @@ public class STabbedPane extends JTabbedPane implements MPrintInformations {
 	}
 
 	/**
-	 * Met à jour les couleurs des onglets en fonction de l'onglet ouvert.
+	 * Met Ã© jour les couleurs des onglets en fonction de l'onglet ouvert.
 	 */
 	private void updateColors() {
 		final int selectedIndex = getSelectedIndex();
@@ -75,8 +75,8 @@ public class STabbedPane extends JTabbedPane implements MPrintInformations {
 	}
 
 	/**
-	 * Cette méthode est appelée par toutes les autres méthodes permettant d'ajouter un onglet. On la surcharge pour
-	 * mettre à jour les couleurs à chaque ajout d'onglet.
+	 * Cette mÃ©thode est appelÃ©e par toutes les autres mÃ©thodes permettant d'ajouter un onglet. On la surcharge pour
+	 * mettre Ã© jour les couleurs Ã© chaque ajout d'onglet.
 	 *
 	 * @param title String
 	 * @param icon Icon
@@ -91,7 +91,7 @@ public class STabbedPane extends JTabbedPane implements MPrintInformations {
 	}
 
 	/**
-	 * Retourne le titre à inclure dans l'impression/export.
+	 * Retourne le titre Ã© inclure dans l'impression/export.
 	 * @return java.lang.String
 	 */
 	@Override

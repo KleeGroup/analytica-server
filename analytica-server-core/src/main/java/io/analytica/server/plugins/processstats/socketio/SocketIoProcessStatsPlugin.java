@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -34,8 +34,8 @@ import org.json.JSONException;
 /**
  * Stockage des process, et conservation statistique de l'arbre.
  * 
- * Transformation d'un Process constitué de sous-process.
- * Chaque Process (et donc sous process) est transformé en Cube avec :
+ * Transformation d'un Process constituÃ© de sous-process.
+ * Chaque Process (et donc sous process) est transformÃ© en Cube avec :
  * - une agregation des mesures de ce process
  * - une agregation des mesures des sous process 
  * 

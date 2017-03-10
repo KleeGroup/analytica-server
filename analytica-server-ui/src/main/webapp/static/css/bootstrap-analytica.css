@@ -1,0 +1,163 @@
+
+BODY{
+	background: #EEE;
+	/*background-image: url('../img/background.png');*/
+	min-width : 1024px;
+	color: #555;
+}
+
+.navbar-inverse, #sidebar {
+	background-image: url('../img/background.png');
+}
+
+.navbar-brand {
+	padding : 1px;
+	padding-right : 30px;
+}
+
+#main {
+	margin:0px;
+	margin-top:50px;
+	max-width:1950px;
+}
+
+#panels {
+	margin-top:30px;
+}
+
+.panel.zoom {
+	position: fixed;
+  	top: 50%;
+  	left: 50%;
+  	margin-top: -384px;
+  	margin-left: -512px;
+	height:768px;
+	width:1024px;	
+	z-index:8010;
+	box-shadow: 5px 5px 5px #000;
+}
+.panel.zoom .chart {
+	position: fixed;
+	height:720px;
+  	left: 50%;
+  	margin-left: -486px;
+	width:972px;	
+}
+
+.row {
+	overflow: hidden; /** Pour fixer la hauteur de la sidebar a celle des panels */
+}  
+
+#sidebar {
+	border-radius: 0px;
+	padding-top:30px;
+	padding-left:0px;
+	padding-right:0px;
+	margin-bottom: -99999px; /** Pour fixer la hauteur de la sidebar a celle des panels */
+    padding-bottom: 99999px;
+}
+
+#sidebar li {
+	width:100%;
+}
+
+#sidebar li.active a {
+	background-color: rgb(45, 137, 239);
+}
+
+.panel.blue {
+	background-color: rgb(45, 137, 239);
+	color:#FFF;
+}
+.panel.green {
+	background-color: rgb(67, 200, 60);
+	color:#FFF;
+}
+
+
+.panel .clock {
+	margin-top:25px;
+	font-family:'Arial, Helvetica, sans-serif; 
+	font-size:36px; 
+	font-weight:bold;
+	text-align:center;
+}
+.panel .clock .hours {
+	font-size:64px;
+}
+.panel .clock .seconds {
+	padding-left:5px;
+	font-size:18px;
+}
+.panel .clock .date {
+	
+	display:block;
+	font-size:18px;
+}
+
+.panel {
+  padding: 0px;
+  background: #FFF;
+  margin-bottom:30px;
+  border-color: #DDD;
+  border-radius :0px;
+}
+
+.panel-body {
+  padding: 5px;
+  margin: 5px;
+}
+
+.panel-heading, .panel-footer {
+  margin: 0px;
+  padding: 5px;
+  border-radius :0px;
+}
+
+.panel .panel-heading {
+	background-color: #FFF;
+	border-color: #DDD;
+	color:#333;
+}
+
+.panel .logo {
+	padding-left:10px;
+}
+
+.panel h5 {
+  margin: 0px;
+}
+
+.panel-footer {
+	position: absolute; 
+	bottom: 0;
+	width:100%;
+}
+
+.panel-h1 {height:185px;}
+.panel-h2 {height:400px;}
+.panel-h3 {height:615px;}
+.panel-h4 {height:830px;}
+
+.panel-h1 .chart {height:135px;}
+.panel-h2 .chart {height:350px;}
+.panel-h3 .chart {height:565px;}
+.panel-h4 .chart {height:780px;}
+
+.bigValue  {
+	font-size: 3em;
+	line-height:1.1em;
+	font-weight: bold;
+	color: #222;
+	/*text-shadow: #B3B3B3 1px 1px 3px;*/
+}
+
+.bigValuelabel {
+	margin-left:5px;
+	font-size: 1.0em; 
+	color: #777;
+}
+
+.panel img {
+	margin: 0px; padding: 0px;
+}

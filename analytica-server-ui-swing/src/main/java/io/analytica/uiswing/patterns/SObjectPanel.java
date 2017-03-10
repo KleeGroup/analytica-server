@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -29,11 +29,11 @@ import mswing.MUtilities;
 import mswing.MViewAdaptee;
 
 /**
- * Panel utilisÈ pour reprÈsenter les champs correspondant ‡ un "objet mÈtier de donnÈes".
- * <br>C'est un composant "container" reprÈsentant la vue graphique d'un objet
- * et contenant en gÈnÈral des sous composants.
- * <br>Sur ce panel toutes les modifications effectuÈes par l'utilisateur sont dÈtectÈes.
- * Vous pouvez contrÙler le statut du panel par les mÈthodes hasChanged() et setChanged(boolean).
+ * Panel utilis√© pour repr√©senter les champs correspondant √© un "objet m√©tier de donn√©es".
+ * <br>C'est un composant "container" repr√©sentant la vue graphique d'un objet
+ * et contenant en g√©n√©ral des sous composants.
+ * <br>Sur ce panel toutes les modifications effectu√©es par l'utilisateur sont d√©tect√©es.
+ * Vous pouvez contr√©ler le statut du panel par les m√©thodes hasChanged() et setChanged(boolean).
  * @version $Id: SObjectPanel.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
  * @author evernat
  */
@@ -57,9 +57,9 @@ public class SObjectPanel extends MChangedPanel {
 	}
 
 	/**
-	 * DÈfinit la valeur de la propriÈtÈ object.
-	 * <br>Cette mÈthode positionne Ègalement l'attibut "changed" ‡ false.
-	 * <br>Elle initialise Ègalement le panel ‡ partir du DT (cela ne peut Ítre fait qu'avec une instance de ce DT).
+	 * D√©finit la valeur de la propri√©t√© object.
+	 * <br>Cette m√©thode positionne √©galement l'attibut "changed" √© false.
+	 * <br>Elle initialise √©galement le panel √© partir du DT (cela ne peut √©tre fait qu'avec une instance de ce DT).
 	 * @param object java.lang.Object
 	 */
 	@Override
@@ -72,9 +72,9 @@ public class SObjectPanel extends MChangedPanel {
 	}
 
 	/**
-	 * Initialisation des champs ‡ partir des mÈta-donnÈes du DT :
+	 * Initialisation des champs √© partir des m√©ta-donn√©es du DT :
 	 * - champs not null,
-	 * - libellÈs
+	 * - libell√©s
 	 * - contraintes de longueurs
 	 */
 	private void initFromDtObject() {
@@ -90,19 +90,19 @@ public class SObjectPanel extends MChangedPanel {
 				identifier = mapping.getIdentifier();
 				adaptee = mapping.getAdaptee();
 				if (!mapping.isNotNull() && isNotNull(identifier)) {
-					// si le mapping n'est pas dÈj‡ not null et que le dt indique not null,
-					// on met le mapping ‡ not null
+					// si le mapping n'est pas d√©j√© not null et que le dt indique not null,
+					// on met le mapping √© not null
 					mapping.setNotNull(true);
 				}
 
-				/** les diffÈrentes ihm de l'objet Ètant assez diffÈrentes et pour diffÈrents personnes
-				 * (liste et dÈtail(s) client lourd, liste et dÈtail(s) client lÈger),
-				 * est-ce profitable de centraliser et unifier les libellÈs ?
+				/** les diff√©rentes ihm de l'objet √©tant assez diff√©rentes et pour diff√©rents personnes
+				 * (liste et d√©tail(s) client lourd, liste et d√©tail(s) client l√©ger),
+				 * est-ce profitable de centraliser et unifier les libell√©s ?
 				 */
 				if (adaptee instanceof MLabelledField) {
-					// si l'adaptee est un labelledField (champ accompagnÈ d'un label)
+					// si l'adaptee est un labelledField (champ accompagn√© d'un label)
 					// et que son labelText est null ou vide,
-					// on met le label indiquÈ dans le DT
+					// on met le label indiqu√© dans le DT
 					labelledField = (MLabelledField) adaptee;
 					labelText = getLabelText(identifier);
 					if (labelText != null && labelText.length() != 0) {
@@ -114,7 +114,7 @@ public class SObjectPanel extends MChangedPanel {
 				// ou un MStringArea,
 				// ou un MLabelledField avec comme field un MTextField (idem) ou un MStringArea
 				// et que la maxLength est -1,
-				// alors on met la contrainte de longueur indiquÈe dans le DT
+				// alors on met la contrainte de longueur indiqu√©e dans le DT
 
 				if (adaptee instanceof MLabelledField) {
 					labelledField = (MLabelledField) adaptee;
@@ -141,7 +141,7 @@ public class SObjectPanel extends MChangedPanel {
 	}
 
 	/**
-	 * Retourne un boolÈen selon que la propriÈtÈ spÈcifiÈe est "not null" dans le DT.
+	 * Retourne un bool√©en selon que la propri√©t√© sp√©cifi√©e est "not null" dans le DT.
 	 * @param identifier String
 	 * @return boolean
 	 */
@@ -150,7 +150,7 @@ public class SObjectPanel extends MChangedPanel {
 	}
 
 	/**
-	 * Retourne le libellÈ de la propriÈtÈ spÈcifiÈe telle qu'indiquÈe dans le DT.
+	 * Retourne le libell√© de la propri√©t√© sp√©cifi√©e telle qu'indiqu√©e dans le DT.
 	 * @param identifier String
 	 * @return String
 	 */
@@ -159,7 +159,7 @@ public class SObjectPanel extends MChangedPanel {
 	}
 
 	/**
-	 * Retourne la longueur maximale de la propriÈtÈ spÈcifiÈe telle qu'indiquÈ dans le DT.
+	 * Retourne la longueur maximale de la propri√©t√© sp√©cifi√©e telle qu'indiqu√© dans le DT.
 	 * @param identifier String
 	 * @return String
 	 */

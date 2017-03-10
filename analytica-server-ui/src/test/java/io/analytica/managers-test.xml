@@ -4,6 +4,8 @@
         <plugin name="ProcessStorePlugin" class="io.analytica.server.plugins.processstore.berkeley.BerkeleyProcessStorePlugin">
         	<param name="dbPath" value="d:/analytica/db" />
         </plugin>
+                <plugin class="io.analytica.server.aggregator.impl.influxDB.InfluxDBProcessAggregatorPlugin">
+ 		</plugin>
          <plugin name="ProcessEncoderPlugin" class="io.analytica.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
         </plugin>
         <plugin name="CubeStorePlugin" class="io.analytica.server.plugins.cubestore.memory.MemoryCubeStorePlugin">

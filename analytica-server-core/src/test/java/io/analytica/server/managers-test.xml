@@ -24,6 +24,8 @@
         	<param name="dbPath" value="g:/analytica/db-test" />
         </plugin>
         
+        <plugin class="io.analytica.server.aggregator.impl.influxDB.InfluxDBProcessAggregatorPlugin">
+ 		</plugin>
          <!-- <plugin name="ProcessEncoderPlugin" class="io.analytica.server.plugins.processencoder.standard.StandardProcessEncoderPlugin">
         </plugin>  -->       
      </component>

@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -33,16 +33,16 @@ public interface RGBInterpolation {
 	String getInterpolationCode();
 
 	/**
-	 * Paramètre les couleurs principales (de guidage)
+	 * ParamÃ©tre les couleurs principales (de guidage)
 	 * @param maincolors Fixe les couleurs principale (de guidage)
 	 */
 	void setMainColors(Color[] maincolors);
 
 	/**
-	 * Récupère une liste de couleur pour un nombre de couleur voulue.
-	 * Le nombre de couleur attendu sont interpolées à partir des couleurs principales. 
-	 * @param nbColors Nombre de couleur demandé
-	 * @return Liste des couleurs interpolées.
+	 * RÃ©cupÃ©re une liste de couleur pour un nombre de couleur voulue.
+	 * Le nombre de couleur attendu sont interpolÃ©es Ã© partir des couleurs principales. 
+	 * @param nbColors Nombre de couleur demandÃ©
+	 * @return Liste des couleurs interpolÃ©es.
 	 */
 	List<Color> getColors(final int nbColors);
 }

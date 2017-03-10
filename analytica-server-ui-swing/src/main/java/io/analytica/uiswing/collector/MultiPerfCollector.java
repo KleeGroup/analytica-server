@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -52,7 +52,7 @@ public abstract class MultiPerfCollector extends StandardMBean implements PerfCo
 				for (final String moduleName : collectorResults.keySet()) {
 					if (!results.containsKey(moduleName)) {
 						results.put(moduleName, getResults(moduleName));
-					} //Sinon on a dÈj‡ rÈcupÈrÈ toutes les donnÈes de ce modules (tout PerfCollector confondu)
+					} //Sinon on a d√©j√© r√©cup√©r√© toutes les donn√©es de ce modules (tout PerfCollector confondu)
 				}
 			}
 		}

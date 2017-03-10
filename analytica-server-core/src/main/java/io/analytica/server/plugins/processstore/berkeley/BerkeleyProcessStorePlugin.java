@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -18,8 +18,8 @@
 package io.analytica.server.plugins.processstore.berkeley;
 
 import io.analytica.api.KProcess;
-import io.analytica.server.impl.Identified;
-import io.analytica.server.impl.ProcessStorePlugin;
+import io.analytica.server.store.Identified;
+import io.analytica.server.store.ProcessStorePlugin;
 import io.vertigo.lang.Activeable;
 
 import java.io.File;
@@ -62,10 +62,12 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 				return new File(current, name).isDirectory();
 			}
 		});
-		for (final String appName : currentApps) {
-			final BerkeleyDatabase database = new BerkeleyDatabase(new File(this.dbPath.getAbsolutePath() + File.separator + appName));
-			database.open(false);
-			databases.put(appName, database);
+		if(currentApps!=null){
+			for (final String appName : currentApps) {
+				final BerkeleyDatabase database = new BerkeleyDatabase(new File(this.dbPath.getAbsolutePath() + File.separator + appName));
+				database.open(false);
+				databases.put(appName, database);
+			}
 		}
 		writer = new BerkeleyDatabaseWriter();
 	}
@@ -95,7 +97,7 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 				databases.put(systemName, database);
 			}
 			return database;
-		}
+		} 
 	}
 
 	/** {@inheritDoc} */

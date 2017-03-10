@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -17,15 +17,17 @@
  */
 package io.analytica.server;
 
+import java.util.List;
+
+
 import io.analytica.api.KProcess;
-import io.analytica.hcube.HCubeStoreException;
-import io.analytica.hcube.query.HQuery;
-import io.analytica.hcube.result.HResult;
+import io.analytica.server.aggregator.ProcessAggregatorDto;
+import io.analytica.server.aggregator.ProcessAggregatorException;
 import io.vertigo.lang.Component;
 
 /**
  * Serveur de Analytica.
- * Réception des données collectées
+ * RÃ©ception des donnÃ©es collectÃ©es
  * 
  * @author pchretien, npiedeloup
  * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
@@ -37,11 +39,13 @@ public interface ServerManager extends Component {
 	 */
 	void push(KProcess process);
 
-	/**
-	 * Execute une requête et fournit en retour un cube virtuel, constitué d'une liste de cubes.  
-	 * @param query Paramètres de la requete
-	 * @return cube virtuel, constitué d'une liste de cubes
-	 * @throws HCubeStoreException 
-	 */
-	HResult execute(final String appName, final String type, HQuery query) throws HCubeStoreException;
+	List<ProcessAggregatorDto> findAllLocations(final String appName) throws ProcessAggregatorException;
+	
+	List<ProcessAggregatorDto> findAllTypes(final String appName) throws ProcessAggregatorException;
+	
+	List<ProcessAggregatorDto> findAllCategories(final String appName)throws ProcessAggregatorException;
+
+	List<ProcessAggregatorDto> findCategories(String appName, String type,String subCategories, String location) throws ProcessAggregatorException;
+
+	List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom, String timeTo, String timeDim, String type, String subCategories, String location, String datas)throws ProcessAggregatorException;
 }

@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la BoursidiËre - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la Boursidi√©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -61,7 +61,7 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 
 	ProcessStats getProcessStatsByProcesseQueue(final String[] methods) {
 		Assertion.checkNotNull(methods);
-		Assertion.checkArgument(methods.length >= 1, "La liste des mÈthodes ne doit pas Ítre vide");
+		Assertion.checkArgument(methods.length >= 1, "La liste des m√©thodes ne doit pas √©tre vide");
 		Map<String, ProcessStatsNode> mapNextProcessStats = methodStatsRoot;
 		ProcessStatsNode methodStatsNode = null;
 		ProcessStatsNode upperProcessStatsNode;
@@ -85,7 +85,7 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 			}
 		}
 		if (methodStatsNode == null) {
-			throw new RuntimeException("methodStatsNode ne doit pas Ítre null");
+			throw new RuntimeException("methodStatsNode ne doit pas √©tre null");
 		}
 		return methodStatsNode.getProcessStats();
 	}
@@ -93,7 +93,7 @@ public class ProcessStatsTree implements ProcessStatsCollection<ProcessStatsNode
 	@Override
 	public void merge(final ProcessStatsCollection other) {
 		Assertion.checkNotNull(other);
-		Assertion.checkArgument(other instanceof ProcessStatsTree, "On ne peut merger que des ProcessStatsCollection de mÍme type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
+		Assertion.checkArgument(other instanceof ProcessStatsTree, "On ne peut merger que des ProcessStatsCollection de m√©me type, impossible de merger {0} avec {1}", this.getClass().getName(), other.getClass().getName());
 		final Map otherProcessStatsRoot = other.getResults();
 		ProcessStatsNode otherProcessStatsNode;
 		ProcessStatsNode currentProcessStatsNode;

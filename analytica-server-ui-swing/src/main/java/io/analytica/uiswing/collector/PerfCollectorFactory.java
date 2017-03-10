@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -29,7 +29,7 @@ public class PerfCollectorFactory {
 	        //perfCollectorName = getString("KANAP.GRABBER.PERF_COLLECTOR", defaultPerfCollector);
 	        PERF_COLLECTOR = (PerfCollector) Class.forName(perfCollectorName).newInstance();
 	    } catch (Throwable t) {
-	        throw new RuntimeException("PerfCollector non trouvé (" + perfCollectorName + ")", t); //Cette exception arretera le chargement de la class et donc l'appli.
+	        throw new RuntimeException("PerfCollector non trouvÃ© (" + perfCollectorName + ")", t); //Cette exception arretera le chargement de la class et donc l'appli.
 	    }
 	}*/
 
@@ -38,7 +38,7 @@ public class PerfCollectorFactory {
 	}
 
 	private PerfCollectorFactory() {
-		//constructeur privé
+		//constructeur privÃ©
 	}
 
 	public void setPerfCollector(final PerfCollector perfCollector) {

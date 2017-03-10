@@ -2,7 +2,7 @@
  * Analytica - beta version - Systems Monitoring Tool
  *
  * Copyright (C) 2013, KleeGroup, direction.technique@kleegroup.com (http://www.kleegroup.com)
- * KleeGroup, Centre d'affaire la Boursidière - BP 159 - 92357 Le Plessis Robinson Cedex - France
+ * KleeGroup, Centre d'affaire la BoursidiÃ©re - BP 159 - 92357 Le Plessis Robinson Cedex - France
  *
  * This program is free software; you can redistribute it and/or modify it under the terms
  * of the GNU General Public License as published by the Free Software Foundation;
@@ -23,7 +23,7 @@ import io.analytica.server.impl.ProcessNetApiPlugin;
 import javax.inject.Inject;
 
 /**
- * Plugin gérant l'api reseau en REST avec jersey.
+ * InfluxDBProcessAggregatorPlugin gÃ©rant l'api reseau en REST avec jersey.
  * @author npiedeloup
  * @version $Id: RestNetApiPlugin.java,v 1.3 2012/10/16 12:39:27 npiedeloup Exp $
  */
