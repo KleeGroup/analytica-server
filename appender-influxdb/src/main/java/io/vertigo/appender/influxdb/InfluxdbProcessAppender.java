@@ -91,7 +91,7 @@ public class InfluxdbProcessAppender extends AppenderSkeleton {
 	private void flatProcess(final AProcess process, final VisitState visitState) {
 		process.getSubProcesses().stream()
 				.forEach(subProcess -> {
-					visitState.push(process);
+					visitState.push(subProcess);
 					//on descend => stack.push
 					flatProcess(subProcess, visitState);
 					//on remonte => stack.poll
