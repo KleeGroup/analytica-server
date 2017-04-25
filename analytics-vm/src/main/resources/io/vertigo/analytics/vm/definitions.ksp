@@ -1,0 +1,59 @@
+package io.vertigo.analytics.vm
+
+create Domain DO_TIMESTAMP {
+	dataType : Date
+}
+
+create Domain DO_NUMERIC {
+	dataType : Long
+}
+
+create Domain DO_STRING {
+	dataType : String
+}
+
+create DtDefinition DT_VM_INFOS {
+	field TIMESTAMP {domain : DO_TIMESTAMP, label : "Timestamp", notNull : "true"}
+	field CPU {domain : DO_NUMERIC, label : "CPU", notNull : "false"}
+	field MEMORY {domain : DO_NUMERIC, label : "Memory", notNull : "false"}
+	field VM_NAME {domain : DO_STRING, label : "Vm Name", notNull : "true"}
+
+}
+
+create Task TK_GET_VM_INFOS {
+    className : "io.vertigo.dynamox.task.TaskEngineSelect"
+        request : "
+        	select	top(6000)
+				sub.timestamp as timestamp,
+				max(sub.cpu) / 100 as cpu,
+				max(sub.mem) / 100 as memory,
+				e.name as vm_name
+			
+			from (
+				select 
+					case p.counter_id when 107 then avg(p.value) else null end as cpu,
+					case p.counter_id when 137 then avg(p.value) else null end as mem,
+					p.timestamp,
+					p.counter_id,
+					e.id
+				
+				
+				 from [monitor].[PerfSampleMed] p
+				JOIN [monitor].[PerfInstance] i ON i.[id] = p.[instance_id] 
+				JOIN [monitor].[Entity] e ON e.[id] = i.[entity_id] 
+				
+				WHERE 
+				e.[moref_type] = 'VirtualMachine' and
+				 (p.[counter_id] = 107 or p.[counter_id] = 137) and
+				 p.[timestamp] >= #LAST_TIMESTAMP#
+				 group by e.id,p.timestamp, p.counter_id
+				 ) sub
+			
+			 JOIN [monitor].[Entity] e ON e.[id] = sub.id 
+			 group by e.name, sub.timestamp
+			 order by timestamp asc
+        	
+			"
+	attribute LAST_TIMESTAMP	 	{domain : DO_TIMESTAMP 		notNull:"true" 	inOut :"in"}
+	attribute VM_INFOS	 	{domain : DO_DT_VM_INFOS_DTC 		notNull:"true" 	inOut :"out"}
+},
