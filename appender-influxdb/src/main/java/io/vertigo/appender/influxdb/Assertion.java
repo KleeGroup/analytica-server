@@ -18,6 +18,8 @@
  */
 package io.vertigo.appender.influxdb;
 
+import java.util.Objects;
+
 /**
  * Assertions have been introduced by  B.Meyer with a language called Eiffel.
  *
@@ -40,6 +42,15 @@ package io.vertigo.appender.influxdb;
 public final class Assertion {
 	private Assertion() {
 		//private constructor
+	}
+
+	/**
+	 * Check if an object is not null.
+	 * If not a generic exception is thrown.
+	 * @param o Object object  that must be not null
+	 */
+	public static void checkNotNull(final Object o) {
+		Objects.requireNonNull(o);
 	}
 
 	/**

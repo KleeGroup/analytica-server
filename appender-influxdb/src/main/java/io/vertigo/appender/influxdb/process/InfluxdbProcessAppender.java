@@ -1,4 +1,4 @@
-package io.vertigo.appender.influxdb;
+package io.vertigo.appender.influxdb.process;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -49,7 +49,6 @@ public class InfluxdbProcessAppender extends AppenderSkeleton {
 
 	@Override
 	protected void append(final LoggingEvent event) {
-
 		if (event.getMessage() instanceof String) {
 			try {
 				final LogMessage logMessage = GSON.fromJson((String) event.getMessage(), LogMessage.class);
