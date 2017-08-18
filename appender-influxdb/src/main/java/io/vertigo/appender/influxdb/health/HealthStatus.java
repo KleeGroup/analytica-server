@@ -27,16 +27,33 @@ package io.vertigo.appender.influxdb.health;
  * @author jmforhan
  */
 public enum HealthStatus {
+
 	/**
-	 * green : the component is fully operational.
+	 * red : the component is not operational.
 	 */
-	GREEN,
+	RED,
+
 	/**
 	 * yellow : the component is partially operational.
 	 */
 	YELLOW,
+
 	/**
-	 * red : the component is not operational.
+	 * green : the component is fully operational.
 	 */
-	RED
+	GREEN;
+
+	public int getNumericValue() {
+		switch (this) {
+			case RED:
+				return 0;
+			case YELLOW:
+				return 1;
+			case GREEN:
+				return 2;
+			default:
+				throw new RuntimeException("Unkown satus : " + this);
+		}
+	}
+
 }
