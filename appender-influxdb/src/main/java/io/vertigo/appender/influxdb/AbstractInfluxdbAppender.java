@@ -2,12 +2,14 @@ package io.vertigo.appender.influxdb;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.ErrorCode;
 import org.apache.log4j.spi.LoggingEvent;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
+import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
 
 import com.google.gson.Gson;
@@ -53,7 +55,12 @@ public abstract class AbstractInfluxdbAppender<O> extends AppenderSkeleton {
 				if (!db.describeDatabases().contains(logMessage.getAppName())) {
 					db.createDatabase(logMessage.getAppName());
 				}
-				db.write(logMessage.getAppName(), "autogen", eventToPoint(logMessage.getEvent(), logMessage.getHost()));
+				final BatchPoints.Builder batchPointsBuilder = BatchPoints.database(logMessage.getAppName())
+						.retentionPolicy("autogen");
+				eventToPoints(logMessage.getEvent(), logMessage.getHost())
+						.forEach(batchPointsBuilder::point);
+				db.write(batchPointsBuilder.build());
+				//db.write(logMessage.getAppName(), "autogen", eventToPoints(logMessage.getEvent(), logMessage.getHost()));
 			} catch (final JsonSyntaxException e) {
 				// it wasn't a message for us so we do nothing
 			} catch (final Exception e) {
@@ -65,7 +72,7 @@ public abstract class AbstractInfluxdbAppender<O> extends AppenderSkeleton {
 
 	}
 
-	protected abstract Point eventToPoint(final O healthCheck, final String host);
+	protected abstract List<Point> eventToPoints(final O healthCheck, final String host);
 
 	protected abstract Type getEventType();
 

@@ -1,6 +1,8 @@
 package io.vertigo.appender.influxdb.metric;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.influxdb.dto.Point;
@@ -10,9 +12,9 @@ import io.vertigo.appender.influxdb.AbstractInfluxdbAppender;
 public class InfluxdbMetricAppender extends AbstractInfluxdbAppender<Metric> {
 
 	@Override
-	protected Point eventToPoint(final Metric metric, final String host) {
+	protected List<Point> eventToPoints(final Metric metric, final String host) {
 
-		return Point.measurement("metric")
+		return Collections.singletonList(Point.measurement("metric")
 				.time(metric.getMeasureInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
 				.addField("location", host)
 				.addField("name", metric.getName())
@@ -22,7 +24,7 @@ public class InfluxdbMetricAppender extends AbstractInfluxdbAppender<Metric> {
 				.tag("name", metric.getName())
 				.tag("topic", metric.getTopic())
 				.tag("value", String.valueOf(metric.getValue()))
-				.build();
+				.build());
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package io.vertigo.appender.influxdb.health;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.influxdb.dto.Point;
@@ -10,9 +12,9 @@ import io.vertigo.appender.influxdb.AbstractInfluxdbAppender;
 public class InfluxdbHealthAppender extends AbstractInfluxdbAppender<HealthCheck> {
 
 	@Override
-	protected Point eventToPoint(final HealthCheck healthCheck, final String host) {
+	protected List<Point> eventToPoints(final HealthCheck healthCheck, final String host) {
 
-		return Point.measurement("healthcheck")
+		return Collections.singletonList(Point.measurement("healthcheck")
 				.time(healthCheck.getCheckInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
 				.addField("location", host)
 				.addField("name", healthCheck.getName())
@@ -28,7 +30,7 @@ public class InfluxdbHealthAppender extends AbstractInfluxdbAppender<HealthCheck
 				.tag("topic", healthCheck.getTopic())
 				.tag("status", String.valueOf(healthCheck.getMeasure().getStatus().getNumericValue()))
 				.tag("message", healthCheck.getMeasure().getMessage())
-				.build();
+				.build());
 	}
 
 	@Override
