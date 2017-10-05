@@ -1,0 +1,318 @@
+Listening on port 4560 
+Waiting to accept a new client. 
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Could not open ObjectInputStream to Socket[addr=/172.20.231.103,port=53121,localport=4560] 
+java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:210)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:246)
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:286)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:345)
+	at java.io.ObjectInputStream$PeekInputStream.read(ObjectInputStream.java:2606)
+	at java.io.ObjectInputStream$PeekInputStream.readFully(ObjectInputStream.java:2622)
+	at java.io.ObjectInputStream$BlockDataInputStream.readShort(ObjectInputStream.java:3099)
+	at java.io.ObjectInputStream.readStreamHeader(ObjectInputStream.java:853)
+	at java.io.ObjectInputStream.<init>(ObjectInputStream.java:349)
+	at org.apache.log4j.net.SocketNode.<init>(SocketNode.java:56)
+	at org.apache.log4j.net.SimpleSocketServer.main(SimpleSocketServer.java:67)
+Waiting to accept a new client. 
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Could not open ObjectInputStream to Socket[addr=/172.20.231.103,port=53183,localport=4560] 
+java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:210)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:246)
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:286)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:345)
+	at java.io.ObjectInputStream$PeekInputStream.read(ObjectInputStream.java:2606)
+	at java.io.ObjectInputStream$PeekInputStream.readFully(ObjectInputStream.java:2622)
+	at java.io.ObjectInputStream$BlockDataInputStream.readShort(ObjectInputStream.java:3099)
+	at java.io.ObjectInputStream.readStreamHeader(ObjectInputStream.java:853)
+	at java.io.ObjectInputStream.<init>(ObjectInputStream.java:349)
+	at org.apache.log4j.net.SocketNode.<init>(SocketNode.java:56)
+	at org.apache.log4j.net.SimpleSocketServer.main(SimpleSocketServer.java:67)
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Waiting to accept a new client. 
+Unexpected exception. Closing conneciton. 
+java.lang.ClassNotFoundException: org.apache.logging.log4j.core.impl.Log4jLogEvent$LogEventProxy
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:348)
+	at java.io.ObjectInputStream.resolveClass(ObjectInputStream.java:677)
+	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1819)
+	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1713)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1986)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1535)
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:422)
+	at org.apache.log4j.net.SocketNode.run(SocketNode.java:82)
+	at java.lang.Thread.run(Thread.java:745)
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Waiting to accept a new client. 
+Unexpected exception. Closing conneciton. 
+java.lang.ClassNotFoundException: org.apache.logging.log4j.core.impl.Log4jLogEvent$LogEventProxy
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:348)
+	at java.io.ObjectInputStream.resolveClass(ObjectInputStream.java:677)
+	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1819)
+	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1713)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1986)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1535)
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:422)
+	at org.apache.log4j.net.SocketNode.run(SocketNode.java:82)
+	at java.lang.Thread.run(Thread.java:745)
+Listening on port 4560 
+Waiting to accept a new client. 
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Waiting to accept a new client. 
+Unexpected exception. Closing conneciton. 
+java.lang.ClassNotFoundException: org.apache.logging.log4j.core.impl.Log4jLogEvent$LogEventProxy
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:348)
+	at java.io.ObjectInputStream.resolveClass(ObjectInputStream.java:677)
+	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1819)
+	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1713)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1986)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1535)
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:422)
+	at org.apache.log4j.net.SocketNode.run(SocketNode.java:82)
+	at java.lang.Thread.run(Thread.java:745)
+Listening on port 4560 
+Waiting to accept a new client. 
+Connected to client at /172.20.231.103 
+Starting new socket node. 
+Waiting to accept a new client. 
+{"appName":"vertigo","host":"NPIEDELOUP-PORT","event":{"category":"tasks","name":"/execute/TK_INIT_MAIN","start":1507120030655,"end":1507120030773,"measures":{"success":100.0},"tags":{},"subProcesses":[{"category":"sql","name":"/execute//* TaskEngine : TK_INIT_MAIN */\n create table fami","start":1507120030769,"end":1507120030770,"measures":{"nbModifiedRow":0.0,"success":100.0},"tags":{"statement":"io.vertigo.database.impl.sql.SqlDataBaseManagerImpl@6e0f7aad"},"subProcesses":[]}]}} 
+Caught java.net.SocketException closing conneciton. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+Listening on port 4560 
+Waiting to accept a new client. 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205801110,"end":1507205801110,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205802113,"end":1507205802174,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205803175,"end":1507205803177,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205804178,"end":1507205804180,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205805181,"end":1507205805183,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205806184,"end":1507205806185,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205807186,"end":1507205807188,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205808190,"end":1507205808192,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205809193,"end":1507205809195,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205810195,"end":1507205810196,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205811197,"end":1507205811199,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205812201,"end":1507205812203,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205813203,"end":1507205813205,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205814206,"end":1507205814207,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205815208,"end":1507205815210,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205816211,"end":1507205816213,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205817214,"end":1507205817217,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205818219,"end":1507205818221,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205819221,"end":1507205819224,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205820225,"end":1507205820227,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205821229,"end":1507205821232,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205822233,"end":1507205822235,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205823237,"end":1507205823238,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205824240,"end":1507205824242,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205825244,"end":1507205825246,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205826246,"end":1507205826248,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205827250,"end":1507205827252,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205828252,"end":1507205828253,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205829255,"end":1507205829257,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205830258,"end":1507205830259,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205831260,"end":1507205831261,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205832262,"end":1507205832264,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205833265,"end":1507205833270,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205834272,"end":1507205834273,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205835274,"end":1507205835275,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205836276,"end":1507205836277,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205837280,"end":1507205837281,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205838282,"end":1507205838283,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205839284,"end":1507205839285,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205840286,"end":1507205840287,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205841288,"end":1507205841289,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205842290,"end":1507205842291,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205843294,"end":1507205843295,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205844296,"end":1507205844297,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205845298,"end":1507205845299,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205846300,"end":1507205846301,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205847302,"end":1507205847303,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205848304,"end":1507205848305,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205849307,"end":1507205849309,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205850311,"end":1507205850312,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205851313,"end":1507205851314,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205852315,"end":1507205852316,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205853317,"end":1507205853318,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205854318,"end":1507205854319,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205855321,"end":1507205855322,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205856323,"end":1507205856324,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205857326,"end":1507205857327,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205858328,"end":1507205858329,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":110000000},"name":"definitionUsageInDao","topic":"DT_ACCOUNT","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":110000000},"name":"definitionUsageInDao","topic":"DT_ACCOUNT_GROUP","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"name":"io","checker":"cachePlugin","feature":"commons","topic":"cache","healthMeasure":{"status":"GREEN"},"checkInstant":{"seconds":1507205860,"nanos":108000000}}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":111000000},"name":"definitionUsageInDao","topic":"DT_ACTOR_ROLE","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":111000000},"name":"definitionUsageInDao","topic":"DT_DUMMY","value":3.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":111000000},"name":"definitionUsageInDao","topic":"DT_GENDER","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"name":"lastExecs","checker":"daemonManager","feature":"commons","topic":"daemons","healthMeasure":{"status":"GREEN"},"checkInstant":{"seconds":1507205860,"nanos":110000000}}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"name":"clusterHealth","checker":"searchServicesPlugin","feature":"dynamo","topic":"search","healthMeasure":{"status":"GREEN"},"checkInstant":{"seconds":1507205860,"nanos":111000000}}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"name":"testQuery","checker":"sqlConnectionProviderPlugin","feature":"database","topic":"sqlDatabase","healthMeasure":{"status":"GREEN"},"checkInstant":{"seconds":1507205862,"nanos":785000000}}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205859330,"end":1507205859331,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_ANALYTICS_HEALTH","start":1507205860106,"end":1507205862805,"measures":{"success":100.0},"tags":{},"subProcesses":[{"category":"sql","name":"/execute/SELECT 1","start":1507205862766,"end":1507205862780,"measures":{"success":100.0,"nbSelectedRow":1.0},"tags":{"statement":"io.vertigo.database.impl.sql.SqlDataBaseManagerImpl@c6b3c91"},"subProcesses":[]}]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_UPDATE_NODE_STATUS","start":1507205862806,"end":1507205862806,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":111000000},"name":"definitionUsageInDao","topic":"DT_MOVIE","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":111000000},"name":"definitionUsageInDao","topic":"DT_MOVIE_CARACT","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":111000000},"name":"definitionUsageInDao","topic":"DT_MOVIE_INDEX","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":112000000},"name":"definitionUsageInDao","topic":"DT_MOVIE_LINK","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":112000000},"name":"definitionUsageInDao","topic":"DT_MOVIE_SYNOPSIS","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":112000000},"name":"definitionUsageInDao","topic":"DT_MOVIE_TRAILER","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":112000000},"name":"definitionUsageInDao","topic":"DT_PERSON","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":112000000},"name":"definitionUsageInDao","topic":"DT_PERSON_ACTOR_ROLE_LINK","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":112000000},"name":"definitionUsageInDao","topic":"DT_PERSON_INDEX","value":2.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":113000000},"name":"definitionUsageInDao","topic":"DT_PERSON_LINK","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":114000000},"name":"domainUsageInDtDefinitions","topic":"DO_ACTIVE","value":2.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":114000000},"name":"domainUsageInDtDefinitions","topic":"DO_CODE","value":2.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":114000000},"name":"domainUsageInDtDefinitions","topic":"DO_DATE","value":2.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":115000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_ACTOR_ROLE_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":115000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_ACTOR_ROLE_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":115000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_DUMMY_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":115000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_DUMMY_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":115000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_GENDER_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":115000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_GENDER_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":115000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_CARACT_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":116000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_CARACT_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":116000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_INDEX_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_INDEX_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_LINK_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_LINK_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_SYNOPSIS_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_SYNOPSIS_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_TRAILER_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_MOVIE_TRAILER_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_ACTOR_ROLE_LINK_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_ACTOR_ROLE_LINK_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":117000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_INDEX_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_INDEX_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_LINK_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_DT_PERSON_LINK_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_HREF","value":8.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_IDENTITY","value":14.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_LABEL","value":23.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_LABEL_SHORT","value":5.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_MULTI_VALUES","value":8.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_RATING","value":4.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_RUNTIME","value":3.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_TEXT","value":9.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_TEXT_NOT_TOKENIZED","value":3.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_X_ACCOUNT_EMAIL","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_X_ACCOUNT_ID","value":2.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_X_ACCOUNT_NAME","value":2.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":118000000},"name":"domainUsageInDtDefinitions","topic":"DO_YEAR","value":4.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_ACTIVE","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_CODE","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DATE","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_ACTOR_ROLE_DTC","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_ACTOR_ROLE_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_DUMMY_DTC","value":3.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_DUMMY_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_GENDER_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_GENDER_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_CARACT_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_CARACT_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_DTC","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_INDEX_DTC","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_INDEX_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_LINK_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":119000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_LINK_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_SYNOPSIS_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_SYNOPSIS_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_TRAILER_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_MOVIE_TRAILER_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_ACTOR_ROLE_LINK_DTC","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_ACTOR_ROLE_LINK_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_DTC","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_INDEX_DTC","value":2.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_INDEX_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_LINK_DTC","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_DT_PERSON_LINK_DTO","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_HREF","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_IDENTITY","value":1.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_LABEL","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_LABEL_SHORT","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_MULTI_VALUES","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_RATING","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"category":"daemon","name":"DMN_REMOTE_LOGGER","start":1507205862806,"end":1507205862811,"measures":{"success":100.0},"tags":{},"subProcesses":[]}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_RUNTIME","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_TEXT","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":120000000},"name":"domainUsageInTasks","topic":"DO_TEXT_NOT_TOKENIZED","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":121000000},"name":"domainUsageInTasks","topic":"DO_X_ACCOUNT_EMAIL","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":121000000},"name":"domainUsageInTasks","topic":"DO_X_ACCOUNT_ID","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":121000000},"name":"domainUsageInTasks","topic":"DO_X_ACCOUNT_NAME","value":0.0,"status":"SUCCESS"}} 
+{"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":121000000},"name":"domainUsageInTasks","topic":"DO_YEAR","value":0.0,"status":"SUCCESS"}} 

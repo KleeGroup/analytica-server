@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+        <appender name="FILE_LOG" class="org.apache.log4j.RollingFileAppender">
+                <param name="File" value="analytics_events.log" />
+                <param name="Append" value="true" />
+                <param name="MaxFileSize" value="100MB" />
+                <param name="MaxBackupIndex" value="50" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern"
+                                value="%m %n" />
+                </layout>
+        </appender>
+        <appender name="PROCESS_INFLUX_DB" class="io.vertigo.analytics.server.feeders.influxdb.log4j.InfluxdbProcessAppender">
+                <param name="serverUrl" value="*"/>
+                <param name="login" value="*"/>
+                <param name="password" value="*"/>
+        </appender>
+         <appender name="HEALTH_INFLUX_DB" class="io.vertigo.analytics.server.feeders.influxdb.log4j.InfluxdbHealthAppender">
+                <param name="serverUrl" value="*"/>
+                <param name="login" value="*"/>
+                <param name="password" value="*"/>
+        </appender>
+         <appender name="METRIC_INFLUX_DB" class="io.vertigo.analytics.server.feeders.influxdb.log4j.InfluxdbMetricAppender">
+                <param name="serverUrl" value="*"/>
+                <param name="login" value="*"/>
+                <param name="password" value="*"/>
+        </appender>
+        
+        <logger name="analytics-health" additivity="false">
+			<level value="INFO" />
+			<appender-ref ref="HEALTH_INFLUX_DB"/>
+            <appender-ref ref="FILE_LOG"/>
+		</logger>
+		<logger name="analytics-metric" additivity="false">
+			<level value="INFO" />
+			<appender-ref ref="METRIC_INFLUX_DB"/>
+            <appender-ref ref="FILE_LOG"/>
+		</logger>
+
+        <root>
+            <level value="INFO"/>
+            <appender-ref ref="PROCESS_INFLUX_DB"/>
+            <appender-ref ref="FILE_LOG"/>
+        </root>
+</log4j:configuration>
