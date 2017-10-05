@@ -32,7 +32,7 @@ public class AnalyticsServerStarter {
 					break;
 				case "log4j2":
 					final TcpSocketServer tcpSocketServer = TcpSocketServer.createSerializedSocketServer(Integer.parseInt(args[i * 3 + 1]));
-					Configurator.initialize(null, args[i * 3 + 2]);
+					Configurator.initialize("definedLog4jContext", AnalyticsServerStarter.class.getClassLoader(), args[i * 3 + 2]);
 					tcpSocketServer.startNewThread().run();
 					break;
 				default:
