@@ -74,6 +74,11 @@ public class InfluxdbUtil {
 		final Map<String, Object> durationFields = visitState.getDurationsByCategory().entrySet().stream()
 				.collect(Collectors.toMap((entry) -> entry.getKey() + "_duration", (entry) -> entry.getValue()));
 
+		// we add a inner duration for convinience
+		final Long innerDuration = process.getDurationMillis() - visitState.getDurationsByCategory().values()
+				.stream()
+				.collect(Collectors.summingLong(Long::longValue));
+
 		final Map<String, String> properedTags = process.getTags().entrySet()
 				.stream()
 				.collect(Collectors.toMap(
@@ -88,6 +93,7 @@ public class InfluxdbUtil {
 				.addField("duration", process.getDurationMillis())
 				.addField("subprocesses", process.getSubProcesses().size())
 				.addField("name", properString(process.getName()))
+				.addField("inner_duration", innerDuration)
 				.fields(countFields)
 				.fields(durationFields)
 				.build();
