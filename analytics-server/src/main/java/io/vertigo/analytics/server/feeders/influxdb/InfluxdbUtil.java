@@ -34,30 +34,35 @@ public class InfluxdbUtil {
 				.addField("location", host)
 				.addField("name", healthCheck.getName())
 				.addField("checker", healthCheck.getChecker())
+				.addField("module", healthCheck.getModule())
 				.addField("feature", healthCheck.getFeature())
-				.addField("topic", healthCheck.getTopic())
 				.addField("status", healthCheck.getMeasure().getStatus().getNumericValue())
 				.addField("message", messageToStore)
 				.tag("location", host)
 				.tag("name", healthCheck.getName())
 				.tag("checker", healthCheck.getChecker())
+				.tag("module", healthCheck.getModule())
 				.tag("feature", healthCheck.getFeature())
-				.tag("topic", healthCheck.getTopic())
 				.tag("status", String.valueOf(healthCheck.getMeasure().getStatus().getNumericValue()))
 				.build());
 	}
 
 	public static List<Point> metricToPoints(final Metric metric, final String host) {
 
+		final String module = metric.getModule();// for now module is null
+		final String moduleToStore = module != null ? module : "";
+
 		return Collections.singletonList(Point.measurement("metric")
 				.time(metric.getMeasureInstant().toEpochMilli(), TimeUnit.MILLISECONDS)
 				.addField("location", host)
 				.addField("name", metric.getName())
-				.addField("topic", metric.getTopic())
+				.addField("module", moduleToStore)
+				.addField("feature", metric.getFeature())
 				.addField("value", metric.getValue())
 				.tag("location", host)
 				.tag("name", metric.getName())
-				.tag("topic", metric.getTopic())
+				.tag("module", moduleToStore)
+				.tag("feature", metric.getFeature())
 				.tag("value", String.valueOf(metric.getValue()))
 				.build());
 	}

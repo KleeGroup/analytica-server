@@ -21,34 +21,37 @@ package io.vertigo.analytics.server.events.metric;
 import java.time.Instant;
 
 /**
- * Interface dÃ©crivant un rÃ©sultat de metric.
+ * Interface décrivant un résultat de metric.
  *
  * @author mlaroche, pchretien
  */
 public final class Metric {
 
 	public enum Status {
-		/** ExÃ©cution OK*/
+		/** Exécution OK*/
 		SUCCESS,
-		/** Erreur lors de l'exÃ©cution*/
+		/** Erreur lors de l'exécution*/
 		ERROR;
 	}
 
 	private final Instant measureInstant;
 	private final String name;
-	private final String topic;
+	private final String module;// may be null for now
+	private final String feature;
 	private final Double value;//migth be null
 	private final Status status;
 
 	Metric(
 			final Instant measureTime,
 			final String name,
-			final String topic,
+			final String module,
+			final String feature,
 			final Double value,
 			final Status status) {
 		measureInstant = measureTime;
 		this.name = name;
-		this.topic = topic;
+		this.module = module;
+		this.feature = feature;
 		this.value = value;
 		this.status = status;
 
@@ -62,8 +65,12 @@ public final class Metric {
 		return name;
 	}
 
-	public String getTopic() {
-		return topic;
+	public String getModule() {
+		return module;
+	}
+
+	public String getFeature() {
+		return feature;
 	}
 
 	public Double getValue() {
