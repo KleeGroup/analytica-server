@@ -38,14 +38,9 @@ public class AnalyticsServerStarter {
 					javaSerializedTcpSocketServer.startNewThread().run();
 					break;
 				case "log4net":
-					/*final TcpSocketServer jsonTcpSocketServer = TcpSocketServer.createJsonSocketServer(Integer.parseInt(args[i * 3 + 1]));
-					Configurator.initialize("definedLog4jContext", AnalyticsServerStarter.class.getClassLoader(), args[i * 3 + 2]);
-					jsonTcpSocketServer.startNewThread().run();*/
-
 					Configurator.initialize("definedLog4netContext", AnalyticsServerStarter.class.getClassLoader(), configFile);
 					AnalyticsTcpServer ats = new AnalyticsTcpServer();
 					ats.start(Integer.parseInt(port));
-					
 					break;
 				default:
 					break;
