@@ -1,0 +1,12 @@
+# Systemd unit file for log4j
+[Unit]
+Description=Log4J server
+After=syslog.target network.target
+[Service]
+Type=simple
+ExecStart=/home/analytica/log4j/bin/log4j-startup.sh
+User=analytica
+Group=analytica
+[Install]
+WantedBy=multi-user.target
+

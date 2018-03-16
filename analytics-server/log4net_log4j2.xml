@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="TRACE" packages="io.vertigo.analytics.server.feeders.influxdb.log4net">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+		<RollingFile name="RollingFile" fileName="analytics_events.log" filePattern="analytics_events-%i.log">
+			<PatternLayout>
+				<Pattern>%m %n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="50" />
+		</RollingFile>
+		<InfluxdbProcess4net name="InfluxdbProcess4net" serverUrl="*" login="*" password="*" />
+
+		<InfluxdbMetric name="InfluxdbMetric" serverUrl="*" login="*" password="*" />
+		<InfluxdbHealth name="InfluxdbHealth" serverUrl="*" login="*" password="*" />
+	</Appenders>
+	<Loggers>
+		<Logger name="analytics-health" level="info" additivity="false">
+			<AppenderRef ref="InfluxdbHealth" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+		<Logger name="analytics-metric" level="info" additivity="false">
+			<AppenderRef ref="InfluxdbMetric" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+		<Root level="info">
+			<AppenderRef ref="InfluxdbProcess4net" />
+			<AppenderRef ref="RollingFile" />
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>
