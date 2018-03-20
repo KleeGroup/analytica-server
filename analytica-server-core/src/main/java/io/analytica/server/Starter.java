@@ -17,6 +17,13 @@
  */
 package io.analytica.server;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Properties;
+
 import io.analytica.restserver.RestServerManager;
 import io.analytica.restserver.impl.RestServerManagerImpl;
 import io.analytica.server.aggregator.impl.influxDB.InfluxDBProcessAggregatorPlugin;
@@ -29,16 +36,8 @@ import io.analytica.server.plugins.queryapi.rest.RestQueryNetApiPlugin;
 import io.vertigo.app.App;
 import io.vertigo.app.config.AppConfig;
 import io.vertigo.app.config.AppConfigBuilder;
-import io.vertigo.app.config.ComponentConfigBuilder;
 import io.vertigo.app.config.ModuleConfigBuilder;
 import io.vertigo.lang.Assertion;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Properties;
 
 /**
  * Charge et demarre un environnement.
@@ -46,7 +45,6 @@ import java.util.Properties;
  */
 public class Starter implements Runnable {
 	private static final String PROCESS_STORE_PATH = "processStorePath";
-	private static final String CUBE_STORE_PATH = "cubeStorePath";
 	private static final String SOCKET_IO_URL = "socketIoUrl";
 	private static final String STACK_PROCESS_STATS = "stackProcessStats";
 	private static final String REST_API_PATH = "restApiPath";
@@ -55,17 +53,15 @@ public class Starter implements Runnable {
 	private static final String TYPE_API_REST = "REST";
 	private static final String PROCESS_API = "processApi";
 	private static final String QUERY_API = "queryApi";
-	
+
 	private static final String AGGREGATOR_HTTP_ADRESSE = "aggregatorHttpAdresse";
 	private static final String AGGREGATOR_HTTP_PORT = "aggregatorHttpPort";
 	private static final String AGGREGATOR_USERNAME = "aggregatorUsername";
 	private static final String AGGREGATOR_PASSWORD = "aggregatorPassword";
 	private static final String AGGREGATOR_MIN_SIZE = "aggregatorCacheMinSize";
-	
+
 	private final Class<?> relativeRootClass;
 	private final String propertiesFileName;
-	private boolean started;
-	private App app;
 
 	/**
 	 * @param propertiesFileName Fichier de propriétés
@@ -138,7 +134,7 @@ public class Starter implements Runnable {
 					.addParam("httpPort", properties.getProperty(REST_API_PORT, "8080"))
 					.endComponent();
 		}
-		final ComponentConfigBuilder serverConfigBuilder = moduleConfigBuilder.beginComponent(ServerManager.class, ServerManagerImpl.class);
+		moduleConfigBuilder.beginComponent(ServerManager.class, ServerManagerImpl.class);
 		if (properties.containsKey(PROCESS_STORE_PATH)) {
 			moduleConfigBuilder.beginPlugin(BerkeleyProcessStorePlugin.class)
 					.addParam("dbPath", properties.getProperty(PROCESS_STORE_PATH))
@@ -152,17 +148,17 @@ public class Starter implements Runnable {
 			moduleConfigBuilder.addPlugin(RestQueryNetApiPlugin.class);
 		}
 		moduleConfigBuilder.beginPlugin(InfluxDBProcessAggregatorPlugin.class)
-		.addParam("httpAddresse", properties.getProperty(AGGREGATOR_HTTP_ADRESSE))
-		.addParam("port", properties.getProperty(AGGREGATOR_HTTP_PORT))
-		.addParam("username", properties.getProperty(AGGREGATOR_USERNAME))
-		.addParam("password", properties.getProperty(AGGREGATOR_PASSWORD))
-		.addParam("flushMinSize", properties.getProperty(AGGREGATOR_MIN_SIZE))
-		.endPlugin();
-		
-//		moduleConfigBuilder.addComponent(HCubeManager.class, HCubeManagerImpl.class)
-//				.beginPlugin(LuceneHCubeStorePlugin.class)
-//				.addParam("path", properties.getProperty(CUBE_STORE_PATH))
-//				.endPlugin();
+				.addParam("httpAddresse", properties.getProperty(AGGREGATOR_HTTP_ADRESSE))
+				.addParam("port", properties.getProperty(AGGREGATOR_HTTP_PORT))
+				.addParam("username", properties.getProperty(AGGREGATOR_USERNAME))
+				.addParam("password", properties.getProperty(AGGREGATOR_PASSWORD))
+				.addParam("flushMinSize", properties.getProperty(AGGREGATOR_MIN_SIZE))
+				.endPlugin();
+
+		//		moduleConfigBuilder.addComponent(HCubeManager.class, HCubeManagerImpl.class)
+		//				.beginPlugin(LuceneHCubeStorePlugin.class)
+		//				.addParam("path", properties.getProperty(CUBE_STORE_PATH))
+		//				.endPlugin();
 		if (properties.containsKey(SOCKET_IO_URL)) {
 			moduleConfigBuilder.beginPlugin(SocketIoProcessStatsPlugin.class)
 					.addParam("socketIoUrl", properties.getProperty(SOCKET_IO_URL))

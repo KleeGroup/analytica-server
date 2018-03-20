@@ -17,17 +17,17 @@
  */
 package io.analytica;
 
-import io.vertigo.app.Home;
-import io.vertigo.core.component.di.injector.Injector;
-import io.vertigo.lang.Container;
-import io.vertigo.lang.Option;
-
+import java.util.Optional;
 import java.util.Properties;
 
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+
+import io.vertigo.app.Home;
+import io.vertigo.core.component.di.injector.DIInjector;
+import io.vertigo.lang.Container;
 
 /**
  * Charge l'environnement de test par defaut.
@@ -48,8 +48,8 @@ public abstract class AbstractTestCaseJU4Rule {
 	/**
 	 * @return fichier properties de paramétrage des managers (par defaut Option.none())
 	 */
-	protected Option<String> getPropertiesFileName() {
-		return Option.none(); //par défaut pas de properties
+	protected Optional<String> getPropertiesFileName() {
+		return Optional.empty(); //par défaut pas de properties
 	}
 
 	/**
@@ -102,7 +102,7 @@ public abstract class AbstractTestCaseJU4Rule {
 				starter.start();
 
 				//On injecte les managers sur la classe de test.
-				Injector.injectMembers(testCaseInstance, getContainer());
+				DIInjector.injectMembers(testCaseInstance, getContainer());
 				try {
 					base.evaluate();
 				} finally {

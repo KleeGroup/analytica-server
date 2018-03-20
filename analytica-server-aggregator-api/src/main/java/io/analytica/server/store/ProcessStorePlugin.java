@@ -17,10 +17,10 @@
  */
 package io.analytica.server.store;
 
-import io.analytica.api.KProcess;
-import io.vertigo.lang.Plugin;
-
 import java.util.List;
+
+import io.analytica.api.AProcess;
+import io.vertigo.lang.Plugin;
 
 /**
  * Plugin gérant le stockage des process.
@@ -32,7 +32,7 @@ public interface ProcessStorePlugin extends Plugin {
 	 * Ajout un processus identifié.
 	 * @param process processus identifié.
 	 */
-	void add(KProcess process);
+	void add(AProcess process);
 
 	/**
 	 * Liste des process suivant.
@@ -41,7 +41,7 @@ public interface ProcessStorePlugin extends Plugin {
 	 * @param maxRow Nombre de ligne max
 	 * @return Liste des process suivant
 	 */
-	List<Identified<KProcess>> getProcess(final String appName, final String lastId, final Integer maxRow);
+	List<Identified<AProcess>> getProcess(final String appName, final String lastId, final Integer maxRow);
 
 	/**
 	 * Liste tous les applications disponible dans le store

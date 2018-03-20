@@ -9,7 +9,7 @@ function showCharts() {
 
 
 function showChart(elem) {
-		var dataUrl = getDataUrl(elem); 
+		var dataUrl = "http://mlaroche-port:8080/dashboard/"+getDataUrl(elem); 
 		var dataQuery = jQuery.parseJSON( elem.attr('data-query') );
 		var dataLabels =  elem.attr('data-labels');
 		if(dataLabels) {
@@ -21,11 +21,11 @@ function showChart(elem) {
 		}
 		var dataColors =  elem.attr('data-colors');
 		
-		$.getJSON(dataUrl, dataQuery)      
+		$.post(dataUrl, elem.attr('data-query'), "json")      
 		.done(
 		  function( datas ) {
-			  if(notEmpty(datas)) {
-				  var dataMetrics = dataQuery.datas.split(';');
+			  if(notEmpty(datas.timedDataSeries)) {
+				  var dataMetrics = datas.seriesNames;
 				  if (elem.hasClass ("bignumber")) {
 					  showBigNumber(elem, datas, dataMetrics, dataQuery, dataLabels, dataIcons, dataColors);
 				  } else if (elem.hasClass ("objective")) {
@@ -35,7 +35,7 @@ function showChart(elem) {
 				  } else if (elem.hasClass ("d3chart")) {
 					  showD3Chart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
 				  } else if (elem.hasClass ("flotchart")) {
-					  showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors);
+					  showFlotChart(elem, datas.timedDataSeries, dataMetrics, dataQuery, dataLabels, dataColors);
 				  }
 			  }
 		  });
@@ -197,32 +197,32 @@ analyticaTools = function() {
 	}
 	
 	analyticaTools.getTimeDimStep = function(timeDim) {
-		if(timeDim == 'Year') {
+		if(timeDim == 'Year' || timeDim.endsWith('y')) {
 			return 364*24*60*60*1000.0;
-		} else if(timeDim == 'Month') {
+		} else if(timeDim == 'Month' || timeDim.endsWith('M')) {
 			return 28*24*60*60*1000.0;
-		} else if(timeDim == 'Day') {
+		} else if(timeDim == 'Day' || timeDim.endsWith('d')) {
 			return 24*60*60*1000.0;
-		} else if(timeDim == 'Hour') {
+		} else if(timeDim == 'Hour' || timeDim.endsWith('h')) {
 			return 60*60*1000.0;
-		} else if(timeDim == 'QuarterHour') {
+		} else if(timeDim == 'QuarterHour' || timeDim.endsWith('15m')) {
 			return 15*60*1000.0;
-		} else if(timeDim == 'SixMinutes') {
+		} else if(timeDim == 'SixMinutes' || timeDim.endsWith('6m')) {
 			return 6*60*1000.0;
-		} else if(timeDim == 'Minute') {
+		} else if(timeDim == 'Minute' || timeDim.endsWith('m')) {
 			return 60*1000.0;
 		}
 		return 60*1000.0;
 	}
 	
 	analyticaTools.getTimeFormat = function (timeDim) {
-		if(timeDim == 'Year') {
+		if(timeDim == 'Year'|| timeDim.endsWith('y')) {
 			return "%Y";
-		} else if(timeDim == 'Month') {
+		} else if(timeDim == 'Month' || timeDim.endsWith('M')) {
 			return "%m/%y";
-		} else if(timeDim == 'Day') {
+		} else if(timeDim == 'Day' || timeDim.endsWith('d')) {
 			return "%e/%m";
-		} else if(timeDim == 'Hour') {
+		} else if(timeDim == 'Hour' || timeDim.endsWith('h')) {
 			return "%Hh";
 		} else { //'QuarterHour' || 'SixMinutes' || 'Minute'
 			return "%H:%M";

@@ -17,7 +17,7 @@
  */
 package io.analytica.server.impl;
 
-import io.analytica.api.KProcess;
+import io.analytica.api.AProcess;
 import io.vertigo.lang.Plugin;
 
 /**
@@ -29,8 +29,8 @@ public interface ProcessStatsPlugin extends Plugin {
 	/**
 	 * Enregistre un process.
 	 * Celui-ci sera mergé avec les autres process déjé enregistrés.
-	 * @param process KProcess.
+	 * @param process AProcess.
 	 */
-	void merge(KProcess process);
+	void merge(AProcess process);
 
 }

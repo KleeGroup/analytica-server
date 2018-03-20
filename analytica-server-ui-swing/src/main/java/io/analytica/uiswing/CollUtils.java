@@ -17,9 +17,6 @@
  */
 package io.analytica.uiswing;
 
-import java.lang.RuntimeException;
-import io.vertigo.lang.Assertion;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -33,6 +30,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.RandomAccess;
+
+import io.vertigo.lang.Assertion;
 
 /**
  * Méthodes utilitaires pour manipuler et filtrer des collections.
@@ -76,7 +75,6 @@ public class CollUtils {
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
 	 * @param value java.lang.Object
-	 * @throws KSystemException
 	 */
 	public static Object findInList(final Collection list, final String propertyName, final Object value) {
 		final List result = filterList(list, propertyName, value);
@@ -91,7 +89,6 @@ public class CollUtils {
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
 	 * @param filter java.lang.Object
-	 * @throws KSystemException
 	 */
 	public static List filterList(final Collection list, final String propertyName, final Object filter) {
 		return filterList(list, propertyName, new Object[] { filter });
@@ -103,7 +100,6 @@ public class CollUtils {
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
 	 * @param filters java.lang.Object[]
-	 * @throws KSystemException
 	 */
 	public static List filterList(final Collection list, final String propertyName, final Object[] filters) {
 		Object object;
@@ -126,7 +122,6 @@ public class CollUtils {
 	 * @return java.util.Map
 	 * @param list java.util.Collection
 	 * @param propertyName java.lang.String
-	 * @throws KSystemException
 	 */
 	public static Map mapList(final Collection list, final String propertyName) {
 		if (list == null) {

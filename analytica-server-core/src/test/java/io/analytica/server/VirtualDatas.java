@@ -20,13 +20,13 @@
  */
 package io.analytica.server;
 
-import io.analytica.api.KProcess;
-import io.analytica.api.KProcessBuilder;
-import io.vertigo.lang.Assertion;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+
+import io.analytica.api.AProcess;
+import io.analytica.api.KProcessBuilder;
+import io.vertigo.lang.Assertion;
 
 /**
  * @author npiedeloup
@@ -162,15 +162,15 @@ public class VirtualDatas {
 				addUpdatePage(new Date(startVisite.getTime() + waitTime + waitTime * i), coef);
 				Thread.sleep(10);
 			}
-
+	
 		}
 	 */
 	private void addHomePage(final Date dateVisite, final double processDuration) {
 		//		final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess sqlProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("select*from news").build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("home;omePage").addSubProcess(sqlProcess).build();
+		final AProcess sqlProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("select*from news").build();
+		final AProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("home;omePage").addSubProcess(sqlProcess).build();
 		serverManager.push(pageProcess);
 	}
 
@@ -178,8 +178,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//	final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("find oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("search").addSubProcess(searchProcess).build();
+		final AProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("find oeuvres").build();
+		final AProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("search").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Recherche " + dateVisite);
 
@@ -189,8 +189,8 @@ public class VirtualDatas {
 		//final double processDuration = Math.random() * 50 + 150d;
 		//final double processDuration = 150d + 100 * Math.sin(dateVisite.getMinutes() * Math.PI / 60);
 
-		final KProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("select 1 from oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("oeuvre").addSubProcess(searchProcess).build();
+		final AProcess searchProcess = new KProcessBuilder(APP_NAME, SQL_PROCESS, dateVisite, 80).withCategory("select 1 from oeuvres").build();
+		final AProcess pageProcess = new KProcessBuilder(APP_NAME, PAGE_PROCESS, dateVisite, processDuration).withCategory("oeuvre").addSubProcess(searchProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Consultation " + dateVisite);
 
@@ -198,9 +198,9 @@ public class VirtualDatas {
 
 	/*	private void addUpdatePage(final Date dateVisite, final double processDuration) {
 			//final double processDuration = Math.random() * 50 + 150d;
-
-		final KProcess updateProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SQL_PROCESS, "update 1 from oeuvres").build();
-		final KProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "/oeuvre").addSubProcess(updateProcess).build();
+	
+		final AProcess updateProcess = new KProcessBuilder(dateVisite, 80, SYSTEM_NAME, SYSTEM_LOCATION, SQL_PROCESS, "update 1 from oeuvres").build();
+		final AProcess pageProcess = new KProcessBuilder(dateVisite, processDuration, SYSTEM_NAME, SYSTEM_LOCATION, PAGE_PROCESS, "/oeuvre").addSubProcess(updateProcess).build();
 		serverManager.push(pageProcess);
 		//System.out.println("Modification " + dateVisite);
 		}*/
@@ -238,8 +238,8 @@ public class VirtualDatas {
 
 //
 //	private void addLoginProcesses(final int offSetSeconds, final double processDuration, final Date dateVisite) {
-//		final KProcess sqlProcess1 = new KProcessBuilder(dateVisite, 10, SQL_PROCESS, "select*from user").build();
-//		final KProcess loginProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/Accueil/login.jsf").addSubProcess(sqlProcess1).build();
+//		final AProcess sqlProcess1 = new KProcessBuilder(dateVisite, 10, SQL_PROCESS, "select*from user").build();
+//		final AProcess loginProcess = new KProcessBuilder(dateVisite, processDuration, PAGE_PROCESS, "/Accueil/login.jsf").addSubProcess(sqlProcess1).build();
 //		serverManager.push(loginProcess);
 //		final HQuery query = serverManager.createQueryBuilder() //
 //				.on(HTimeDimension.Minute)//
@@ -255,4 +255,3 @@ public class VirtualDatas {
 //	private void addContributorProcess(final int offSetSeconds, final int processDuration) {
 //		final Date dateVisite = new Date(System.currentTimeMillis() - 60 * offSetSeconds * 1000);
 //	}
-

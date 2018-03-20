@@ -17,11 +17,6 @@
  */
 package io.analytica.server.plugins.processstore.berkeley;
 
-import io.analytica.api.KProcess;
-import io.analytica.server.store.Identified;
-import io.analytica.server.store.ProcessStorePlugin;
-import io.vertigo.lang.Activeable;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
@@ -33,9 +28,12 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.sleepycat.je.DatabaseEntry;
+
+import io.analytica.api.AProcess;
+import io.analytica.server.store.Identified;
+import io.analytica.server.store.ProcessStorePlugin;
+import io.vertigo.lang.Activeable;
 
 /**
  * Stockage des Process dans une base Berkeley.
@@ -43,7 +41,6 @@ import com.sleepycat.je.DatabaseEntry;
  * @version $Id: $
  */
 public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Activeable {
-	private static final Logger LOG = Logger.getLogger(BerkeleyProcessStorePlugin.class);
 	private final File dbPath;
 	private final Map<String, BerkeleyDatabase> databases;
 	private final BerkeleyDatabaseWriter writer;
@@ -62,7 +59,7 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 				return new File(current, name).isDirectory();
 			}
 		});
-		if(currentApps!=null){
+		if (currentApps != null) {
 			for (final String appName : currentApps) {
 				final BerkeleyDatabase database = new BerkeleyDatabase(new File(this.dbPath.getAbsolutePath() + File.separator + appName));
 				database.open(false);
@@ -80,7 +77,7 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 
 	/** {@inheritDoc} */
 	@Override
-	public void add(final KProcess process) {
+	public void add(final AProcess process) {
 		final BerkeleyDatabase database = obtainDatabase(process.getAppName());
 		final long key = database.getSequenceNextVal();
 		final DatabaseEntry dataKey = writer.writeKey(key);
@@ -97,7 +94,7 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 				databases.put(systemName, database);
 			}
 			return database;
-		} 
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -116,9 +113,9 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Identified<KProcess>> getProcess(final String appName, final String lastKeyString, final Integer maxRow) {
+	public List<Identified<AProcess>> getProcess(final String appName, final String lastKeyString, final Integer maxRow) {
 		final List<String> systemNames = new ArrayList<>();
-		final List<Identified<KProcess>> processes = new ArrayList<>();
+		final List<Identified<AProcess>> processes = new ArrayList<>();
 
 		for (final File databaseDirectory : dbPath.listFiles(new FileFilter() {
 			@Override
@@ -135,7 +132,7 @@ public final class BerkeleyProcessStorePlugin implements ProcessStorePlugin, Act
 		final Map<DatabaseEntry, DatabaseEntry> entries = database.next(lastKey, maxRow);
 		for (final Map.Entry<DatabaseEntry, DatabaseEntry> entry : entries.entrySet()) {
 			final long key = writer.readKey(entry.getKey());
-			final KProcess process = writer.readProcess(entry.getValue());
+			final AProcess process = writer.readProcess(entry.getValue());
 			processes.add(new Identified(systemName + "-" + key, process));
 		}
 		return processes;

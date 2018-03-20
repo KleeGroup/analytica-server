@@ -1,5 +1,18 @@
 package io.analytica.server.aggregator.impl.influxDB;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.influxdb.InfluxDB;
+import org.influxdb.InfluxDB.ConsistencyLevel;
+import org.influxdb.dto.BatchPoints;
+import org.influxdb.dto.Point;
+import org.influxdb.dto.Query;
+import org.influxdb.dto.QueryResult;
+
+import io.analytica.api.AProcess;
 /**
  * Analytica - beta version - Systems Monitoring Tool
  *
@@ -30,82 +43,64 @@ package io.analytica.server.aggregator.impl.influxDB;
  * If you do not wish to do so, delete this exception statement from your version.
  */
 import io.analytica.api.Assertion;
-import io.analytica.api.KProcess;
 import io.analytica.server.aggregator.ProcessAggegatorConstants;
 import io.analytica.server.aggregator.ProcessAggregatorDto;
 import io.analytica.server.aggregator.ProcessAggregatorException;
-import io.analytica.server.aggregator.ProcessAggregatorQuery;
 import io.analytica.server.aggregator.ProcessAggregatorUtil;
 import io.analytica.server.aggregator.impl.influxDB.query.InfluxDBMultipleQuery;
 import io.analytica.server.aggregator.impl.influxDB.query.InfluxDBQuery;
 import io.analytica.server.aggregator.impl.influxDB.query.InfluxDBSingleQuery;
 import io.analytica.server.store.Identified;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDB.ConsistencyLevel;
-import org.influxdb.dto.BatchPoints;
-import org.influxdb.dto.Point;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
-
 public final class Connector {
-	
+
 	private final String appName;
-	private final List<Identified<KProcess>> processes = new ArrayList<Identified<KProcess>>(); //buffer
+	private final List<Identified<AProcess>> processes = new ArrayList<>(); //buffer
 	private final InfluxDB influxDB;
 
 	private final int flushMinSize;
 
-
-	public Connector(final String appName,final InfluxDB influxDB, final int flushMinSize ) throws ProcessAggregatorException {
+	public Connector(final String appName, final InfluxDB influxDB, final int flushMinSize) throws ProcessAggregatorException {
 		Assertion.checkArgNotEmpty(appName);
 		//-----
 		this.appName = appName;
 		this.influxDB = influxDB;
-		this.flushMinSize=flushMinSize;
-		influxDB.createDatabase(appName);	
+		this.flushMinSize = flushMinSize;
+		influxDB.createDatabase(appName);
 	}
-		
 
-	
-	public synchronized void add(final Identified<KProcess> process) {
+	public synchronized void add(final Identified<AProcess> process) {
 		if (influxDB != null) {
 			processes.add(process);
 		}
 	}
-	
-	private List<ProcessAggregatorDto> executeSingleQuery(InfluxDBSingleQuery singleQuery) throws ProcessAggregatorException{
-		QueryResult queryResult = influxDB.query(new Query(singleQuery.getQuery(),appName));
-		return Util.parseResults(queryResult,singleQuery.getSelector(),singleQuery.getCategory());
+
+	private List<ProcessAggregatorDto> executeSingleQuery(final InfluxDBSingleQuery singleQuery) throws ProcessAggregatorException {
+		final QueryResult queryResult = influxDB.query(new Query(singleQuery.getQuery(), appName));
+		return Util.parseResults(queryResult, singleQuery.getSelector(), singleQuery.getCategory());
 	}
-	
-	private List<ProcessAggregatorDto> executeMultipleQuery(InfluxDBMultipleQuery multipleQuery) throws ProcessAggregatorException{
-		List<List<ProcessAggregatorDto>> results = new ArrayList<List<ProcessAggregatorDto>>();
-		for(InfluxDBSingleQuery singleQuery : multipleQuery.getSingleQueries()){
+
+	private List<ProcessAggregatorDto> executeMultipleQuery(final InfluxDBMultipleQuery multipleQuery) throws ProcessAggregatorException {
+		final List<List<ProcessAggregatorDto>> results = new ArrayList<>();
+		for (final InfluxDBSingleQuery singleQuery : multipleQuery.getSingleQueries()) {
 			results.add(executeSingleQuery(singleQuery));
 		}
 		return Util.aggregateResults(results);
 	}
-	
-	public List<ProcessAggregatorDto> execute(InfluxDBQuery dbQuery) throws ProcessAggregatorException{
-		final boolean isSingleQuery=dbQuery instanceof InfluxDBSingleQuery;
-		final boolean isMultipleQuery=dbQuery instanceof InfluxDBMultipleQuery;
-		Assertion.checkArgument(isSingleQuery||isMultipleQuery, "Unable to execute query. Unknown type");
+
+	public List<ProcessAggregatorDto> execute(final InfluxDBQuery dbQuery) throws ProcessAggregatorException {
+		final boolean isSingleQuery = dbQuery instanceof InfluxDBSingleQuery;
+		final boolean isMultipleQuery = dbQuery instanceof InfluxDBMultipleQuery;
+		Assertion.checkArgument(isSingleQuery || isMultipleQuery, "Unable to execute query. Unknown type");
 		//-----------------------------------------------------------------------------------------------
-		if(isSingleQuery){
+		if (isSingleQuery) {
 			return executeSingleQuery((InfluxDBSingleQuery) dbQuery);
 		}
 		return executeMultipleQuery((InfluxDBMultipleQuery) dbQuery);
 	}
-	
-	public synchronized void  flush() {
-		if(processes.isEmpty()){
+
+	public synchronized void flush() {
+		if (processes.isEmpty()) {
 			return;
 		}
 		final BatchPoints batchPoints = BatchPoints
@@ -113,34 +108,33 @@ public final class Connector {
 				.retentionPolicy("default")
 				.consistency(ConsistencyLevel.ALL)
 				.build();
-		for (final Identified<KProcess> process : processes) {
-			for(KProcess flatProcess :ProcessAggregatorUtil.flatProcess(process.getData()))
-			{
+		for (final Identified<AProcess> process : processes) {
+			for (final AProcess flatProcess : ProcessAggregatorUtil.flatProcess(process.getData())) {
 				batchPoints.point(processToPoint(flatProcess));
 			}
 		}
 		influxDB.write(batchPoints);
-		updateLastInsertedProcess(processes.get(processes.size()-1));
+		updateLastInsertedProcess(processes.get(processes.size() - 1));
 		processes.clear();
 	}
 
-	private void updateLastInsertedProcess(final Identified<KProcess> process){
+	private void updateLastInsertedProcess(final Identified<AProcess> process) {
 		final BatchPoints batchPoints = BatchPoints
 				.database(appName)
 				.retentionPolicy("default")
 				.consistency(ConsistencyLevel.ALL)
 				.build();
-	
-			Point lastInsertedProcess = Point.measurement(ProcessAggegatorConstants.LAST_INSERTED_PROCESS)
-					.time(0,TimeUnit.MICROSECONDS)
-					.field(ProcessAggegatorConstants.LAST_INSERTED_PROCESS, process.getKey())
-					.build();
-			batchPoints.point(lastInsertedProcess);
-			influxDB.write(batchPoints);
-		
-	}	
-	
-	private static Point processToPoint(final KProcess process) {
+
+		final Point lastInsertedProcess = Point.measurement(ProcessAggegatorConstants.LAST_INSERTED_PROCESS)
+				.time(0, TimeUnit.MICROSECONDS)
+				.field(ProcessAggegatorConstants.LAST_INSERTED_PROCESS, process.getKey())
+				.build();
+		batchPoints.point(lastInsertedProcess);
+		influxDB.write(batchPoints);
+
+	}
+
+	private static Point processToPoint(final AProcess process) {
 		final Map measures = process.getMeasures();
 		return Point.measurement(process.getType())
 				.time(process.getStartDate().getTime(), TimeUnit.MILLISECONDS)
@@ -150,69 +144,69 @@ public final class Connector {
 				.fields(measures)
 				.build();
 	}
-	
-//	public List<ProcessAggregatorDto> findAllLocations() throws ProcessAggregatorException{
-//	QueryResult queryResult = influxDB.query(new Query("SHOW TAG VALUES WITH KEY = "+InfluxDBQuery.TAG_LOCATION, appName));
-//	return Util.getResults(queryResult,InfluxDBQuery.NO_CATEGORY);
-//}
 
-//public List<ProcessAggregatorDto> findAllTypes() throws ProcessAggregatorException{
-//	QueryResult queryResult = influxDB.query(new Query("SHOW MEASUREMENTS", appName));
-//	return Util.getResults(queryResult,InfluxDBQuery.NO_CATEGORY);
-//}
-	
-//	public List<ProcessAggregatorDto> findAllCategories() throws ProcessAggregatorException {
-//		List<ProcessAggregatorDto> categories = new ArrayList<ProcessAggregatorDto>();
-//		List<ProcessAggregatorDto> types = findAllTypes();
-//		for (ProcessAggregatorDto type : types) {
-//			QueryResult queryResult = influxDB.query(new Query("SHOW TAG VALUES FROM "+type.getMeasure(InfluxDBQuery.MEASUREMENT)+" with key="+InfluxDBQuery.TAG_CATEGORY, appName));
-//			categories.addAll(Util.getResults(queryResult,InfluxDBQuery.NO_CATEGORY));
-//		}
-//		return categories;
-//	}
+	//	public List<ProcessAggregatorDto> findAllLocations() throws ProcessAggregatorException{
+	//	QueryResult queryResult = influxDB.query(new Query("SHOW TAG VALUES WITH KEY = "+InfluxDBQuery.TAG_LOCATION, appName));
+	//	return Util.getResults(queryResult,InfluxDBQuery.NO_CATEGORY);
+	//}
 
-//	public List<ProcessAggregatorDto> findCategories(String type, String subCategories,String location) throws ProcessAggregatorException {
-//		StringBuilder queryBuilder = new StringBuilder();
-//		queryBuilder.append("SHOW TAG VALUES FROM ").append(Util.getRegexMeasurement(type))
-//		.append(" with key=").append(InfluxDBQuery.TAG_CATEGORY)
-//		.append(" where ").append(InfluxDBQuery.TAG_CATEGORY).append("=").append(Util.getRegexTag(subCategories))
-//		.append(" and ").append(InfluxDBQuery.TAG_LOCATION).append("=").append(Util.getRegexTag(location));
-//		QueryResult queryResult = influxDB.query(new Query(queryBuilder.toString(), appName));
-//		return Util.getResults(queryResult,getCategory(type,subCategories), InfluxDBQuery.TAG_CATEGORY);
-//	}
+	//public List<ProcessAggregatorDto> findAllTypes() throws ProcessAggregatorException{
+	//	QueryResult queryResult = influxDB.query(new Query("SHOW MEASUREMENTS", appName));
+	//	return Util.getResults(queryResult,InfluxDBQuery.NO_CATEGORY);
+	//}
 
-//	
-////TODO Create an object for data that will contain the metric, aggregationRule,
-//	public List<ProcessAggregatorDto> getTimeLine(String timeFrom, String timeTo,
-//			String timeDim, String type, String subCategories, String location, Map<String, String> datas) throws ProcessAggregatorException {
-//		StringBuilder queryBuilder = new StringBuilder();
-//		queryBuilder.append("SELECT ");
-//		 final List<Entry<String, String>> entries= new ArrayList<Entry<String, String>>(datas.entrySet());
-//		for (int i=0; i<entries.size();i++){
-//			final String aggretationRule=entries.get(i).getValue();
-//			final String metrics=entries.get(i).getKey();
-//			final String name=metrics+":"+aggretationRule;
-//			queryBuilder.append(aggretationRule).append("(\"").append(metrics).append("\") AS \"").append(name).append("\"");
-//			if(i<entries.size()-1){
-//				queryBuilder.append(",");
-//			}
-//			queryBuilder.append(" ");
-//		}
-//		queryBuilder.append(" FROM ")
-//		.append(Util.getRegexFilterMeasurement(type))
-//		.append(" where ").append(InfluxDBQuery.TAG_CATEGORY).append("=").append(Util.getRegexFilterTag(subCategories))
-//		.append(" and ").append(InfluxDBQuery.TAG_LOCATION).append("=").append(Util.getRegexFilterTag(location))
-//		.append(" and ").append(InfluxDBQuery.TAG_TIME).append(" > ").append(timeFrom)
-//		.append(" and ").append(InfluxDBQuery.TAG_TIME).append(" < ").append(timeTo)
-//		.append(" group by ").append(InfluxDBQuery.TAG_TIME).append("(").append(timeDim).append(")");
-//		QueryResult queryResult = influxDB.query(new Query(queryBuilder.toString(), appName));
-//		return Util.parseResults(queryResult,getCategory(type,subCategories));
-//	}
-	
-//	private String getCategory(final String type, final String subCategories){
-//		if(subCategories==null||subCategories.isEmpty()){
-//			return type;
-//		}
-//		return type+ProcessAggregatorQuery.SEPARATOR+subCategories;
-//	}
+	//	public List<ProcessAggregatorDto> findAllCategories() throws ProcessAggregatorException {
+	//		List<ProcessAggregatorDto> categories = new ArrayList<ProcessAggregatorDto>();
+	//		List<ProcessAggregatorDto> types = findAllTypes();
+	//		for (ProcessAggregatorDto type : types) {
+	//			QueryResult queryResult = influxDB.query(new Query("SHOW TAG VALUES FROM "+type.getMeasure(InfluxDBQuery.MEASUREMENT)+" with key="+InfluxDBQuery.TAG_CATEGORY, appName));
+	//			categories.addAll(Util.getResults(queryResult,InfluxDBQuery.NO_CATEGORY));
+	//		}
+	//		return categories;
+	//	}
+
+	//	public List<ProcessAggregatorDto> findCategories(String type, String subCategories,String location) throws ProcessAggregatorException {
+	//		StringBuilder queryBuilder = new StringBuilder();
+	//		queryBuilder.append("SHOW TAG VALUES FROM ").append(Util.getRegexMeasurement(type))
+	//		.append(" with key=").append(InfluxDBQuery.TAG_CATEGORY)
+	//		.append(" where ").append(InfluxDBQuery.TAG_CATEGORY).append("=").append(Util.getRegexTag(subCategories))
+	//		.append(" and ").append(InfluxDBQuery.TAG_LOCATION).append("=").append(Util.getRegexTag(location));
+	//		QueryResult queryResult = influxDB.query(new Query(queryBuilder.toString(), appName));
+	//		return Util.getResults(queryResult,getCategory(type,subCategories), InfluxDBQuery.TAG_CATEGORY);
+	//	}
+
+	//	
+	////TODO Create an object for data that will contain the metric, aggregationRule,
+	//	public List<ProcessAggregatorDto> getTimeLine(String timeFrom, String timeTo,
+	//			String timeDim, String type, String subCategories, String location, Map<String, String> datas) throws ProcessAggregatorException {
+	//		StringBuilder queryBuilder = new StringBuilder();
+	//		queryBuilder.append("SELECT ");
+	//		 final List<Entry<String, String>> entries= new ArrayList<Entry<String, String>>(datas.entrySet());
+	//		for (int i=0; i<entries.size();i++){
+	//			final String aggretationRule=entries.get(i).getValue();
+	//			final String metrics=entries.get(i).getKey();
+	//			final String name=metrics+":"+aggretationRule;
+	//			queryBuilder.append(aggretationRule).append("(\"").append(metrics).append("\") AS \"").append(name).append("\"");
+	//			if(i<entries.size()-1){
+	//				queryBuilder.append(",");
+	//			}
+	//			queryBuilder.append(" ");
+	//		}
+	//		queryBuilder.append(" FROM ")
+	//		.append(Util.getRegexFilterMeasurement(type))
+	//		.append(" where ").append(InfluxDBQuery.TAG_CATEGORY).append("=").append(Util.getRegexFilterTag(subCategories))
+	//		.append(" and ").append(InfluxDBQuery.TAG_LOCATION).append("=").append(Util.getRegexFilterTag(location))
+	//		.append(" and ").append(InfluxDBQuery.TAG_TIME).append(" > ").append(timeFrom)
+	//		.append(" and ").append(InfluxDBQuery.TAG_TIME).append(" < ").append(timeTo)
+	//		.append(" group by ").append(InfluxDBQuery.TAG_TIME).append("(").append(timeDim).append(")");
+	//		QueryResult queryResult = influxDB.query(new Query(queryBuilder.toString(), appName));
+	//		return Util.parseResults(queryResult,getCategory(type,subCategories));
+	//	}
+
+	//	private String getCategory(final String type, final String subCategories){
+	//		if(subCategories==null||subCategories.isEmpty()){
+	//			return type;
+	//		}
+	//		return type+ProcessAggregatorQuery.SEPARATOR+subCategories;
+	//	}
 }

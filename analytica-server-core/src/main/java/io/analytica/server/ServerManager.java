@@ -19,8 +19,7 @@ package io.analytica.server;
 
 import java.util.List;
 
-
-import io.analytica.api.KProcess;
+import io.analytica.api.AProcess;
 import io.analytica.server.aggregator.ProcessAggregatorDto;
 import io.analytica.server.aggregator.ProcessAggregatorException;
 import io.vertigo.lang.Component;
@@ -28,7 +27,7 @@ import io.vertigo.lang.Component;
 /**
  * Serveur de Analytica.
  * Réception des données collectées
- * 
+ *
  * @author pchretien, npiedeloup
  * @version $Id: ServerManager.java,v 1.8 2012/09/14 15:04:13 pchretien Exp $
  */
@@ -37,15 +36,15 @@ public interface ServerManager extends Component {
 	 * Add a process.
 	 * @param process Process to push
 	 */
-	void push(KProcess process);
+	void push(AProcess process);
 
 	List<ProcessAggregatorDto> findAllLocations(final String appName) throws ProcessAggregatorException;
-	
+
 	List<ProcessAggregatorDto> findAllTypes(final String appName) throws ProcessAggregatorException;
-	
-	List<ProcessAggregatorDto> findAllCategories(final String appName)throws ProcessAggregatorException;
 
-	List<ProcessAggregatorDto> findCategories(String appName, String type,String subCategories, String location) throws ProcessAggregatorException;
+	List<ProcessAggregatorDto> findAllCategories(final String appName) throws ProcessAggregatorException;
 
-	List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom, String timeTo, String timeDim, String type, String subCategories, String location, String datas)throws ProcessAggregatorException;
+	List<ProcessAggregatorDto> findCategories(String appName, String type, String subCategories, String location) throws ProcessAggregatorException;
+
+	List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom, String timeTo, String timeDim, String type, String subCategories, String location, String datas) throws ProcessAggregatorException;
 }

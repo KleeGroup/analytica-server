@@ -17,19 +17,16 @@
  */
 package io.analytica.ui;
 
-import io.analytica.restserver.impl.RestServerManagerImpl;
-import io.vertigo.app.App;
-import io.vertigo.core.component.di.injector.Injector;
-import io.vertigo.lang.Assertion;
+import org.apache.logging.log4j.LogManager;import org.apache.logging.log4j.Logger;
 
-import org.apache.log4j.Logger;
+import io.vertigo.app.App;
+import io.vertigo.lang.Assertion;
 
 /**
  * Charge et démarre un environnement.
  * @author pchretien, npiedeloup
  */
 public class ServerUiStarter {
-
 
 	/**
 	 * Lance l'environnement et attend indéfiniment.
@@ -41,14 +38,15 @@ public class ServerUiStarter {
 		Assertion.checkArgument(args[0].endsWith(".properties"), usageMsg + " ( .properties attendu : " + args[0] + ")");
 		//---------------------------------------------------------------------
 		try (App app = new App(AnalyticaServerUiConfigurator.config(args[0]))) {
-			
-			RestServerManagerImpl test = new RestServerManagerImpl("/test/",8080);
+
+			//final RestServerManagerImpl test = new RestServerManagerImpl("/test/", 8080, );
+			//System.out.println(test);
 			//	AppShell.startShell(5222);
 			System.in.read();
 			//Thread.sleep(1000 * 1000);
 		} catch (final Exception e) {
 			e.printStackTrace();
-			Logger.getLogger(ServerUiStarter.class).warn("an error occured when starting", e);
+			LogManager.getLogger(ServerUiStarter.class).warn("an error occured when starting", e);
 		}
 	}
 

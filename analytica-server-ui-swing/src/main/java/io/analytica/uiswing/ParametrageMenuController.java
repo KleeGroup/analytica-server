@@ -17,23 +17,6 @@
  */
 package io.analytica.uiswing;
 
-import io.analytica.api.KProcess;
-import io.analytica.server.plugins.processstats.memorystack.LastProcessMXBean;
-import io.analytica.uiswing.collector.PerfCallStackCollector;
-import io.analytica.uiswing.collector.PerfCollector;
-import io.analytica.uiswing.collector.ProcessStats;
-import io.analytica.uiswing.collector.ProcessStatsCollection;
-import io.analytica.uiswing.collector.ProcessStatsMap;
-import io.analytica.uiswing.collector.ProcessStatsTree;
-import io.analytica.uiswing.patterns.SFrame;
-import io.analytica.uiswing.patterns.SLabel;
-import io.analytica.uiswing.patterns.SMasterNoDetailPanel;
-import io.analytica.uiswing.patterns.SPanel;
-import io.analytica.uiswing.patterns.SScrollPane;
-import io.analytica.uiswing.patterns.STabbedPane;
-import io.analytica.uiswing.patterns.STree;
-import io.analytica.uiswing.patterns.SUtilities;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
@@ -55,11 +38,27 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import javax.swing.BorderFactory;
 
+import com.google.gson.Gson;
+
+import io.analytica.api.AProcess;
+import io.analytica.server.plugins.processstats.memorystack.LastProcessMXBean;
+import io.analytica.uiswing.collector.PerfCallStackCollector;
+import io.analytica.uiswing.collector.PerfCollector;
+import io.analytica.uiswing.collector.ProcessStats;
+import io.analytica.uiswing.collector.ProcessStatsCollection;
+import io.analytica.uiswing.collector.ProcessStatsMap;
+import io.analytica.uiswing.collector.ProcessStatsTree;
+import io.analytica.uiswing.patterns.SFrame;
+import io.analytica.uiswing.patterns.SLabel;
+import io.analytica.uiswing.patterns.SMasterNoDetailPanel;
+import io.analytica.uiswing.patterns.SPanel;
+import io.analytica.uiswing.patterns.SScrollPane;
+import io.analytica.uiswing.patterns.STabbedPane;
+import io.analytica.uiswing.patterns.STree;
+import io.analytica.uiswing.patterns.SUtilities;
 import mswing.patterns.MMasterPanel;
 import mswing.table.MTable;
 import mswing.table.MUtilitiesTable;
-
-import com.google.gson.Gson;
 
 /**
  * @version $Id: ParametrageMenuController.java,v 1.1 2012/01/13 13:43:55 npiedeloup Exp $
@@ -159,19 +158,19 @@ public class ParametrageMenuController {
 
 	private PerfCollector convertAsPerfCollector(final LastProcessMXBean mbeanProxy) {
 		final PerfCollector perfCollector = new PerfCallStackCollector();
-		final KProcess[] nextProcesses = new Gson().fromJson(mbeanProxy.getLastProcessesJson(), KProcess[].class);
-		for (final KProcess process : nextProcesses) {
+		final AProcess[] nextProcesses = new Gson().fromJson(mbeanProxy.getLastProcessesJson(), AProcess[].class);
+		for (final AProcess process : nextProcesses) {
 			storeToPerfCollector(process, perfCollector);
 		}
 		return perfCollector;
 	}
 
-	private void storeToPerfCollector(final KProcess process, final PerfCollector perfCollector) {
+	private void storeToPerfCollector(final AProcess process, final PerfCollector perfCollector) {
 		perfCollector.onProcessStart(process.getType(), Arrays.asList(process.getCategory()).toString(), null, null);
-		for (final KProcess subprocess : process.getSubProcesses()) {
+		for (final AProcess subprocess : process.getSubProcesses()) {
 			storeToPerfCollector(subprocess, perfCollector);
 		}
-		perfCollector.onProcessFinish(process.getType(), Arrays.asList(process.getCategory()).toString(), null, null, null, Math.round(process.getMeasures().get(KProcess.DURATION)), true);
+		perfCollector.onProcessFinish(process.getType(), Arrays.asList(process.getCategory()).toString(), null, null, null, Math.round(process.getMeasures().get(AProcess.DURATION)), true);
 	}
 
 	private String getModuleLibelleByModuleName(final String moduleName) {

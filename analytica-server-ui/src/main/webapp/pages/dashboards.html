@@ -12,7 +12,7 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/bootstrap-analytica.css">
 		<link rel="stylesheet" type="text/css" media="screen" href="../static/css/chart-analytica.css">
 		
-		<link rel="shortcut icon" href="static/ico/favicon.png">
+		<link rel="shortcut icon" href="../static/ico/favicon.png">
 	</head>
 	<body>
 	
@@ -73,7 +73,7 @@
 			<div class="logo"><img src="../static/img/logoSpark.png" height="180px"/></div>
 		</div>
 	</div>
-	
+	<!--
 	<div class="col-md-6">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-dashboard"></i> Qualité de Service</h5></div>
@@ -87,14 +87,14 @@
 			</div>
 		</div>
 	</div>
-	
+	-->
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1 blue">
 			<div class="panel-body clock"></div>
 		</div>
 	</div>
 	
-	
+	<!--
 	<div class="col-md-3">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution du nombre d'appel</h5></div>
@@ -132,16 +132,28 @@
 			</div>
 		</div>
 	</div>
-	
+	-->
 	
 	<div class="col-md-6">
 		<div class="panel panel-primary panel-h1">
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Activit&eacute; : Visites</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart linechart" 
-			    data-url="rest/query/timeLine/WEB" 
-			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:count"}'
-			    data-colors='RED2GREEN'></div>
+			    data-url="data/series" 
+				data-labels='{"duration:min":"Minimum", "duration:mean":"Moyenne", "duration:percentile_80":"Per80" }' 
+			    data-query='{ "timeFilter": {
+					"from": "now() - 3d",
+					"to": "now()",
+					"dim": "1h"
+				  },
+				"dataFilter": {
+					"measurement": "webservices",
+					"location": "*",
+					"name": "*",
+					"topic": "*"
+				  }, 
+				  "measures":["duration:min", "duration:mean", "duration:percentile_80"]}'
+			    data-colors='GREEN2BLUE'></div>
 			</div>
 		</div>
 	</div>
@@ -198,13 +210,30 @@
 			<div class="panel-heading"><h5><i class="glyphicon glyphicon-star"></i> Evolution de la répartition des tps de réponse</h5></div>
 			<div class="panel-body">
 				<div class="chart flotchart stakedareachart" 
-			    data-url="rest/query/timeLine/page" 
-			    data-query='{"timeFrom":"NOW() - 1h", "timeTo":"NOW()", "timeDim":"1m","appName":"museum","location":"*", "datas":"duration:clustered:10-;duration:clustered:20;duration:clustered:50;duration:clustered:100;duration:clustered:200;duration:clustered:500;duration:clustered:1000;duration:clustered:2000+"}' 
-			    data-labels='{"duration:clustered:10-":"<10ms","duration:clustered:20":"<20ms","duration:clustered:50":"<50ms","duration:clustered:100":"<100ms", "duration:clustered:200":"<200ms", "duration:clustered:500":"<500ms", "duration:clustered:1000":"<1s", "duration:clustered:2000+":">2s"}'
-			    data-colors='iHEAT'></div>
+			    data-url="data/series/clustered" 
+				 data-query='{ "clusteredMeasure": {
+						"measure": "duration:count",
+						"thresholds": ["10","20","50","100","200","500","1000","2000"]
+					  },
+				"timeFilter": {
+					"from": "now() - 8d",
+					"to": "now() - 7d",
+					"dim": "1h"
+				  },
+				"dataFilter": {
+					"measurement": "webservices",
+					"location": "*",
+					"name": "*",
+					"topic": "*"
+				  }, 
+				  "measures":["duration:count"]}' 
+			    data-labels='{"duration:count<10":"<10ms","duration:count_20":"<20ms","duration:count_50":"<50ms","duration:count_100":"<100ms", "duration:count_200":"<200ms", "duration:count_500":"<500ms", "duration:count_1000":"<1s", "duration:count_2000":"<2s", "duration:count>2000":">2s"}'
+			    data-colors='iRED2GREEN'></div>
 			</div>
 		</div>
 	</div>
+	
+	
 	 
 	</div> <!-- /row -->
 	
@@ -569,27 +598,27 @@
 	</div>
 </div> <!-- container-fluid -->
 		<!-- start: JavaScript--> 
-	<script src="static/js/jquery-1.11.3.js"></script>
+	<script src="../static/js/jquery-1.11.3.js"></script>
 	<!-- <script src="js/jquery-migrate-1.0.0.min.js"></script> -->
-	<script src="static/js/jquery-ui-1.11.3.min.js"></script>
+	<script src="../static/js/jquery-ui-1.11.3.min.js"></script>
 	<!-- <script src="js/jquery.ui.touch-punch.js"></script>
 	<script src="js/modernizr.js"></script> -->
-	<script src="static/js/bootstrap.min.js"></script>
+	<script src="../static/js/bootstrap.min.js"></script>
 	<!-- <script src="js/jquery.cookie.js"></script>
 	<script src='js/fullcalendar.min.js'></script>
 	<script src='js/jquery.dataTables.min.js'></script> -->
-	<script src="static/js/jquery.flot.js"></script>
-	<!-- <script src="static/js/jquery.flot.orderBars.js"></script> --> <!-- must be before jquery.flot.stack.js -->
-	<script src="static/js/jquery.flot.pie.js"></script>
-	<script src="static/js/jquery.flot.categories.js"></script>
-	<script src="static/js/jquery.flot.resize.min.js"></script>
-	<script src="static/js/jquery.flot.time.js"></script>
-	<script src="static/js/jquery.flot.stack.js"></script>
-	<script src="static/js/jquery.flot.sidedBars.js"></script>
+	<script src="../static/js/jquery.flot.js"></script>
+	<!-- <script src="../static/js/jquery.flot.orderBars.js"></script> --> <!-- must be before jquery.flot.stack.js -->
+	<script src="../static/js/jquery.flot.pie.js"></script>
+	<script src="../static/js/jquery.flot.categories.js"></script>
+	<script src="../static/js/jquery.flot.resize.min.js"></script>
+	<script src="../static/js/jquery.flot.time.js"></script>
+	<script src="../static/js/jquery.flot.stack.js"></script>
+	<script src="../static/js/jquery.flot.sidedBars.js"></script>
 	
-	<script src="static/js/jquery.sparkline.js"></script>
-	<script src="static/js/jquery.dataTables.js"></script>
-	<script src="static/js/jquery.knob.js"></script>
+	<script src="../static/js/jquery.sparkline.js"></script>
+	<script src="../static/js/jquery.dataTables.js"></script>
+	<script src="../static/js/jquery.knob.js"></script>
 	<!-- <script src="js/jquery.chosen.min.js"></script>
 	<script src="js/jquery.uniform.min.js"></script>
 	<script src="js/jquery.cleditor.min.js"></script>
@@ -606,14 +635,14 @@
 	<script src="js/counter.js"></script>
 	<script src="js/retina.js"></script>
 	<script src="js/custom.js"></script>  -->
-	<script src="static/js/d3.v3.js"></script> 
-	<!-- <script src="static/js/analytica.d3.js"></script>  -->
-	<script src="static/js/analytica.datatable.js"></script>
-	<script src="static/js/analytica.flot.js"></script>
-	<script src="static/js/analytica.bignumber.js"></script>
-	<script src="static/js/analytica.objectif.js"></script>
-	<script src="static/js/analytica.js"></script> 
-	<script src="static/js/processing-1.4.1.js"></script>
+	<script src="../static/js/d3.v3.js"></script> 
+	<!-- <script src="../static/js/analytica.d3.js"></script>  -->
+	<script src="../static/js/analytica.datatable.js"></script>
+	<script src="../static/js/analytica.flot.js"></script>
+	<script src="../static/js/analytica.bignumber.js"></script>
+	<script src="../static/js/analytica.objectif.js"></script>
+	<script src="../static/js/analytica.js"></script> 
+	<script src="../static/js/processing-1.4.1.js"></script>
 	<!-- end: JavaScript-->
 	<script> $(document).ready(function() { 
 		startClock(); 

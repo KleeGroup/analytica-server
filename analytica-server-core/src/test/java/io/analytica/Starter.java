@@ -17,16 +17,15 @@
  */
 package io.analytica;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.Properties;
 
 import io.vertigo.app.App;
 import io.vertigo.app.config.AppConfig;
 import io.vertigo.app.config.xml.XMLAppConfigBuilder;
 import io.vertigo.lang.Assertion;
-import io.vertigo.lang.Option;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Properties;
 
 /**
  * Charge et démarre un environnement.
@@ -37,7 +36,7 @@ public final class Starter implements Runnable {
 	private final Class<?> relativeRootClass;
 	private final String managersXmlFileName;
 	//	private final Option<String> propertiesFileName;
-	private final Option<Properties> defaultProperties;
+	private final Optional<Properties> defaultProperties;
 	private final long timeToWait;
 	private boolean started;
 	private App app;
@@ -49,7 +48,7 @@ public final class Starter implements Runnable {
 	 * @param defaultProperties Propriétés par défaut (pouvant étre récupéré de la ligne de commande par exemple)
 	 * @param timeToWait Temps d'attente, 0 signifie illimité
 	 */
-	public Starter(final String managersXmlFileName, final Option<String> propertiesFileName, final Class<?> relativeRootClass, final Option<Properties> defaultProperties, final long timeToWait) {
+	public Starter(final String managersXmlFileName, final Optional<String> propertiesFileName, final Class<?> relativeRootClass, final Option<Properties> defaultProperties, final long timeToWait) {
 		Assertion.checkNotNull(managersXmlFileName);
 		Assertion.checkNotNull(propertiesFileName);
 		Assertion.checkNotNull(defaultProperties);
@@ -73,7 +72,7 @@ public final class Starter implements Runnable {
 		Assertion.checkArgument(args.length == 1 || args[1].endsWith(".properties"), usageMsg + " (" + (args.length == 2 ? args[1] : "vide") + ")");
 		//---------------------------------------------------------------------
 		final String managersXmlFileName = args[0];
-		final Option<String> propertiesFileName = args.length == 2 ? Option.<String> some(args[1]) : Option.<String> none();
+		final Optional<String> propertiesFileName = args.length == 2 ? Option.<String> some(args[1]) : Option.<String> none();
 		final Starter starter = new Starter(managersXmlFileName, propertiesFileName, Starter.class, Option.<Properties> none(), 0);
 		starter.run();
 	}

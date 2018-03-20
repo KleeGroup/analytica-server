@@ -23,8 +23,6 @@
 
 package io.analytica.uiswing;
 
-import io.analytica.uiswing.collector.PerfCollector;
-
 import javax.management.AttributeChangeNotification;
 import javax.management.JMX;
 import javax.management.MBeanServerConnection;
@@ -34,6 +32,8 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+
+import io.analytica.uiswing.collector.PerfCollector;
 
 public class Client {
 
@@ -69,7 +69,7 @@ public class Client {
 		final JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
 
 		final MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
-		final ObjectName mbeanName = new ObjectName("kanap:name=PerfCollector");
+		final ObjectName mbeanName = new ObjectName("analytica:type=LastProcessMXBean");
 		final PerfCollector mbeanProxy = JMX.newMBeanProxy(mbsc, mbeanName, PerfCollector.class, true);
 		echo("\ngetResults = " + mbeanProxy.getResults());
 		jmxc.close();

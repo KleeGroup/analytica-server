@@ -17,10 +17,6 @@
  */
 package io.analytica.server.plugins.processstore.berkeley;
 
-import io.analytica.api.KProcess;
-import io.analytica.api.KProcessBuilder;
-import io.vertigo.lang.Assertion;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,14 +25,18 @@ import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 
+import io.analytica.api.AProcess;
+import io.analytica.api.KProcessBuilder;
+import io.vertigo.lang.Assertion;
+
 /**
  * Classe qui pour un DtObject permet de lire/écrire un tuple.
  * Le binding est indépendant de la DtDefinition.
  *
  * @author pchretien
- * @version $Id: KProcessBinding.java,v 1.9 2012/11/08 17:07:40 pchretien Exp $
+ * @version $Id: AProcessBinding.java,v 1.9 2012/11/08 17:07:40 pchretien Exp $
  */
-final class KProcessBinding extends TupleBinding {
+final class AProcessBinding extends TupleBinding {
 	private static final String PROCESS_BINDING_PREFIX = "ProcessBinding";
 	private static final String PROCESS_BINDING_V1 = PROCESS_BINDING_PREFIX + "V1";
 
@@ -70,13 +70,13 @@ final class KProcessBinding extends TupleBinding {
 	@Override
 	public void objectToEntry(final Object object, final TupleOutput to) {
 		try {
-			doProcessToEntry((KProcess) object, to);
+			doProcessToEntry((AProcess) object, to);
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private KProcess doEntryToProcessV1(final TupleInput ti) throws Exception {
+	private AProcess doEntryToProcessV1(final TupleInput ti) throws Exception {
 		final String version = ti.readString();
 		Assertion.checkArgument(PROCESS_BINDING_V1.equals(version), "Version de l'encodage du process incompatible. lu: {0}, attendu : {1}", version, PROCESS_BINDING_V1);
 		//---------------------------------------------------------------------
@@ -93,7 +93,7 @@ final class KProcessBinding extends TupleBinding {
 				final String mName = ti.readString();
 				final double mValue = ti.readDouble();
 				//Passer par un NS
-				if (mName != KProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead
+				if (mName != AProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead
 					processBuilder.setMeasure(mName, mValue);
 				}
 			} else if ("MetaData".equals(subInfoType)) {
@@ -102,8 +102,8 @@ final class KProcessBinding extends TupleBinding {
 				//Passer par un NS
 				processBuilder.addMetaData(mdName, mdValue);
 			} else if ("SubProcess".equals(subInfoType)) {
-				final KProcess subProcess = doEntryToProcessV1(ti);
-				processBuilder.addSubProcess(subProcess,false);
+				final AProcess subProcess = doEntryToProcessV1(ti);
+				processBuilder.addSubProcess(subProcess, false);
 			} else if ("P-END".equals(subInfoType)) {
 				break; //on a terminé
 			} else {
@@ -113,17 +113,17 @@ final class KProcessBinding extends TupleBinding {
 		return processBuilder.withCategory(category).withLocation(location).build();
 	}
 
-	private void doProcessToEntry(final KProcess process, final TupleOutput to) {
+	private void doProcessToEntry(final AProcess process, final TupleOutput to) {
 		to.writeString(PROCESS_BINDING_V1);//Marqueur de version
 		to.writeString(process.getType());
 		to.writeString(process.getCategory());
 		to.writeString(process.getLocation());
 		to.writeString(process.getAppName());
 		to.writeLong(process.getStartDate().getTime());
-		to.writeDouble(process.getMeasures().get(KProcess.DURATION));
+		to.writeDouble(process.getMeasures().get(AProcess.DURATION));
 
 		for (final Entry<String, Double> measure : process.getMeasures().entrySet()) {
-			if (measure.getKey() != KProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead
+			if (measure.getKey() != AProcess.SUB_DURATION) { //subDuration is computed from subProcesses durations instead
 				to.writeString("Measure");
 				to.writeString(measure.getKey());
 				to.writeDouble(measure.getValue());
@@ -136,7 +136,7 @@ final class KProcessBinding extends TupleBinding {
 			to.writeString(entry.getValue());
 		}
 
-		for (final KProcess subProcess : process.getSubProcesses()) {
+		for (final AProcess subProcess : process.getSubProcesses()) {
 			to.writeString("SubProcess");
 			doProcessToEntry(subProcess, to);
 		}

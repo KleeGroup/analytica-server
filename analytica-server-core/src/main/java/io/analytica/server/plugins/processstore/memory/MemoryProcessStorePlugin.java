@@ -17,15 +17,15 @@
  */
 package io.analytica.server.plugins.processstore.memory;
 
-import io.analytica.api.KProcess;
-import io.analytica.server.store.Identified;
-import io.analytica.server.store.ProcessStorePlugin;
-import io.vertigo.lang.Assertion;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import io.analytica.api.AProcess;
+import io.analytica.server.store.Identified;
+import io.analytica.server.store.ProcessStorePlugin;
+import io.vertigo.lang.Assertion;
 
 /**
  * Implémentation mémoire du stockage des Process.
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @version $Id: MemoryProcessStorePlugin.java,v 1.4 2012/04/06 16:09:35 npiedeloup Exp $
  */
 public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
-	private final Queue<Identified<KProcess>> processQueue = new ConcurrentLinkedQueue<>();
+	private final Queue<Identified<AProcess>> processQueue = new ConcurrentLinkedQueue<>();
 	private long sequence = 0;
 
 	/**
@@ -45,18 +45,18 @@ public final class MemoryProcessStorePlugin implements ProcessStorePlugin {
 
 	/** {@inheritDoc} */
 	@Override
-	public void add(final KProcess process) {
+	public void add(final AProcess process) {
 		processQueue.add(new Identified<>(String.valueOf(sequence++), process));
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Identified<KProcess>> getProcess(final String appName, final String lastKey, final Integer maxRow) {
+	public List<Identified<AProcess>> getProcess(final String appName, final String lastKey, final Integer maxRow) {
 		Assertion.checkNotNull(maxRow);
 		Assertion.checkArgument(maxRow >= 1, "MaxRow doit étre strictement positif");
 		//---------------------------------------------------------------------
-		final List<Identified<KProcess>> processes = new ArrayList<>();
-		Identified<KProcess> process = processQueue.poll();
+		final List<Identified<AProcess>> processes = new ArrayList<>();
+		Identified<AProcess> process = processQueue.poll();
 		while (process != null) {
 			processes.add(process);
 			if (processes.size() >= maxRow) {

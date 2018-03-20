@@ -19,53 +19,43 @@ package io.analytica.server.plugins.queryapi.rest;
 
 import io.analytica.server.aggregator.ProcessAggregatorQuery;
 import io.analytica.server.aggregator.ProcessAggregatorQueryBuilder;
-import io.vertigo.lang.Assertion;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author statchum, npiedeloup
  * @version $Id: codetemplates.xml,v 1.2 2011/06/21 14:33:16 npiedeloup Exp $
  */
 public final class Utils {
-	
-	public static ProcessAggregatorQuery createQuery(final String applicationName, final String from, final String to, final String timeDimension, final String type, final String subCategories, final boolean children,final String locations) {
+
+	public static ProcessAggregatorQuery createQuery(final String applicationName, final String from, final String to, final String timeDimension, final String type, final String subCategories, final boolean children, final String locations) {
 		final ProcessAggregatorQueryBuilder queryBuilder = new ProcessAggregatorQueryBuilder(applicationName);
 		queryBuilder.withLocations(locations).withCategories(type, subCategories).withDateRange(timeDimension, from, to);
 		return queryBuilder.build();
-	}	
-	
-//	public static List<TimedDataSerie> loadDataSeriesByTime(final HResult result, final List<String> dataKeys/*ex "{duration:mean","ERROR:mean"}*/) {
-//		Assertion.checkNotNull(result);
-//		// ---------------------------------------------------------------------
-//		final List<TimedDataSerie> dataSeries = new ArrayList<>();
-//
-//		for (final HCategory category : result.getAllCategories()) { //Normalement une seule categorie
-//			for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
-//				final HCube cube = entry.getValue();
-//				final HTime time = entry.getKey();
-//				final Map<String, String> values = new HashMap<>();
-//				for (final String dataKey : dataKeys) {
-//					final String[] metricKey = dataKey.split(":");
-//					final HMetric hMetric = cube.getMetric(metricKey[0]);
-//					if (hMetric != null) {
-//						final String val = getMetricValue(metricKey, hMetric, null);
-//						values.put(dataKey, val);
-//					} else {
-//						//pas de values.put(key, val); on laisse null
-//					}
-//				}
-//				final TimedDataSerie dataSerie = new TimedDataSerie(time.inMillis(), values);
-//				dataSeries.add(dataSerie);
-//			}
-//		}
-//		return dataSeries;
-//	}
+	}
+
+	//	public static List<TimedDataSerie> loadDataSeriesByTime(final HResult result, final List<String> dataKeys/*ex "{duration:mean","ERROR:mean"}*/) {
+	//		Assertion.checkNotNull(result);
+	//		// ---------------------------------------------------------------------
+	//		final List<TimedDataSerie> dataSeries = new ArrayList<>();
+	//
+	//		for (final HCategory category : result.getAllCategories()) { //Normalement une seule categorie
+	//			for (final Map.Entry<HTime, HCube> entry : result.getSerie(category).getCubes().entrySet()) {
+	//				final HCube cube = entry.getValue();
+	//				final HTime time = entry.getKey();
+	//				final Map<String, String> values = new HashMap<>();
+	//				for (final String dataKey : dataKeys) {
+	//					final String[] metricKey = dataKey.split(":");
+	//					final HMetric hMetric = cube.getMetric(metricKey[0]);
+	//					if (hMetric != null) {
+	//						final String val = getMetricValue(metricKey, hMetric, null);
+	//						values.put(dataKey, val);
+	//					} else {
+	//						//pas de values.put(key, val); on laisse null
+	//					}
+	//				}
+	//				final TimedDataSerie dataSerie = new TimedDataSerie(time.inMillis(), values);
+	//				dataSeries.add(dataSerie);
+	//			}
+	//		}
+	//		return dataSeries;
+	//	}
 }

@@ -17,10 +17,6 @@
  */
 package io.analytica.server.plugins.processstats.memorystack;
 
-import io.analytica.api.KProcess;
-import io.analytica.server.impl.ProcessStatsPlugin;
-import io.vertigo.lang.Activeable;
-
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -31,15 +27,19 @@ import javax.management.ObjectName;
 
 import com.google.gson.Gson;
 
+import io.analytica.api.AProcess;
+import io.analytica.server.impl.ProcessStatsPlugin;
+import io.vertigo.lang.Activeable;
+
 /**
  * Stockage des process, et conservation statistique de l'arbre.
- * 
+ *
  * Transformation d'un Process constitué de sous-process.
  * Chaque Process (et donc sous process) est transformé en Cube avec :
  * - une agregation des mesures de ce process
- * - une agregation des mesures des sous process 
- * 
- * 
+ * - une agregation des mesures des sous process
+ *
+ *
  * @author npiedeloup
  * @version $Id: StandardProcessEncoderPlugin.java,v 1.16 2012/10/16 17:27:12 pchretien Exp $
  */
@@ -47,7 +47,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 	private final LimitedDelayQueue processQueue = new LimitedDelayQueue(24 * 60); //24h
 
 	@Override
-	public void merge(final KProcess process) {
+	public void merge(final AProcess process) {
 		processQueue.add(process);
 	}
 
@@ -85,16 +85,16 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 	/** {@inheritDoc} */
 	@Override
 	public String getLastProcessesJson() {
-		final List<KProcess> processes = new ArrayList<>(processQueue);
+		final List<AProcess> processes = new ArrayList<>(processQueue);
 		return new Gson().toJson(processes);
 	}
 
 	/**
-	 * Liste de process limité en durée, seul les plus récents sont gardés. 
+	 * Liste de process limité en durée, seul les plus récents sont gardés.
 	 * @author npiedeloup
 	 * @version $Id: $
 	 */
-	static class LimitedDelayQueue extends LinkedList<KProcess> {
+	static class LimitedDelayQueue extends LinkedList<AProcess> {
 
 		private static final long serialVersionUID = -6085444623815188157L;
 		private final int delayMinute;
@@ -109,7 +109,7 @@ public final class MemoryStackProcessStatsPlugin implements ProcessStatsPlugin, 
 
 		/** {@inheritDoc} */
 		@Override
-		public boolean add(final KProcess o) {
+		public boolean add(final AProcess o) {
 			return super.add(o);
 			//			final Date limit = new Date(System.currentTimeMillis() - delayMinute * 60 * 1000);
 			//			while (!isEmpty() && getFirst().getStartDate().before(limit)) {

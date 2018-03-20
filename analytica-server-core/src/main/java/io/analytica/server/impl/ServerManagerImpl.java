@@ -17,7 +17,16 @@
  */
 package io.analytica.server.impl;
 
-import io.analytica.api.KProcess;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.inject.Inject;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import io.analytica.api.AProcess;
 import io.analytica.server.ServerManager;
 import io.analytica.server.aggregator.ProcessAggegatorConstants;
 import io.analytica.server.aggregator.ProcessAggregatorDto;
@@ -28,16 +37,6 @@ import io.analytica.server.store.Identified;
 import io.analytica.server.store.ProcessStorePlugin;
 import io.vertigo.lang.Activeable;
 import io.vertigo.lang.Assertion;
-import io.vertigo.lang.Option;
-
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.inject.Inject;
-
-import org.apache.log4j.Logger;
-
 
 /**
  * Manager Serveur d'Analytica.
@@ -49,33 +48,28 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	private final ProcessStorePlugin processStorePlugin;
 	private final ProcessAggregatorPlugin processAggregatorPlugin;
 	private Timer asyncCubeStoreTimer = null;
-	private final Option<ProcessStatsPlugin> processStatsPlugin;
-	static final Logger logger = Logger.getLogger(ServerManagerImpl.class);
+	static final Logger logger = LogManager.getLogger(ServerManagerImpl.class);
 	private static final int NB_PROCESS_A_TRAITER = 5000;
 
 	/**
 	 * Constructeur.
 	 * @param processStorePlugin InfluxDBProcessAggregatorPlugin de stockage des Process
-	 * @param hcubeManager Manager de stockage des Cubes
 	 */
 	@Inject
-	public ServerManagerImpl(final ProcessAggregatorPlugin processAggregatorPlugin, final ProcessStorePlugin processStorePlugin, final Option<ProcessStatsPlugin> processStatsPlugin, final QueryNetApiPlugin queryNetApiPlugin, final ProcessNetApiPlugin processNetApiPlugin) {
+	public ServerManagerImpl(final ProcessAggregatorPlugin processAggregatorPlugin, final ProcessStorePlugin processStorePlugin, final QueryNetApiPlugin queryNetApiPlugin, final ProcessNetApiPlugin processNetApiPlugin) {
 		super();
 		Assertion.checkNotNull(processAggregatorPlugin);
 		Assertion.checkNotNull(processStorePlugin);
-		Assertion.checkNotNull(processStatsPlugin);
 		//-----------------------------------------------------------------
 		this.processAggregatorPlugin = processAggregatorPlugin;
 		this.processStorePlugin = processStorePlugin;
-		this.processStatsPlugin = processStatsPlugin;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void push(final KProcess process) {
+	public void push(final AProcess process) {
 		processStorePlugin.add(process);
 	}
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -108,17 +102,17 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 			}
 		}
 	}
-	
-	int storeNexProcesses() throws ProcessAggregatorException{
+
+	int storeNexProcesses() throws ProcessAggregatorException {
 		final List<String> processStoreApps = processStorePlugin.getApps();
 		int numberOfProcessesTreated = 0;
 		for (final String appName : processStoreApps) {
-			
-			ProcessAggregatorQueryBuilder queryBuilder = new ProcessAggregatorQueryBuilder(appName)
-															.withType(ProcessAggegatorConstants.LAST_INSERTED_PROCESS)
-															.withSelectors(ProcessAggegatorConstants.LAST_INSERTED_PROCESS);
-			final List<Identified<KProcess>> nextProcesses = processStorePlugin.getProcess(appName, processAggregatorPlugin.getLastInsertedProcess(queryBuilder.build()), NB_PROCESS_A_TRAITER);
-			for (final Identified<KProcess> process : nextProcesses) {
+
+			final ProcessAggregatorQueryBuilder queryBuilder = new ProcessAggregatorQueryBuilder(appName)
+					.withType(ProcessAggegatorConstants.LAST_INSERTED_PROCESS)
+					.withSelectors(ProcessAggegatorConstants.LAST_INSERTED_PROCESS);
+			final List<Identified<AProcess>> nextProcesses = processStorePlugin.getProcess(appName, processAggregatorPlugin.getLastInsertedProcess(queryBuilder.build()), NB_PROCESS_A_TRAITER);
+			for (final Identified<AProcess> process : nextProcesses) {
 				processAggregatorPlugin.push(process);
 				numberOfProcessesTreated++;
 			}
@@ -127,7 +121,7 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	@Override
-	public List<ProcessAggregatorDto> findAllLocations(String appName)
+	public List<ProcessAggregatorDto> findAllLocations(final String appName)
 			throws ProcessAggregatorException {
 		return processAggregatorPlugin.findAllLocations(new ProcessAggregatorQueryBuilder(appName).build());
 	}
@@ -139,30 +133,30 @@ public final class ServerManagerImpl implements ServerManager, Activeable {
 	}
 
 	@Override
-	public List<ProcessAggregatorDto> findAllCategories(String appName)
+	public List<ProcessAggregatorDto> findAllCategories(final String appName)
 			throws ProcessAggregatorException {
 		return processAggregatorPlugin.findAllCategories(new ProcessAggregatorQueryBuilder(appName).build());
 	}
 
 	@Override
-	public List<ProcessAggregatorDto> findCategories(String appName, String type,String subCategories, String location)throws ProcessAggregatorException {
-		 ProcessAggregatorQueryBuilder queryBuilder = new ProcessAggregatorQueryBuilder(appName)
-		 									.withLocations(location)
-		 									.withCategories(subCategories)
-		 									.withType(type);
+	public List<ProcessAggregatorDto> findCategories(final String appName, final String type, final String subCategories, final String location) throws ProcessAggregatorException {
+		final ProcessAggregatorQueryBuilder queryBuilder = new ProcessAggregatorQueryBuilder(appName)
+				.withLocations(location)
+				.withCategories(subCategories)
+				.withType(type);
 		return processAggregatorPlugin.findCategories(queryBuilder.build());
 	}
 
 	@Override
-	public List<ProcessAggregatorDto> getTimeLine(String appName, String timeFrom,
-			String timeTo, String timeDim, String type, String subCategories,
-			String location,String datas) throws ProcessAggregatorException {
-		 ProcessAggregatorQueryBuilder queryBuilder = new ProcessAggregatorQueryBuilder(appName)
-			.withLocations(location)
-			.withCategories(subCategories)
-			.withType(type)
-			.withDateRange(timeDim, timeFrom, timeTo)
-			.withSelectors(datas);
+	public List<ProcessAggregatorDto> getTimeLine(final String appName, final String timeFrom,
+			final String timeTo, final String timeDim, final String type, final String subCategories,
+			final String location, final String datas) throws ProcessAggregatorException {
+		final ProcessAggregatorQueryBuilder queryBuilder = new ProcessAggregatorQueryBuilder(appName)
+				.withLocations(location)
+				.withCategories(subCategories)
+				.withType(type)
+				.withDateRange(timeDim, timeFrom, timeTo)
+				.withSelectors(datas);
 		return processAggregatorPlugin.getTimeLine(queryBuilder.build());
 	}
 }

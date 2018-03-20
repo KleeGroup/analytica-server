@@ -17,12 +17,6 @@
  */
 package io.analytica.server.plugins.processstats.socketio;
 
-import io.analytica.api.KProcess;
-import io.analytica.server.impl.ProcessStatsPlugin;
-import io.socket.SocketIO;
-import io.vertigo.lang.Activeable;
-import io.vertigo.lang.Assertion;
-
 import java.net.MalformedURLException;
 
 import javax.inject.Inject;
@@ -31,15 +25,21 @@ import javax.inject.Named;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import io.analytica.api.AProcess;
+import io.analytica.server.impl.ProcessStatsPlugin;
+import io.socket.SocketIO;
+import io.vertigo.lang.Activeable;
+import io.vertigo.lang.Assertion;
+
 /**
  * Stockage des process, et conservation statistique de l'arbre.
- * 
+ *
  * Transformation d'un Process constitué de sous-process.
  * Chaque Process (et donc sous process) est transformé en Cube avec :
  * - une agregation des mesures de ce process
- * - une agregation des mesures des sous process 
- * 
- * 
+ * - une agregation des mesures des sous process
+ *
+ *
  * @author npiedeloup
  * @version $Id: StandardProcessEncoderPlugin.java,v 1.16 2012/10/16 17:27:12 pchretien Exp $
  */
@@ -59,7 +59,7 @@ public final class SocketIoProcessStatsPlugin implements ProcessStatsPlugin, Act
 
 	/** {@inheritDoc} */
 	@Override
-	public void merge(final KProcess process) {
+	public void merge(final AProcess process) {
 		final long time = process.getStartDate().getTime();
 		final double duration = process.getDuration() / 2000 * 300;
 		final int size = process.getSubProcesses().size() + 1;
@@ -68,7 +68,7 @@ public final class SocketIoProcessStatsPlugin implements ProcessStatsPlugin, Act
 		} catch (final JSONException e) {
 			throw new RuntimeException("Erreur de publication SocketIo", e);
 		}
-		for (final KProcess subProcess : process.getSubProcesses()) {
+		for (final AProcess subProcess : process.getSubProcesses()) {
 			merge(subProcess);
 		}
 	}

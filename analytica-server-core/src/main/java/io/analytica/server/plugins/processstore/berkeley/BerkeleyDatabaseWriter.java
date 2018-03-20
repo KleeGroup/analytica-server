@@ -17,11 +17,11 @@
  */
 package io.analytica.server.plugins.processstore.berkeley;
 
-import io.analytica.api.KProcess;
-
 import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.DatabaseEntry;
+
+import io.analytica.api.AProcess;
 
 /**
  * Objet d'accés en écriture é la base Berkeley.
@@ -31,17 +31,17 @@ import com.sleepycat.je.DatabaseEntry;
  */
 final class BerkeleyDatabaseWriter {
 	private final EntryBinding uuidBinding = TupleBinding.getPrimitiveBinding(Long.class);
-	private final TupleBinding processBinding = new KProcessBinding();
+	private final TupleBinding processBinding = new AProcessBinding();
 
-	KProcess readProcess(final DatabaseEntry process) {
-		return (KProcess) processBinding.entryToObject(process);
+	AProcess readProcess(final DatabaseEntry process) {
+		return (AProcess) processBinding.entryToObject(process);
 	}
 
-	public BerkeleyDatabaseWriter(){
+	public BerkeleyDatabaseWriter() {
 		System.out.println("Constructeur BerkeleyDatabaseWriter");
 	}
-	
-	DatabaseEntry writeProcess(final KProcess process) {
+
+	DatabaseEntry writeProcess(final AProcess process) {
 		final DatabaseEntry resultKey = new DatabaseEntry();
 		if (process != null) {
 			processBinding.objectToEntry(process, resultKey);

@@ -1,6 +1,6 @@
 
 function showFlotChart(elem, datas, dataMetrics, dataQuery, dataLabels, dataColors) {
-	var allMetrics = dataQuery.datas.split(';');
+	var allMetrics = dataMetrics;
 	var timedSeries = datas[0].time;
 	var flotDatas = toFlotData(datas, dataMetrics, allMetrics, dataLabels, timedSeries);
 	var defaultChartOptions = createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries);
@@ -53,11 +53,11 @@ function createDefaultChartOptions(allMetrics, dataQuery, datas, timedSeries, da
 		};
 		if(timedSeries) {
 			options.xaxis = {
-				min: datas[0].time,
-			    max: datas[datas.length-1].time,
+				min: datas[0].time*1000.0,
+			    max: datas[datas.length-1].time*1000.0,
 				mode: "time",
 				timezone : "browser",
-				timeformat: analyticaTools.getTimeFormat(dataQuery.timeDim)
+				timeformat: analyticaTools.getTimeFormat(dataQuery.timeFilter.dim)
 			};	
 		} else {
 			options.xaxis = {
@@ -104,7 +104,7 @@ function getBarOptions(dataQuery, datas, timedSeries, dataColors) {
 				bars: {
 					//horizontal:true,
 					show: true,
-					barWidth: timedSeries?analyticaTools.getTimeDimStep(dataQuery.timeDim):0.8,
+					barWidth: timedSeries?analyticaTools.getTimeDimStep(dataQuery.timeFilter.dim):0.8,
 					align: "center",
 				}
 			},
@@ -117,7 +117,7 @@ function getBarOptions(dataQuery, datas, timedSeries, dataColors) {
 		options.xaxis = {
 				mode: "time",
 				timezone : "browser",
-				timeformat: analyticaTools.getTimeFormat(dataQuery.timeDim)
+				timeformat: analyticaTools.getTimeFormat(dataQuery.timeFilter.dim)
 			};		
 	}
 	
@@ -130,17 +130,17 @@ function getSparkBarOptions(dataQuery, datas, timedSeries, dataColors) {
 			bars: {
 				show: true,
 				fill:1,
-				//barWidth: analyticaTools.getTimeDimStep(dataQuery.timeDim),
+				//barWidth: analyticaTools.getTimeDimStep(dataQuery.timeFilter.dim),
 				lineWidth : 4, //on fixe la taille en pt
 				align: "center",
 			}
 		},
 		xaxis: {
-			min: datas[0].time,
-		    max: datas[datas.length-1].time+analyticaTools.getTimeDimStep(dataQuery.timeDim)/2,
+			min: datas[0].time*1000.0,
+		    max: datas[datas.length-1].time*1000.0+analyticaTools.getTimeDimStep(dataQuery.timeFilter.dim)/2,
 			mode: "time",
 			timezone : "browser",
-			timeformat: analyticaTools.getTimeFormat(dataQuery.timeDim)
+			timeformat: analyticaTools.getTimeFormat(dataQuery.timeFilter.dim)
 		},
 		grid: {
 			show: false,
@@ -411,7 +411,7 @@ function toFlotData(datas, metrics, allMetrics, dataLabels, timedSeries) {
 		}
 		serie.data = new Array();
 		for(var j = 0 ; j<datas.length; j++) {
-			var x = timedSeries ? datas[j].time : datas[j].category; // timed series by default, else categories 
+			var x = timedSeries ? datas[j].time*1000.0 : datas[j].category; // timed series by default, else categories 
 			var y = datas[j].values[metric];
 			serie.data[j]=([x, y]);
 		}

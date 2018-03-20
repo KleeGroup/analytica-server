@@ -17,11 +17,6 @@
  */
 package io.analytica.restserver.impl;
 
-import io.analytica.restserver.RestServerManager;
-import io.vertigo.core.param.ParamManager;
-import io.vertigo.lang.Activeable;
-import io.vertigo.lang.Assertion;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -35,23 +30,28 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.glassfish.grizzly.http.server.CLStaticHttpHandler;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
-import org.glassfish.grizzly.http.server.StaticHttpHandler;
 
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.ClassNamesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+
+import io.analytica.restserver.RestServerManager;
+import io.vertigo.core.param.ParamManager;
+import io.vertigo.lang.Activeable;
+import io.vertigo.lang.Assertion;
 
 /**
  * InfluxDBProcessAggregatorPlugin gérant l'api reseau en REST avec jersey.
  * @author npiedeloup
  */
 public final class RestServerManagerImpl implements RestServerManager, Activeable {
-	private static final Logger LOG = Logger.getLogger(RestServerManagerImpl.class);
+	private static final Logger LOG = LogManager.getLogger(RestServerManagerImpl.class);
 	private final String apiPath;
 	private final int httpPort;
 	private HttpServer httpServer;
@@ -61,20 +61,20 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 	private final Timer delayedStarter = new Timer("RestServerDelayedStarter", true);
 	private RestartServerTask startServerTask;
 
-	@Inject
 	public ParamManager paramManager;
-	
+
 	/**
 	 * Constructeur.
 	 * @param apiPath Chemin racine des WebServices REST (commence et fini par / et autre que /)
 	 * @param httpPort port du serveur web
 	 */
 	@Inject
-	public RestServerManagerImpl(@Named("apiPath") final String apiPath, @Named("httpPort") final int httpPort) {
+	public RestServerManagerImpl(@Named("apiPath") final String apiPath, @Named("httpPort") final int httpPort, final ParamManager paramManager) {
 		Assertion.checkArgNotEmpty(apiPath);
 		Assertion.checkArgument(apiPath.startsWith("/") && apiPath.endsWith("/") && !apiPath.equals("/"), "La racine des WebServices (apiPath:{0}) doit commencer et finir par /, et étre différent de /", apiPath);
 		//---------------------------------------------------------------------
-		String test = paramManager.getStringValue("restApiPath");
+		this.paramManager = paramManager;
+		paramManager.getStringValue("restApiPath");
 		this.apiPath = apiPath;
 		this.httpPort = httpPort;
 	}
@@ -160,15 +160,14 @@ public final class RestServerManagerImpl implements RestServerManager, Activeabl
 		rc.getProperties().put(ResourceConfig.PROPERTY_CONTAINER_REQUEST_FILTERS, com.sun.jersey.api.container.filter.GZIPContentEncodingFilter.class.getName());
 		rc.getProperties().put(ResourceConfig.PROPERTY_CONTAINER_RESPONSE_FILTERS, com.sun.jersey.api.container.filter.GZIPContentEncodingFilter.class.getName());
 		final HttpServer grizzlyServer = GrizzlyServerFactory.createHttpServer(baseUri, rc);
-		
+
 		// Add the CLStaticHttpHandler to serve static resources
 		for (final Map.Entry<String, List<String>> entry : pathsPerContext.entrySet()) {
-			StaticHttpHandler handler = new StaticHttpHandler(entry.getValue().toArray(new String[entry.getValue().size()]));
-//			grizzlyServer.getServerConfiguration().addHttpHandler(handler,entry.getKey());
+			//			grizzlyServer.getServerConfiguration().addHttpHandler(handler,entry.getKey());
 			grizzlyServer.getServerConfiguration().addHttpHandler(new CLStaticHttpHandler(Thread.currentThread().getContextClassLoader(), entry.getValue().toArray(new String[entry.getValue().size()])), entry.getKey());
 		}
-		for (Map.Entry<HttpHandler, String[]>set : grizzlyServer.getServerConfiguration().getHttpHandlers().entrySet()) {
-			System.out.println(set.getKey()+" "+ set.getValue());
+		for (final Map.Entry<HttpHandler, String[]> set : grizzlyServer.getServerConfiguration().getHttpHandlers().entrySet()) {
+			System.out.println(set.getKey() + " " + set.getValue());
 		}
 		for (final NetworkListener listener : grizzlyServer.getListeners()) {
 			//if false, local files (html, etc.) can be modified without restarting the server

@@ -17,11 +17,6 @@
  */
 package io.analytica.server.plugins.processapi.rest;
 
-import io.analytica.api.KProcess;
-import io.analytica.server.ServerManager;
-import io.vertigo.app.Home;
-import io.vertigo.core.component.di.injector.Injector;
-
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,9 +25,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+
+import io.analytica.api.AProcess;
+import io.analytica.server.ServerManager;
+import io.vertigo.app.Home;
+import io.vertigo.core.component.di.injector.DIInjector;
 
 /**
  * Api REST avec jersey de dépot des process.
@@ -41,7 +42,7 @@ import com.google.gson.Gson;
  */
 @Path("/process")
 public final class JerseyRestProcessNetApi {
-	private static final Logger LOG = Logger.getLogger(JerseyRestProcessNetApi.class);
+	private static final Logger LOG = LogManager.getLogger(JerseyRestProcessNetApi.class);
 
 	@Inject
 	private ServerManager serverManager;
@@ -50,7 +51,7 @@ public final class JerseyRestProcessNetApi {
 	 * Constructeur simple pour instanciation par jersey.
 	 */
 	public JerseyRestProcessNetApi() {
-		Injector.injectMembers(this, Home.getApp().getComponentSpace());
+		DIInjector.injectMembers(this, Home.getApp().getComponentSpace());
 	}
 
 	/**
@@ -59,10 +60,10 @@ public final class JerseyRestProcessNetApi {
 	@POST
 	@Consumes(MediaType.TEXT_PLAIN)
 	public void push(final String json) {
-		final KProcess[] processes = new Gson().fromJson(json, KProcess[].class);
+		final AProcess[] processes = new Gson().fromJson(json, AProcess[].class);
 		LOG.info("PUSH " + processes.length + " processes.");
 		//LOG.info("-> " + json);
-		for (final KProcess process : processes) {
+		for (final AProcess process : processes) {
 			serverManager.push(process);
 		}
 	}
@@ -81,8 +82,8 @@ public final class JerseyRestProcessNetApi {
 	 * On n'utilise pas APPLICATION_JSON, car jackson est moins simple é mettre en place que Gson.
 	 * @POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void add(final KProcess[] processes) {
-		for (final KProcess process : processes) {
+	public void add(final AProcess[] processes) {
+		for (final AProcess process : processes) {
 			serverManager.add(process);
 		}
 	}*/
