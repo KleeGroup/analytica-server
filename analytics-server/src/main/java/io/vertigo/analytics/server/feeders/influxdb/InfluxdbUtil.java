@@ -101,6 +101,7 @@ public class InfluxdbUtil {
 				.addField("inner_duration", innerDuration)
 				.fields(countFields)
 				.fields(durationFields)
+				.fields((Map) process.getMeasures())
 				.build();
 	}
 

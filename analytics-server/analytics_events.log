@@ -316,3 +316,7 @@ Waiting to accept a new client.
 {"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":121000000},"name":"domainUsageInTasks","topic":"DO_X_ACCOUNT_ID","value":0.0,"status":"SUCCESS"}} 
 {"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":121000000},"name":"domainUsageInTasks","topic":"DO_X_ACCOUNT_NAME","value":0.0,"status":"SUCCESS"}} 
 {"appName":"pandora","host":"MLAROCHE-PORT","event":{"measureInstant":{"seconds":1507205860,"nanos":121000000},"name":"domainUsageInTasks","topic":"DO_YEAR","value":0.0,"status":"SUCCESS"}} 
+io.vertigo.analytics.server.LogMessage@72a46a09 
+io.vertigo.analytics.server.LogMessage@17d5efe8 
+io.vertigo.analytics.server.LogMessage@4a2a0cbc 
+{"appName": "chatbotTest", "host": "moi", "start": 1556553591414, "end": 1556553591414, "event": {"category": "user", "name": "message", "measures": {"confidence": 1.0, "isButton": 1}, "tags": {"text": "/acquiescement", "intent": "acquiescement", "userId": "2678070522355904"}, "subProcesses": []}} 
