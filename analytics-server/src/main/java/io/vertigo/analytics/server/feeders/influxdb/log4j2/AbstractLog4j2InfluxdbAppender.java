@@ -40,7 +40,7 @@ abstract class AbstractLog4j2InfluxdbAppender<O> extends AbstractAppender {
 			final String serverUrl,
 			final String login,
 			final String password) {
-		super(name, filter, null, false);
+		super(name, filter, null, true);
 		//---
 		influxDB = InfluxDBFactory.connect(serverUrl, login, password);
 	}
